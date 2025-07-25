@@ -1,0 +1,9 @@
+{
+  "appEnv": "dev",
+  "appName": "AskApi",
+  "contentRoot": "http://localhost:3403",
+  "mailSystem": "",
+  "membershipApi": "http://localhost:8083",
+  "s3Bucket": "",
+  "messagingApi": "http://localhost:8086"
+}

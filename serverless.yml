@@ -1,0 +1,68 @@
+service: ask-api
+
+package:
+  individually: true
+  exclude:
+    - node_modules/**
+
+custom:
+  env: ${lower(${opt:stage, self:provider.stage})}
+  vpcSettings:
+    prod:
+      securityGroupIds:
+        - sg-052314a1eec2f2567
+      subnetIds:
+        - subnet-01a6b61d749d10c46
+    current: ${ternary(${self:custom.env}, prod, ${self:custom.vpcSettings.prod}, ~)}
+
+provider:
+  name: aws
+  runtime: nodejs20.x
+  memorySize: 512
+  timeout: 30
+  region: us-east-2
+  iam:
+    role: arn:aws:iam::428019619026:role/ChurchAppsRole
+  environment:
+    APP_ENV: ${self:custom.env}
+  logs:
+    httpApi:
+      logRetentionInDays: 1
+  httpApi:
+    binaryMediaTypes:
+      - "*/*"
+  apiGateway:
+    throttle:
+      rateLimit: 5
+      burstLimit: 20
+
+layers:
+  dependencies:
+    path: layer
+    name: ${self:service}-${sls:stage}-dependencies
+    description: Dependencies for ${self:service}
+    compatibleRuntimes:
+      - nodejs20.x
+
+functions:
+  api:
+    name: ask-api-${sls:stage}-api
+    handler: lambda.universal
+    events:
+      - http:
+          path: /{proxy+}
+          method: ANY
+      - http:
+          path: /
+          method: ANY
+    vpc: ${self:custom.vpcSettings.current}
+    layers:
+      - { Ref: DependenciesLambdaLayer }
+    package:
+      patterns:
+        - "!node_modules/**"
+        - "!package-lock.json"
+        - "**"
+
+plugins:
+  - serverless-plugin-utils

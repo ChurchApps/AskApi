@@ -1,0 +1,10 @@
+{
+  "appEnv": "prod",
+  "appName": "AskApi",
+  "contentRoot": "https://ask.churchapps.org",
+  "fileStore": "S3",
+  "mailSystem": "SES",
+  "membershipApi": "https://membershipapi.churchapps.org",
+  "s3Bucket": "churchapps-ask",
+  "messagingApi": "https://messagingapi.churchapps.org"
+}

@@ -1,0 +1,10 @@
+{
+  "appEnv": "staging",
+  "appName": "AskApi",
+  "contentRoot": "https://ask.staging.churchapps.org",
+  "fileStore": "S3",
+  "mailSystem": "SES",
+  "membershipApi": "https://membershipapi.staging.churchapps.org",
+  "s3Bucket": "staging-churchapps-ask",
+  "messagingApi": "https://messagingapi.staging.churchapps.org"
+}

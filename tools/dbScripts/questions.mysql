@@ -1,0 +1,17 @@
+DROP TABLE IF EXISTS questions;
+
+CREATE TABLE questions (
+  id CHAR(11) NOT NULL,
+  churchId CHAR(11) NOT NULL,
+  userId CHAR(11) NOT NULL,
+  question TEXT NOT NULL,
+  answer TEXT NULL,
+  dateAnswered DATETIME NULL,
+  inputTokens INT NULL,
+  cachedInputTokens INT NULL,
+  outputTokens INT NULL,
+  seconds DECIMAL(10,3) NULL,
+  PRIMARY KEY (id),
+  INDEX IDX_questions_churchId (churchId),
+  INDEX IDX_questions_userId (userId)
+);
