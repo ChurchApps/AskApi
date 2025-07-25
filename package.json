@@ -25,6 +25,8 @@
     "dev:start": "npm-run-all build start",
     "dev": "nodemon --watch src -e ts,ejs --exec \"ts-node src/app.ts\"",
     "start": "node .",
+    "playground": "cd playground && npm start",
+    "dev:with-playground": "npm-run-all --parallel dev playground",
     "test": "echo \"Error: no test specified\" && exit 1",
     "serverless-local": "serverless invoke local -f api"
   },
