@@ -23,8 +23,9 @@ export class QuestionRepository {
 
   private async create(question: Question) {
     question.id = UniqueIdHelper.shortId();
-    
-    const query = "INSERT INTO questions (id, churchId, userId, question, answer, dateAnswered, inputTokens, cachedInputTokens, outputTokens, seconds) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?);";
+
+    const query =
+      "INSERT INTO questions (id, churchId, userId, question, answer, dateAnswered, inputTokens, cachedInputTokens, outputTokens, seconds) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?);";
     const params = [
       question.id,
       question.churchId,
@@ -35,14 +36,15 @@ export class QuestionRepository {
       question.inputTokens,
       question.cachedInputTokens,
       question.outputTokens,
-      question.seconds
+      question.seconds,
     ];
     await TypedDB.query(query, params);
     return question;
   }
 
   private async update(question: Question) {
-    const sql = "UPDATE questions SET question=?, answer=?, dateAnswered=?, inputTokens=?, cachedInputTokens=?, outputTokens=?, seconds=? WHERE id=? AND churchId=?;";
+    const sql =
+      "UPDATE questions SET question=?, answer=?, dateAnswered=?, inputTokens=?, cachedInputTokens=?, outputTokens=?, seconds=? WHERE id=? AND churchId=?;";
     const params = [
       question.question,
       question.answer,
@@ -52,7 +54,7 @@ export class QuestionRepository {
       question.outputTokens,
       question.seconds,
       question.id,
-      question.churchId
+      question.churchId,
     ];
     await TypedDB.query(sql, params);
     return question;

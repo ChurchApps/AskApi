@@ -6,5 +6,8 @@
   "mailSystem": "SES",
   "membershipApi": "https://membershipapi.churchapps.org",
   "s3Bucket": "churchapps-ask",
-  "messagingApi": "https://messagingapi.churchapps.org"
+  "messagingApi": "https://messagingapi.churchapps.org",
+  "aiProvider": "openrouter",
+  "openAiApiKey": "",
+  "openRouterApiKey": ""
 }

@@ -1,11 +1,14 @@
 import fs from "fs";
 import path from "path";
 
-import { EnvironmentBase, AwsHelper } from "@churchapps/apihelper";
+import { EnvironmentBase } from "@churchapps/apihelper";
 
 export class Environment extends EnvironmentBase {
   static membershipApi: string;
   static messagingApi: string;
+  static aiProvider: string;
+  static openAiApiKey: string;
+  static openRouterApiKey: string;
 
   static async init(environment: string) {
     let file = "dev.json";
@@ -21,5 +24,8 @@ export class Environment extends EnvironmentBase {
 
     this.membershipApi = data.membershipApi;
     this.messagingApi = data.messagingApi;
+    this.aiProvider = data.aiProvider || "openai";
+    this.openAiApiKey = data.openAiApiKey || process.env.OPENAI_API_KEY;
+    this.openRouterApiKey = data.openRouterApiKey || process.env.OPENROUTER_API_KEY;
   }
 }
