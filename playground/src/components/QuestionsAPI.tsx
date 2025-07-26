@@ -1,5 +1,6 @@
 import React, { useState } from 'react';
 import { AuthConfig, APIResponse } from '../App';
+import { ApiHelper } from '../helpers/ApiHelper';
 
 interface QuestionsAPIProps {
   auth: AuthConfig;
@@ -44,43 +45,32 @@ const QuestionsAPI: React.FC<QuestionsAPIProps> = ({ auth, setResponse }) => {
   };
 
   const sendRequest = async () => {
-    if (!auth.authToken) {
-      alert('Please enter an auth token');
+    if (!auth.isAuthenticated || !auth.authToken) {
+      alert('Please log in first');
       return;
     }
 
     setLoading(true);
-    
-    const headers: Record<string, string> = {
-      'Authorization': `Bearer ${auth.authToken}`,
-      'Content-Type': 'application/json'
-    };
-
-    if (auth.churchId) {
-      headers['churchid'] = auth.churchId;
-    }
-
-    const options: RequestInit = {
-      method,
-      headers
-    };
-
-    if ((method === 'POST' || method === 'PUT') && requestBody) {
-      try {
-        options.body = JSON.stringify(JSON.parse(requestBody));
-      } catch (e) {
-        alert('Invalid JSON in request body');
-        setLoading(false);
-        return;
-      }
-    }
 
     try {
-      const response = await fetch(`http://localhost:8097${endpoint}`, options);
-      const data = await response.json();
+      // Use ApiHelper to make the request to AskApi
+      let data;
+      const apiName = 'AskApi';
+      
+      if (method === 'GET') {
+        data = await ApiHelper.get(endpoint, apiName);
+      } else if (method === 'POST') {
+        const body = requestBody ? JSON.parse(requestBody) : {};
+        data = await ApiHelper.post(endpoint, body, apiName);
+      } else if (method === 'PUT') {
+        const body = requestBody ? JSON.parse(requestBody) : {};
+        data = await ApiHelper.put(endpoint, body, apiName);
+      } else if (method === 'DELETE') {
+        data = await ApiHelper.delete(endpoint, apiName);
+      }
       
       setResponse({
-        status: response.status,
+        status: 200,
         data,
         timestamp: new Date().toISOString()
       });

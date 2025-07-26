@@ -1,5 +1,6 @@
 import React, { useState } from 'react';
 import { AuthConfig, APIResponse } from '../App';
+import { ApiHelper } from '../helpers/ApiHelper';
 
 interface QueryAPIProps {
   auth: AuthConfig;
@@ -28,8 +29,8 @@ const QueryAPI: React.FC<QueryAPIProps> = ({ auth, setResponse }) => {
   };
 
   const sendQueryRequest = async () => {
-    if (!auth.authToken) {
-      alert('Please enter an auth token');
+    if (!auth.isAuthenticated || !auth.authToken) {
+      alert('Please log in first');
       return;
     }
 
@@ -40,15 +41,6 @@ const QueryAPI: React.FC<QueryAPIProps> = ({ auth, setResponse }) => {
 
     setLoading(true);
 
-    const headers: Record<string, string> = {
-      'Authorization': `Bearer ${auth.authToken}`,
-      'Content-Type': 'application/json'
-    };
-
-    if (auth.churchId) {
-      headers['churchid'] = auth.churchId;
-    }
-
     const body: any = {
       text: queryText
     };
@@ -57,16 +49,10 @@ const QueryAPI: React.FC<QueryAPIProps> = ({ auth, setResponse }) => {
     if (siteUrl) body.siteUrl = siteUrl;
 
     try {
-      const response = await fetch('http://localhost:8097/query/questions', {
-        method: 'POST',
-        headers,
-        body: JSON.stringify(body)
-      });
-      
-      const data = await response.json();
+      const data = await ApiHelper.post('/query/questions', body, 'AskApi');
       
       setResponse({
-        status: response.status,
+        status: 200,
         data,
         timestamp: new Date().toISOString()
       });

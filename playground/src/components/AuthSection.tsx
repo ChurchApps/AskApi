@@ -1,5 +1,9 @@
-import React from 'react';
+import React, { useState } from 'react';
 import { AuthConfig } from '../App';
+import { UserHelper, ApiHelper } from '../helpers/ApiHelper';
+import { useUserContext, useUserContextLogout } from '../contexts/UserContext';
+import { LoginPage } from '@churchapps/apphelper-login';
+import { EnvironmentHelper } from '../helpers/EnvironmentHelper';
 
 interface AuthSectionProps {
   auth: AuthConfig;
@@ -7,35 +11,141 @@ interface AuthSectionProps {
 }
 
 const AuthSection: React.FC<AuthSectionProps> = ({ auth, setAuth }) => {
+  const [showLogin, setShowLogin] = useState(false);
+  const userContext = useUserContext();
+  const logout = useUserContextLogout();
+
+  const handleLoginSuccess = (redirectUrl?: string) => {
+    // Check if userChurch has valid data (non-empty jwt indicates successful login)
+    if (userContext.userChurch && userContext.userChurch.jwt) {
+      // Set the JWT for API calls
+      ApiHelper.setDefaultPermissions(userContext.userChurch.jwt);
+      
+      // Update auth state
+      setAuth({
+        churchId: userContext.userChurch.church.id || '',
+        authToken: userContext.userChurch.jwt,
+        isAuthenticated: true,
+        church: userContext.userChurch.church,
+        user: userContext.userChurch
+      });
+      
+      // Store in UserHelper for persistence
+      UserHelper.currentUserChurch = userContext.userChurch;
+    }
+    setShowLogin(false);
+  };
+
+  const handleLogout = () => {
+    // Clear user data
+    UserHelper.logout();
+    
+    // Clear API authentication
+    ApiHelper.clearAuthentication();
+    
+    // Clear user context using our utility function
+    logout();
+    
+    // Clear auth state
+    setAuth({
+      churchId: '',
+      authToken: '',
+      isAuthenticated: false,
+      church: undefined,
+      user: undefined
+    });
+  };
+
+  if (showLogin) {
+    return (
+      <div className="section">
+        <div className="section-title">🔐 Authentication</div>
+        <LoginPage 
+          context={userContext}
+          jwt=""
+          auth={EnvironmentHelper.getMembershipApiUrl()}
+          keyName="MembershipApi"
+          appName="AskApi Playground"
+          appUrl={window.location.origin}
+          returnUrl="/"
+          handleRedirect={handleLoginSuccess}
+          showLogo={true}
+        />
+        
+        <div style={{ marginTop: '15px' }}>
+          <button 
+            className="btn btn-secondary" 
+            onClick={() => setShowLogin(false)}
+          >
+            Cancel
+          </button>
+        </div>
+      </div>
+    );
+  }
+
+  if (!auth.isAuthenticated) {
+    return (
+      <div className="section">
+        <div className="section-title">🔐 Authentication</div>
+        <div className="info-box">
+          Please log in with your ChurchApps account to access the AskApi playground.
+        </div>
+        
+        <button 
+          className="btn btn-primary" 
+          onClick={() => setShowLogin(true)}
+        >
+          Login with ChurchApps
+        </button>
+      </div>
+    );
+  }
+
   return (
     <div className="section">
       <div className="section-title">🔐 Authentication</div>
-      <div className="info-box">
-        This playground requires valid authentication. Use your church credentials to get started.
+      <div className="info-box" style={{ backgroundColor: '#27ae60' }}>
+        ✅ Successfully authenticated as <strong>{auth.user?.displayName || auth.user?.email}</strong>
+        {auth.church?.name && <> at <strong>{auth.church.name}</strong></>}
       </div>
       
       <div className="form-grid">
         <div className="form-group">
-          <label htmlFor="churchId">Church ID</label>
+          <label>Church</label>
           <input
             type="text"
-            id="churchId"
-            placeholder="Enter your church ID"
-            value={auth.churchId}
-            onChange={(e) => setAuth({ ...auth, churchId: e.target.value })}
+            value={auth.church?.name || 'No church selected'}
+            disabled
+            style={{ backgroundColor: '#f8f9fa' }}
           />
         </div>
         
         <div className="form-group">
-          <label htmlFor="authToken">Auth Token (JWT)</label>
+          <label>Church ID</label>
           <input
             type="text"
-            id="authToken"
-            placeholder="Enter your JWT token"
-            value={auth.authToken}
-            onChange={(e) => setAuth({ ...auth, authToken: e.target.value })}
+            value={auth.churchId}
+            disabled
+            style={{ backgroundColor: '#f8f9fa' }}
           />
         </div>
+
+        <div className="form-group">
+          <label>JWT Token</label>
+          <input
+            type="text"
+            value={auth.authToken ? `${auth.authToken.substring(0, 30)}...` : ''}
+            disabled
+            style={{ backgroundColor: '#f8f9fa', fontFamily: 'monospace', fontSize: '0.85em' }}
+          />
+        </div>
+      </div>
+
+      <div className="button-group">
+        <button className="btn btn-secondary" onClick={handleLogout}>
+          Logout
+        </button>
       </div>
     </div>
   );
