@@ -1,0 +1,2359 @@
+{
+  "openapi": "3.0.0",
+  "info": {
+    "title": "Content API",
+    "description": "API for managing church content including pages, sermons, events, songs, and media",
+    "version": "1.0.0"
+  },
+  "servers": [
+    {
+      "url": "/",
+      "description": "API base URL"
+    }
+  ],
+  "security": [
+    {
+      "bearerAuth": []
+    }
+  ],
+  "paths": {
+    "/arrangements/{id}": {
+      "get": {
+        "tags": ["Arrangements"],
+        "summary": "Get arrangement by ID",
+        "parameters": [
+          {
+            "name": "id",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Successful response",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Arrangement"
+                }
+              }
+            }
+          }
+        }
+      },
+      "delete": {
+        "tags": ["Arrangements"],
+        "summary": "Delete arrangement",
+        "parameters": [
+          {
+            "name": "id",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Successful response"
+          }
+        },
+        "security": [
+          {
+            "bearerAuth": [],
+            "permissions": ["content.edit"]
+          }
+        ]
+      }
+    },
+    "/arrangements/song/{songId}": {
+      "get": {
+        "tags": ["Arrangements"],
+        "summary": "Get arrangements by song ID",
+        "parameters": [
+          {
+            "name": "songId",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Successful response",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "array",
+                  "items": {
+                    "$ref": "#/components/schemas/Arrangement"
+                  }
+                }
+              }
+            }
+          }
+        },
+        "security": [
+          {
+            "bearerAuth": [],
+            "permissions": ["content.edit"]
+          }
+        ]
+      }
+    },
+    "/arrangements/songDetail/{songDetailId}": {
+      "get": {
+        "tags": ["Arrangements"],
+        "summary": "Get arrangements by song detail ID",
+        "parameters": [
+          {
+            "name": "songDetailId",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Successful response",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "array",
+                  "items": {
+                    "$ref": "#/components/schemas/Arrangement"
+                  }
+                }
+              }
+            }
+          }
+        },
+        "security": [
+          {
+            "bearerAuth": [],
+            "permissions": ["content.edit"]
+          }
+        ]
+      }
+    },
+    "/arrangements": {
+      "get": {
+        "tags": ["Arrangements"],
+        "summary": "Get all arrangements",
+        "responses": {
+          "200": {
+            "description": "Successful response",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "array",
+                  "items": {
+                    "$ref": "#/components/schemas/Arrangement"
+                  }
+                }
+              }
+            }
+          }
+        },
+        "security": [
+          {
+            "bearerAuth": [],
+            "permissions": ["content.edit"]
+          }
+        ]
+      },
+      "post": {
+        "tags": ["Arrangements"],
+        "summary": "Create or update arrangements",
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "type": "array",
+                "items": {
+                  "$ref": "#/components/schemas/Arrangement"
+                }
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "Successful response"
+          }
+        },
+        "security": [
+          {
+            "bearerAuth": [],
+            "permissions": ["content.edit"]
+          }
+        ]
+      }
+    },
+    "/arrangements/freeShow/missing": {
+      "post": {
+        "tags": ["Arrangements"],
+        "summary": "Get missing FreeShow arrangements",
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "type": "object",
+                "properties": {
+                  "freeShowIds": {
+                    "type": "array",
+                    "items": {
+                      "type": "string"
+                    }
+                  }
+                }
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "Successful response"
+          }
+        }
+      }
+    },
+    "/arrangementKeys/presenter/{churchId}/{id}": {
+      "get": {
+        "tags": ["Arrangement Keys"],
+        "summary": "Get arrangement key for presenter (anonymous)",
+        "parameters": [
+          {
+            "name": "churchId",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "name": "id",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Successful response",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ArrangementKey"
+                }
+              }
+            }
+          }
+        },
+        "security": []
+      }
+    },
+    "/arrangementKeys/{id}": {
+      "get": {
+        "tags": ["Arrangement Keys"],
+        "summary": "Get arrangement key by ID",
+        "parameters": [
+          {
+            "name": "id",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Successful response",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ArrangementKey"
+                }
+              }
+            }
+          }
+        }
+      },
+      "delete": {
+        "tags": ["Arrangement Keys"],
+        "summary": "Delete arrangement key",
+        "parameters": [
+          {
+            "name": "id",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Successful response"
+          }
+        },
+        "security": [
+          {
+            "bearerAuth": [],
+            "permissions": ["content.edit"]
+          }
+        ]
+      }
+    },
+    "/arrangementKeys/arrangement/{arrangementId}": {
+      "get": {
+        "tags": ["Arrangement Keys"],
+        "summary": "Get arrangement keys by arrangement ID",
+        "parameters": [
+          {
+            "name": "arrangementId",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Successful response",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "array",
+                  "items": {
+                    "$ref": "#/components/schemas/ArrangementKey"
+                  }
+                }
+              }
+            }
+          }
+        },
+        "security": [
+          {
+            "bearerAuth": [],
+            "permissions": ["content.edit"]
+          }
+        ]
+      }
+    },
+    "/arrangementKeys": {
+      "get": {
+        "tags": ["Arrangement Keys"],
+        "summary": "Get all arrangement keys",
+        "responses": {
+          "200": {
+            "description": "Successful response",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "array",
+                  "items": {
+                    "$ref": "#/components/schemas/ArrangementKey"
+                  }
+                }
+              }
+            }
+          }
+        },
+        "security": [
+          {
+            "bearerAuth": [],
+            "permissions": ["content.edit"]
+          }
+        ]
+      },
+      "post": {
+        "tags": ["Arrangement Keys"],
+        "summary": "Create or update arrangement keys",
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "type": "array",
+                "items": {
+                  "$ref": "#/components/schemas/ArrangementKey"
+                }
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "Successful response"
+          }
+        },
+        "security": [
+          {
+            "bearerAuth": [],
+            "permissions": ["content.edit"]
+          }
+        ]
+      }
+    },
+    "/bibles/{translationKey}/search": {
+      "get": {
+        "tags": ["Bible"],
+        "summary": "Search Bible verses",
+        "parameters": [
+          {
+            "name": "translationKey",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "name": "query",
+            "in": "query",
+            "required": true,
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Successful response"
+          }
+        },
+        "security": []
+      }
+    },
+    "/bibles/stats": {
+      "get": {
+        "tags": ["Bible"],
+        "summary": "Get Bible lookup statistics",
+        "parameters": [
+          {
+            "name": "startDate",
+            "in": "query",
+            "schema": {
+              "type": "string",
+              "format": "date"
+            }
+          },
+          {
+            "name": "endDate",
+            "in": "query",
+            "schema": {
+              "type": "string",
+              "format": "date"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Successful response"
+          }
+        },
+        "security": []
+      }
+    },
+    "/bibles/{translationKey}/books": {
+      "get": {
+        "tags": ["Bible"],
+        "summary": "Get books for translation",
+        "parameters": [
+          {
+            "name": "translationKey",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Successful response"
+          }
+        },
+        "security": []
+      }
+    },
+    "/bibles/{translationKey}/{bookKey}/chapters": {
+      "get": {
+        "tags": ["Bible"],
+        "summary": "Get chapters for book",
+        "parameters": [
+          {
+            "name": "translationKey",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "name": "bookKey",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Successful response"
+          }
+        },
+        "security": []
+      }
+    },
+    "/bibles/{translationKey}/chapters/{chapterKey}/verses": {
+      "get": {
+        "tags": ["Bible"],
+        "summary": "Get verses for chapter",
+        "parameters": [
+          {
+            "name": "translationKey",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "name": "chapterKey",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Successful response"
+          }
+        },
+        "security": []
+      }
+    },
+    "/bibles": {
+      "get": {
+        "tags": ["Bible"],
+        "summary": "Get all translations",
+        "responses": {
+          "200": {
+            "description": "Successful response"
+          }
+        },
+        "security": []
+      }
+    },
+    "/blocks/{churchId}/tree/{id}": {
+      "get": {
+        "tags": ["Blocks"],
+        "summary": "Get block tree structure",
+        "parameters": [
+          {
+            "name": "churchId",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "name": "id",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Successful response"
+          }
+        },
+        "security": []
+      }
+    },
+    "/blocks/{id}": {
+      "get": {
+        "tags": ["Blocks"],
+        "summary": "Get block by ID",
+        "parameters": [
+          {
+            "name": "id",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Successful response",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Block"
+                }
+              }
+            }
+          }
+        }
+      },
+      "delete": {
+        "tags": ["Blocks"],
+        "summary": "Delete block",
+        "parameters": [
+          {
+            "name": "id",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Successful response"
+          }
+        },
+        "security": [
+          {
+            "bearerAuth": [],
+            "permissions": ["content.edit"]
+          }
+        ]
+      }
+    },
+    "/blocks": {
+      "get": {
+        "tags": ["Blocks"],
+        "summary": "Get all blocks",
+        "responses": {
+          "200": {
+            "description": "Successful response",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "array",
+                  "items": {
+                    "$ref": "#/components/schemas/Block"
+                  }
+                }
+              }
+            }
+          }
+        }
+      },
+      "post": {
+        "tags": ["Blocks"],
+        "summary": "Create or update blocks",
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "type": "array",
+                "items": {
+                  "$ref": "#/components/schemas/Block"
+                }
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "Successful response"
+          }
+        },
+        "security": [
+          {
+            "bearerAuth": [],
+            "permissions": ["content.edit"]
+          }
+        ]
+      }
+    },
+    "/blocks/blockType/{blockType}": {
+      "get": {
+        "tags": ["Blocks"],
+        "summary": "Get blocks by type",
+        "parameters": [
+          {
+            "name": "blockType",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Successful response",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "array",
+                  "items": {
+                    "$ref": "#/components/schemas/Block"
+                  }
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/blocks/public/footer/{churchId}": {
+      "get": {
+        "tags": ["Blocks"],
+        "summary": "Get footer blocks",
+        "parameters": [
+          {
+            "name": "churchId",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Successful response"
+          }
+        },
+        "security": []
+      }
+    },
+    "/curatedCalendars/{id}": {
+      "get": {
+        "tags": ["Curated Calendars"],
+        "summary": "Get curated calendar by ID",
+        "parameters": [
+          {
+            "name": "id",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Successful response",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/CuratedCalendar"
+                }
+              }
+            }
+          }
+        }
+      },
+      "delete": {
+        "tags": ["Curated Calendars"],
+        "summary": "Delete curated calendar",
+        "parameters": [
+          {
+            "name": "id",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Successful response"
+          }
+        },
+        "security": [
+          {
+            "bearerAuth": [],
+            "permissions": ["content.edit"]
+          }
+        ]
+      }
+    },
+    "/curatedCalendars": {
+      "get": {
+        "tags": ["Curated Calendars"],
+        "summary": "Get all curated calendars",
+        "responses": {
+          "200": {
+            "description": "Successful response",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "array",
+                  "items": {
+                    "$ref": "#/components/schemas/CuratedCalendar"
+                  }
+                }
+              }
+            }
+          }
+        }
+      },
+      "post": {
+        "tags": ["Curated Calendars"],
+        "summary": "Create or update curated calendars",
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "type": "array",
+                "items": {
+                  "$ref": "#/components/schemas/CuratedCalendar"
+                }
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "Successful response"
+          }
+        },
+        "security": [
+          {
+            "bearerAuth": [],
+            "permissions": ["content.edit"]
+          }
+        ]
+      }
+    },
+    "/curatedEvents/calendar/{curatedCalendarId}": {
+      "get": {
+        "tags": ["Curated Events"],
+        "summary": "Get events for curated calendar",
+        "parameters": [
+          {
+            "name": "curatedCalendarId",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "name": "withoutEvents",
+            "in": "query",
+            "schema": {
+              "type": "boolean"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Successful response",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "array",
+                  "items": {
+                    "$ref": "#/components/schemas/CuratedEvent"
+                  }
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/curatedEvents/public/calendar/{churchId}/{curatedCalendarId}": {
+      "get": {
+        "tags": ["Curated Events"],
+        "summary": "Get public events for curated calendar",
+        "parameters": [
+          {
+            "name": "churchId",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "name": "curatedCalendarId",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Successful response"
+          }
+        },
+        "security": []
+      }
+    },
+    "/curatedEvents/{id}": {
+      "get": {
+        "tags": ["Curated Events"],
+        "summary": "Get curated event by ID",
+        "parameters": [
+          {
+            "name": "id",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Successful response",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/CuratedEvent"
+                }
+              }
+            }
+          }
+        }
+      },
+      "delete": {
+        "tags": ["Curated Events"],
+        "summary": "Delete curated event",
+        "parameters": [
+          {
+            "name": "id",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Successful response"
+          }
+        },
+        "security": [
+          {
+            "bearerAuth": [],
+            "permissions": ["content.edit"]
+          }
+        ]
+      }
+    },
+    "/curatedEvents": {
+      "get": {
+        "tags": ["Curated Events"],
+        "summary": "Get all curated events",
+        "responses": {
+          "200": {
+            "description": "Successful response",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "array",
+                  "items": {
+                    "$ref": "#/components/schemas/CuratedEvent"
+                  }
+                }
+              }
+            }
+          }
+        }
+      },
+      "post": {
+        "tags": ["Curated Events"],
+        "summary": "Create or update curated events",
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "type": "array",
+                "items": {
+                  "$ref": "#/components/schemas/CuratedEvent"
+                }
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "Successful response"
+          }
+        },
+        "security": [
+          {
+            "bearerAuth": [],
+            "permissions": ["content.edit"]
+          }
+        ]
+      }
+    },
+    "/elements/{id}": {
+      "get": {
+        "tags": ["Elements"],
+        "summary": "Get element by ID",
+        "parameters": [
+          {
+            "name": "id",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Successful response",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Element"
+                }
+              }
+            }
+          }
+        }
+      },
+      "delete": {
+        "tags": ["Elements"],
+        "summary": "Delete element",
+        "parameters": [
+          {
+            "name": "id",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Successful response"
+          }
+        },
+        "security": [
+          {
+            "bearerAuth": [],
+            "permissions": ["content.edit"]
+          }
+        ]
+      }
+    },
+    "/elements/duplicate/{id}": {
+      "post": {
+        "tags": ["Elements"],
+        "summary": "Duplicate element",
+        "parameters": [
+          {
+            "name": "id",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Successful response"
+          }
+        },
+        "security": [
+          {
+            "bearerAuth": [],
+            "permissions": ["content.edit"]
+          }
+        ]
+      }
+    },
+    "/elements": {
+      "post": {
+        "tags": ["Elements"],
+        "summary": "Create or update elements",
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "type": "array",
+                "items": {
+                  "$ref": "#/components/schemas/Element"
+                }
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "Successful response"
+          }
+        },
+        "security": [
+          {
+            "bearerAuth": [],
+            "permissions": ["content.edit"]
+          }
+        ]
+      }
+    },
+    "/events/timeline/group/{groupId}": {
+      "get": {
+        "tags": ["Events"],
+        "summary": "Get timeline posts for group",
+        "parameters": [
+          {
+            "name": "groupId",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "name": "eventIds",
+            "in": "query",
+            "schema": {
+              "type": "string"
+            },
+            "description": "Comma-separated event IDs"
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Successful response"
+          }
+        }
+      }
+    },
+    "/events/timeline": {
+      "get": {
+        "tags": ["Events"],
+        "summary": "Get timeline posts",
+        "parameters": [
+          {
+            "name": "eventIds",
+            "in": "query",
+            "schema": {
+              "type": "string"
+            },
+            "description": "Comma-separated event IDs"
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Successful response"
+          }
+        }
+      }
+    },
+    "/events/subscribe": {
+      "get": {
+        "tags": ["Events"],
+        "summary": "Get ICS calendar subscription",
+        "parameters": [
+          {
+            "name": "groupId",
+            "in": "query",
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "name": "curatedCalendarId",
+            "in": "query",
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "name": "churchId",
+            "in": "query",
+            "required": true,
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "ICS calendar file",
+            "content": {
+              "text/calendar": {
+                "schema": {
+                  "type": "string"
+                }
+              }
+            }
+          }
+        },
+        "security": []
+      }
+    },
+    "/events/group/{groupId}": {
+      "get": {
+        "tags": ["Events"],
+        "summary": "Get events for group",
+        "parameters": [
+          {
+            "name": "groupId",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Successful response",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "array",
+                  "items": {
+                    "$ref": "#/components/schemas/Event"
+                  }
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/events/public/group/{churchId}/{groupId}": {
+      "get": {
+        "tags": ["Events"],
+        "summary": "Get public events for group",
+        "parameters": [
+          {
+            "name": "churchId",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "name": "groupId",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Successful response"
+          }
+        },
+        "security": []
+      }
+    },
+    "/events/{id}": {
+      "get": {
+        "tags": ["Events"],
+        "summary": "Get event by ID",
+        "parameters": [
+          {
+            "name": "id",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Successful response",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Event"
+                }
+              }
+            }
+          }
+        }
+      },
+      "delete": {
+        "tags": ["Events"],
+        "summary": "Delete event",
+        "parameters": [
+          {
+            "name": "id",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Successful response"
+          }
+        },
+        "security": [
+          {
+            "bearerAuth": [],
+            "permissions": ["content.edit"]
+          }
+        ]
+      }
+    },
+    "/events": {
+      "post": {
+        "tags": ["Events"],
+        "summary": "Create or update events",
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "type": "array",
+                "items": {
+                  "$ref": "#/components/schemas/Event"
+                }
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "Successful response"
+          }
+        }
+      }
+    },
+    "/files/{id}": {
+      "get": {
+        "tags": ["Files"],
+        "summary": "Get file by ID",
+        "parameters": [
+          {
+            "name": "id",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Successful response",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/File"
+                }
+              }
+            }
+          }
+        }
+      },
+      "delete": {
+        "tags": ["Files"],
+        "summary": "Delete file",
+        "parameters": [
+          {
+            "name": "id",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Successful response"
+          }
+        },
+        "security": [
+          {
+            "bearerAuth": [],
+            "permissions": ["content.edit"]
+          }
+        ]
+      }
+    },
+    "/files/{contentType}/{contentId}": {
+      "get": {
+        "tags": ["Files"],
+        "summary": "Get files by content",
+        "parameters": [
+          {
+            "name": "contentType",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "name": "contentId",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Successful response",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "array",
+                  "items": {
+                    "$ref": "#/components/schemas/File"
+                  }
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/files": {
+      "get": {
+        "tags": ["Files"],
+        "summary": "Get all files",
+        "responses": {
+          "200": {
+            "description": "Successful response",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "array",
+                  "items": {
+                    "$ref": "#/components/schemas/File"
+                  }
+                }
+              }
+            }
+          }
+        }
+      },
+      "post": {
+        "tags": ["Files"],
+        "summary": "Upload files",
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "type": "array",
+                "items": {
+                  "$ref": "#/components/schemas/File"
+                }
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "Successful response"
+          }
+        },
+        "security": [
+          {
+            "bearerAuth": [],
+            "permissions": ["content.edit"]
+          }
+        ]
+      }
+    },
+    "/files/postUrl": {
+      "post": {
+        "tags": ["Files"],
+        "summary": "Get upload URL",
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "type": "object",
+                "properties": {
+                  "resourceId": {
+                    "type": "string"
+                  },
+                  "fileName": {
+                    "type": "string"
+                  },
+                  "contentType": {
+                    "type": "string"
+                  },
+                  "contentId": {
+                    "type": "string"
+                  }
+                }
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "Upload URL response"
+          }
+        },
+        "security": [
+          {
+            "bearerAuth": [],
+            "permissions": ["content.edit"]
+          }
+        ]
+      }
+    },
+    "/pages/{churchId}/tree": {
+      "get": {
+        "tags": ["Pages"],
+        "summary": "Get page tree structure",
+        "parameters": [
+          {
+            "name": "churchId",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "name": "url",
+            "in": "query",
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "name": "id",
+            "in": "query",
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Successful response"
+          }
+        },
+        "security": []
+      }
+    },
+    "/pages/{id}": {
+      "get": {
+        "tags": ["Pages"],
+        "summary": "Get page by ID",
+        "parameters": [
+          {
+            "name": "id",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Successful response",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Page"
+                }
+              }
+            }
+          }
+        }
+      },
+      "delete": {
+        "tags": ["Pages"],
+        "summary": "Delete page",
+        "parameters": [
+          {
+            "name": "id",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Successful response"
+          }
+        },
+        "security": [
+          {
+            "bearerAuth": [],
+            "permissions": ["content.edit"]
+          }
+        ]
+      }
+    },
+    "/pages": {
+      "get": {
+        "tags": ["Pages"],
+        "summary": "Get all pages",
+        "responses": {
+          "200": {
+            "description": "Successful response",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "array",
+                  "items": {
+                    "$ref": "#/components/schemas/Page"
+                  }
+                }
+              }
+            }
+          }
+        }
+      },
+      "post": {
+        "tags": ["Pages"],
+        "summary": "Create or update pages",
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "type": "array",
+                "items": {
+                  "$ref": "#/components/schemas/Page"
+                }
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "Successful response"
+          }
+        },
+        "security": [
+          {
+            "bearerAuth": [],
+            "permissions": ["content.edit"]
+          }
+        ]
+      }
+    },
+    "/pages/duplicate/{id}": {
+      "post": {
+        "tags": ["Pages"],
+        "summary": "Duplicate page",
+        "parameters": [
+          {
+            "name": "id",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Successful response"
+          }
+        },
+        "security": [
+          {
+            "bearerAuth": [],
+            "permissions": ["content.edit"]
+          }
+        ]
+      }
+    },
+    "/sermons/public/tvFeed/{churchId}": {
+      "get": {
+        "tags": ["Sermons"],
+        "summary": "Get TV feed",
+        "parameters": [
+          {
+            "name": "churchId",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Successful response"
+          }
+        },
+        "security": []
+      }
+    },
+    "/sermons/public/tvFeed/{churchId}/{sermonId}": {
+      "get": {
+        "tags": ["Sermons"],
+        "summary": "Get sermon TV feed",
+        "parameters": [
+          {
+            "name": "churchId",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "name": "sermonId",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Successful response"
+          }
+        },
+        "security": []
+      }
+    },
+    "/sermons/timeline": {
+      "get": {
+        "tags": ["Sermons"],
+        "summary": "Get timeline posts",
+        "parameters": [
+          {
+            "name": "sermonIds",
+            "in": "query",
+            "schema": {
+              "type": "string"
+            },
+            "description": "Comma-separated sermon IDs"
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Successful response"
+          }
+        }
+      }
+    },
+    "/sermons/lookup": {
+      "get": {
+        "tags": ["Sermons"],
+        "summary": "Lookup sermon from video service",
+        "parameters": [
+          {
+            "name": "videoType",
+            "in": "query",
+            "required": true,
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "name": "videoData",
+            "in": "query",
+            "required": true,
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Successful response"
+          }
+        },
+        "security": []
+      }
+    },
+    "/sermons/{id}": {
+      "get": {
+        "tags": ["Sermons"],
+        "summary": "Get sermon by ID",
+        "parameters": [
+          {
+            "name": "id",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Successful response",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Sermon"
+                }
+              }
+            }
+          }
+        }
+      },
+      "delete": {
+        "tags": ["Sermons"],
+        "summary": "Delete sermon",
+        "parameters": [
+          {
+            "name": "id",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Successful response"
+          }
+        },
+        "security": [
+          {
+            "bearerAuth": [],
+            "permissions": ["streamingServices.edit"]
+          }
+        ]
+      }
+    },
+    "/sermons": {
+      "get": {
+        "tags": ["Sermons"],
+        "summary": "Get all sermons",
+        "responses": {
+          "200": {
+            "description": "Successful response",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "array",
+                  "items": {
+                    "$ref": "#/components/schemas/Sermon"
+                  }
+                }
+              }
+            }
+          }
+        }
+      },
+      "post": {
+        "tags": ["Sermons"],
+        "summary": "Create or update sermons",
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "type": "array",
+                "items": {
+                  "$ref": "#/components/schemas/Sermon"
+                }
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "Successful response"
+          }
+        },
+        "security": [
+          {
+            "bearerAuth": [],
+            "permissions": ["streamingServices.edit"]
+          }
+        ]
+      }
+    },
+    "/sermons/public/{churchId}": {
+      "get": {
+        "tags": ["Sermons"],
+        "summary": "Get public sermons",
+        "parameters": [
+          {
+            "name": "churchId",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Successful response"
+          }
+        },
+        "security": []
+      }
+    },
+    "/songs/search": {
+      "get": {
+        "tags": ["Songs"],
+        "summary": "Search songs",
+        "parameters": [
+          {
+            "name": "q",
+            "in": "query",
+            "required": true,
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Successful response",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "array",
+                  "items": {
+                    "$ref": "#/components/schemas/Song"
+                  }
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/songs/{id}": {
+      "get": {
+        "tags": ["Songs"],
+        "summary": "Get song by ID",
+        "parameters": [
+          {
+            "name": "id",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Successful response",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Song"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/songs": {
+      "get": {
+        "tags": ["Songs"],
+        "summary": "Get all songs",
+        "responses": {
+          "200": {
+            "description": "Successful response",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "array",
+                  "items": {
+                    "$ref": "#/components/schemas/Song"
+                  }
+                }
+              }
+            }
+          }
+        },
+        "security": [
+          {
+            "bearerAuth": [],
+            "permissions": ["content.edit"]
+          }
+        ]
+      },
+      "post": {
+        "tags": ["Songs"],
+        "summary": "Create or update songs",
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "type": "array",
+                "items": {
+                  "$ref": "#/components/schemas/Song"
+                }
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "Successful response"
+          }
+        },
+        "security": [
+          {
+            "bearerAuth": [],
+            "permissions": ["content.edit"]
+          }
+        ]
+      }
+    }
+  },
+  "components": {
+    "securitySchemes": {
+      "bearerAuth": {
+        "type": "http",
+        "scheme": "bearer",
+        "bearerFormat": "JWT"
+      }
+    },
+    "schemas": {
+      "Arrangement": {
+        "type": "object",
+        "properties": {
+          "id": {
+            "type": "string"
+          },
+          "churchId": {
+            "type": "string"
+          },
+          "songId": {
+            "type": "string"
+          },
+          "name": {
+            "type": "string"
+          },
+          "data": {
+            "type": "object"
+          }
+        }
+      },
+      "ArrangementKey": {
+        "type": "object",
+        "properties": {
+          "id": {
+            "type": "string"
+          },
+          "churchId": {
+            "type": "string"
+          },
+          "arrangementId": {
+            "type": "string"
+          },
+          "key": {
+            "type": "string"
+          },
+          "data": {
+            "type": "object"
+          }
+        }
+      },
+      "Block": {
+        "type": "object",
+        "properties": {
+          "id": {
+            "type": "string"
+          },
+          "churchId": {
+            "type": "string"
+          },
+          "name": {
+            "type": "string"
+          },
+          "blockType": {
+            "type": "string"
+          },
+          "data": {
+            "type": "object"
+          }
+        }
+      },
+      "CuratedCalendar": {
+        "type": "object",
+        "properties": {
+          "id": {
+            "type": "string"
+          },
+          "churchId": {
+            "type": "string"
+          },
+          "name": {
+            "type": "string"
+          },
+          "description": {
+            "type": "string"
+          }
+        }
+      },
+      "CuratedEvent": {
+        "type": "object",
+        "properties": {
+          "id": {
+            "type": "string"
+          },
+          "churchId": {
+            "type": "string"
+          },
+          "curatedCalendarId": {
+            "type": "string"
+          },
+          "eventId": {
+            "type": "string"
+          },
+          "groupId": {
+            "type": "string"
+          }
+        }
+      },
+      "Element": {
+        "type": "object",
+        "properties": {
+          "id": {
+            "type": "string"
+          },
+          "churchId": {
+            "type": "string"
+          },
+          "sectionId": {
+            "type": "string"
+          },
+          "elementType": {
+            "type": "string"
+          },
+          "sort": {
+            "type": "number"
+          },
+          "data": {
+            "type": "object"
+          }
+        }
+      },
+      "Event": {
+        "type": "object",
+        "properties": {
+          "id": {
+            "type": "string"
+          },
+          "churchId": {
+            "type": "string"
+          },
+          "groupId": {
+            "type": "string"
+          },
+          "title": {
+            "type": "string"
+          },
+          "description": {
+            "type": "string"
+          },
+          "startTime": {
+            "type": "string",
+            "format": "date-time"
+          },
+          "endTime": {
+            "type": "string",
+            "format": "date-time"
+          }
+        }
+      },
+      "File": {
+        "type": "object",
+        "properties": {
+          "id": {
+            "type": "string"
+          },
+          "churchId": {
+            "type": "string"
+          },
+          "fileName": {
+            "type": "string"
+          },
+          "contentType": {
+            "type": "string"
+          },
+          "contentId": {
+            "type": "string"
+          },
+          "size": {
+            "type": "number"
+          }
+        }
+      },
+      "Page": {
+        "type": "object",
+        "properties": {
+          "id": {
+            "type": "string"
+          },
+          "churchId": {
+            "type": "string"
+          },
+          "parentId": {
+            "type": "string"
+          },
+          "name": {
+            "type": "string"
+          },
+          "path": {
+            "type": "string"
+          },
+          "title": {
+            "type": "string"
+          }
+        }
+      },
+      "Sermon": {
+        "type": "object",
+        "properties": {
+          "id": {
+            "type": "string"
+          },
+          "churchId": {
+            "type": "string"
+          },
+          "title": {
+            "type": "string"
+          },
+          "description": {
+            "type": "string"
+          },
+          "videoUrl": {
+            "type": "string"
+          },
+          "thumbnail": {
+            "type": "string"
+          },
+          "publishDate": {
+            "type": "string",
+            "format": "date-time"
+          }
+        }
+      },
+      "Song": {
+        "type": "object",
+        "properties": {
+          "id": {
+            "type": "string"
+          },
+          "churchId": {
+            "type": "string"
+          },
+          "title": {
+            "type": "string"
+          },
+          "artist": {
+            "type": "string"
+          },
+          "key": {
+            "type": "string"
+          },
+          "bpm": {
+            "type": "number"
+          }
+        }
+      }
+    }
+  },
+  "tags": [
+    {
+      "name": "Arrangements",
+      "description": "Manage song arrangements"
+    },
+    {
+      "name": "Arrangement Keys",
+      "description": "Manage arrangement keys and transpositions"
+    },
+    {
+      "name": "Bible",
+      "description": "Bible search and verse lookup functionality"
+    },
+    {
+      "name": "Blocks",
+      "description": "Manage reusable content blocks"
+    },
+    {
+      "name": "Curated Calendars",
+      "description": "Manage curated event calendars"
+    },
+    {
+      "name": "Curated Events",
+      "description": "Manage events in curated calendars"
+    },
+    {
+      "name": "Elements",
+      "description": "Manage page elements"
+    },
+    {
+      "name": "Events",
+      "description": "Manage church events"
+    },
+    {
+      "name": "Files",
+      "description": "File upload and management"
+    },
+    {
+      "name": "Pages",
+      "description": "Website page management"
+    },
+    {
+      "name": "Sermons",
+      "description": "Sermon and media content management"
+    },
+    {
+      "name": "Songs",
+      "description": "Song library management"
+    }
+  ]
+}
