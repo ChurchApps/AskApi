@@ -1,6 +1,6 @@
 import React, { useState } from 'react';
 import { AuthConfig } from '../App';
-import { UserHelper, ApiHelper } from '../helpers/ApiHelper';
+import { UserHelper, ApiHelper } from '@churchapps/apphelper';
 import { useUserContext, useUserContextLogout } from '../contexts/UserContext';
 import { LoginPage } from '@churchapps/apphelper-login';
 import { EnvironmentHelper } from '../helpers/EnvironmentHelper';
@@ -20,7 +20,7 @@ const AuthSection: React.FC<AuthSectionProps> = ({ auth, setAuth }) => {
     if (userContext.userChurch && userContext.userChurch.jwt) {
       // Set the JWT for API calls
       ApiHelper.setDefaultPermissions(userContext.userChurch.jwt);
-      
+
       // Update auth state
       setAuth({
         churchId: userContext.userChurch.church.id || '',
@@ -29,52 +29,32 @@ const AuthSection: React.FC<AuthSectionProps> = ({ auth, setAuth }) => {
         church: userContext.userChurch.church,
         user: userContext.userChurch
       });
-      
+
       // Store in UserHelper for persistence
       UserHelper.currentUserChurch = userContext.userChurch;
     }
     setShowLogin(false);
   };
 
-  const handleLogout = () => {
-    // Clear user data
-    UserHelper.logout();
-    
-    // Clear API authentication
-    ApiHelper.clearAuthentication();
-    
-    // Clear user context using our utility function
-    logout();
-    
-    // Clear auth state
-    setAuth({
-      churchId: '',
-      authToken: '',
-      isAuthenticated: false,
-      church: undefined,
-      user: undefined
-    });
-  };
-
   if (showLogin) {
     return (
       <div className="section">
         <div className="section-title">🔐 Authentication</div>
-        <LoginPage 
+        <LoginPage
           context={userContext}
           jwt=""
-          auth={EnvironmentHelper.getMembershipApiUrl()}
-          keyName="MembershipApi"
+          auth={""}
+          keyName=""
           appName="AskApi Playground"
           appUrl={window.location.origin}
           returnUrl="/"
           handleRedirect={handleLoginSuccess}
           showLogo={true}
         />
-        
+
         <div style={{ marginTop: '15px' }}>
-          <button 
-            className="btn btn-secondary" 
+          <button
+            className="btn btn-secondary"
             onClick={() => setShowLogin(false)}
           >
             Cancel
@@ -91,9 +71,9 @@ const AuthSection: React.FC<AuthSectionProps> = ({ auth, setAuth }) => {
         <div className="info-box">
           Please log in with your ChurchApps account to access the AskApi playground.
         </div>
-        
-        <button 
-          className="btn btn-primary" 
+
+        <button
+          className="btn btn-primary"
           onClick={() => setShowLogin(true)}
         >
           Login with ChurchApps
@@ -109,7 +89,7 @@ const AuthSection: React.FC<AuthSectionProps> = ({ auth, setAuth }) => {
         ✅ Successfully authenticated as <strong>{auth.user?.displayName || auth.user?.email}</strong>
         {auth.church?.name && <> at <strong>{auth.church.name}</strong></>}
       </div>
-      
+
       <div className="form-grid">
         <div className="form-group">
           <label>Church</label>
@@ -120,7 +100,7 @@ const AuthSection: React.FC<AuthSectionProps> = ({ auth, setAuth }) => {
             style={{ backgroundColor: '#f8f9fa' }}
           />
         </div>
-        
+
         <div className="form-group">
           <label>Church ID</label>
           <input
@@ -142,11 +122,7 @@ const AuthSection: React.FC<AuthSectionProps> = ({ auth, setAuth }) => {
         </div>
       </div>
 
-      <div className="button-group">
-        <button className="btn btn-secondary" onClick={handleLogout}>
-          Logout
-        </button>
-      </div>
+
     </div>
   );
 };

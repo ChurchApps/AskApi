@@ -1,6 +1,6 @@
 import React, { useState } from 'react';
 import { AuthConfig, APIResponse } from '../App';
-import { ApiHelper } from '../helpers/ApiHelper';
+import { ApiHelper } from '@churchapps/apphelper';
 
 interface QuestionsAPIProps {
   auth: AuthConfig;

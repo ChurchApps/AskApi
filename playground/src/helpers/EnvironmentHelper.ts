@@ -1,17 +1,16 @@
-import { ApiHelper } from './ApiHelper';
-import { CommonEnvironmentHelper } from '@churchapps/helpers';
+import { CommonEnvironmentHelper, ApiHelper } from "@churchapps/apphelper";
 
 export class EnvironmentHelper {
   static initialized = false;
 
   static init = () => {
     if (this.initialized) return;
-    
+
     let stage = process.env.REACT_APP_STAGE || process.env.NODE_ENV;
-    
+
     // First initialize CommonEnvironmentHelper with base URLs
     CommonEnvironmentHelper.init(stage || "development");
-    
+
     // Then apply environment-specific overrides
     if (stage === "production") {
       this.initProd();
@@ -27,7 +26,7 @@ export class EnvironmentHelper {
 
   static initDev = () => {
     console.log("Initializing development environment");
-    
+
     // Override with environment variables if provided
     if (process.env.REACT_APP_MEMBERSHIP_API) {
       CommonEnvironmentHelper.MembershipApi = process.env.REACT_APP_MEMBERSHIP_API;
@@ -40,20 +39,14 @@ export class EnvironmentHelper {
 
   static initStaging = () => {
     console.log("Initializing staging environment");
-    
-    // Override with environment variables if provided
-    if (process.env.REACT_APP_MEMBERSHIP_API) {
-      CommonEnvironmentHelper.MembershipApi = process.env.REACT_APP_MEMBERSHIP_API;
-    }
+
+
   };
 
   static initProd = () => {
     console.log("Initializing production environment");
-    
-    // Override with environment variables if provided  
-    if (process.env.REACT_APP_MEMBERSHIP_API) {
-      CommonEnvironmentHelper.MembershipApi = process.env.REACT_APP_MEMBERSHIP_API;
-    }
+
+
   };
 
   static populateApiConfigs = () => {
@@ -62,24 +55,15 @@ export class EnvironmentHelper {
     const askApiUrl = this.getAskApiUrl();
 
     ApiHelper.apiConfigs = [
-      {
-        keyName: "MembershipApi",
-        url: membershipApiUrl,
-        jwt: "",
-        permissionsWithoutChurch: []
-      },
-      {
-        keyName: "AskApi", 
-        url: askApiUrl,
-        jwt: "",
-        permissionsWithoutChurch: []
-      }
+      { keyName: "AttendanceApi", url: CommonEnvironmentHelper.AttendanceApi, jwt: "", permissions: [] },
+      { keyName: "GivingApi", url: CommonEnvironmentHelper.GivingApi, jwt: "", permissions: [] },
+      { keyName: "MembershipApi", url: CommonEnvironmentHelper.MembershipApi, jwt: "", permissions: [] },
+      { keyName: "MessagingApi", url: CommonEnvironmentHelper.MessagingApi, jwt: "", permissions: [] },
+      { keyName: "ReportingApi", url: CommonEnvironmentHelper.ReportingApi, jwt: "", permissions: [] },
+      { keyName: "DoingApi", url: CommonEnvironmentHelper.DoingApi, jwt: "", permissions: [] },
+      { keyName: "ContentApi", url: CommonEnvironmentHelper.ContentApi, jwt: "", permissions: [] },
+      { keyName: "AskApi", url: askApiUrl, jwt: "", permissions: [] },
     ];
-
-    console.log("API Configurations:", {
-      MembershipApi: membershipApiUrl,
-      AskApi: askApiUrl
-    });
   };
 
   static getMembershipApiUrl = (): string => {
@@ -87,15 +71,15 @@ export class EnvironmentHelper {
     if (process.env.REACT_APP_MEMBERSHIP_API) {
       return process.env.REACT_APP_MEMBERSHIP_API;
     }
-    
+
     // Then check CommonEnvironmentHelper
     if (CommonEnvironmentHelper.MembershipApi) {
       return CommonEnvironmentHelper.MembershipApi;
     }
-    
+
     // Fall back to stage-based defaults
     const stage = process.env.REACT_APP_STAGE || process.env.NODE_ENV;
-    
+
     switch (stage) {
       case "production":
         return "https://api.churchapps.org/membership";
@@ -113,7 +97,7 @@ export class EnvironmentHelper {
     }
 
     const stage = process.env.REACT_APP_STAGE || process.env.NODE_ENV;
-    
+
     switch (stage) {
       case "production":
         return "https://askapi.churchapps.org";
