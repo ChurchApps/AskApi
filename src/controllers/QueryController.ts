@@ -32,16 +32,9 @@ export class QueryController extends AskBaseController {
   @httpPost("/ask")
   public async askQuestion(req: express.Request<{}, {}, any>, res: express.Response): Promise<any> {
     return this.actionWrapper(req, res, async (au) => {
-      console.log("=== /query/ask API Request ===");
-      console.log("Request payload:", JSON.stringify(req.body, null, 2));
-      console.log("Auth info - churchId:", au.churchId, "userId:", au.personId);
-      
       const { question, tokens } = req.body;
-      console.log("Extracted question:", question);
-      console.log("Extracted tokens:", tokens ? Object.keys(tokens) : "No tokens provided");
 
       try {
-        console.log("initializing OpenAI", question);
         // Initialize OpenAI
         await OpenAiHelper.initialize();
 
@@ -82,10 +75,6 @@ export class QueryController extends AskBaseController {
           processingTime: seconds
         };
         
-        console.log("=== /query/ask API Response ===");
-        console.log("Response:", JSON.stringify(response, null, 2));
-        console.log("Total processing time:", seconds, "seconds");
-        console.log("================================\n");
 
         // Return the answer
         return response;
