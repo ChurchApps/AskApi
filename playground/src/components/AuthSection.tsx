@@ -43,8 +43,8 @@ const AuthSection: React.FC<AuthSectionProps> = ({ auth, setAuth }) => {
         <LoginPage
           context={userContext}
           jwt=""
-          auth={""}
-          keyName=""
+          auth={EnvironmentHelper.getMembershipApiUrl()}
+          keyName="MembershipApi"
           appName="AskApi Playground"
           appUrl={window.location.origin}
           returnUrl="/"
@@ -110,17 +110,44 @@ const AuthSection: React.FC<AuthSectionProps> = ({ auth, setAuth }) => {
             style={{ backgroundColor: '#f8f9fa' }}
           />
         </div>
-
-        <div className="form-group">
-          <label>JWT Token</label>
-          <input
-            type="text"
-            value={auth.authToken ? `${auth.authToken.substring(0, 30)}...` : ''}
-            disabled
-            style={{ backgroundColor: '#f8f9fa', fontFamily: 'monospace', fontSize: '0.85em' }}
-          />
-        </div>
       </div>
+
+      {/* Display JWT tokens for all APIs */}
+      {userContext.userChurch?.apis && userContext.userChurch.apis.length > 0 && (
+        <div className="api-tokens-section">
+          <h4>API JWT Tokens</h4>
+          <div className="api-tokens-grid">
+            {userContext.userChurch.apis.map((api: any, index: number) => (
+              <div key={index} className="api-token-item">
+                <div className="api-token-header">
+                  <strong>{api.keyName}</strong>
+                  <span className="permission-count">
+                    ({api.permissions?.length || 0} permissions)
+                  </span>
+                </div>
+                <input
+                  type="text"
+                  value={api.jwt ? `${api.jwt.substring(0, 40)}...` : 'No token'}
+                  disabled
+                  style={{ 
+                    backgroundColor: '#f8f9fa', 
+                    fontFamily: 'monospace', 
+                    fontSize: '0.75em',
+                    width: '100%',
+                    marginTop: '5px'
+                  }}
+                />
+                {api.permissions && api.permissions.length > 0 && (
+                  <div className="permissions-list">
+                    <small>Permissions: {api.permissions.slice(0, 3).map((p: any) => p.action).join(', ')}
+                    {api.permissions.length > 3 && ` +${api.permissions.length - 3} more`}</small>
+                  </div>
+                )}
+              </div>
+            ))}
+          </div>
+        </div>
+      )}
 
 
     </div>
