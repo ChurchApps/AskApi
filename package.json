@@ -26,7 +26,7 @@
     "dev": "nodemon --watch src -e ts,ejs --exec \"ts-node src/index.ts\"",
     "start": "node .",
     "playground": "cd playground && npm start",
-    "dev:with-playground": "npm-run-all --parallel dev playground",
+    "dev:with-playground": "npm-run-all --parallel playground dev",
     "test": "echo \"Error: no test specified\" && exit 1",
     "serverless-local": "serverless invoke local -f api"
   },

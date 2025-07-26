@@ -49,7 +49,7 @@ export class OpenAiHelper {
   public static async getCompletion(prompt: string, subDomain?: string, siteUrl?: string) {
     if (this.provider === "openai") {
       const response = await this.openai.chat.completions.create({
-        model: "gpt-4",
+        model: "gpt-4.1-mini",
         messages: [
           {
             role: "system",
@@ -200,7 +200,7 @@ If no APIs are needed, return an empty array: []`;
 
     if (this.provider === "openai") {
       const response = await this.openai.chat.completions.create({
-        model: "gpt-4",
+        model: "gpt-4.1-mini",
         messages: [
           { role: "system", content: "You are an API routing assistant." },
           { role: "user", content: prompt }
@@ -292,7 +292,7 @@ Please provide a helpful and accurate answer based on the available information.
   private static async getAnswerCompletion(prompt: string): Promise<any> {
     if (this.provider === "openai") {
       const response = await this.openai.chat.completions.create({
-        model: "gpt-4",
+        model: "gpt-4.1-mini",
         messages: [
           {
             role: "system",
