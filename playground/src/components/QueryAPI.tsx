@@ -1,13 +1,14 @@
 import React, { useState } from 'react';
-import { AuthConfig, APIResponse } from '../App';
+import { APIResponse } from '../App';
 import { ApiHelper } from '@churchapps/apphelper';
+import { useUserContext } from '../contexts/UserContext';
 
 interface QueryAPIProps {
-  auth: AuthConfig;
   setResponse: (response: APIResponse) => void;
 }
 
-const QueryAPI: React.FC<QueryAPIProps> = ({ auth, setResponse }) => {
+const QueryAPI: React.FC<QueryAPIProps> = ({ setResponse }) => {
+  const { userChurch } = useUserContext();
   const [queryText, setQueryText] = useState('');
   const [subDomain, setSubDomain] = useState('');
   const [siteUrl, setSiteUrl] = useState('');
@@ -29,7 +30,7 @@ const QueryAPI: React.FC<QueryAPIProps> = ({ auth, setResponse }) => {
   };
 
   const sendQueryRequest = async () => {
-    if (!auth.isAuthenticated || !auth.authToken) {
+    if (!userChurch || !userChurch.jwt) {
       alert('Please log in first');
       return;
     }

@@ -33,12 +33,18 @@ export const init = async () => {
       res.sendStatus(200);
     });
 
-    // Handle body parsing from @codegenie/serverless-express
-    expApp.use((req, res, next) => {
-      const contentType = req.headers["content-type"] || "";
+    // Add standard Express JSON parsing middleware
+    expApp.use(express.json({ limit: '10mb' }));
+    expApp.use(express.urlencoded({ extended: true, limit: '10mb' }));
 
-      // Mark request as already having body parsed to prevent further body parsing attempts
-      (req as any)._body = true;
+    // Handle body parsing from @codegenie/serverless-express (for Lambda deployment)
+    expApp.use((req, res, next) => {
+      // Skip if body is already parsed as an object (from express.json())
+      if (req.body && typeof req.body === 'object' && !Buffer.isBuffer(req.body)) {
+        return next();
+      }
+
+      const contentType = req.headers["content-type"] || "";
 
       // Handle Buffer instances (most common case with serverless-express)
       if (Buffer.isBuffer(req.body)) {

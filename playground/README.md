@@ -39,11 +39,12 @@ Or from the playground directory:
 npm start
 ```
 
-The playground will open at `http://localhost:3000` and connect to the configured API endpoints based on the environment.
+The playground will open at `http://localhost:3097` and connect to the configured API endpoints based on the environment.
 
 ## API Endpoints Tested
 
 ### Questions API
+
 - `GET /questions` - Get all questions
 - `GET /questions/:id` - Get specific question
 - `GET /questions?userId=` - Get questions by user
@@ -52,6 +53,7 @@ The playground will open at `http://localhost:3000` and connect to the configure
 - `DELETE /questions/:id` - Delete question
 
 ### Query API
+
 - `POST /query/questions` - Natural language query processing
 
 ## Authentication
@@ -98,7 +100,7 @@ The playground supports multiple environments using the shared `CommonEnvironmen
 The playground automatically configures API URLs based on the environment:
 
 - **Development**: Uses staging URLs by default, with optional localhost overrides
-- **Staging**: Uses `https://membershipapi.staging.churchapps.org` for MembershipApi and `https://askapi.staging.churchapps.org` for AskApi  
+- **Staging**: Uses `https://membershipapi.staging.churchapps.org` for MembershipApi and `https://askapi.staging.churchapps.org` for AskApi
 - **Production**: Uses `https://membershipapi.churchapps.org` for MembershipApi and `https://askapi.churchapps.org` for AskApi
 
 ### CommonEnvironmentHelper Integration
@@ -125,6 +127,7 @@ The playground displays the current environment and API URLs in the header for t
 ## Natural Language Queries
 
 Example queries you can test:
+
 - "Show me all questions about baptism"
 - "Find answered questions from this month"
 - "Questions with more than 100 input tokens"

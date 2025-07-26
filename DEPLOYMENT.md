@@ -33,4 +33,4 @@ npm run dev          # API only
 npm run playground   # Playground only
 ```
 
-The playground will be available at `http://localhost:3000` and will proxy API requests to `http://localhost:8097`.
+The playground will be available at `http://localhost:3097` and will proxy API requests to `http://localhost:8097`.

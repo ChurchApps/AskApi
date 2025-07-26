@@ -53,12 +53,12 @@ export class OpenAiHelper {
         messages: [
           {
             role: "system",
-            content: "You are an API assistant for a church Q&A system.",
+            content: "You are an API assistant for a church Q&A system."
           },
-          { role: "user", content: prompt },
+          { role: "user", content: prompt }
         ],
         temperature: 0.7,
-        max_tokens: 500,
+        max_tokens: 500
       });
 
       return this.parseAIResponse(response.choices[0]?.message?.content || "");
@@ -72,18 +72,18 @@ export class OpenAiHelper {
           messages: [
             {
               role: "system",
-              content: "You are an API assistant for a church Q&A system.",
+              content: "You are an API assistant for a church Q&A system."
             },
-            { role: "user", content: prompt },
-          ],
+            { role: "user", content: prompt }
+          ]
         },
         {
           headers: {
             Authorization: `Bearer ${this.OPENROUTER_API_KEY}`,
             "Content-Type": "application/json",
             "HTTP-Referer": siteUrl,
-            "X-Title": subDomain,
-          },
+            "X-Title": subDomain
+          }
         }
       );
 
@@ -143,9 +143,9 @@ export class OpenAiHelper {
     }
   }
 
-  public static async askQuestion(question: string, tokens: ApiTokens, subDomain?: string, siteUrl?: string): Promise<AskQuestionResult> {
+  public static async askQuestion(question: string, tokens: ApiTokens): Promise<AskQuestionResult> {
     const startTime = Date.now();
-    
+
     try {
       await this.initialize();
 
@@ -155,7 +155,7 @@ export class OpenAiHelper {
 
       // Determine which APIs are needed based on the question
       const apiDetermination = await this.determineRequiredApis(question, instructions);
-      
+
       // Call the required APIs
       const apiResponses = await this.callRequiredApis(apiDetermination, tokens);
 
@@ -163,7 +163,7 @@ export class OpenAiHelper {
       const finalPrompt = this.buildAnswerPrompt(question, instructions, apiResponses);
 
       // Get the answer from OpenAI/OpenRouter
-      const result = await this.getAnswerCompletion(finalPrompt, subDomain, siteUrl);
+      const result = await this.getAnswerCompletion(finalPrompt);
 
       const endTime = Date.now();
 
@@ -208,7 +208,7 @@ If no APIs are needed, return an empty array: []`;
         temperature: 0,
         max_tokens: 100
       });
-      
+
       const content = response.choices[0]?.message?.content || "[]";
       return JSON.parse(content.trim());
     }
@@ -242,12 +242,12 @@ If no APIs are needed, return an empty array: []`;
 
   private static async callRequiredApis(apiNames: string[], tokens: ApiTokens): Promise<Record<string, any>> {
     const apiResponses: Record<string, any> = {};
-    
+
     for (const apiName of apiNames) {
       const lowerApiName = apiName.toLowerCase();
       const tokenKey = `${lowerApiName}Token` as keyof ApiTokens;
       const token = tokens[tokenKey];
-      
+
       if (!token) {
         apiResponses[apiName] = { error: `No token provided for ${apiName}` };
         continue;
@@ -256,7 +256,7 @@ If no APIs are needed, return an empty array: []`;
       // Read the swagger file for the API
       const swaggerPath = path.join(__dirname, `../../config/swagger/${lowerApiName}.json`);
       let swaggerContent: any = {};
-      
+
       try {
         swaggerContent = JSON.parse(fs.readFileSync(swaggerPath, "utf-8"));
       } catch (error) {
@@ -289,7 +289,7 @@ User Question: "${question}"
 Please provide a helpful and accurate answer based on the available information. If you need to make API calls to get specific data, explain what data would be needed and from which endpoints.`;
   }
 
-  private static async getAnswerCompletion(prompt: string, subDomain?: string, siteUrl?: string): Promise<any> {
+  private static async getAnswerCompletion(prompt: string): Promise<any> {
     if (this.provider === "openai") {
       const response = await this.openai.chat.completions.create({
         model: "gpt-4",
@@ -331,8 +331,8 @@ Please provide a helpful and accurate answer based on the available information.
           headers: {
             Authorization: `Bearer ${this.OPENROUTER_API_KEY}`,
             "Content-Type": "application/json",
-            "HTTP-Referer": siteUrl,
-            "X-Title": subDomain
+            "HTTP-Referer": "https://chums.org",
+            "X-Title": "Chums"
           }
         }
       );

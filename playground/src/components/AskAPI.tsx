@@ -1,11 +1,10 @@
 import React, { useState, useEffect } from 'react';
 import axios from 'axios';
-import { AuthConfig, APIResponse } from '../App';
+import { APIResponse } from '../App';
 import { EnvironmentHelper } from '../helpers/EnvironmentHelper';
 import { useUserContext } from '../contexts/UserContext';
 
 interface AskAPIProps {
-  auth: AuthConfig;
   setResponse: (response: APIResponse) => void;
 }
 
@@ -19,7 +18,7 @@ interface ApiTokens {
   reportingApiToken: string;
 }
 
-const AskAPI: React.FC<AskAPIProps> = ({ auth, setResponse }) => {
+const AskAPI: React.FC<AskAPIProps> = ({ setResponse }) => {
   const { userChurch } = useUserContext();
   const [question, setQuestion] = useState('');
   const [tokens, setTokens] = useState<ApiTokens>({
@@ -106,7 +105,7 @@ const AskAPI: React.FC<AskAPIProps> = ({ auth, setResponse }) => {
         },
         {
           headers: {
-            'Authorization': `Bearer ${auth.authToken}`,
+            'Authorization': `Bearer ${userChurch?.jwt || ''}`,
             'Content-Type': 'application/json'
           }
         }
@@ -128,17 +127,19 @@ const AskAPI: React.FC<AskAPIProps> = ({ auth, setResponse }) => {
     }
   };
 
-  // Use the auth token for all APIs by default if tokens are not provided
+  // Use the userChurch JWT token for all APIs by default if tokens are not provided
   const handleUseAuthToken = () => {
-    setTokens({
-      attendanceApiToken: auth.authToken,
-      contentApiToken: auth.authToken,
-      doingApiToken: auth.authToken,
-      givingApiToken: auth.authToken,
-      membershipApiToken: auth.authToken,
-      messagingApiToken: auth.authToken,
-      reportingApiToken: auth.authToken
-    });
+    if (userChurch?.jwt) {
+      setTokens({
+        attendanceApiToken: userChurch.jwt,
+        contentApiToken: userChurch.jwt,
+        doingApiToken: userChurch.jwt,
+        givingApiToken: userChurch.jwt,
+        membershipApiToken: userChurch.jwt,
+        messagingApiToken: userChurch.jwt,
+        reportingApiToken: userChurch.jwt
+      });
+    }
   };
 
   return (

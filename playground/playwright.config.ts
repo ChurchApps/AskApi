@@ -8,7 +8,7 @@ export default defineConfig({
   workers: process.env.CI ? 1 : undefined,
   reporter: 'html',
   use: {
-    baseURL: 'http://localhost:3000',
+    baseURL: 'http://localhost:3097',
     trace: 'on-first-retry',
     screenshot: 'only-on-failure',
     video: 'retain-on-failure',
@@ -31,7 +31,7 @@ export default defineConfig({
 
   webServer: {
     command: 'npm start',
-    port: 3000,
+    port: 3097,
     timeout: 120 * 1000,
     reuseExistingServer: !process.env.CI,
   },

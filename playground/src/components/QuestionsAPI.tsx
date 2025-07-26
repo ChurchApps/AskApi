@@ -1,13 +1,14 @@
 import React, { useState } from 'react';
-import { AuthConfig, APIResponse } from '../App';
+import { APIResponse } from '../App';
 import { ApiHelper } from '@churchapps/apphelper';
+import { useUserContext } from '../contexts/UserContext';
 
 interface QuestionsAPIProps {
-  auth: AuthConfig;
   setResponse: (response: APIResponse) => void;
 }
 
-const QuestionsAPI: React.FC<QuestionsAPIProps> = ({ auth, setResponse }) => {
+const QuestionsAPI: React.FC<QuestionsAPIProps> = ({ setResponse }) => {
+  const { userChurch } = useUserContext();
   const [endpoint, setEndpoint] = useState('/questions');
   const [method, setMethod] = useState('GET');
   const [requestBody, setRequestBody] = useState('');
@@ -45,7 +46,7 @@ const QuestionsAPI: React.FC<QuestionsAPIProps> = ({ auth, setResponse }) => {
   };
 
   const sendRequest = async () => {
-    if (!auth.isAuthenticated || !auth.authToken) {
+    if (!userChurch || !userChurch.jwt) {
       alert('Please log in first');
       return;
     }

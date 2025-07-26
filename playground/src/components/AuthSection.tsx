@@ -1,40 +1,20 @@
 import React, { useState } from 'react';
-import { AuthConfig } from '../App';
-import { UserHelper, ApiHelper } from '@churchapps/apphelper';
-import { useUserContext, useUserContextLogout } from '../contexts/UserContext';
+import { useUserContext } from '../contexts/UserContext';
 import { LoginPage } from '@churchapps/apphelper-login';
-import { EnvironmentHelper } from '../helpers/EnvironmentHelper';
 
-interface AuthSectionProps {
-  auth: AuthConfig;
-  setAuth: (auth: AuthConfig) => void;
-}
-
-const AuthSection: React.FC<AuthSectionProps> = ({ auth, setAuth }) => {
+const AuthSection: React.FC = () => {
   const [showLogin, setShowLogin] = useState(false);
   const userContext = useUserContext();
+  const { userChurch } = userContext;
 
   const handleLoginSuccess = (redirectUrl?: string) => {
-    // Check if userChurch has valid data (non-empty jwt indicates successful login)
-    console.log(userContext.userChurch);
-    if (userContext.userChurch && userContext.userChurch.jwt) {
-      // Set the JWT for API calls
-      ApiHelper.setDefaultPermissions(userContext.userChurch.jwt);
-
-      // Update auth state
-      setAuth({
-        churchId: userContext.userChurch.church.id || '',
-        authToken: userContext.userChurch.jwt,
-        isAuthenticated: true,
-        church: userContext.userChurch.church,
-        user: userContext.userChurch
-      });
-
-      // Store in UserHelper for persistence
-      UserHelper.currentUserChurch = userContext.userChurch;
-    }
+    // Login is successful when userChurch has a JWT
+    // The LoginPage component will have already updated the context
     setShowLogin(false);
   };
+
+  // User is authenticated if userChurch has a JWT
+  const isAuthenticated = !!(userChurch && userChurch.jwt);
 
   if (showLogin) {
     return (
@@ -64,7 +44,7 @@ const AuthSection: React.FC<AuthSectionProps> = ({ auth, setAuth }) => {
     );
   }
 
-  if (!auth.isAuthenticated) {
+  if (!isAuthenticated) {
     return (
       <div className="section">
         <div className="section-title">🔐 Authentication</div>
@@ -86,8 +66,8 @@ const AuthSection: React.FC<AuthSectionProps> = ({ auth, setAuth }) => {
     <div className="section">
       <div className="section-title">🔐 Authentication</div>
       <div className="info-box" style={{ backgroundColor: '#27ae60' }}>
-        ✅ Successfully authenticated as <strong>{auth.user?.displayName || auth.user?.email}</strong>
-        {auth.church?.name && <> at <strong>{auth.church.name}</strong></>}
+        ✅ Successfully authenticated as <strong>{userChurch.person?.name?.display || userChurch.person?.contactInfo?.email}</strong>
+        {userChurch.church?.name && <> at <strong>{userChurch.church.name}</strong></>}
       </div>
 
       <div className="form-grid">
@@ -95,7 +75,7 @@ const AuthSection: React.FC<AuthSectionProps> = ({ auth, setAuth }) => {
           <label>Church</label>
           <input
             type="text"
-            value={auth.church?.name || 'No church selected'}
+            value={userChurch.church?.name || 'No church selected'}
             disabled
             style={{ backgroundColor: '#f8f9fa' }}
           />
@@ -105,7 +85,7 @@ const AuthSection: React.FC<AuthSectionProps> = ({ auth, setAuth }) => {
           <label>Church ID</label>
           <input
             type="text"
-            value={auth.churchId}
+            value={userChurch.church?.id || ''}
             disabled
             style={{ backgroundColor: '#f8f9fa' }}
           />
@@ -113,11 +93,11 @@ const AuthSection: React.FC<AuthSectionProps> = ({ auth, setAuth }) => {
       </div>
 
       {/* Display JWT tokens for all APIs */}
-      {userContext.userChurch?.apis && userContext.userChurch.apis.length > 0 && (
+      {userChurch?.apis && userChurch.apis.length > 0 && (
         <div className="api-tokens-section">
           <h4>API JWT Tokens</h4>
           <div className="api-tokens-grid">
-            {userContext.userChurch.apis.map((api: any, index: number) => (
+            {userChurch.apis.map((api: any, index: number) => (
               <div key={index} className="api-token-item">
                 <div className="api-token-header">
                   <strong>{api.keyName}</strong>
