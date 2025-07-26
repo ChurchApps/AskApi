@@ -13,10 +13,10 @@ interface AuthSectionProps {
 const AuthSection: React.FC<AuthSectionProps> = ({ auth, setAuth }) => {
   const [showLogin, setShowLogin] = useState(false);
   const userContext = useUserContext();
-  const logout = useUserContextLogout();
 
   const handleLoginSuccess = (redirectUrl?: string) => {
     // Check if userChurch has valid data (non-empty jwt indicates successful login)
+    console.log(userContext.userChurch);
     if (userContext.userChurch && userContext.userChurch.jwt) {
       // Set the JWT for API calls
       ApiHelper.setDefaultPermissions(userContext.userChurch.jwt);
