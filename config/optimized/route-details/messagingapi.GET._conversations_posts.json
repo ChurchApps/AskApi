@@ -1,0 +1,21 @@
+{
+  "routeKey": "messagingapi.GET._conversations_posts",
+  "parameters": [],
+  "responses": {
+    "200": {
+      "description": "User's conversations with messages",
+      "content": {
+        "application/json": {
+          "schema": {
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/Conversation"
+            }
+          }
+        }
+      }
+    }
+  },
+  "security": [],
+  "examples": []
+}

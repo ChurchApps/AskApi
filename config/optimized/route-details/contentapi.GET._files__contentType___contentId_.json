@@ -1,0 +1,38 @@
+{
+  "routeKey": "contentapi.GET._files__contentType___contentId_",
+  "parameters": [
+    {
+      "name": "contentType",
+      "in": "path",
+      "required": true,
+      "schema": {
+        "type": "string"
+      }
+    },
+    {
+      "name": "contentId",
+      "in": "path",
+      "required": true,
+      "schema": {
+        "type": "string"
+      }
+    }
+  ],
+  "responses": {
+    "200": {
+      "description": "Successful response",
+      "content": {
+        "application/json": {
+          "schema": {
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/File"
+            }
+          }
+        }
+      }
+    }
+  },
+  "security": [],
+  "examples": []
+}

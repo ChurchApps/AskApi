@@ -1,0 +1,18 @@
+{
+  "routeKey": "messagingapi.GET._notifications_tmpEmail",
+  "parameters": [],
+  "responses": {
+    "200": {
+      "description": "Email notifications processed",
+      "content": {
+        "application/json": {
+          "schema": {
+            "type": "object"
+          }
+        }
+      }
+    }
+  },
+  "security": [],
+  "examples": []
+}

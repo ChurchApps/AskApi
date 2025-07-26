@@ -1,0 +1,43 @@
+{
+  "routeKey": "doingapi.POST._tasks",
+  "parameters": [
+    {
+      "name": "type",
+      "in": "query",
+      "schema": {
+        "type": "string"
+      },
+      "description": "Optional task type"
+    }
+  ],
+  "requestBody": {
+    "required": true,
+    "content": {
+      "application/json": {
+        "schema": {
+          "type": "array",
+          "items": {
+            "$ref": "#/components/schemas/Task"
+          }
+        }
+      }
+    }
+  },
+  "responses": {
+    "200": {
+      "description": "Successful response",
+      "content": {
+        "application/json": {
+          "schema": {
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/Task"
+            }
+          }
+        }
+      }
+    }
+  },
+  "security": [],
+  "examples": []
+}

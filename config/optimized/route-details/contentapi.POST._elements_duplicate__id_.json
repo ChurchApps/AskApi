@@ -1,0 +1,27 @@
+{
+  "routeKey": "contentapi.POST._elements_duplicate__id_",
+  "parameters": [
+    {
+      "name": "id",
+      "in": "path",
+      "required": true,
+      "schema": {
+        "type": "string"
+      }
+    }
+  ],
+  "responses": {
+    "200": {
+      "description": "Successful response"
+    }
+  },
+  "security": [
+    {
+      "bearerAuth": [],
+      "permissions": [
+        "content.edit"
+      ]
+    }
+  ],
+  "examples": []
+}

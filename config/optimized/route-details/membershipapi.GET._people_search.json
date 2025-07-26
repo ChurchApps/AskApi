@@ -1,0 +1,43 @@
+{
+  "routeKey": "membershipapi.GET._people_search",
+  "parameters": [
+    {
+      "name": "term",
+      "in": "query",
+      "schema": {
+        "type": "string"
+      }
+    },
+    {
+      "name": "email",
+      "in": "query",
+      "schema": {
+        "type": "string"
+      }
+    }
+  ],
+  "responses": {
+    "200": {
+      "description": "Search results",
+      "content": {
+        "application/json": {
+          "schema": {
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/Person"
+            }
+          }
+        }
+      }
+    },
+    "401": {
+      "description": "Unauthorized"
+    }
+  },
+  "security": [
+    {
+      "bearerAuth": []
+    }
+  ],
+  "examples": []
+}

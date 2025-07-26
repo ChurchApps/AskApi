@@ -1,0 +1,39 @@
+{
+  "routeKey": "messagingapi.GET._devices_deviceId__deviceId_",
+  "parameters": [
+    {
+      "name": "deviceId",
+      "in": "path",
+      "required": true,
+      "schema": {
+        "type": "string"
+      }
+    }
+  ],
+  "responses": {
+    "200": {
+      "description": "Device with pairing status",
+      "content": {
+        "application/json": {
+          "schema": {
+            "allOf": [
+              {
+                "$ref": "#/components/schemas/Device"
+              },
+              {
+                "type": "object",
+                "properties": {
+                  "paired": {
+                    "type": "boolean"
+                  }
+                }
+              }
+            ]
+          }
+        }
+      }
+    }
+  },
+  "security": [],
+  "examples": []
+}

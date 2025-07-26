@@ -1,0 +1,21 @@
+{
+  "routeKey": "messagingapi.GET._devices_my",
+  "parameters": [],
+  "responses": {
+    "200": {
+      "description": "User's devices",
+      "content": {
+        "application/json": {
+          "schema": {
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/Device"
+            }
+          }
+        }
+      }
+    }
+  },
+  "security": [],
+  "examples": []
+}

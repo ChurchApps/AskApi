@@ -1,0 +1,35 @@
+{
+  "routeKey": "attendanceapi.POST._visitsessions_log",
+  "parameters": [],
+  "requestBody": {
+    "required": true,
+    "content": {
+      "application/json": {
+        "schema": {
+          "$ref": "#/components/schemas/Visit"
+        }
+      }
+    }
+  },
+  "responses": {
+    "200": {
+      "description": "Successful response",
+      "content": {
+        "application/json": {
+          "schema": {
+            "type": "object"
+          }
+        }
+      }
+    }
+  },
+  "security": [
+    {
+      "bearerAuth": [],
+      "permissions": [
+        "attendance.edit"
+      ]
+    }
+  ],
+  "examples": []
+}

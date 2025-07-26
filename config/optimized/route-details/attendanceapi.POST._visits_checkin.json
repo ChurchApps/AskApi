@@ -1,0 +1,57 @@
+{
+  "routeKey": "attendanceapi.POST._visits_checkin",
+  "parameters": [
+    {
+      "name": "serviceId",
+      "in": "query",
+      "required": true,
+      "schema": {
+        "type": "string"
+      }
+    },
+    {
+      "name": "peopleIds",
+      "in": "query",
+      "required": true,
+      "schema": {
+        "type": "string"
+      },
+      "description": "Comma-separated list of person IDs"
+    }
+  ],
+  "requestBody": {
+    "required": true,
+    "content": {
+      "application/json": {
+        "schema": {
+          "type": "array",
+          "items": {
+            "$ref": "#/components/schemas/Visit"
+          }
+        }
+      }
+    }
+  },
+  "responses": {
+    "200": {
+      "description": "Successful response",
+      "content": {
+        "application/json": {
+          "schema": {
+            "type": "array"
+          }
+        }
+      }
+    }
+  },
+  "security": [
+    {
+      "bearerAuth": [],
+      "permissions": [
+        "attendance.edit",
+        "attendance.checkin"
+      ]
+    }
+  ],
+  "examples": []
+}

@@ -1,0 +1,23 @@
+{
+  "routeKey": "doingapi.GET._automations_check",
+  "parameters": [],
+  "responses": {
+    "200": {
+      "description": "Automation check triggered",
+      "content": {
+        "application/json": {
+          "schema": {
+            "type": "object",
+            "properties": {
+              "success": {
+                "type": "boolean"
+              }
+            }
+          }
+        }
+      }
+    }
+  },
+  "security": [],
+  "examples": []
+}

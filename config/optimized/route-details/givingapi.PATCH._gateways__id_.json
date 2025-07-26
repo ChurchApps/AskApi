@@ -1,0 +1,44 @@
+{
+  "routeKey": "givingapi.PATCH._gateways__id_",
+  "parameters": [
+    {
+      "name": "id",
+      "in": "path",
+      "required": true,
+      "schema": {
+        "type": "string"
+      }
+    }
+  ],
+  "requestBody": {
+    "required": true,
+    "content": {
+      "application/json": {
+        "schema": {
+          "$ref": "#/components/schemas/Gateway"
+        }
+      }
+    }
+  },
+  "responses": {
+    "200": {
+      "description": "Updated gateway",
+      "content": {
+        "application/json": {
+          "schema": {
+            "$ref": "#/components/schemas/Gateway"
+          }
+        }
+      }
+    }
+  },
+  "security": [
+    {
+      "bearerAuth": [],
+      "permissions": [
+        "settings.edit"
+      ]
+    }
+  ],
+  "examples": []
+}

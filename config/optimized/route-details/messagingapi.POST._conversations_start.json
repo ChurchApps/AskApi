@@ -1,0 +1,45 @@
+{
+  "routeKey": "messagingapi.POST._conversations_start",
+  "parameters": [],
+  "requestBody": {
+    "required": true,
+    "content": {
+      "application/json": {
+        "schema": {
+          "type": "object",
+          "properties": {
+            "groupId": {
+              "type": "string"
+            },
+            "contentType": {
+              "type": "string"
+            },
+            "contentId": {
+              "type": "string"
+            },
+            "title": {
+              "type": "string"
+            },
+            "comment": {
+              "type": "string"
+            }
+          }
+        }
+      }
+    }
+  },
+  "responses": {
+    "200": {
+      "description": "Created conversation",
+      "content": {
+        "application/json": {
+          "schema": {
+            "$ref": "#/components/schemas/Conversation"
+          }
+        }
+      }
+    }
+  },
+  "security": [],
+  "examples": []
+}

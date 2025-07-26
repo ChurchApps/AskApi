@@ -1,0 +1,21 @@
+{
+  "routeKey": "messagingapi.GET._privateMessages",
+  "parameters": [],
+  "responses": {
+    "200": {
+      "description": "User's private messages",
+      "content": {
+        "application/json": {
+          "schema": {
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/PrivateMessage"
+            }
+          }
+        }
+      }
+    }
+  },
+  "security": [],
+  "examples": []
+}

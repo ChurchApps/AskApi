@@ -1,0 +1,28 @@
+{
+  "routeKey": "messagingapi.POST._messages_setCallout",
+  "parameters": [],
+  "requestBody": {
+    "required": true,
+    "content": {
+      "application/json": {
+        "schema": {
+          "$ref": "#/components/schemas/Message"
+        }
+      }
+    }
+  },
+  "responses": {
+    "200": {
+      "description": "Message updated",
+      "content": {
+        "application/json": {
+          "schema": {
+            "$ref": "#/components/schemas/Message"
+          }
+        }
+      }
+    }
+  },
+  "security": [],
+  "examples": []
+}

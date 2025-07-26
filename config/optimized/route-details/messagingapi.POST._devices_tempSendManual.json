@@ -1,0 +1,45 @@
+{
+  "routeKey": "messagingapi.POST._devices_tempSendManual",
+  "parameters": [],
+  "requestBody": {
+    "required": true,
+    "content": {
+      "application/json": {
+        "schema": {
+          "type": "object",
+          "properties": {
+            "fcmToken": {
+              "type": "string"
+            },
+            "title": {
+              "type": "string"
+            },
+            "body": {
+              "type": "string"
+            },
+            "type": {
+              "type": "string"
+            },
+            "contextId": {
+              "type": "string"
+            }
+          }
+        }
+      }
+    }
+  },
+  "responses": {
+    "200": {
+      "description": "Notification sent",
+      "content": {
+        "application/json": {
+          "schema": {
+            "type": "object"
+          }
+        }
+      }
+    }
+  },
+  "security": [],
+  "examples": []
+}

@@ -1,0 +1,51 @@
+{
+  "routeKey": "messagingapi.POST._notifications_create",
+  "parameters": [],
+  "requestBody": {
+    "required": true,
+    "content": {
+      "application/json": {
+        "schema": {
+          "type": "object",
+          "properties": {
+            "peopleIds": {
+              "type": "array",
+              "items": {
+                "type": "string"
+              }
+            },
+            "contentType": {
+              "type": "string"
+            },
+            "contentId": {
+              "type": "string"
+            },
+            "message": {
+              "type": "string"
+            },
+            "link": {
+              "type": "string"
+            }
+          }
+        }
+      }
+    }
+  },
+  "responses": {
+    "200": {
+      "description": "Created notifications",
+      "content": {
+        "application/json": {
+          "schema": {
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/Notification"
+            }
+          }
+        }
+      }
+    }
+  },
+  "security": [],
+  "examples": []
+}

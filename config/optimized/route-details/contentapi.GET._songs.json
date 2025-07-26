@@ -1,0 +1,28 @@
+{
+  "routeKey": "contentapi.GET._songs",
+  "parameters": [],
+  "responses": {
+    "200": {
+      "description": "Successful response",
+      "content": {
+        "application/json": {
+          "schema": {
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/Song"
+            }
+          }
+        }
+      }
+    }
+  },
+  "security": [
+    {
+      "bearerAuth": [],
+      "permissions": [
+        "content.edit"
+      ]
+    }
+  ],
+  "examples": []
+}

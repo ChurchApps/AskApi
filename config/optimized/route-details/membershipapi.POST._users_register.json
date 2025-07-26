@@ -1,0 +1,38 @@
+{
+  "routeKey": "membershipapi.POST._users_register",
+  "parameters": [],
+  "requestBody": {
+    "required": true,
+    "content": {
+      "application/json": {
+        "schema": {
+          "$ref": "#/components/schemas/RegisterUserRequest"
+        }
+      }
+    }
+  },
+  "responses": {
+    "200": {
+      "description": "Registration successful",
+      "content": {
+        "application/json": {
+          "schema": {
+            "$ref": "#/components/schemas/User"
+          }
+        }
+      }
+    },
+    "400": {
+      "description": "Registration failed",
+      "content": {
+        "application/json": {
+          "schema": {
+            "$ref": "#/components/schemas/Error"
+          }
+        }
+      }
+    }
+  },
+  "security": [],
+  "examples": []
+}

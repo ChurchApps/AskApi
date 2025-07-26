@@ -1,0 +1,21 @@
+{
+  "routeKey": "givingapi.GET._donations_my",
+  "parameters": [],
+  "responses": {
+    "200": {
+      "description": "User's donations",
+      "content": {
+        "application/json": {
+          "schema": {
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/Donation"
+            }
+          }
+        }
+      }
+    }
+  },
+  "security": [],
+  "examples": []
+}

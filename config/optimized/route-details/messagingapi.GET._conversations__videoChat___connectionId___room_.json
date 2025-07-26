@@ -1,0 +1,43 @@
+{
+  "routeKey": "messagingapi.GET._conversations__videoChat___connectionId___room_",
+  "parameters": [
+    {
+      "name": "videoChat",
+      "in": "path",
+      "required": true,
+      "schema": {
+        "type": "string"
+      }
+    },
+    {
+      "name": "connectionId",
+      "in": "path",
+      "required": true,
+      "schema": {
+        "type": "string"
+      }
+    },
+    {
+      "name": "room",
+      "in": "path",
+      "required": true,
+      "schema": {
+        "type": "string"
+      }
+    }
+  ],
+  "responses": {
+    "200": {
+      "description": "Video chat invite sent",
+      "content": {
+        "application/json": {
+          "schema": {
+            "type": "object"
+          }
+        }
+      }
+    }
+  },
+  "security": [],
+  "examples": []
+}

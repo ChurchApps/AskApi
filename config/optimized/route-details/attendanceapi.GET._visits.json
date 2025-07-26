@@ -1,0 +1,37 @@
+{
+  "routeKey": "attendanceapi.GET._visits",
+  "parameters": [
+    {
+      "name": "personId",
+      "in": "query",
+      "required": false,
+      "schema": {
+        "type": "string"
+      }
+    }
+  ],
+  "responses": {
+    "200": {
+      "description": "Successful response",
+      "content": {
+        "application/json": {
+          "schema": {
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/Visit"
+            }
+          }
+        }
+      }
+    }
+  },
+  "security": [
+    {
+      "bearerAuth": [],
+      "permissions": [
+        "attendance.view"
+      ]
+    }
+  ],
+  "examples": []
+}

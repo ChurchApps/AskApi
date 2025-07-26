@@ -1,0 +1,28 @@
+{
+  "routeKey": "membershipapi.GET._groups_my",
+  "parameters": [],
+  "responses": {
+    "200": {
+      "description": "User's groups",
+      "content": {
+        "application/json": {
+          "schema": {
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/Group"
+            }
+          }
+        }
+      }
+    },
+    "401": {
+      "description": "Unauthorized"
+    }
+  },
+  "security": [
+    {
+      "bearerAuth": []
+    }
+  ],
+  "examples": []
+}

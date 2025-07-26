@@ -1,0 +1,28 @@
+{
+  "routeKey": "contentapi.GET._events_timeline_group__groupId_",
+  "parameters": [
+    {
+      "name": "groupId",
+      "in": "path",
+      "required": true,
+      "schema": {
+        "type": "string"
+      }
+    },
+    {
+      "name": "eventIds",
+      "in": "query",
+      "schema": {
+        "type": "string"
+      },
+      "description": "Comma-separated event IDs"
+    }
+  ],
+  "responses": {
+    "200": {
+      "description": "Successful response"
+    }
+  },
+  "security": [],
+  "examples": []
+}

@@ -1,0 +1,28 @@
+{
+  "routeKey": "messagingapi.POST._devices_enroll",
+  "parameters": [],
+  "requestBody": {
+    "required": true,
+    "content": {
+      "application/json": {
+        "schema": {
+          "$ref": "#/components/schemas/Device"
+        }
+      }
+    }
+  },
+  "responses": {
+    "200": {
+      "description": "Device enrolled",
+      "content": {
+        "application/json": {
+          "schema": {
+            "$ref": "#/components/schemas/Device"
+          }
+        }
+      }
+    }
+  },
+  "security": [],
+  "examples": []
+}

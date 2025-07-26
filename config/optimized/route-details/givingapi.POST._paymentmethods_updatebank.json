@@ -1,0 +1,35 @@
+{
+  "routeKey": "givingapi.POST._paymentmethods_updatebank",
+  "parameters": [],
+  "requestBody": {
+    "required": true,
+    "content": {
+      "application/json": {
+        "schema": {
+          "type": "object"
+        }
+      }
+    }
+  },
+  "responses": {
+    "200": {
+      "description": "Stripe response",
+      "content": {
+        "application/json": {
+          "schema": {
+            "type": "object"
+          }
+        }
+      }
+    }
+  },
+  "security": [
+    {
+      "bearerAuth": [],
+      "permissions": [
+        "donations.edit"
+      ]
+    }
+  ],
+  "examples": []
+}

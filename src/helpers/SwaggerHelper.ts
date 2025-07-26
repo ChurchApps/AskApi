@@ -19,6 +19,26 @@ export interface RouteInfo {
   tags?: string[];
 }
 
+export interface RouteIndex {
+  service: string;
+  method: string;
+  path: string;
+  summary: string;
+  tags: string[];
+  requiresAuth: boolean;
+  permissions: string[];
+  routeKey: string;
+}
+
+export interface RouteDetails {
+  routeKey: string;
+  parameters?: any[];
+  requestBody?: any;
+  responses?: any;
+  security?: any[];
+  examples?: any[];
+}
+
 export interface SwaggerResult {
   availableEndpoints: string[];
   swagger: SwaggerContent;
@@ -184,5 +204,128 @@ export class SwaggerHelper {
       route.tags?.some(tag => tag.toLowerCase().includes(term)) ||
       route.path.toLowerCase().includes(term)
     );
+  }
+
+  /**
+   * Generates a unique route key
+   * @param service Service name
+   * @param method HTTP method
+   * @param path Route path
+   * @returns Unique route key
+   */
+  private static generateRouteKey(service: string, method: string, path: string): string {
+    return `${service}.${method}.${path.replace(/[^a-zA-Z0-9]/g, '_')}`;
+  }
+
+  /**
+   * Extracts permissions from security array
+   * @param security Security configuration from swagger
+   * @returns Array of permission strings
+   */
+  private static extractPermissions(security?: any[]): string[] {
+    if (!security || !Array.isArray(security)) return [];
+    
+    const permissions: string[] = [];
+    security.forEach(securityItem => {
+      if (securityItem.permissions && Array.isArray(securityItem.permissions)) {
+        permissions.push(...securityItem.permissions);
+      }
+    });
+    
+    return permissions;
+  }
+
+  /**
+   * Converts swagger routes to optimized route index
+   * @returns Array of route index entries
+   */
+  public static generateRouteIndex(): RouteIndex[] {
+    const index: RouteIndex[] = [];
+    
+    this.apiCollections.forEach(collection => {
+      collection.routes.forEach(route => {
+        const routeKey = this.generateRouteKey(route.apiName, route.method, route.path);
+        
+        index.push({
+          service: route.apiName,
+          method: route.method,
+          path: route.path,
+          summary: route.summary || '',
+          tags: route.tags || [],
+          requiresAuth: true, // Most endpoints require auth in this system
+          permissions: [], // Will be populated from detailed swagger data
+          routeKey
+        });
+      });
+    });
+    
+    return index;
+  }
+
+  /**
+   * Extracts detailed route information for specific route
+   * @param apiName API name
+   * @param path Route path
+   * @param method HTTP method
+   * @returns Route details or null if not found
+   */
+  public static async extractRouteDetails(apiName: string, path: string, method: string): Promise<RouteDetails | null> {
+    const swaggerResult = await this.readSwaggerFile(apiName);
+    if (!swaggerResult?.swagger.paths?.[path]?.[method.toLowerCase()]) {
+      return null;
+    }
+    
+    const methodData = swaggerResult.swagger.paths[path][method.toLowerCase()];
+    const routeKey = this.generateRouteKey(apiName, method, path);
+    
+    return {
+      routeKey,
+      parameters: methodData.parameters || [],
+      requestBody: methodData.requestBody,
+      responses: methodData.responses || {},
+      security: methodData.security || [],
+      examples: methodData.examples || []
+    };
+  }
+
+  /**
+   * Generates optimized files for OpenAI integration
+   * @param outputDir Directory to save the optimized files
+   */
+  public static async generateOptimizedFiles(outputDir: string = './config/optimized'): Promise<void> {
+    await this.loadAllSwaggerFiles();
+    
+    // Ensure output directory exists
+    if (!fs.existsSync(outputDir)) {
+      fs.mkdirSync(outputDir, { recursive: true });
+    }
+    
+    // Generate route index
+    const routeIndex = this.generateRouteIndex();
+    fs.writeFileSync(
+      path.join(outputDir, 'route-index.json'),
+      JSON.stringify(routeIndex, null, 2)
+    );
+    
+    // Generate detailed route files
+    const detailsDir = path.join(outputDir, 'route-details');
+    if (!fs.existsSync(detailsDir)) {
+      fs.mkdirSync(detailsDir, { recursive: true });
+    }
+    
+    for (const collection of this.apiCollections) {
+      for (const route of collection.routes) {
+        const details = await this.extractRouteDetails(route.apiName, route.path, route.method);
+        if (details) {
+          const filename = `${details.routeKey}.json`;
+          fs.writeFileSync(
+            path.join(detailsDir, filename),
+            JSON.stringify(details, null, 2)
+          );
+        }
+      }
+    }
+    
+    console.log(`Generated optimized files: ${routeIndex.length} routes indexed, details saved to ${detailsDir}`);
   }
 }

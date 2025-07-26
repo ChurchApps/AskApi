@@ -1,0 +1,3782 @@
+[
+  {
+    "service": "attendanceapi",
+    "method": "GET",
+    "path": "/attendancerecords/tree",
+    "summary": "Get attendance tree structure",
+    "tags": [
+      "Attendance Records"
+    ],
+    "requiresAuth": true,
+    "permissions": [],
+    "routeKey": "attendanceapi.GET._attendancerecords_tree"
+  },
+  {
+    "service": "attendanceapi",
+    "method": "GET",
+    "path": "/attendancerecords/trend",
+    "summary": "Get attendance trend data",
+    "tags": [
+      "Attendance Records"
+    ],
+    "requiresAuth": true,
+    "permissions": [],
+    "routeKey": "attendanceapi.GET._attendancerecords_trend"
+  },
+  {
+    "service": "attendanceapi",
+    "method": "GET",
+    "path": "/attendancerecords/groups",
+    "summary": "Get attendance records by groups",
+    "tags": [
+      "Attendance Records"
+    ],
+    "requiresAuth": true,
+    "permissions": [],
+    "routeKey": "attendanceapi.GET._attendancerecords_groups"
+  },
+  {
+    "service": "attendanceapi",
+    "method": "GET",
+    "path": "/attendancerecords/search",
+    "summary": "Search attendance records with filters",
+    "tags": [
+      "Attendance Records"
+    ],
+    "requiresAuth": true,
+    "permissions": [],
+    "routeKey": "attendanceapi.GET._attendancerecords_search"
+  },
+  {
+    "service": "attendanceapi",
+    "method": "GET",
+    "path": "/attendancerecords",
+    "summary": "Get attendance records",
+    "tags": [
+      "Attendance Records"
+    ],
+    "requiresAuth": true,
+    "permissions": [],
+    "routeKey": "attendanceapi.GET._attendancerecords"
+  },
+  {
+    "service": "attendanceapi",
+    "method": "GET",
+    "path": "/campuses/{id}",
+    "summary": "Get a specific campus",
+    "tags": [
+      "Campuses"
+    ],
+    "requiresAuth": true,
+    "permissions": [],
+    "routeKey": "attendanceapi.GET._campuses__id_"
+  },
+  {
+    "service": "attendanceapi",
+    "method": "DELETE",
+    "path": "/campuses/{id}",
+    "summary": "Delete a campus",
+    "tags": [
+      "Campuses"
+    ],
+    "requiresAuth": true,
+    "permissions": [],
+    "routeKey": "attendanceapi.DELETE._campuses__id_"
+  },
+  {
+    "service": "attendanceapi",
+    "method": "GET",
+    "path": "/campuses",
+    "summary": "Get all campuses",
+    "tags": [
+      "Campuses"
+    ],
+    "requiresAuth": true,
+    "permissions": [],
+    "routeKey": "attendanceapi.GET._campuses"
+  },
+  {
+    "service": "attendanceapi",
+    "method": "POST",
+    "path": "/campuses",
+    "summary": "Create or update campuses",
+    "tags": [
+      "Campuses"
+    ],
+    "requiresAuth": true,
+    "permissions": [],
+    "routeKey": "attendanceapi.POST._campuses"
+  },
+  {
+    "service": "attendanceapi",
+    "method": "GET",
+    "path": "/groupservicetimes/{id}",
+    "summary": "Get a specific group service time",
+    "tags": [
+      "Group Service Times"
+    ],
+    "requiresAuth": true,
+    "permissions": [],
+    "routeKey": "attendanceapi.GET._groupservicetimes__id_"
+  },
+  {
+    "service": "attendanceapi",
+    "method": "DELETE",
+    "path": "/groupservicetimes/{id}",
+    "summary": "Delete a group service time",
+    "tags": [
+      "Group Service Times"
+    ],
+    "requiresAuth": true,
+    "permissions": [],
+    "routeKey": "attendanceapi.DELETE._groupservicetimes__id_"
+  },
+  {
+    "service": "attendanceapi",
+    "method": "GET",
+    "path": "/groupservicetimes",
+    "summary": "Get all group service times",
+    "tags": [
+      "Group Service Times"
+    ],
+    "requiresAuth": true,
+    "permissions": [],
+    "routeKey": "attendanceapi.GET._groupservicetimes"
+  },
+  {
+    "service": "attendanceapi",
+    "method": "POST",
+    "path": "/groupservicetimes",
+    "summary": "Create or update group service times",
+    "tags": [
+      "Group Service Times"
+    ],
+    "requiresAuth": true,
+    "permissions": [],
+    "routeKey": "attendanceapi.POST._groupservicetimes"
+  },
+  {
+    "service": "attendanceapi",
+    "method": "GET",
+    "path": "/services/search",
+    "summary": "Search services by campus",
+    "tags": [
+      "Services"
+    ],
+    "requiresAuth": true,
+    "permissions": [],
+    "routeKey": "attendanceapi.GET._services_search"
+  },
+  {
+    "service": "attendanceapi",
+    "method": "GET",
+    "path": "/services/{id}",
+    "summary": "Get a specific service",
+    "tags": [
+      "Services"
+    ],
+    "requiresAuth": true,
+    "permissions": [],
+    "routeKey": "attendanceapi.GET._services__id_"
+  },
+  {
+    "service": "attendanceapi",
+    "method": "DELETE",
+    "path": "/services/{id}",
+    "summary": "Delete a service",
+    "tags": [
+      "Services"
+    ],
+    "requiresAuth": true,
+    "permissions": [],
+    "routeKey": "attendanceapi.DELETE._services__id_"
+  },
+  {
+    "service": "attendanceapi",
+    "method": "GET",
+    "path": "/services",
+    "summary": "Get all services with campus information",
+    "tags": [
+      "Services"
+    ],
+    "requiresAuth": true,
+    "permissions": [],
+    "routeKey": "attendanceapi.GET._services"
+  },
+  {
+    "service": "attendanceapi",
+    "method": "POST",
+    "path": "/services",
+    "summary": "Create or update services",
+    "tags": [
+      "Services"
+    ],
+    "requiresAuth": true,
+    "permissions": [],
+    "routeKey": "attendanceapi.POST._services"
+  },
+  {
+    "service": "attendanceapi",
+    "method": "GET",
+    "path": "/servicetimes/search",
+    "summary": "Search service times by campus and service",
+    "tags": [
+      "Service Times"
+    ],
+    "requiresAuth": true,
+    "permissions": [],
+    "routeKey": "attendanceapi.GET._servicetimes_search"
+  },
+  {
+    "service": "attendanceapi",
+    "method": "GET",
+    "path": "/servicetimes/{id}",
+    "summary": "Get a specific service time",
+    "tags": [
+      "Service Times"
+    ],
+    "requiresAuth": true,
+    "permissions": [],
+    "routeKey": "attendanceapi.GET._servicetimes__id_"
+  },
+  {
+    "service": "attendanceapi",
+    "method": "DELETE",
+    "path": "/servicetimes/{id}",
+    "summary": "Delete a service time",
+    "tags": [
+      "Service Times"
+    ],
+    "requiresAuth": true,
+    "permissions": [],
+    "routeKey": "attendanceapi.DELETE._servicetimes__id_"
+  },
+  {
+    "service": "attendanceapi",
+    "method": "GET",
+    "path": "/servicetimes",
+    "summary": "Get all service times",
+    "tags": [
+      "Service Times"
+    ],
+    "requiresAuth": true,
+    "permissions": [],
+    "routeKey": "attendanceapi.GET._servicetimes"
+  },
+  {
+    "service": "attendanceapi",
+    "method": "POST",
+    "path": "/servicetimes",
+    "summary": "Create or update service times",
+    "tags": [
+      "Service Times"
+    ],
+    "requiresAuth": true,
+    "permissions": [],
+    "routeKey": "attendanceapi.POST._servicetimes"
+  },
+  {
+    "service": "attendanceapi",
+    "method": "GET",
+    "path": "/sessions/{id}",
+    "summary": "Get a specific session",
+    "tags": [
+      "Sessions"
+    ],
+    "requiresAuth": true,
+    "permissions": [],
+    "routeKey": "attendanceapi.GET._sessions__id_"
+  },
+  {
+    "service": "attendanceapi",
+    "method": "DELETE",
+    "path": "/sessions/{id}",
+    "summary": "Delete a session",
+    "tags": [
+      "Sessions"
+    ],
+    "requiresAuth": true,
+    "permissions": [],
+    "routeKey": "attendanceapi.DELETE._sessions__id_"
+  },
+  {
+    "service": "attendanceapi",
+    "method": "GET",
+    "path": "/sessions",
+    "summary": "Get all sessions",
+    "tags": [
+      "Sessions"
+    ],
+    "requiresAuth": true,
+    "permissions": [],
+    "routeKey": "attendanceapi.GET._sessions"
+  },
+  {
+    "service": "attendanceapi",
+    "method": "POST",
+    "path": "/sessions",
+    "summary": "Create or update sessions",
+    "tags": [
+      "Sessions"
+    ],
+    "requiresAuth": true,
+    "permissions": [],
+    "routeKey": "attendanceapi.POST._sessions"
+  },
+  {
+    "service": "attendanceapi",
+    "method": "GET",
+    "path": "/visits/checkin",
+    "summary": "Get check-in data for people",
+    "tags": [
+      "Visits"
+    ],
+    "requiresAuth": true,
+    "permissions": [],
+    "routeKey": "attendanceapi.GET._visits_checkin"
+  },
+  {
+    "service": "attendanceapi",
+    "method": "POST",
+    "path": "/visits/checkin",
+    "summary": "Process check-in for multiple people",
+    "tags": [
+      "Visits"
+    ],
+    "requiresAuth": true,
+    "permissions": [],
+    "routeKey": "attendanceapi.POST._visits_checkin"
+  },
+  {
+    "service": "attendanceapi",
+    "method": "GET",
+    "path": "/visits/{id}",
+    "summary": "Get a specific visit",
+    "tags": [
+      "Visits"
+    ],
+    "requiresAuth": true,
+    "permissions": [],
+    "routeKey": "attendanceapi.GET._visits__id_"
+  },
+  {
+    "service": "attendanceapi",
+    "method": "DELETE",
+    "path": "/visits/{id}",
+    "summary": "Delete a visit",
+    "tags": [
+      "Visits"
+    ],
+    "requiresAuth": true,
+    "permissions": [],
+    "routeKey": "attendanceapi.DELETE._visits__id_"
+  },
+  {
+    "service": "attendanceapi",
+    "method": "GET",
+    "path": "/visits",
+    "summary": "Get all visits",
+    "tags": [
+      "Visits"
+    ],
+    "requiresAuth": true,
+    "permissions": [],
+    "routeKey": "attendanceapi.GET._visits"
+  },
+  {
+    "service": "attendanceapi",
+    "method": "POST",
+    "path": "/visits",
+    "summary": "Create or update visits",
+    "tags": [
+      "Visits"
+    ],
+    "requiresAuth": true,
+    "permissions": [],
+    "routeKey": "attendanceapi.POST._visits"
+  },
+  {
+    "service": "attendanceapi",
+    "method": "POST",
+    "path": "/visitsessions/log",
+    "summary": "Log attendance for a person in a session",
+    "tags": [
+      "Visit Sessions"
+    ],
+    "requiresAuth": true,
+    "permissions": [],
+    "routeKey": "attendanceapi.POST._visitsessions_log"
+  },
+  {
+    "service": "attendanceapi",
+    "method": "GET",
+    "path": "/visitsessions/download/{sessionId}",
+    "summary": "Download attendance data for a session",
+    "tags": [
+      "Visit Sessions"
+    ],
+    "requiresAuth": true,
+    "permissions": [],
+    "routeKey": "attendanceapi.GET._visitsessions_download__sessionId_"
+  },
+  {
+    "service": "attendanceapi",
+    "method": "GET",
+    "path": "/visitsessions/{id}",
+    "summary": "Get a specific visit session",
+    "tags": [
+      "Visit Sessions"
+    ],
+    "requiresAuth": true,
+    "permissions": [],
+    "routeKey": "attendanceapi.GET._visitsessions__id_"
+  },
+  {
+    "service": "attendanceapi",
+    "method": "DELETE",
+    "path": "/visitsessions/{id}",
+    "summary": "Delete a visit session",
+    "tags": [
+      "Visit Sessions"
+    ],
+    "requiresAuth": true,
+    "permissions": [],
+    "routeKey": "attendanceapi.DELETE._visitsessions__id_"
+  },
+  {
+    "service": "attendanceapi",
+    "method": "GET",
+    "path": "/visitsessions",
+    "summary": "Get all visit sessions",
+    "tags": [
+      "Visit Sessions"
+    ],
+    "requiresAuth": true,
+    "permissions": [],
+    "routeKey": "attendanceapi.GET._visitsessions"
+  },
+  {
+    "service": "attendanceapi",
+    "method": "POST",
+    "path": "/visitsessions",
+    "summary": "Create or update visit sessions",
+    "tags": [
+      "Visit Sessions"
+    ],
+    "requiresAuth": true,
+    "permissions": [],
+    "routeKey": "attendanceapi.POST._visitsessions"
+  },
+  {
+    "service": "attendanceapi",
+    "method": "DELETE",
+    "path": "/visitsessions",
+    "summary": "Delete visit session by person and session",
+    "tags": [
+      "Visit Sessions"
+    ],
+    "requiresAuth": true,
+    "permissions": [],
+    "routeKey": "attendanceapi.DELETE._visitsessions"
+  },
+  {
+    "service": "contentapi",
+    "method": "GET",
+    "path": "/arrangements/{id}",
+    "summary": "Get arrangement by ID",
+    "tags": [
+      "Arrangements"
+    ],
+    "requiresAuth": true,
+    "permissions": [],
+    "routeKey": "contentapi.GET._arrangements__id_"
+  },
+  {
+    "service": "contentapi",
+    "method": "DELETE",
+    "path": "/arrangements/{id}",
+    "summary": "Delete arrangement",
+    "tags": [
+      "Arrangements"
+    ],
+    "requiresAuth": true,
+    "permissions": [],
+    "routeKey": "contentapi.DELETE._arrangements__id_"
+  },
+  {
+    "service": "contentapi",
+    "method": "GET",
+    "path": "/arrangements/song/{songId}",
+    "summary": "Get arrangements by song ID",
+    "tags": [
+      "Arrangements"
+    ],
+    "requiresAuth": true,
+    "permissions": [],
+    "routeKey": "contentapi.GET._arrangements_song__songId_"
+  },
+  {
+    "service": "contentapi",
+    "method": "GET",
+    "path": "/arrangements/songDetail/{songDetailId}",
+    "summary": "Get arrangements by song detail ID",
+    "tags": [
+      "Arrangements"
+    ],
+    "requiresAuth": true,
+    "permissions": [],
+    "routeKey": "contentapi.GET._arrangements_songDetail__songDetailId_"
+  },
+  {
+    "service": "contentapi",
+    "method": "GET",
+    "path": "/arrangements",
+    "summary": "Get all arrangements",
+    "tags": [
+      "Arrangements"
+    ],
+    "requiresAuth": true,
+    "permissions": [],
+    "routeKey": "contentapi.GET._arrangements"
+  },
+  {
+    "service": "contentapi",
+    "method": "POST",
+    "path": "/arrangements",
+    "summary": "Create or update arrangements",
+    "tags": [
+      "Arrangements"
+    ],
+    "requiresAuth": true,
+    "permissions": [],
+    "routeKey": "contentapi.POST._arrangements"
+  },
+  {
+    "service": "contentapi",
+    "method": "POST",
+    "path": "/arrangements/freeShow/missing",
+    "summary": "Get missing FreeShow arrangements",
+    "tags": [
+      "Arrangements"
+    ],
+    "requiresAuth": true,
+    "permissions": [],
+    "routeKey": "contentapi.POST._arrangements_freeShow_missing"
+  },
+  {
+    "service": "contentapi",
+    "method": "GET",
+    "path": "/arrangementKeys/presenter/{churchId}/{id}",
+    "summary": "Get arrangement key for presenter (anonymous)",
+    "tags": [
+      "Arrangement Keys"
+    ],
+    "requiresAuth": true,
+    "permissions": [],
+    "routeKey": "contentapi.GET._arrangementKeys_presenter__churchId___id_"
+  },
+  {
+    "service": "contentapi",
+    "method": "GET",
+    "path": "/arrangementKeys/{id}",
+    "summary": "Get arrangement key by ID",
+    "tags": [
+      "Arrangement Keys"
+    ],
+    "requiresAuth": true,
+    "permissions": [],
+    "routeKey": "contentapi.GET._arrangementKeys__id_"
+  },
+  {
+    "service": "contentapi",
+    "method": "DELETE",
+    "path": "/arrangementKeys/{id}",
+    "summary": "Delete arrangement key",
+    "tags": [
+      "Arrangement Keys"
+    ],
+    "requiresAuth": true,
+    "permissions": [],
+    "routeKey": "contentapi.DELETE._arrangementKeys__id_"
+  },
+  {
+    "service": "contentapi",
+    "method": "GET",
+    "path": "/arrangementKeys/arrangement/{arrangementId}",
+    "summary": "Get arrangement keys by arrangement ID",
+    "tags": [
+      "Arrangement Keys"
+    ],
+    "requiresAuth": true,
+    "permissions": [],
+    "routeKey": "contentapi.GET._arrangementKeys_arrangement__arrangementId_"
+  },
+  {
+    "service": "contentapi",
+    "method": "GET",
+    "path": "/arrangementKeys",
+    "summary": "Get all arrangement keys",
+    "tags": [
+      "Arrangement Keys"
+    ],
+    "requiresAuth": true,
+    "permissions": [],
+    "routeKey": "contentapi.GET._arrangementKeys"
+  },
+  {
+    "service": "contentapi",
+    "method": "POST",
+    "path": "/arrangementKeys",
+    "summary": "Create or update arrangement keys",
+    "tags": [
+      "Arrangement Keys"
+    ],
+    "requiresAuth": true,
+    "permissions": [],
+    "routeKey": "contentapi.POST._arrangementKeys"
+  },
+  {
+    "service": "contentapi",
+    "method": "GET",
+    "path": "/bibles/{translationKey}/search",
+    "summary": "Search Bible verses",
+    "tags": [
+      "Bible"
+    ],
+    "requiresAuth": true,
+    "permissions": [],
+    "routeKey": "contentapi.GET._bibles__translationKey__search"
+  },
+  {
+    "service": "contentapi",
+    "method": "GET",
+    "path": "/bibles/stats",
+    "summary": "Get Bible lookup statistics",
+    "tags": [
+      "Bible"
+    ],
+    "requiresAuth": true,
+    "permissions": [],
+    "routeKey": "contentapi.GET._bibles_stats"
+  },
+  {
+    "service": "contentapi",
+    "method": "GET",
+    "path": "/bibles/{translationKey}/books",
+    "summary": "Get books for translation",
+    "tags": [
+      "Bible"
+    ],
+    "requiresAuth": true,
+    "permissions": [],
+    "routeKey": "contentapi.GET._bibles__translationKey__books"
+  },
+  {
+    "service": "contentapi",
+    "method": "GET",
+    "path": "/bibles/{translationKey}/{bookKey}/chapters",
+    "summary": "Get chapters for book",
+    "tags": [
+      "Bible"
+    ],
+    "requiresAuth": true,
+    "permissions": [],
+    "routeKey": "contentapi.GET._bibles__translationKey___bookKey__chapters"
+  },
+  {
+    "service": "contentapi",
+    "method": "GET",
+    "path": "/bibles/{translationKey}/chapters/{chapterKey}/verses",
+    "summary": "Get verses for chapter",
+    "tags": [
+      "Bible"
+    ],
+    "requiresAuth": true,
+    "permissions": [],
+    "routeKey": "contentapi.GET._bibles__translationKey__chapters__chapterKey__verses"
+  },
+  {
+    "service": "contentapi",
+    "method": "GET",
+    "path": "/bibles",
+    "summary": "Get all translations",
+    "tags": [
+      "Bible"
+    ],
+    "requiresAuth": true,
+    "permissions": [],
+    "routeKey": "contentapi.GET._bibles"
+  },
+  {
+    "service": "contentapi",
+    "method": "GET",
+    "path": "/blocks/{churchId}/tree/{id}",
+    "summary": "Get block tree structure",
+    "tags": [
+      "Blocks"
+    ],
+    "requiresAuth": true,
+    "permissions": [],
+    "routeKey": "contentapi.GET._blocks__churchId__tree__id_"
+  },
+  {
+    "service": "contentapi",
+    "method": "GET",
+    "path": "/blocks/{id}",
+    "summary": "Get block by ID",
+    "tags": [
+      "Blocks"
+    ],
+    "requiresAuth": true,
+    "permissions": [],
+    "routeKey": "contentapi.GET._blocks__id_"
+  },
+  {
+    "service": "contentapi",
+    "method": "DELETE",
+    "path": "/blocks/{id}",
+    "summary": "Delete block",
+    "tags": [
+      "Blocks"
+    ],
+    "requiresAuth": true,
+    "permissions": [],
+    "routeKey": "contentapi.DELETE._blocks__id_"
+  },
+  {
+    "service": "contentapi",
+    "method": "GET",
+    "path": "/blocks",
+    "summary": "Get all blocks",
+    "tags": [
+      "Blocks"
+    ],
+    "requiresAuth": true,
+    "permissions": [],
+    "routeKey": "contentapi.GET._blocks"
+  },
+  {
+    "service": "contentapi",
+    "method": "POST",
+    "path": "/blocks",
+    "summary": "Create or update blocks",
+    "tags": [
+      "Blocks"
+    ],
+    "requiresAuth": true,
+    "permissions": [],
+    "routeKey": "contentapi.POST._blocks"
+  },
+  {
+    "service": "contentapi",
+    "method": "GET",
+    "path": "/blocks/blockType/{blockType}",
+    "summary": "Get blocks by type",
+    "tags": [
+      "Blocks"
+    ],
+    "requiresAuth": true,
+    "permissions": [],
+    "routeKey": "contentapi.GET._blocks_blockType__blockType_"
+  },
+  {
+    "service": "contentapi",
+    "method": "GET",
+    "path": "/blocks/public/footer/{churchId}",
+    "summary": "Get footer blocks",
+    "tags": [
+      "Blocks"
+    ],
+    "requiresAuth": true,
+    "permissions": [],
+    "routeKey": "contentapi.GET._blocks_public_footer__churchId_"
+  },
+  {
+    "service": "contentapi",
+    "method": "GET",
+    "path": "/curatedCalendars/{id}",
+    "summary": "Get curated calendar by ID",
+    "tags": [
+      "Curated Calendars"
+    ],
+    "requiresAuth": true,
+    "permissions": [],
+    "routeKey": "contentapi.GET._curatedCalendars__id_"
+  },
+  {
+    "service": "contentapi",
+    "method": "DELETE",
+    "path": "/curatedCalendars/{id}",
+    "summary": "Delete curated calendar",
+    "tags": [
+      "Curated Calendars"
+    ],
+    "requiresAuth": true,
+    "permissions": [],
+    "routeKey": "contentapi.DELETE._curatedCalendars__id_"
+  },
+  {
+    "service": "contentapi",
+    "method": "GET",
+    "path": "/curatedCalendars",
+    "summary": "Get all curated calendars",
+    "tags": [
+      "Curated Calendars"
+    ],
+    "requiresAuth": true,
+    "permissions": [],
+    "routeKey": "contentapi.GET._curatedCalendars"
+  },
+  {
+    "service": "contentapi",
+    "method": "POST",
+    "path": "/curatedCalendars",
+    "summary": "Create or update curated calendars",
+    "tags": [
+      "Curated Calendars"
+    ],
+    "requiresAuth": true,
+    "permissions": [],
+    "routeKey": "contentapi.POST._curatedCalendars"
+  },
+  {
+    "service": "contentapi",
+    "method": "GET",
+    "path": "/curatedEvents/calendar/{curatedCalendarId}",
+    "summary": "Get events for curated calendar",
+    "tags": [
+      "Curated Events"
+    ],
+    "requiresAuth": true,
+    "permissions": [],
+    "routeKey": "contentapi.GET._curatedEvents_calendar__curatedCalendarId_"
+  },
+  {
+    "service": "contentapi",
+    "method": "GET",
+    "path": "/curatedEvents/public/calendar/{churchId}/{curatedCalendarId}",
+    "summary": "Get public events for curated calendar",
+    "tags": [
+      "Curated Events"
+    ],
+    "requiresAuth": true,
+    "permissions": [],
+    "routeKey": "contentapi.GET._curatedEvents_public_calendar__churchId___curatedCalendarId_"
+  },
+  {
+    "service": "contentapi",
+    "method": "GET",
+    "path": "/curatedEvents/{id}",
+    "summary": "Get curated event by ID",
+    "tags": [
+      "Curated Events"
+    ],
+    "requiresAuth": true,
+    "permissions": [],
+    "routeKey": "contentapi.GET._curatedEvents__id_"
+  },
+  {
+    "service": "contentapi",
+    "method": "DELETE",
+    "path": "/curatedEvents/{id}",
+    "summary": "Delete curated event",
+    "tags": [
+      "Curated Events"
+    ],
+    "requiresAuth": true,
+    "permissions": [],
+    "routeKey": "contentapi.DELETE._curatedEvents__id_"
+  },
+  {
+    "service": "contentapi",
+    "method": "GET",
+    "path": "/curatedEvents",
+    "summary": "Get all curated events",
+    "tags": [
+      "Curated Events"
+    ],
+    "requiresAuth": true,
+    "permissions": [],
+    "routeKey": "contentapi.GET._curatedEvents"
+  },
+  {
+    "service": "contentapi",
+    "method": "POST",
+    "path": "/curatedEvents",
+    "summary": "Create or update curated events",
+    "tags": [
+      "Curated Events"
+    ],
+    "requiresAuth": true,
+    "permissions": [],
+    "routeKey": "contentapi.POST._curatedEvents"
+  },
+  {
+    "service": "contentapi",
+    "method": "GET",
+    "path": "/elements/{id}",
+    "summary": "Get element by ID",
+    "tags": [
+      "Elements"
+    ],
+    "requiresAuth": true,
+    "permissions": [],
+    "routeKey": "contentapi.GET._elements__id_"
+  },
+  {
+    "service": "contentapi",
+    "method": "DELETE",
+    "path": "/elements/{id}",
+    "summary": "Delete element",
+    "tags": [
+      "Elements"
+    ],
+    "requiresAuth": true,
+    "permissions": [],
+    "routeKey": "contentapi.DELETE._elements__id_"
+  },
+  {
+    "service": "contentapi",
+    "method": "POST",
+    "path": "/elements/duplicate/{id}",
+    "summary": "Duplicate element",
+    "tags": [
+      "Elements"
+    ],
+    "requiresAuth": true,
+    "permissions": [],
+    "routeKey": "contentapi.POST._elements_duplicate__id_"
+  },
+  {
+    "service": "contentapi",
+    "method": "POST",
+    "path": "/elements",
+    "summary": "Create or update elements",
+    "tags": [
+      "Elements"
+    ],
+    "requiresAuth": true,
+    "permissions": [],
+    "routeKey": "contentapi.POST._elements"
+  },
+  {
+    "service": "contentapi",
+    "method": "GET",
+    "path": "/events/timeline/group/{groupId}",
+    "summary": "Get timeline posts for group",
+    "tags": [
+      "Events"
+    ],
+    "requiresAuth": true,
+    "permissions": [],
+    "routeKey": "contentapi.GET._events_timeline_group__groupId_"
+  },
+  {
+    "service": "contentapi",
+    "method": "GET",
+    "path": "/events/timeline",
+    "summary": "Get timeline posts",
+    "tags": [
+      "Events"
+    ],
+    "requiresAuth": true,
+    "permissions": [],
+    "routeKey": "contentapi.GET._events_timeline"
+  },
+  {
+    "service": "contentapi",
+    "method": "GET",
+    "path": "/events/subscribe",
+    "summary": "Get ICS calendar subscription",
+    "tags": [
+      "Events"
+    ],
+    "requiresAuth": true,
+    "permissions": [],
+    "routeKey": "contentapi.GET._events_subscribe"
+  },
+  {
+    "service": "contentapi",
+    "method": "GET",
+    "path": "/events/group/{groupId}",
+    "summary": "Get events for group",
+    "tags": [
+      "Events"
+    ],
+    "requiresAuth": true,
+    "permissions": [],
+    "routeKey": "contentapi.GET._events_group__groupId_"
+  },
+  {
+    "service": "contentapi",
+    "method": "GET",
+    "path": "/events/public/group/{churchId}/{groupId}",
+    "summary": "Get public events for group",
+    "tags": [
+      "Events"
+    ],
+    "requiresAuth": true,
+    "permissions": [],
+    "routeKey": "contentapi.GET._events_public_group__churchId___groupId_"
+  },
+  {
+    "service": "contentapi",
+    "method": "GET",
+    "path": "/events/{id}",
+    "summary": "Get event by ID",
+    "tags": [
+      "Events"
+    ],
+    "requiresAuth": true,
+    "permissions": [],
+    "routeKey": "contentapi.GET._events__id_"
+  },
+  {
+    "service": "contentapi",
+    "method": "DELETE",
+    "path": "/events/{id}",
+    "summary": "Delete event",
+    "tags": [
+      "Events"
+    ],
+    "requiresAuth": true,
+    "permissions": [],
+    "routeKey": "contentapi.DELETE._events__id_"
+  },
+  {
+    "service": "contentapi",
+    "method": "POST",
+    "path": "/events",
+    "summary": "Create or update events",
+    "tags": [
+      "Events"
+    ],
+    "requiresAuth": true,
+    "permissions": [],
+    "routeKey": "contentapi.POST._events"
+  },
+  {
+    "service": "contentapi",
+    "method": "GET",
+    "path": "/files/{id}",
+    "summary": "Get file by ID",
+    "tags": [
+      "Files"
+    ],
+    "requiresAuth": true,
+    "permissions": [],
+    "routeKey": "contentapi.GET._files__id_"
+  },
+  {
+    "service": "contentapi",
+    "method": "DELETE",
+    "path": "/files/{id}",
+    "summary": "Delete file",
+    "tags": [
+      "Files"
+    ],
+    "requiresAuth": true,
+    "permissions": [],
+    "routeKey": "contentapi.DELETE._files__id_"
+  },
+  {
+    "service": "contentapi",
+    "method": "GET",
+    "path": "/files/{contentType}/{contentId}",
+    "summary": "Get files by content",
+    "tags": [
+      "Files"
+    ],
+    "requiresAuth": true,
+    "permissions": [],
+    "routeKey": "contentapi.GET._files__contentType___contentId_"
+  },
+  {
+    "service": "contentapi",
+    "method": "GET",
+    "path": "/files",
+    "summary": "Get all files",
+    "tags": [
+      "Files"
+    ],
+    "requiresAuth": true,
+    "permissions": [],
+    "routeKey": "contentapi.GET._files"
+  },
+  {
+    "service": "contentapi",
+    "method": "POST",
+    "path": "/files",
+    "summary": "Upload files",
+    "tags": [
+      "Files"
+    ],
+    "requiresAuth": true,
+    "permissions": [],
+    "routeKey": "contentapi.POST._files"
+  },
+  {
+    "service": "contentapi",
+    "method": "POST",
+    "path": "/files/postUrl",
+    "summary": "Get upload URL",
+    "tags": [
+      "Files"
+    ],
+    "requiresAuth": true,
+    "permissions": [],
+    "routeKey": "contentapi.POST._files_postUrl"
+  },
+  {
+    "service": "contentapi",
+    "method": "GET",
+    "path": "/pages/{churchId}/tree",
+    "summary": "Get page tree structure",
+    "tags": [
+      "Pages"
+    ],
+    "requiresAuth": true,
+    "permissions": [],
+    "routeKey": "contentapi.GET._pages__churchId__tree"
+  },
+  {
+    "service": "contentapi",
+    "method": "GET",
+    "path": "/pages/{id}",
+    "summary": "Get page by ID",
+    "tags": [
+      "Pages"
+    ],
+    "requiresAuth": true,
+    "permissions": [],
+    "routeKey": "contentapi.GET._pages__id_"
+  },
+  {
+    "service": "contentapi",
+    "method": "DELETE",
+    "path": "/pages/{id}",
+    "summary": "Delete page",
+    "tags": [
+      "Pages"
+    ],
+    "requiresAuth": true,
+    "permissions": [],
+    "routeKey": "contentapi.DELETE._pages__id_"
+  },
+  {
+    "service": "contentapi",
+    "method": "GET",
+    "path": "/pages",
+    "summary": "Get all pages",
+    "tags": [
+      "Pages"
+    ],
+    "requiresAuth": true,
+    "permissions": [],
+    "routeKey": "contentapi.GET._pages"
+  },
+  {
+    "service": "contentapi",
+    "method": "POST",
+    "path": "/pages",
+    "summary": "Create or update pages",
+    "tags": [
+      "Pages"
+    ],
+    "requiresAuth": true,
+    "permissions": [],
+    "routeKey": "contentapi.POST._pages"
+  },
+  {
+    "service": "contentapi",
+    "method": "POST",
+    "path": "/pages/duplicate/{id}",
+    "summary": "Duplicate page",
+    "tags": [
+      "Pages"
+    ],
+    "requiresAuth": true,
+    "permissions": [],
+    "routeKey": "contentapi.POST._pages_duplicate__id_"
+  },
+  {
+    "service": "contentapi",
+    "method": "GET",
+    "path": "/sermons/public/tvFeed/{churchId}",
+    "summary": "Get TV feed",
+    "tags": [
+      "Sermons"
+    ],
+    "requiresAuth": true,
+    "permissions": [],
+    "routeKey": "contentapi.GET._sermons_public_tvFeed__churchId_"
+  },
+  {
+    "service": "contentapi",
+    "method": "GET",
+    "path": "/sermons/public/tvFeed/{churchId}/{sermonId}",
+    "summary": "Get sermon TV feed",
+    "tags": [
+      "Sermons"
+    ],
+    "requiresAuth": true,
+    "permissions": [],
+    "routeKey": "contentapi.GET._sermons_public_tvFeed__churchId___sermonId_"
+  },
+  {
+    "service": "contentapi",
+    "method": "GET",
+    "path": "/sermons/timeline",
+    "summary": "Get timeline posts",
+    "tags": [
+      "Sermons"
+    ],
+    "requiresAuth": true,
+    "permissions": [],
+    "routeKey": "contentapi.GET._sermons_timeline"
+  },
+  {
+    "service": "contentapi",
+    "method": "GET",
+    "path": "/sermons/lookup",
+    "summary": "Lookup sermon from video service",
+    "tags": [
+      "Sermons"
+    ],
+    "requiresAuth": true,
+    "permissions": [],
+    "routeKey": "contentapi.GET._sermons_lookup"
+  },
+  {
+    "service": "contentapi",
+    "method": "GET",
+    "path": "/sermons/{id}",
+    "summary": "Get sermon by ID",
+    "tags": [
+      "Sermons"
+    ],
+    "requiresAuth": true,
+    "permissions": [],
+    "routeKey": "contentapi.GET._sermons__id_"
+  },
+  {
+    "service": "contentapi",
+    "method": "DELETE",
+    "path": "/sermons/{id}",
+    "summary": "Delete sermon",
+    "tags": [
+      "Sermons"
+    ],
+    "requiresAuth": true,
+    "permissions": [],
+    "routeKey": "contentapi.DELETE._sermons__id_"
+  },
+  {
+    "service": "contentapi",
+    "method": "GET",
+    "path": "/sermons",
+    "summary": "Get all sermons",
+    "tags": [
+      "Sermons"
+    ],
+    "requiresAuth": true,
+    "permissions": [],
+    "routeKey": "contentapi.GET._sermons"
+  },
+  {
+    "service": "contentapi",
+    "method": "POST",
+    "path": "/sermons",
+    "summary": "Create or update sermons",
+    "tags": [
+      "Sermons"
+    ],
+    "requiresAuth": true,
+    "permissions": [],
+    "routeKey": "contentapi.POST._sermons"
+  },
+  {
+    "service": "contentapi",
+    "method": "GET",
+    "path": "/sermons/public/{churchId}",
+    "summary": "Get public sermons",
+    "tags": [
+      "Sermons"
+    ],
+    "requiresAuth": true,
+    "permissions": [],
+    "routeKey": "contentapi.GET._sermons_public__churchId_"
+  },
+  {
+    "service": "contentapi",
+    "method": "GET",
+    "path": "/songs/search",
+    "summary": "Search songs",
+    "tags": [
+      "Songs"
+    ],
+    "requiresAuth": true,
+    "permissions": [],
+    "routeKey": "contentapi.GET._songs_search"
+  },
+  {
+    "service": "contentapi",
+    "method": "GET",
+    "path": "/songs/{id}",
+    "summary": "Get song by ID",
+    "tags": [
+      "Songs"
+    ],
+    "requiresAuth": true,
+    "permissions": [],
+    "routeKey": "contentapi.GET._songs__id_"
+  },
+  {
+    "service": "contentapi",
+    "method": "GET",
+    "path": "/songs",
+    "summary": "Get all songs",
+    "tags": [
+      "Songs"
+    ],
+    "requiresAuth": true,
+    "permissions": [],
+    "routeKey": "contentapi.GET._songs"
+  },
+  {
+    "service": "contentapi",
+    "method": "POST",
+    "path": "/songs",
+    "summary": "Create or update songs",
+    "tags": [
+      "Songs"
+    ],
+    "requiresAuth": true,
+    "permissions": [],
+    "routeKey": "contentapi.POST._songs"
+  },
+  {
+    "service": "doingapi",
+    "method": "GET",
+    "path": "/actions/{id}",
+    "summary": "Get action by ID",
+    "tags": [
+      "Actions"
+    ],
+    "requiresAuth": true,
+    "permissions": [],
+    "routeKey": "doingapi.GET._actions__id_"
+  },
+  {
+    "service": "doingapi",
+    "method": "DELETE",
+    "path": "/actions/{id}",
+    "summary": "Delete action",
+    "tags": [
+      "Actions"
+    ],
+    "requiresAuth": true,
+    "permissions": [],
+    "routeKey": "doingapi.DELETE._actions__id_"
+  },
+  {
+    "service": "doingapi",
+    "method": "GET",
+    "path": "/actions/automation/{id}",
+    "summary": "Get actions for automation",
+    "tags": [
+      "Actions"
+    ],
+    "requiresAuth": true,
+    "permissions": [],
+    "routeKey": "doingapi.GET._actions_automation__id_"
+  },
+  {
+    "service": "doingapi",
+    "method": "POST",
+    "path": "/actions",
+    "summary": "Create or update actions",
+    "tags": [
+      "Actions"
+    ],
+    "requiresAuth": true,
+    "permissions": [],
+    "routeKey": "doingapi.POST._actions"
+  },
+  {
+    "service": "doingapi",
+    "method": "GET",
+    "path": "/assignments/my",
+    "summary": "Get current user's assignments",
+    "tags": [
+      "Assignments"
+    ],
+    "requiresAuth": true,
+    "permissions": [],
+    "routeKey": "doingapi.GET._assignments_my"
+  },
+  {
+    "service": "doingapi",
+    "method": "GET",
+    "path": "/assignments/{id}",
+    "summary": "Get assignment by ID",
+    "tags": [
+      "Assignments"
+    ],
+    "requiresAuth": true,
+    "permissions": [],
+    "routeKey": "doingapi.GET._assignments__id_"
+  },
+  {
+    "service": "doingapi",
+    "method": "DELETE",
+    "path": "/assignments/{id}",
+    "summary": "Delete assignment",
+    "tags": [
+      "Assignments"
+    ],
+    "requiresAuth": true,
+    "permissions": [],
+    "routeKey": "doingapi.DELETE._assignments__id_"
+  },
+  {
+    "service": "doingapi",
+    "method": "GET",
+    "path": "/assignments/plan/ids",
+    "summary": "Get assignments by plan IDs",
+    "tags": [
+      "Assignments"
+    ],
+    "requiresAuth": true,
+    "permissions": [],
+    "routeKey": "doingapi.GET._assignments_plan_ids"
+  },
+  {
+    "service": "doingapi",
+    "method": "GET",
+    "path": "/assignments/plan/{planId}",
+    "summary": "Get assignments for plan",
+    "tags": [
+      "Assignments"
+    ],
+    "requiresAuth": true,
+    "permissions": [],
+    "routeKey": "doingapi.GET._assignments_plan__planId_"
+  },
+  {
+    "service": "doingapi",
+    "method": "POST",
+    "path": "/assignments/accept/{id}",
+    "summary": "Accept assignment",
+    "tags": [
+      "Assignments"
+    ],
+    "requiresAuth": true,
+    "permissions": [],
+    "routeKey": "doingapi.POST._assignments_accept__id_"
+  },
+  {
+    "service": "doingapi",
+    "method": "POST",
+    "path": "/assignments/decline/{id}",
+    "summary": "Decline assignment",
+    "tags": [
+      "Assignments"
+    ],
+    "requiresAuth": true,
+    "permissions": [],
+    "routeKey": "doingapi.POST._assignments_decline__id_"
+  },
+  {
+    "service": "doingapi",
+    "method": "POST",
+    "path": "/assignments",
+    "summary": "Create or update assignments",
+    "tags": [
+      "Assignments"
+    ],
+    "requiresAuth": true,
+    "permissions": [],
+    "routeKey": "doingapi.POST._assignments"
+  },
+  {
+    "service": "doingapi",
+    "method": "GET",
+    "path": "/automations/check",
+    "summary": "Trigger automation check",
+    "tags": [
+      "Automations"
+    ],
+    "requiresAuth": true,
+    "permissions": [],
+    "routeKey": "doingapi.GET._automations_check"
+  },
+  {
+    "service": "doingapi",
+    "method": "GET",
+    "path": "/automations/{id}",
+    "summary": "Get automation by ID",
+    "tags": [
+      "Automations"
+    ],
+    "requiresAuth": true,
+    "permissions": [],
+    "routeKey": "doingapi.GET._automations__id_"
+  },
+  {
+    "service": "doingapi",
+    "method": "DELETE",
+    "path": "/automations/{id}",
+    "summary": "Delete automation",
+    "tags": [
+      "Automations"
+    ],
+    "requiresAuth": true,
+    "permissions": [],
+    "routeKey": "doingapi.DELETE._automations__id_"
+  },
+  {
+    "service": "doingapi",
+    "method": "GET",
+    "path": "/automations",
+    "summary": "Get all automations",
+    "tags": [
+      "Automations"
+    ],
+    "requiresAuth": true,
+    "permissions": [],
+    "routeKey": "doingapi.GET._automations"
+  },
+  {
+    "service": "doingapi",
+    "method": "POST",
+    "path": "/automations",
+    "summary": "Create or update automations",
+    "tags": [
+      "Automations"
+    ],
+    "requiresAuth": true,
+    "permissions": [],
+    "routeKey": "doingapi.POST._automations"
+  },
+  {
+    "service": "doingapi",
+    "method": "GET",
+    "path": "/blockoutDates/ids",
+    "summary": "Get blockout dates by IDs",
+    "tags": [
+      "Blockout Dates"
+    ],
+    "requiresAuth": true,
+    "permissions": [],
+    "routeKey": "doingapi.GET._blockoutDates_ids"
+  },
+  {
+    "service": "doingapi",
+    "method": "GET",
+    "path": "/blockoutDates/my",
+    "summary": "Get current user's blockout dates",
+    "tags": [
+      "Blockout Dates"
+    ],
+    "requiresAuth": true,
+    "permissions": [],
+    "routeKey": "doingapi.GET._blockoutDates_my"
+  },
+  {
+    "service": "doingapi",
+    "method": "GET",
+    "path": "/blockoutDates/upcoming",
+    "summary": "Get upcoming blockout dates",
+    "tags": [
+      "Blockout Dates"
+    ],
+    "requiresAuth": true,
+    "permissions": [],
+    "routeKey": "doingapi.GET._blockoutDates_upcoming"
+  },
+  {
+    "service": "doingapi",
+    "method": "GET",
+    "path": "/blockoutDates/{id}",
+    "summary": "Get blockout date by ID",
+    "tags": [
+      "Blockout Dates"
+    ],
+    "requiresAuth": true,
+    "permissions": [],
+    "routeKey": "doingapi.GET._blockoutDates__id_"
+  },
+  {
+    "service": "doingapi",
+    "method": "DELETE",
+    "path": "/blockoutDates/{id}",
+    "summary": "Delete blockout date",
+    "tags": [
+      "Blockout Dates"
+    ],
+    "requiresAuth": true,
+    "permissions": [],
+    "routeKey": "doingapi.DELETE._blockoutDates__id_"
+  },
+  {
+    "service": "doingapi",
+    "method": "POST",
+    "path": "/blockoutDates",
+    "summary": "Create or update blockout dates",
+    "tags": [
+      "Blockout Dates"
+    ],
+    "requiresAuth": true,
+    "permissions": [],
+    "routeKey": "doingapi.POST._blockoutDates"
+  },
+  {
+    "service": "doingapi",
+    "method": "GET",
+    "path": "/conditions/{id}",
+    "summary": "Get condition by ID",
+    "tags": [
+      "Conditions"
+    ],
+    "requiresAuth": true,
+    "permissions": [],
+    "routeKey": "doingapi.GET._conditions__id_"
+  },
+  {
+    "service": "doingapi",
+    "method": "DELETE",
+    "path": "/conditions/{id}",
+    "summary": "Delete condition",
+    "tags": [
+      "Conditions"
+    ],
+    "requiresAuth": true,
+    "permissions": [],
+    "routeKey": "doingapi.DELETE._conditions__id_"
+  },
+  {
+    "service": "doingapi",
+    "method": "GET",
+    "path": "/conditions/automation/{id}",
+    "summary": "Get conditions for automation",
+    "tags": [
+      "Conditions"
+    ],
+    "requiresAuth": true,
+    "permissions": [],
+    "routeKey": "doingapi.GET._conditions_automation__id_"
+  },
+  {
+    "service": "doingapi",
+    "method": "POST",
+    "path": "/conditions",
+    "summary": "Create or update conditions",
+    "tags": [
+      "Conditions"
+    ],
+    "requiresAuth": true,
+    "permissions": [],
+    "routeKey": "doingapi.POST._conditions"
+  },
+  {
+    "service": "doingapi",
+    "method": "GET",
+    "path": "/conjunctions/{id}",
+    "summary": "Get conjunction by ID",
+    "tags": [
+      "Conjunctions"
+    ],
+    "requiresAuth": true,
+    "permissions": [],
+    "routeKey": "doingapi.GET._conjunctions__id_"
+  },
+  {
+    "service": "doingapi",
+    "method": "DELETE",
+    "path": "/conjunctions/{id}",
+    "summary": "Delete conjunction",
+    "tags": [
+      "Conjunctions"
+    ],
+    "requiresAuth": true,
+    "permissions": [],
+    "routeKey": "doingapi.DELETE._conjunctions__id_"
+  },
+  {
+    "service": "doingapi",
+    "method": "GET",
+    "path": "/conjunctions/automation/{id}",
+    "summary": "Get conjunctions for automation",
+    "tags": [
+      "Conjunctions"
+    ],
+    "requiresAuth": true,
+    "permissions": [],
+    "routeKey": "doingapi.GET._conjunctions_automation__id_"
+  },
+  {
+    "service": "doingapi",
+    "method": "POST",
+    "path": "/conjunctions",
+    "summary": "Create or update conjunctions",
+    "tags": [
+      "Conjunctions"
+    ],
+    "requiresAuth": true,
+    "permissions": [],
+    "routeKey": "doingapi.POST._conjunctions"
+  },
+  {
+    "service": "doingapi",
+    "method": "GET",
+    "path": "/plans/presenter",
+    "summary": "Get plans for next 7 days",
+    "tags": [
+      "Plans"
+    ],
+    "requiresAuth": true,
+    "permissions": [],
+    "routeKey": "doingapi.GET._plans_presenter"
+  },
+  {
+    "service": "doingapi",
+    "method": "GET",
+    "path": "/plans/ids",
+    "summary": "Get plans by IDs",
+    "tags": [
+      "Plans"
+    ],
+    "requiresAuth": true,
+    "permissions": [],
+    "routeKey": "doingapi.GET._plans_ids"
+  },
+  {
+    "service": "doingapi",
+    "method": "GET",
+    "path": "/plans/{id}",
+    "summary": "Get plan by ID",
+    "tags": [
+      "Plans"
+    ],
+    "requiresAuth": true,
+    "permissions": [],
+    "routeKey": "doingapi.GET._plans__id_"
+  },
+  {
+    "service": "doingapi",
+    "method": "DELETE",
+    "path": "/plans/{id}",
+    "summary": "Delete plan and all related data",
+    "tags": [
+      "Plans"
+    ],
+    "requiresAuth": true,
+    "permissions": [],
+    "routeKey": "doingapi.DELETE._plans__id_"
+  },
+  {
+    "service": "doingapi",
+    "method": "GET",
+    "path": "/plans",
+    "summary": "Get all plans",
+    "tags": [
+      "Plans"
+    ],
+    "requiresAuth": true,
+    "permissions": [],
+    "routeKey": "doingapi.GET._plans"
+  },
+  {
+    "service": "doingapi",
+    "method": "POST",
+    "path": "/plans",
+    "summary": "Create or update plans",
+    "tags": [
+      "Plans"
+    ],
+    "requiresAuth": true,
+    "permissions": [],
+    "routeKey": "doingapi.POST._plans"
+  },
+  {
+    "service": "doingapi",
+    "method": "POST",
+    "path": "/plans/autofill/{id}",
+    "summary": "Auto-fill plan assignments",
+    "tags": [
+      "Plans"
+    ],
+    "requiresAuth": true,
+    "permissions": [],
+    "routeKey": "doingapi.POST._plans_autofill__id_"
+  },
+  {
+    "service": "doingapi",
+    "method": "POST",
+    "path": "/plans/copy/{id}",
+    "summary": "Copy plan with new service date",
+    "tags": [
+      "Plans"
+    ],
+    "requiresAuth": true,
+    "permissions": [],
+    "routeKey": "doingapi.POST._plans_copy__id_"
+  },
+  {
+    "service": "doingapi",
+    "method": "GET",
+    "path": "/planItems/ids",
+    "summary": "Get plan items by IDs",
+    "tags": [
+      "Plan Items"
+    ],
+    "requiresAuth": true,
+    "permissions": [],
+    "routeKey": "doingapi.GET._planItems_ids"
+  },
+  {
+    "service": "doingapi",
+    "method": "GET",
+    "path": "/planItems/{id}",
+    "summary": "Get plan item by ID",
+    "tags": [
+      "Plan Items"
+    ],
+    "requiresAuth": true,
+    "permissions": [],
+    "routeKey": "doingapi.GET._planItems__id_"
+  },
+  {
+    "service": "doingapi",
+    "method": "DELETE",
+    "path": "/planItems/{id}",
+    "summary": "Delete plan item",
+    "tags": [
+      "Plan Items"
+    ],
+    "requiresAuth": true,
+    "permissions": [],
+    "routeKey": "doingapi.DELETE._planItems__id_"
+  },
+  {
+    "service": "doingapi",
+    "method": "GET",
+    "path": "/planItems/presenter/{churchId}/{planId}",
+    "summary": "Get hierarchical plan items for presenter",
+    "tags": [
+      "Plan Items"
+    ],
+    "requiresAuth": true,
+    "permissions": [],
+    "routeKey": "doingapi.GET._planItems_presenter__churchId___planId_"
+  },
+  {
+    "service": "doingapi",
+    "method": "GET",
+    "path": "/planItems/plan/{planId}",
+    "summary": "Get hierarchical plan items for plan",
+    "tags": [
+      "Plan Items"
+    ],
+    "requiresAuth": true,
+    "permissions": [],
+    "routeKey": "doingapi.GET._planItems_plan__planId_"
+  },
+  {
+    "service": "doingapi",
+    "method": "POST",
+    "path": "/planItems/sort",
+    "summary": "Reorder plan items",
+    "tags": [
+      "Plan Items"
+    ],
+    "requiresAuth": true,
+    "permissions": [],
+    "routeKey": "doingapi.POST._planItems_sort"
+  },
+  {
+    "service": "doingapi",
+    "method": "POST",
+    "path": "/planItems",
+    "summary": "Create or update plan items",
+    "tags": [
+      "Plan Items"
+    ],
+    "requiresAuth": true,
+    "permissions": [],
+    "routeKey": "doingapi.POST._planItems"
+  },
+  {
+    "service": "doingapi",
+    "method": "GET",
+    "path": "/positions/ids",
+    "summary": "Get positions by IDs",
+    "tags": [
+      "Positions"
+    ],
+    "requiresAuth": true,
+    "permissions": [],
+    "routeKey": "doingapi.GET._positions_ids"
+  },
+  {
+    "service": "doingapi",
+    "method": "GET",
+    "path": "/positions/{id}",
+    "summary": "Get position by ID",
+    "tags": [
+      "Positions"
+    ],
+    "requiresAuth": true,
+    "permissions": [],
+    "routeKey": "doingapi.GET._positions__id_"
+  },
+  {
+    "service": "doingapi",
+    "method": "DELETE",
+    "path": "/positions/{id}",
+    "summary": "Delete position",
+    "tags": [
+      "Positions"
+    ],
+    "requiresAuth": true,
+    "permissions": [],
+    "routeKey": "doingapi.DELETE._positions__id_"
+  },
+  {
+    "service": "doingapi",
+    "method": "GET",
+    "path": "/positions/plan/ids",
+    "summary": "Get positions by plan IDs",
+    "tags": [
+      "Positions"
+    ],
+    "requiresAuth": true,
+    "permissions": [],
+    "routeKey": "doingapi.GET._positions_plan_ids"
+  },
+  {
+    "service": "doingapi",
+    "method": "GET",
+    "path": "/positions/plan/{planId}",
+    "summary": "Get positions for plan",
+    "tags": [
+      "Positions"
+    ],
+    "requiresAuth": true,
+    "permissions": [],
+    "routeKey": "doingapi.GET._positions_plan__planId_"
+  },
+  {
+    "service": "doingapi",
+    "method": "POST",
+    "path": "/positions",
+    "summary": "Create or update positions",
+    "tags": [
+      "Positions"
+    ],
+    "requiresAuth": true,
+    "permissions": [],
+    "routeKey": "doingapi.POST._positions"
+  },
+  {
+    "service": "doingapi",
+    "method": "GET",
+    "path": "/tasks/timeline",
+    "summary": "Get timeline tasks for current user",
+    "tags": [
+      "Tasks"
+    ],
+    "requiresAuth": true,
+    "permissions": [],
+    "routeKey": "doingapi.GET._tasks_timeline"
+  },
+  {
+    "service": "doingapi",
+    "method": "GET",
+    "path": "/tasks/closed",
+    "summary": "Get closed tasks for current user",
+    "tags": [
+      "Tasks"
+    ],
+    "requiresAuth": true,
+    "permissions": [],
+    "routeKey": "doingapi.GET._tasks_closed"
+  },
+  {
+    "service": "doingapi",
+    "method": "GET",
+    "path": "/tasks/directoryUpdate/{personId}",
+    "summary": "Get directory update tasks for person",
+    "tags": [
+      "Tasks"
+    ],
+    "requiresAuth": true,
+    "permissions": [],
+    "routeKey": "doingapi.GET._tasks_directoryUpdate__personId_"
+  },
+  {
+    "service": "doingapi",
+    "method": "GET",
+    "path": "/tasks/{id}",
+    "summary": "Get task by ID",
+    "tags": [
+      "Tasks"
+    ],
+    "requiresAuth": true,
+    "permissions": [],
+    "routeKey": "doingapi.GET._tasks__id_"
+  },
+  {
+    "service": "doingapi",
+    "method": "GET",
+    "path": "/tasks",
+    "summary": "Get open tasks for current user",
+    "tags": [
+      "Tasks"
+    ],
+    "requiresAuth": true,
+    "permissions": [],
+    "routeKey": "doingapi.GET._tasks"
+  },
+  {
+    "service": "doingapi",
+    "method": "POST",
+    "path": "/tasks",
+    "summary": "Create or update tasks",
+    "tags": [
+      "Tasks"
+    ],
+    "requiresAuth": true,
+    "permissions": [],
+    "routeKey": "doingapi.POST._tasks"
+  },
+  {
+    "service": "doingapi",
+    "method": "POST",
+    "path": "/tasks/loadForGroups",
+    "summary": "Get tasks for groups",
+    "tags": [
+      "Tasks"
+    ],
+    "requiresAuth": true,
+    "permissions": [],
+    "routeKey": "doingapi.POST._tasks_loadForGroups"
+  },
+  {
+    "service": "doingapi",
+    "method": "GET",
+    "path": "/times/plans",
+    "summary": "Get times by plan IDs",
+    "tags": [
+      "Times"
+    ],
+    "requiresAuth": true,
+    "permissions": [],
+    "routeKey": "doingapi.GET._times_plans"
+  },
+  {
+    "service": "doingapi",
+    "method": "GET",
+    "path": "/times/all",
+    "summary": "Get all times",
+    "tags": [
+      "Times"
+    ],
+    "requiresAuth": true,
+    "permissions": [],
+    "routeKey": "doingapi.GET._times_all"
+  },
+  {
+    "service": "doingapi",
+    "method": "GET",
+    "path": "/times/{id}",
+    "summary": "Get time by ID",
+    "tags": [
+      "Times"
+    ],
+    "requiresAuth": true,
+    "permissions": [],
+    "routeKey": "doingapi.GET._times__id_"
+  },
+  {
+    "service": "doingapi",
+    "method": "DELETE",
+    "path": "/times/{id}",
+    "summary": "Delete time",
+    "tags": [
+      "Times"
+    ],
+    "requiresAuth": true,
+    "permissions": [],
+    "routeKey": "doingapi.DELETE._times__id_"
+  },
+  {
+    "service": "doingapi",
+    "method": "GET",
+    "path": "/times/plan/{planId}",
+    "summary": "Get times for plan",
+    "tags": [
+      "Times"
+    ],
+    "requiresAuth": true,
+    "permissions": [],
+    "routeKey": "doingapi.GET._times_plan__planId_"
+  },
+  {
+    "service": "doingapi",
+    "method": "POST",
+    "path": "/times",
+    "summary": "Create or update times",
+    "tags": [
+      "Times"
+    ],
+    "requiresAuth": true,
+    "permissions": [],
+    "routeKey": "doingapi.POST._times"
+  },
+  {
+    "service": "givingapi",
+    "method": "GET",
+    "path": "/customers/{id}",
+    "summary": "Get customer by ID",
+    "tags": [
+      "Customers"
+    ],
+    "requiresAuth": true,
+    "permissions": [],
+    "routeKey": "givingapi.GET._customers__id_"
+  },
+  {
+    "service": "givingapi",
+    "method": "DELETE",
+    "path": "/customers/{id}",
+    "summary": "Delete customer",
+    "tags": [
+      "Customers"
+    ],
+    "requiresAuth": true,
+    "permissions": [],
+    "routeKey": "givingapi.DELETE._customers__id_"
+  },
+  {
+    "service": "givingapi",
+    "method": "GET",
+    "path": "/customers/{id}/subscriptions",
+    "summary": "Get customer subscriptions",
+    "tags": [
+      "Customers"
+    ],
+    "requiresAuth": true,
+    "permissions": [],
+    "routeKey": "givingapi.GET._customers__id__subscriptions"
+  },
+  {
+    "service": "givingapi",
+    "method": "GET",
+    "path": "/customers",
+    "summary": "Get all customers",
+    "tags": [
+      "Customers"
+    ],
+    "requiresAuth": true,
+    "permissions": [],
+    "routeKey": "givingapi.GET._customers"
+  },
+  {
+    "service": "givingapi",
+    "method": "POST",
+    "path": "/donate/log",
+    "summary": "Log a donation",
+    "tags": [
+      "Donations"
+    ],
+    "requiresAuth": true,
+    "permissions": [],
+    "routeKey": "givingapi.POST._donate_log"
+  },
+  {
+    "service": "givingapi",
+    "method": "POST",
+    "path": "/donate/webhook/{provider}",
+    "summary": "Handle payment provider webhooks",
+    "tags": [
+      "Donations"
+    ],
+    "requiresAuth": true,
+    "permissions": [],
+    "routeKey": "givingapi.POST._donate_webhook__provider_"
+  },
+  {
+    "service": "givingapi",
+    "method": "POST",
+    "path": "/donate/charge",
+    "summary": "Process one-time donation",
+    "tags": [
+      "Donations"
+    ],
+    "requiresAuth": true,
+    "permissions": [],
+    "routeKey": "givingapi.POST._donate_charge"
+  },
+  {
+    "service": "givingapi",
+    "method": "POST",
+    "path": "/donate/subscribe",
+    "summary": "Create recurring donation subscription",
+    "tags": [
+      "Donations"
+    ],
+    "requiresAuth": true,
+    "permissions": [],
+    "routeKey": "givingapi.POST._donate_subscribe"
+  },
+  {
+    "service": "givingapi",
+    "method": "POST",
+    "path": "/donate/fee",
+    "summary": "Calculate processing fees",
+    "tags": [
+      "Donations"
+    ],
+    "requiresAuth": true,
+    "permissions": [],
+    "routeKey": "givingapi.POST._donate_fee"
+  },
+  {
+    "service": "givingapi",
+    "method": "POST",
+    "path": "/donate/captcha-verify",
+    "summary": "Verify reCAPTCHA token",
+    "tags": [
+      "Donations"
+    ],
+    "requiresAuth": true,
+    "permissions": [],
+    "routeKey": "givingapi.POST._donate_captcha_verify"
+  },
+  {
+    "service": "givingapi",
+    "method": "GET",
+    "path": "/donationbatches/{id}",
+    "summary": "Get donation batch by ID",
+    "tags": [
+      "Donation Batches"
+    ],
+    "requiresAuth": true,
+    "permissions": [],
+    "routeKey": "givingapi.GET._donationbatches__id_"
+  },
+  {
+    "service": "givingapi",
+    "method": "DELETE",
+    "path": "/donationbatches/{id}",
+    "summary": "Delete donation batch and related donations",
+    "tags": [
+      "Donation Batches"
+    ],
+    "requiresAuth": true,
+    "permissions": [],
+    "routeKey": "givingapi.DELETE._donationbatches__id_"
+  },
+  {
+    "service": "givingapi",
+    "method": "GET",
+    "path": "/donationbatches",
+    "summary": "Get all donation batches",
+    "tags": [
+      "Donation Batches"
+    ],
+    "requiresAuth": true,
+    "permissions": [],
+    "routeKey": "givingapi.GET._donationbatches"
+  },
+  {
+    "service": "givingapi",
+    "method": "POST",
+    "path": "/donationbatches",
+    "summary": "Create or update donation batches",
+    "tags": [
+      "Donation Batches"
+    ],
+    "requiresAuth": true,
+    "permissions": [],
+    "routeKey": "givingapi.POST._donationbatches"
+  },
+  {
+    "service": "givingapi",
+    "method": "GET",
+    "path": "/donations/testEmail",
+    "summary": "Test email functionality",
+    "tags": [
+      "Donations"
+    ],
+    "requiresAuth": true,
+    "permissions": [],
+    "routeKey": "givingapi.GET._donations_testEmail"
+  },
+  {
+    "service": "givingapi",
+    "method": "GET",
+    "path": "/donations/summary",
+    "summary": "Get donation summary and reports",
+    "tags": [
+      "Donations"
+    ],
+    "requiresAuth": true,
+    "permissions": [],
+    "routeKey": "givingapi.GET._donations_summary"
+  },
+  {
+    "service": "givingapi",
+    "method": "GET",
+    "path": "/donations/my",
+    "summary": "Get current user's donations",
+    "tags": [
+      "Donations"
+    ],
+    "requiresAuth": true,
+    "permissions": [],
+    "routeKey": "givingapi.GET._donations_my"
+  },
+  {
+    "service": "givingapi",
+    "method": "GET",
+    "path": "/donations/{id}",
+    "summary": "Get donation by ID",
+    "tags": [
+      "Donations"
+    ],
+    "requiresAuth": true,
+    "permissions": [],
+    "routeKey": "givingapi.GET._donations__id_"
+  },
+  {
+    "service": "givingapi",
+    "method": "DELETE",
+    "path": "/donations/{id}",
+    "summary": "Delete donation",
+    "tags": [
+      "Donations"
+    ],
+    "requiresAuth": true,
+    "permissions": [],
+    "routeKey": "givingapi.DELETE._donations__id_"
+  },
+  {
+    "service": "givingapi",
+    "method": "GET",
+    "path": "/donations",
+    "summary": "Get donations with filters",
+    "tags": [
+      "Donations"
+    ],
+    "requiresAuth": true,
+    "permissions": [],
+    "routeKey": "givingapi.GET._donations"
+  },
+  {
+    "service": "givingapi",
+    "method": "POST",
+    "path": "/donations",
+    "summary": "Create or update donations",
+    "tags": [
+      "Donations"
+    ],
+    "requiresAuth": true,
+    "permissions": [],
+    "routeKey": "givingapi.POST._donations"
+  },
+  {
+    "service": "givingapi",
+    "method": "GET",
+    "path": "/eventLog/{id}",
+    "summary": "Get event log by ID",
+    "tags": [
+      "Event Logs"
+    ],
+    "requiresAuth": true,
+    "permissions": [],
+    "routeKey": "givingapi.GET._eventLog__id_"
+  },
+  {
+    "service": "givingapi",
+    "method": "DELETE",
+    "path": "/eventLog/{id}",
+    "summary": "Delete event log",
+    "tags": [
+      "Event Logs"
+    ],
+    "requiresAuth": true,
+    "permissions": [],
+    "routeKey": "givingapi.DELETE._eventLog__id_"
+  },
+  {
+    "service": "givingapi",
+    "method": "GET",
+    "path": "/eventLog/type/{type}",
+    "summary": "Get event logs by type",
+    "tags": [
+      "Event Logs"
+    ],
+    "requiresAuth": true,
+    "permissions": [],
+    "routeKey": "givingapi.GET._eventLog_type__type_"
+  },
+  {
+    "service": "givingapi",
+    "method": "GET",
+    "path": "/eventLog",
+    "summary": "Get all event logs",
+    "tags": [
+      "Event Logs"
+    ],
+    "requiresAuth": true,
+    "permissions": [],
+    "routeKey": "givingapi.GET._eventLog"
+  },
+  {
+    "service": "givingapi",
+    "method": "POST",
+    "path": "/eventLog",
+    "summary": "Create or update event logs",
+    "tags": [
+      "Event Logs"
+    ],
+    "requiresAuth": true,
+    "permissions": [],
+    "routeKey": "givingapi.POST._eventLog"
+  },
+  {
+    "service": "givingapi",
+    "method": "GET",
+    "path": "/funds/{id}",
+    "summary": "Get fund by ID",
+    "tags": [
+      "Funds"
+    ],
+    "requiresAuth": true,
+    "permissions": [],
+    "routeKey": "givingapi.GET._funds__id_"
+  },
+  {
+    "service": "givingapi",
+    "method": "DELETE",
+    "path": "/funds/{id}",
+    "summary": "Delete fund",
+    "tags": [
+      "Funds"
+    ],
+    "requiresAuth": true,
+    "permissions": [],
+    "routeKey": "givingapi.DELETE._funds__id_"
+  },
+  {
+    "service": "givingapi",
+    "method": "GET",
+    "path": "/funds/churchId/{churchId}",
+    "summary": "Get funds for specific church",
+    "tags": [
+      "Funds"
+    ],
+    "requiresAuth": true,
+    "permissions": [],
+    "routeKey": "givingapi.GET._funds_churchId__churchId_"
+  },
+  {
+    "service": "givingapi",
+    "method": "GET",
+    "path": "/funds",
+    "summary": "Get all funds",
+    "tags": [
+      "Funds"
+    ],
+    "requiresAuth": true,
+    "permissions": [],
+    "routeKey": "givingapi.GET._funds"
+  },
+  {
+    "service": "givingapi",
+    "method": "POST",
+    "path": "/funds",
+    "summary": "Create or update funds",
+    "tags": [
+      "Funds"
+    ],
+    "requiresAuth": true,
+    "permissions": [],
+    "routeKey": "givingapi.POST._funds"
+  },
+  {
+    "service": "givingapi",
+    "method": "GET",
+    "path": "/funddonations/my",
+    "summary": "Get current user's fund donations",
+    "tags": [
+      "Fund Donations"
+    ],
+    "requiresAuth": true,
+    "permissions": [],
+    "routeKey": "givingapi.GET._funddonations_my"
+  },
+  {
+    "service": "givingapi",
+    "method": "GET",
+    "path": "/funddonations/{id}",
+    "summary": "Get fund donation by ID",
+    "tags": [
+      "Fund Donations"
+    ],
+    "requiresAuth": true,
+    "permissions": [],
+    "routeKey": "givingapi.GET._funddonations__id_"
+  },
+  {
+    "service": "givingapi",
+    "method": "DELETE",
+    "path": "/funddonations/{id}",
+    "summary": "Delete fund donation",
+    "tags": [
+      "Fund Donations"
+    ],
+    "requiresAuth": true,
+    "permissions": [],
+    "routeKey": "givingapi.DELETE._funddonations__id_"
+  },
+  {
+    "service": "givingapi",
+    "method": "GET",
+    "path": "/funddonations",
+    "summary": "Get fund donations with filters",
+    "tags": [
+      "Fund Donations"
+    ],
+    "requiresAuth": true,
+    "permissions": [],
+    "routeKey": "givingapi.GET._funddonations"
+  },
+  {
+    "service": "givingapi",
+    "method": "POST",
+    "path": "/funddonations",
+    "summary": "Create or update fund donations",
+    "tags": [
+      "Fund Donations"
+    ],
+    "requiresAuth": true,
+    "permissions": [],
+    "routeKey": "givingapi.POST._funddonations"
+  },
+  {
+    "service": "givingapi",
+    "method": "GET",
+    "path": "/gateways/churchId/{churchId}",
+    "summary": "Get gateways for specific church",
+    "tags": [
+      "Gateways"
+    ],
+    "requiresAuth": true,
+    "permissions": [],
+    "routeKey": "givingapi.GET._gateways_churchId__churchId_"
+  },
+  {
+    "service": "givingapi",
+    "method": "GET",
+    "path": "/gateways/configured/{churchId}",
+    "summary": "Check if gateway is configured",
+    "tags": [
+      "Gateways"
+    ],
+    "requiresAuth": true,
+    "permissions": [],
+    "routeKey": "givingapi.GET._gateways_configured__churchId_"
+  },
+  {
+    "service": "givingapi",
+    "method": "GET",
+    "path": "/gateways/{id}",
+    "summary": "Get gateway by ID",
+    "tags": [
+      "Gateways"
+    ],
+    "requiresAuth": true,
+    "permissions": [],
+    "routeKey": "givingapi.GET._gateways__id_"
+  },
+  {
+    "service": "givingapi",
+    "method": "PATCH",
+    "path": "/gateways/{id}",
+    "summary": "Update gateway",
+    "tags": [
+      "Gateways"
+    ],
+    "requiresAuth": true,
+    "permissions": [],
+    "routeKey": "givingapi.PATCH._gateways__id_"
+  },
+  {
+    "service": "givingapi",
+    "method": "DELETE",
+    "path": "/gateways/{id}",
+    "summary": "Delete gateway and remove Stripe webhooks",
+    "tags": [
+      "Gateways"
+    ],
+    "requiresAuth": true,
+    "permissions": [],
+    "routeKey": "givingapi.DELETE._gateways__id_"
+  },
+  {
+    "service": "givingapi",
+    "method": "GET",
+    "path": "/gateways",
+    "summary": "Get all gateways",
+    "tags": [
+      "Gateways"
+    ],
+    "requiresAuth": true,
+    "permissions": [],
+    "routeKey": "givingapi.GET._gateways"
+  },
+  {
+    "service": "givingapi",
+    "method": "POST",
+    "path": "/gateways",
+    "summary": "Create or update gateways and create Stripe webhooks",
+    "tags": [
+      "Gateways"
+    ],
+    "requiresAuth": true,
+    "permissions": [],
+    "routeKey": "givingapi.POST._gateways"
+  },
+  {
+    "service": "givingapi",
+    "method": "GET",
+    "path": "/paymentmethods/personid/{id}",
+    "summary": "Get person's payment methods",
+    "tags": [
+      "Payment Methods"
+    ],
+    "requiresAuth": true,
+    "permissions": [],
+    "routeKey": "givingapi.GET._paymentmethods_personid__id_"
+  },
+  {
+    "service": "givingapi",
+    "method": "POST",
+    "path": "/paymentmethods/addcard",
+    "summary": "Add credit card",
+    "tags": [
+      "Payment Methods"
+    ],
+    "requiresAuth": true,
+    "permissions": [],
+    "routeKey": "givingapi.POST._paymentmethods_addcard"
+  },
+  {
+    "service": "givingapi",
+    "method": "POST",
+    "path": "/paymentmethods/updatecard",
+    "summary": "Update credit card",
+    "tags": [
+      "Payment Methods"
+    ],
+    "requiresAuth": true,
+    "permissions": [],
+    "routeKey": "givingapi.POST._paymentmethods_updatecard"
+  },
+  {
+    "service": "givingapi",
+    "method": "POST",
+    "path": "/paymentmethods/addbankaccount",
+    "summary": "Add bank account",
+    "tags": [
+      "Payment Methods"
+    ],
+    "requiresAuth": true,
+    "permissions": [],
+    "routeKey": "givingapi.POST._paymentmethods_addbankaccount"
+  },
+  {
+    "service": "givingapi",
+    "method": "POST",
+    "path": "/paymentmethods/updatebank",
+    "summary": "Update bank account",
+    "tags": [
+      "Payment Methods"
+    ],
+    "requiresAuth": true,
+    "permissions": [],
+    "routeKey": "givingapi.POST._paymentmethods_updatebank"
+  },
+  {
+    "service": "givingapi",
+    "method": "POST",
+    "path": "/paymentmethods/verifybank",
+    "summary": "Verify bank account with micro-deposits",
+    "tags": [
+      "Payment Methods"
+    ],
+    "requiresAuth": true,
+    "permissions": [],
+    "routeKey": "givingapi.POST._paymentmethods_verifybank"
+  },
+  {
+    "service": "givingapi",
+    "method": "DELETE",
+    "path": "/paymentmethods/{id}/{customerid}",
+    "summary": "Delete payment method",
+    "tags": [
+      "Payment Methods"
+    ],
+    "requiresAuth": true,
+    "permissions": [],
+    "routeKey": "givingapi.DELETE._paymentmethods__id___customerid_"
+  },
+  {
+    "service": "givingapi",
+    "method": "GET",
+    "path": "/subscriptions/{id}",
+    "summary": "Get subscription by ID",
+    "tags": [
+      "Subscriptions"
+    ],
+    "requiresAuth": true,
+    "permissions": [],
+    "routeKey": "givingapi.GET._subscriptions__id_"
+  },
+  {
+    "service": "givingapi",
+    "method": "DELETE",
+    "path": "/subscriptions/{id}",
+    "summary": "Delete subscription",
+    "tags": [
+      "Subscriptions"
+    ],
+    "requiresAuth": true,
+    "permissions": [],
+    "routeKey": "givingapi.DELETE._subscriptions__id_"
+  },
+  {
+    "service": "givingapi",
+    "method": "GET",
+    "path": "/subscriptions",
+    "summary": "Get all subscriptions",
+    "tags": [
+      "Subscriptions"
+    ],
+    "requiresAuth": true,
+    "permissions": [],
+    "routeKey": "givingapi.GET._subscriptions"
+  },
+  {
+    "service": "givingapi",
+    "method": "POST",
+    "path": "/subscriptions",
+    "summary": "Update subscriptions",
+    "tags": [
+      "Subscriptions"
+    ],
+    "requiresAuth": true,
+    "permissions": [],
+    "routeKey": "givingapi.POST._subscriptions"
+  },
+  {
+    "service": "givingapi",
+    "method": "GET",
+    "path": "/subscriptionfunds/{id}",
+    "summary": "Get subscription fund by ID",
+    "tags": [
+      "Subscription Funds"
+    ],
+    "requiresAuth": true,
+    "permissions": [],
+    "routeKey": "givingapi.GET._subscriptionfunds__id_"
+  },
+  {
+    "service": "givingapi",
+    "method": "DELETE",
+    "path": "/subscriptionfunds/{id}",
+    "summary": "Delete subscription fund",
+    "tags": [
+      "Subscription Funds"
+    ],
+    "requiresAuth": true,
+    "permissions": [],
+    "routeKey": "givingapi.DELETE._subscriptionfunds__id_"
+  },
+  {
+    "service": "givingapi",
+    "method": "GET",
+    "path": "/subscriptionfunds",
+    "summary": "Get subscription funds",
+    "tags": [
+      "Subscription Funds"
+    ],
+    "requiresAuth": true,
+    "permissions": [],
+    "routeKey": "givingapi.GET._subscriptionfunds"
+  },
+  {
+    "service": "givingapi",
+    "method": "DELETE",
+    "path": "/subscriptionfunds/subscription/{id}",
+    "summary": "Delete all funds for subscription",
+    "tags": [
+      "Subscription Funds"
+    ],
+    "requiresAuth": true,
+    "permissions": [],
+    "routeKey": "givingapi.DELETE._subscriptionfunds_subscription__id_"
+  },
+  {
+    "service": "membershipapi",
+    "method": "GET",
+    "path": "/people",
+    "summary": "Get all people",
+    "tags": [
+      "People"
+    ],
+    "requiresAuth": true,
+    "permissions": [],
+    "routeKey": "membershipapi.GET._people"
+  },
+  {
+    "service": "membershipapi",
+    "method": "POST",
+    "path": "/people",
+    "summary": "Create or update people",
+    "tags": [
+      "People"
+    ],
+    "requiresAuth": true,
+    "permissions": [],
+    "routeKey": "membershipapi.POST._people"
+  },
+  {
+    "service": "membershipapi",
+    "method": "GET",
+    "path": "/people/{id}",
+    "summary": "Get person by ID",
+    "tags": [
+      "People"
+    ],
+    "requiresAuth": true,
+    "permissions": [],
+    "routeKey": "membershipapi.GET._people__id_"
+  },
+  {
+    "service": "membershipapi",
+    "method": "DELETE",
+    "path": "/people/{id}",
+    "summary": "Delete person",
+    "tags": [
+      "People"
+    ],
+    "requiresAuth": true,
+    "permissions": [],
+    "routeKey": "membershipapi.DELETE._people__id_"
+  },
+  {
+    "service": "membershipapi",
+    "method": "GET",
+    "path": "/people/search",
+    "summary": "Search people",
+    "tags": [
+      "People"
+    ],
+    "requiresAuth": true,
+    "permissions": [],
+    "routeKey": "membershipapi.GET._people_search"
+  },
+  {
+    "service": "membershipapi",
+    "method": "POST",
+    "path": "/people/search",
+    "summary": "Search people (POST)",
+    "tags": [
+      "People"
+    ],
+    "requiresAuth": true,
+    "permissions": [],
+    "routeKey": "membershipapi.POST._people_search"
+  },
+  {
+    "service": "membershipapi",
+    "method": "POST",
+    "path": "/people/advancedSearch",
+    "summary": "Advanced search people",
+    "tags": [
+      "People"
+    ],
+    "requiresAuth": true,
+    "permissions": [],
+    "routeKey": "membershipapi.POST._people_advancedSearch"
+  },
+  {
+    "service": "membershipapi",
+    "method": "GET",
+    "path": "/people/recent",
+    "summary": "Get recently added people",
+    "tags": [
+      "People"
+    ],
+    "requiresAuth": true,
+    "permissions": [],
+    "routeKey": "membershipapi.GET._people_recent"
+  },
+  {
+    "service": "membershipapi",
+    "method": "GET",
+    "path": "/people/household/{householdId}",
+    "summary": "Get household members",
+    "tags": [
+      "People"
+    ],
+    "requiresAuth": true,
+    "permissions": [],
+    "routeKey": "membershipapi.GET._people_household__householdId_"
+  },
+  {
+    "service": "membershipapi",
+    "method": "POST",
+    "path": "/people/household/{householdId}",
+    "summary": "Save household members",
+    "tags": [
+      "People"
+    ],
+    "requiresAuth": true,
+    "permissions": [],
+    "routeKey": "membershipapi.POST._people_household__householdId_"
+  },
+  {
+    "service": "membershipapi",
+    "method": "GET",
+    "path": "/churches",
+    "summary": "Get user's churches",
+    "tags": [
+      "Churches"
+    ],
+    "requiresAuth": true,
+    "permissions": [],
+    "routeKey": "membershipapi.GET._churches"
+  },
+  {
+    "service": "membershipapi",
+    "method": "POST",
+    "path": "/churches",
+    "summary": "Save church",
+    "tags": [
+      "Churches"
+    ],
+    "requiresAuth": true,
+    "permissions": [],
+    "routeKey": "membershipapi.POST._churches"
+  },
+  {
+    "service": "membershipapi",
+    "method": "GET",
+    "path": "/churches/{id}",
+    "summary": "Get church by ID",
+    "tags": [
+      "Churches"
+    ],
+    "requiresAuth": true,
+    "permissions": [],
+    "routeKey": "membershipapi.GET._churches__id_"
+  },
+  {
+    "service": "membershipapi",
+    "method": "GET",
+    "path": "/churches/search",
+    "summary": "Search churches",
+    "tags": [
+      "Churches"
+    ],
+    "requiresAuth": true,
+    "permissions": [],
+    "routeKey": "membershipapi.GET._churches_search"
+  },
+  {
+    "service": "membershipapi",
+    "method": "POST",
+    "path": "/churches/search",
+    "summary": "Search churches (POST)",
+    "tags": [
+      "Churches"
+    ],
+    "requiresAuth": true,
+    "permissions": [],
+    "routeKey": "membershipapi.POST._churches_search"
+  },
+  {
+    "service": "membershipapi",
+    "method": "GET",
+    "path": "/churches/lookup",
+    "summary": "Lookup church by subdomain or ID",
+    "tags": [
+      "Churches"
+    ],
+    "requiresAuth": true,
+    "permissions": [],
+    "routeKey": "membershipapi.GET._churches_lookup"
+  },
+  {
+    "service": "membershipapi",
+    "method": "POST",
+    "path": "/users/login",
+    "summary": "User login",
+    "tags": [
+      "Authentication"
+    ],
+    "requiresAuth": true,
+    "permissions": [],
+    "routeKey": "membershipapi.POST._users_login"
+  },
+  {
+    "service": "membershipapi",
+    "method": "POST",
+    "path": "/users/register",
+    "summary": "User registration",
+    "tags": [
+      "Authentication"
+    ],
+    "requiresAuth": true,
+    "permissions": [],
+    "routeKey": "membershipapi.POST._users_register"
+  },
+  {
+    "service": "membershipapi",
+    "method": "POST",
+    "path": "/users/forgot",
+    "summary": "Forgot password",
+    "tags": [
+      "Authentication"
+    ],
+    "requiresAuth": true,
+    "permissions": [],
+    "routeKey": "membershipapi.POST._users_forgot"
+  },
+  {
+    "service": "membershipapi",
+    "method": "GET",
+    "path": "/groups",
+    "summary": "Get all groups",
+    "tags": [
+      "Groups"
+    ],
+    "requiresAuth": true,
+    "permissions": [],
+    "routeKey": "membershipapi.GET._groups"
+  },
+  {
+    "service": "membershipapi",
+    "method": "POST",
+    "path": "/groups",
+    "summary": "Create or update groups",
+    "tags": [
+      "Groups"
+    ],
+    "requiresAuth": true,
+    "permissions": [],
+    "routeKey": "membershipapi.POST._groups"
+  },
+  {
+    "service": "membershipapi",
+    "method": "GET",
+    "path": "/groups/{id}",
+    "summary": "Get group by ID",
+    "tags": [
+      "Groups"
+    ],
+    "requiresAuth": true,
+    "permissions": [],
+    "routeKey": "membershipapi.GET._groups__id_"
+  },
+  {
+    "service": "membershipapi",
+    "method": "DELETE",
+    "path": "/groups/{id}",
+    "summary": "Delete group",
+    "tags": [
+      "Groups"
+    ],
+    "requiresAuth": true,
+    "permissions": [],
+    "routeKey": "membershipapi.DELETE._groups__id_"
+  },
+  {
+    "service": "membershipapi",
+    "method": "GET",
+    "path": "/groups/my",
+    "summary": "Get user's groups",
+    "tags": [
+      "Groups"
+    ],
+    "requiresAuth": true,
+    "permissions": [],
+    "routeKey": "membershipapi.GET._groups_my"
+  },
+  {
+    "service": "membershipapi",
+    "method": "GET",
+    "path": "/groups/tag/{tag}",
+    "summary": "Get groups by tag",
+    "tags": [
+      "Groups"
+    ],
+    "requiresAuth": true,
+    "permissions": [],
+    "routeKey": "membershipapi.GET._groups_tag__tag_"
+  },
+  {
+    "service": "membershipapi",
+    "method": "GET",
+    "path": "/forms",
+    "summary": "Get all forms",
+    "tags": [
+      "Forms"
+    ],
+    "requiresAuth": true,
+    "permissions": [],
+    "routeKey": "membershipapi.GET._forms"
+  },
+  {
+    "service": "membershipapi",
+    "method": "POST",
+    "path": "/forms",
+    "summary": "Create or update forms",
+    "tags": [
+      "Forms"
+    ],
+    "requiresAuth": true,
+    "permissions": [],
+    "routeKey": "membershipapi.POST._forms"
+  },
+  {
+    "service": "membershipapi",
+    "method": "GET",
+    "path": "/forms/{id}",
+    "summary": "Get form by ID",
+    "tags": [
+      "Forms"
+    ],
+    "requiresAuth": true,
+    "permissions": [],
+    "routeKey": "membershipapi.GET._forms__id_"
+  },
+  {
+    "service": "membershipapi",
+    "method": "DELETE",
+    "path": "/forms/{id}",
+    "summary": "Delete form",
+    "tags": [
+      "Forms"
+    ],
+    "requiresAuth": true,
+    "permissions": [],
+    "routeKey": "membershipapi.DELETE._forms__id_"
+  },
+  {
+    "service": "messagingapi",
+    "method": "POST",
+    "path": "/blockedIps",
+    "summary": "Save blocked IP addresses",
+    "tags": [
+      "Blocked IPs"
+    ],
+    "requiresAuth": true,
+    "permissions": [],
+    "routeKey": "messagingapi.POST._blockedIps"
+  },
+  {
+    "service": "messagingapi",
+    "method": "POST",
+    "path": "/blockedIps/clear",
+    "summary": "Clear blocked IPs for specific services",
+    "tags": [
+      "Blocked IPs"
+    ],
+    "requiresAuth": true,
+    "permissions": [],
+    "routeKey": "messagingapi.POST._blockedIps_clear"
+  },
+  {
+    "service": "messagingapi",
+    "method": "GET",
+    "path": "/connections/{churchId}/{conversationId}",
+    "summary": "Load connections for a conversation",
+    "tags": [
+      "Connections"
+    ],
+    "requiresAuth": true,
+    "permissions": [],
+    "routeKey": "messagingapi.GET._connections__churchId___conversationId_"
+  },
+  {
+    "service": "messagingapi",
+    "method": "POST",
+    "path": "/connections/tmpSendAlert",
+    "summary": "Send alert notifications to connections",
+    "tags": [
+      "Connections"
+    ],
+    "requiresAuth": true,
+    "permissions": [],
+    "routeKey": "messagingapi.POST._connections_tmpSendAlert"
+  },
+  {
+    "service": "messagingapi",
+    "method": "POST",
+    "path": "/connections",
+    "summary": "Save connections",
+    "tags": [
+      "Connections"
+    ],
+    "requiresAuth": true,
+    "permissions": [],
+    "routeKey": "messagingapi.POST._connections"
+  },
+  {
+    "service": "messagingapi",
+    "method": "POST",
+    "path": "/connections/setName",
+    "summary": "Set display name for connections by socket ID",
+    "tags": [
+      "Connections"
+    ],
+    "requiresAuth": true,
+    "permissions": [],
+    "routeKey": "messagingapi.POST._connections_setName"
+  },
+  {
+    "service": "messagingapi",
+    "method": "GET",
+    "path": "/conversations/timeline/ids",
+    "summary": "Get conversations by IDs for timeline",
+    "tags": [
+      "Conversations"
+    ],
+    "requiresAuth": true,
+    "permissions": [],
+    "routeKey": "messagingapi.GET._conversations_timeline_ids"
+  },
+  {
+    "service": "messagingapi",
+    "method": "GET",
+    "path": "/conversations/posts/group/{groupId}",
+    "summary": "Get posts for a specific group",
+    "tags": [
+      "Conversations"
+    ],
+    "requiresAuth": true,
+    "permissions": [],
+    "routeKey": "messagingapi.GET._conversations_posts_group__groupId_"
+  },
+  {
+    "service": "messagingapi",
+    "method": "GET",
+    "path": "/conversations/posts",
+    "summary": "Get posts for user's groups",
+    "tags": [
+      "Conversations"
+    ],
+    "requiresAuth": true,
+    "permissions": [],
+    "routeKey": "messagingapi.GET._conversations_posts"
+  },
+  {
+    "service": "messagingapi",
+    "method": "POST",
+    "path": "/conversations/start",
+    "summary": "Start a new conversation with initial comment",
+    "tags": [
+      "Conversations"
+    ],
+    "requiresAuth": true,
+    "permissions": [],
+    "routeKey": "messagingapi.POST._conversations_start"
+  },
+  {
+    "service": "messagingapi",
+    "method": "POST",
+    "path": "/conversations",
+    "summary": "Save conversations",
+    "tags": [
+      "Conversations"
+    ],
+    "requiresAuth": true,
+    "permissions": [],
+    "routeKey": "messagingapi.POST._conversations"
+  },
+  {
+    "service": "messagingapi",
+    "method": "GET",
+    "path": "/conversations/requestPrayer/{churchId}/{conversationId}",
+    "summary": "Request prayer for a conversation",
+    "tags": [
+      "Conversations"
+    ],
+    "requiresAuth": true,
+    "permissions": [],
+    "routeKey": "messagingapi.GET._conversations_requestPrayer__churchId___conversationId_"
+  },
+  {
+    "service": "messagingapi",
+    "method": "GET",
+    "path": "/conversations/current/{churchId}/{contentType}/{contentId}",
+    "summary": "Get or create current conversation for content",
+    "tags": [
+      "Conversations"
+    ],
+    "requiresAuth": true,
+    "permissions": [],
+    "routeKey": "messagingapi.GET._conversations_current__churchId___contentType___contentId_"
+  },
+  {
+    "service": "messagingapi",
+    "method": "GET",
+    "path": "/conversations/{videoChat}/{connectionId}/{room}",
+    "summary": "Send video chat invite to connection",
+    "tags": [
+      "Conversations"
+    ],
+    "requiresAuth": true,
+    "permissions": [],
+    "routeKey": "messagingapi.GET._conversations__videoChat___connectionId___room_"
+  },
+  {
+    "service": "messagingapi",
+    "method": "GET",
+    "path": "/conversations/{contentType}/{contentId}",
+    "summary": "Get conversations for content",
+    "tags": [
+      "Conversations"
+    ],
+    "requiresAuth": true,
+    "permissions": [],
+    "routeKey": "messagingapi.GET._conversations__contentType___contentId_"
+  },
+  {
+    "service": "messagingapi",
+    "method": "GET",
+    "path": "/conversations/cleanup",
+    "summary": "Cleanup conversations",
+    "tags": [
+      "Conversations"
+    ],
+    "requiresAuth": true,
+    "permissions": [],
+    "routeKey": "messagingapi.GET._conversations_cleanup"
+  },
+  {
+    "service": "messagingapi",
+    "method": "GET",
+    "path": "/conversations/{id}",
+    "summary": "Get conversation by ID",
+    "tags": [
+      "Conversations"
+    ],
+    "requiresAuth": true,
+    "permissions": [],
+    "routeKey": "messagingapi.GET._conversations__id_"
+  },
+  {
+    "service": "messagingapi",
+    "method": "GET",
+    "path": "/deviceContents/deviceId/{deviceId}",
+    "summary": "Get device content by device ID",
+    "tags": [
+      "Device Content"
+    ],
+    "requiresAuth": true,
+    "permissions": [],
+    "routeKey": "messagingapi.GET._deviceContents_deviceId__deviceId_"
+  },
+  {
+    "service": "messagingapi",
+    "method": "POST",
+    "path": "/deviceContents",
+    "summary": "Save device content",
+    "tags": [
+      "Device Content"
+    ],
+    "requiresAuth": true,
+    "permissions": [],
+    "routeKey": "messagingapi.POST._deviceContents"
+  },
+  {
+    "service": "messagingapi",
+    "method": "DELETE",
+    "path": "/deviceContents/{id}",
+    "summary": "Delete device content",
+    "tags": [
+      "Device Content"
+    ],
+    "requiresAuth": true,
+    "permissions": [],
+    "routeKey": "messagingapi.DELETE._deviceContents__id_"
+  },
+  {
+    "service": "messagingapi",
+    "method": "GET",
+    "path": "/devices/my",
+    "summary": "Get current user's active devices",
+    "tags": [
+      "Devices"
+    ],
+    "requiresAuth": true,
+    "permissions": [],
+    "routeKey": "messagingapi.GET._devices_my"
+  },
+  {
+    "service": "messagingapi",
+    "method": "GET",
+    "path": "/devices/deviceId/{deviceId}",
+    "summary": "Get device by device ID with pairing status",
+    "tags": [
+      "Devices"
+    ],
+    "requiresAuth": true,
+    "permissions": [],
+    "routeKey": "messagingapi.GET._devices_deviceId__deviceId_"
+  },
+  {
+    "service": "messagingapi",
+    "method": "GET",
+    "path": "/devices/player/{deviceId}",
+    "summary": "Get player configuration for device",
+    "tags": [
+      "Devices"
+    ],
+    "requiresAuth": true,
+    "permissions": [],
+    "routeKey": "messagingapi.GET._devices_player__deviceId_"
+  },
+  {
+    "service": "messagingapi",
+    "method": "POST",
+    "path": "/devices/register",
+    "summary": "Register a new device",
+    "tags": [
+      "Devices"
+    ],
+    "requiresAuth": true,
+    "permissions": [],
+    "routeKey": "messagingapi.POST._devices_register"
+  },
+  {
+    "service": "messagingapi",
+    "method": "POST",
+    "path": "/devices",
+    "summary": "Save devices",
+    "tags": [
+      "Devices"
+    ],
+    "requiresAuth": true,
+    "permissions": [],
+    "routeKey": "messagingapi.POST._devices"
+  },
+  {
+    "service": "messagingapi",
+    "method": "GET",
+    "path": "/devices/pair/{pairingCode}",
+    "summary": "Pair device using pairing code",
+    "tags": [
+      "Devices"
+    ],
+    "requiresAuth": true,
+    "permissions": [],
+    "routeKey": "messagingapi.GET._devices_pair__pairingCode_"
+  },
+  {
+    "service": "messagingapi",
+    "method": "POST",
+    "path": "/devices/enroll",
+    "summary": "Enroll device for pairing",
+    "tags": [
+      "Devices"
+    ],
+    "requiresAuth": true,
+    "permissions": [],
+    "routeKey": "messagingapi.POST._devices_enroll"
+  },
+  {
+    "service": "messagingapi",
+    "method": "POST",
+    "path": "/devices/tempMessageUser",
+    "summary": "Send push notification to user's devices",
+    "tags": [
+      "Devices"
+    ],
+    "requiresAuth": true,
+    "permissions": [],
+    "routeKey": "messagingapi.POST._devices_tempMessageUser"
+  },
+  {
+    "service": "messagingapi",
+    "method": "POST",
+    "path": "/devices/tempSendManual",
+    "summary": "Send push notification to specific FCM token",
+    "tags": [
+      "Devices"
+    ],
+    "requiresAuth": true,
+    "permissions": [],
+    "routeKey": "messagingapi.POST._devices_tempSendManual"
+  },
+  {
+    "service": "messagingapi",
+    "method": "DELETE",
+    "path": "/devices/{id}",
+    "summary": "Delete device",
+    "tags": [
+      "Devices"
+    ],
+    "requiresAuth": true,
+    "permissions": [],
+    "routeKey": "messagingapi.DELETE._devices__id_"
+  },
+  {
+    "service": "messagingapi",
+    "method": "GET",
+    "path": "/devices/testNotification/{deviceId}",
+    "summary": "Send test notification to device",
+    "tags": [
+      "Devices"
+    ],
+    "requiresAuth": true,
+    "permissions": [],
+    "routeKey": "messagingapi.GET._devices_testNotification__deviceId_"
+  },
+  {
+    "service": "messagingapi",
+    "method": "POST",
+    "path": "/messages",
+    "summary": "Save messages with notification handling",
+    "tags": [
+      "Messages"
+    ],
+    "requiresAuth": true,
+    "permissions": [],
+    "routeKey": "messagingapi.POST._messages"
+  },
+  {
+    "service": "messagingapi",
+    "method": "POST",
+    "path": "/messages/send",
+    "summary": "Send messages (legacy streaming endpoint)",
+    "tags": [
+      "Messages"
+    ],
+    "requiresAuth": true,
+    "permissions": [],
+    "routeKey": "messagingapi.POST._messages_send"
+  },
+  {
+    "service": "messagingapi",
+    "method": "POST",
+    "path": "/messages/setCallout",
+    "summary": "Set message as callout",
+    "tags": [
+      "Messages"
+    ],
+    "requiresAuth": true,
+    "permissions": [],
+    "routeKey": "messagingapi.POST._messages_setCallout"
+  },
+  {
+    "service": "messagingapi",
+    "method": "GET",
+    "path": "/messages/{id}",
+    "summary": "Get message by ID",
+    "tags": [
+      "Messages"
+    ],
+    "requiresAuth": true,
+    "permissions": [],
+    "routeKey": "messagingapi.GET._messages__id_"
+  },
+  {
+    "service": "messagingapi",
+    "method": "DELETE",
+    "path": "/messages/{id}",
+    "summary": "Delete message",
+    "tags": [
+      "Messages"
+    ],
+    "requiresAuth": true,
+    "permissions": [],
+    "routeKey": "messagingapi.DELETE._messages__id_"
+  },
+  {
+    "service": "messagingapi",
+    "method": "GET",
+    "path": "/messages/conversation/{conversationId}",
+    "summary": "Load messages for conversation",
+    "tags": [
+      "Messages"
+    ],
+    "requiresAuth": true,
+    "permissions": [],
+    "routeKey": "messagingapi.GET._messages_conversation__conversationId_"
+  },
+  {
+    "service": "messagingapi",
+    "method": "GET",
+    "path": "/messages/catchup/{churchId}/{conversationId}",
+    "summary": "Catch up on messages for conversation",
+    "tags": [
+      "Messages"
+    ],
+    "requiresAuth": true,
+    "permissions": [],
+    "routeKey": "messagingapi.GET._messages_catchup__churchId___conversationId_"
+  },
+  {
+    "service": "messagingapi",
+    "method": "POST",
+    "path": "/notifications",
+    "summary": "Save notifications",
+    "tags": [
+      "Notifications"
+    ],
+    "requiresAuth": true,
+    "permissions": [],
+    "routeKey": "messagingapi.POST._notifications"
+  },
+  {
+    "service": "messagingapi",
+    "method": "POST",
+    "path": "/notifications/create",
+    "summary": "Create notifications for multiple people",
+    "tags": [
+      "Notifications"
+    ],
+    "requiresAuth": true,
+    "permissions": [],
+    "routeKey": "messagingapi.POST._notifications_create"
+  },
+  {
+    "service": "messagingapi",
+    "method": "POST",
+    "path": "/notifications/ping",
+    "summary": "Send ping notification to person",
+    "tags": [
+      "Notifications"
+    ],
+    "requiresAuth": true,
+    "permissions": [],
+    "routeKey": "messagingapi.POST._notifications_ping"
+  },
+  {
+    "service": "messagingapi",
+    "method": "GET",
+    "path": "/notifications/tmpEmail",
+    "summary": "Trigger daily email notifications",
+    "tags": [
+      "Notifications"
+    ],
+    "requiresAuth": true,
+    "permissions": [],
+    "routeKey": "messagingapi.GET._notifications_tmpEmail"
+  },
+  {
+    "service": "messagingapi",
+    "method": "GET",
+    "path": "/notifications/my",
+    "summary": "Get user's notifications and mark as read",
+    "tags": [
+      "Notifications"
+    ],
+    "requiresAuth": true,
+    "permissions": [],
+    "routeKey": "messagingapi.GET._notifications_my"
+  },
+  {
+    "service": "messagingapi",
+    "method": "GET",
+    "path": "/notifications/unreadCount",
+    "summary": "Get count of unread notifications",
+    "tags": [
+      "Notifications"
+    ],
+    "requiresAuth": true,
+    "permissions": [],
+    "routeKey": "messagingapi.GET._notifications_unreadCount"
+  },
+  {
+    "service": "messagingapi",
+    "method": "POST",
+    "path": "/notificationPreferences",
+    "summary": "Save notification preferences",
+    "tags": [
+      "Notification Preferences"
+    ],
+    "requiresAuth": true,
+    "permissions": [],
+    "routeKey": "messagingapi.POST._notificationPreferences"
+  },
+  {
+    "service": "messagingapi",
+    "method": "GET",
+    "path": "/notificationPreferences/my",
+    "summary": "Get user's notification preferences",
+    "tags": [
+      "Notification Preferences"
+    ],
+    "requiresAuth": true,
+    "permissions": [],
+    "routeKey": "messagingapi.GET._notificationPreferences_my"
+  },
+  {
+    "service": "messagingapi",
+    "method": "GET",
+    "path": "/privateMessages",
+    "summary": "Get all private messages for user and mark as read",
+    "tags": [
+      "Private Messages"
+    ],
+    "requiresAuth": true,
+    "permissions": [],
+    "routeKey": "messagingapi.GET._privateMessages"
+  },
+  {
+    "service": "messagingapi",
+    "method": "POST",
+    "path": "/privateMessages",
+    "summary": "Save private messages",
+    "tags": [
+      "Private Messages"
+    ],
+    "requiresAuth": true,
+    "permissions": [],
+    "routeKey": "messagingapi.POST._privateMessages"
+  },
+  {
+    "service": "messagingapi",
+    "method": "GET",
+    "path": "/privateMessages/existing/{personId}",
+    "summary": "Get existing private message conversation with person",
+    "tags": [
+      "Private Messages"
+    ],
+    "requiresAuth": true,
+    "permissions": [],
+    "routeKey": "messagingapi.GET._privateMessages_existing__personId_"
+  },
+  {
+    "service": "messagingapi",
+    "method": "GET",
+    "path": "/privateMessages/{id}",
+    "summary": "Get private message by ID and clear notification",
+    "tags": [
+      "Private Messages"
+    ],
+    "requiresAuth": true,
+    "permissions": [],
+    "routeKey": "messagingapi.GET._privateMessages__id_"
+  }
+]

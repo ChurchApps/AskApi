@@ -1,0 +1,29 @@
+{
+  "routeKey": "contentapi.POST._arrangements_freeShow_missing",
+  "parameters": [],
+  "requestBody": {
+    "required": true,
+    "content": {
+      "application/json": {
+        "schema": {
+          "type": "object",
+          "properties": {
+            "freeShowIds": {
+              "type": "array",
+              "items": {
+                "type": "string"
+              }
+            }
+          }
+        }
+      }
+    }
+  },
+  "responses": {
+    "200": {
+      "description": "Successful response"
+    }
+  },
+  "security": [],
+  "examples": []
+}

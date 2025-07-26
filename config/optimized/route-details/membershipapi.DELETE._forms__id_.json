@@ -1,0 +1,27 @@
+{
+  "routeKey": "membershipapi.DELETE._forms__id_",
+  "parameters": [
+    {
+      "name": "id",
+      "in": "path",
+      "required": true,
+      "schema": {
+        "type": "string"
+      }
+    }
+  ],
+  "responses": {
+    "200": {
+      "description": "Form deleted successfully"
+    },
+    "401": {
+      "description": "Unauthorized"
+    }
+  },
+  "security": [
+    {
+      "bearerAuth": []
+    }
+  ],
+  "examples": []
+}

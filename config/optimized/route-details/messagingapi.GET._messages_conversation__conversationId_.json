@@ -1,0 +1,30 @@
+{
+  "routeKey": "messagingapi.GET._messages_conversation__conversationId_",
+  "parameters": [
+    {
+      "name": "conversationId",
+      "in": "path",
+      "required": true,
+      "schema": {
+        "type": "string"
+      }
+    }
+  ],
+  "responses": {
+    "200": {
+      "description": "Conversation messages",
+      "content": {
+        "application/json": {
+          "schema": {
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/Message"
+            }
+          }
+        }
+      }
+    }
+  },
+  "security": [],
+  "examples": []
+}

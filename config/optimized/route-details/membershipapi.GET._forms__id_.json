@@ -1,0 +1,34 @@
+{
+  "routeKey": "membershipapi.GET._forms__id_",
+  "parameters": [
+    {
+      "name": "id",
+      "in": "path",
+      "required": true,
+      "schema": {
+        "type": "string"
+      }
+    }
+  ],
+  "responses": {
+    "200": {
+      "description": "Form details",
+      "content": {
+        "application/json": {
+          "schema": {
+            "$ref": "#/components/schemas/Form"
+          }
+        }
+      }
+    },
+    "401": {
+      "description": "Unauthorized"
+    }
+  },
+  "security": [
+    {
+      "bearerAuth": []
+    }
+  ],
+  "examples": []
+}

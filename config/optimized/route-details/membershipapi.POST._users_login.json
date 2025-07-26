@@ -1,0 +1,45 @@
+{
+  "routeKey": "membershipapi.POST._users_login",
+  "parameters": [],
+  "requestBody": {
+    "required": true,
+    "content": {
+      "application/json": {
+        "schema": {
+          "$ref": "#/components/schemas/LoginRequest"
+        }
+      }
+    }
+  },
+  "responses": {
+    "200": {
+      "description": "Login successful",
+      "content": {
+        "application/json": {
+          "schema": {
+            "type": "object",
+            "properties": {
+              "user": {
+                "$ref": "#/components/schemas/User"
+              },
+              "userChurches": {
+                "type": "array",
+                "items": {
+                  "type": "object"
+                }
+              },
+              "token": {
+                "type": "string"
+              }
+            }
+          }
+        }
+      }
+    },
+    "401": {
+      "description": "Login failed"
+    }
+  },
+  "security": [],
+  "examples": []
+}

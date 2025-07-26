@@ -1,8 +1,9 @@
-import { controller, httpPost } from "inversify-express-utils";
+import { controller, httpPost, httpGet } from "inversify-express-utils";
 import express from "express";
 import { AskBaseController } from "./AskBaseController";
 import { OpenAiHelper, ArrayHelper } from "../helpers";
 import { Question } from "../models";
+import { OpenAIQueryService } from "../services/OpenAIQueryService";
 
 @controller("/query")
 export class QueryController extends AskBaseController {
@@ -81,6 +82,120 @@ export class QueryController extends AskBaseController {
         console.error("Error processing question:", error);
         return res.status(500).json({
           error: "Failed to process question",
+          details: error.message
+        });
+      }
+    });
+  }
+
+  @httpPost("/discover-routes")
+  public async discoverRoutes(req: express.Request<{}, {}, any>, res: express.Response): Promise<any> {
+    return this.actionWrapper(req, res, async (au) => {
+      const { query } = req.body;
+
+      if (!query || typeof query !== 'string') {
+        return res.status(400).json({
+          error: "Query parameter is required and must be a string"
+        });
+      }
+
+      try {
+        const queryService = OpenAIQueryService.getInstance();
+        
+        const result = await queryService.processQuery(query, {
+          churchId: au.churchId,
+          userId: au.personId,
+          permissions: [] // TODO: Extract from au if needed
+        });
+
+        return {
+          intent: result.intent,
+          routes: result.selectedRoutes,
+          apiCall: result.apiCall,
+          explanation: result.explanation,
+          confidence: result.confidence
+        };
+      } catch (error) {
+        console.error("Error discovering routes:", error);
+        return res.status(500).json({
+          error: "Failed to discover routes",
+          details: error.message
+        });
+      }
+    });
+  }
+
+  @httpGet("/available-routes")
+  public async getAvailableRoutes(req: express.Request, res: express.Response): Promise<any> {
+    return this.actionWrapper(req, res, async (au) => {
+      try {
+        const queryService = OpenAIQueryService.getInstance();
+        await queryService.initialize();
+
+        const routes = queryService.getAllRoutes();
+        const stats = queryService.getStats();
+
+        return {
+          routes,
+          stats,
+          totalRoutes: routes.length
+        };
+      } catch (error) {
+        console.error("Error getting available routes:", error);
+        return res.status(500).json({
+          error: "Failed to get available routes",
+          details: error.message
+        });
+      }
+    });
+  }
+
+  @httpPost("/search-routes")
+  public async searchRoutes(req: express.Request<{}, {}, any>, res: express.Response): Promise<any> {
+    return this.actionWrapper(req, res, async (au) => {
+      const { searchTerm } = req.body;
+
+      if (!searchTerm || typeof searchTerm !== 'string') {
+        return res.status(400).json({
+          error: "searchTerm parameter is required and must be a string"
+        });
+      }
+
+      try {
+        const queryService = OpenAIQueryService.getInstance();
+        await queryService.initialize();
+
+        const routes = queryService.searchRoutes(searchTerm);
+
+        return {
+          routes,
+          count: routes.length,
+          searchTerm
+        };
+      } catch (error) {
+        console.error("Error searching routes:", error);
+        return res.status(500).json({
+          error: "Failed to search routes",
+          details: error.message
+        });
+      }
+    });
+  }
+
+  @httpGet("/stats")
+  public async getStats(req: express.Request, res: express.Response): Promise<any> {
+    return this.actionWrapper(req, res, async (au) => {
+      try {
+        const queryService = OpenAIQueryService.getInstance();
+        await queryService.initialize();
+
+        const stats = queryService.getStats();
+
+        return stats;
+      } catch (error) {
+        console.error("Error getting stats:", error);
+        return res.status(500).json({
+          error: "Failed to get stats",
           details: error.message
         });
       }

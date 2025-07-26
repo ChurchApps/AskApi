@@ -1,0 +1,34 @@
+{
+  "routeKey": "messagingapi.GET._privateMessages_existing__personId_",
+  "parameters": [
+    {
+      "name": "personId",
+      "in": "path",
+      "required": true,
+      "schema": {
+        "type": "string"
+      }
+    }
+  ],
+  "responses": {
+    "200": {
+      "description": "Existing private message conversation",
+      "content": {
+        "application/json": {
+          "schema": {
+            "oneOf": [
+              {
+                "$ref": "#/components/schemas/PrivateMessage"
+              },
+              {
+                "type": "object"
+              }
+            ]
+          }
+        }
+      }
+    }
+  },
+  "security": [],
+  "examples": []
+}

@@ -1,0 +1,28 @@
+{
+  "routeKey": "membershipapi.GET._people",
+  "parameters": [],
+  "responses": {
+    "200": {
+      "description": "List of people",
+      "content": {
+        "application/json": {
+          "schema": {
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/Person"
+            }
+          }
+        }
+      }
+    },
+    "401": {
+      "description": "Unauthorized"
+    }
+  },
+  "security": [
+    {
+      "bearerAuth": []
+    }
+  ],
+  "examples": []
+}

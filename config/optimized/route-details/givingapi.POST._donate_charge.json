@@ -1,0 +1,28 @@
+{
+  "routeKey": "givingapi.POST._donate_charge",
+  "parameters": [],
+  "requestBody": {
+    "required": true,
+    "content": {
+      "application/json": {
+        "schema": {
+          "$ref": "#/components/schemas/Donation"
+        }
+      }
+    }
+  },
+  "responses": {
+    "200": {
+      "description": "Stripe charge response",
+      "content": {
+        "application/json": {
+          "schema": {
+            "type": "object"
+          }
+        }
+      }
+    }
+  },
+  "security": [],
+  "examples": []
+}

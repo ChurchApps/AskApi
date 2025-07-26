@@ -1,0 +1,28 @@
+{
+  "routeKey": "givingapi.GET._eventLog",
+  "parameters": [],
+  "responses": {
+    "200": {
+      "description": "Successful response",
+      "content": {
+        "application/json": {
+          "schema": {
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/EventLog"
+            }
+          }
+        }
+      }
+    }
+  },
+  "security": [
+    {
+      "bearerAuth": [],
+      "permissions": [
+        "donations.viewSummary"
+      ]
+    }
+  ],
+  "examples": []
+}

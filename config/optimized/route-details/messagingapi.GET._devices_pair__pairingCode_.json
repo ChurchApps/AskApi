@@ -1,0 +1,32 @@
+{
+  "routeKey": "messagingapi.GET._devices_pair__pairingCode_",
+  "parameters": [
+    {
+      "name": "pairingCode",
+      "in": "path",
+      "required": true,
+      "schema": {
+        "type": "string"
+      }
+    }
+  ],
+  "responses": {
+    "200": {
+      "description": "Pairing result",
+      "content": {
+        "application/json": {
+          "schema": {
+            "type": "object",
+            "properties": {
+              "success": {
+                "type": "boolean"
+              }
+            }
+          }
+        }
+      }
+    }
+  },
+  "security": [],
+  "examples": []
+}

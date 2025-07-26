@@ -1,0 +1,28 @@
+{
+  "routeKey": "contentapi.GET._bibles__translationKey__chapters__chapterKey__verses",
+  "parameters": [
+    {
+      "name": "translationKey",
+      "in": "path",
+      "required": true,
+      "schema": {
+        "type": "string"
+      }
+    },
+    {
+      "name": "chapterKey",
+      "in": "path",
+      "required": true,
+      "schema": {
+        "type": "string"
+      }
+    }
+  ],
+  "responses": {
+    "200": {
+      "description": "Successful response"
+    }
+  },
+  "security": [],
+  "examples": []
+}

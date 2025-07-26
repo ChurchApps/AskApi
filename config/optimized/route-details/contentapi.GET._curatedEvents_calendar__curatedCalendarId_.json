@@ -1,0 +1,37 @@
+{
+  "routeKey": "contentapi.GET._curatedEvents_calendar__curatedCalendarId_",
+  "parameters": [
+    {
+      "name": "curatedCalendarId",
+      "in": "path",
+      "required": true,
+      "schema": {
+        "type": "string"
+      }
+    },
+    {
+      "name": "withoutEvents",
+      "in": "query",
+      "schema": {
+        "type": "boolean"
+      }
+    }
+  ],
+  "responses": {
+    "200": {
+      "description": "Successful response",
+      "content": {
+        "application/json": {
+          "schema": {
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/CuratedEvent"
+            }
+          }
+        }
+      }
+    }
+  },
+  "security": [],
+  "examples": []
+}

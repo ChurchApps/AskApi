@@ -1,0 +1,43 @@
+{
+  "routeKey": "messagingapi.GET._conversations_current__churchId___contentType___contentId_",
+  "parameters": [
+    {
+      "name": "churchId",
+      "in": "path",
+      "required": true,
+      "schema": {
+        "type": "string"
+      }
+    },
+    {
+      "name": "contentType",
+      "in": "path",
+      "required": true,
+      "schema": {
+        "type": "string"
+      }
+    },
+    {
+      "name": "contentId",
+      "in": "path",
+      "required": true,
+      "schema": {
+        "type": "string"
+      }
+    }
+  ],
+  "responses": {
+    "200": {
+      "description": "Current conversation",
+      "content": {
+        "application/json": {
+          "schema": {
+            "$ref": "#/components/schemas/Conversation"
+          }
+        }
+      }
+    }
+  },
+  "security": [],
+  "examples": []
+}

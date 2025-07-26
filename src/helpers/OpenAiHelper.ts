@@ -162,17 +162,17 @@ export class OpenAiHelper {
       console.log("Determined Routes:", requiredRoutes);
 
       // Call the required routes
+      console.log("Tokens provided:", Object.keys(tokens).filter(k => tokens[k as keyof ApiTokens]));
       const apiResponses = await this.callRequiredRoutes(requiredRoutes, tokens);
-      console.log("API Responses:", apiResponses, tokens);
+      console.log("API Responses:", apiResponses);
 
-      /*
       // Build the final prompt with API responses
       const finalPrompt = this.buildAnswerPrompt(question, instructions, apiResponses);
       console.log("Final Prompt:", finalPrompt);
-*/
+
       // Get the answer from OpenAI/OpenRouter
-      const result = await this.getAnswerCompletion("test");
-      //console.log("AI Result:", result);
+      const result = await this.getAnswerCompletion(finalPrompt);
+      console.log("AI Result:", result);
 
       const endTime = Date.now();
 
@@ -196,11 +196,11 @@ export class OpenAiHelper {
 
   private static async determineRequiredRoutes(question: string, instructions: string): Promise<RouteInfo[]> {
     const allRoutes = SwaggerHelper.getAllRoutes();
-    
+
     // Build a comprehensive prompt with all available routes
-    const routesInfo = allRoutes.map(route => 
-      `${route.apiName} ${route.method} ${route.path} - ${route.summary || route.description || 'No description'}`
-    ).join('\n');
+    const routesInfo = allRoutes.map(route =>
+      `${route.apiName} ${route.method} ${route.path} - ${route.summary || route.description || "No description"}`
+    ).join("\n");
 
     const prompt = `Based on the following instructions, user question, and available API routes, determine which specific routes need to be called.
 
@@ -233,7 +233,7 @@ If no routes are needed, return an empty array: []`;
 
       const content = response.choices[0]?.message?.content || "[]";
       const routeReferences = JSON.parse(content.trim());
-      
+
       // Match the returned route references with actual RouteInfo objects
       return this.matchRoutesToReferences(routeReferences, allRoutes);
     }
@@ -260,7 +260,7 @@ If no routes are needed, return an empty array: []`;
 
       const content = response.data.choices[0]?.message?.content || "[]";
       const routeReferences = JSON.parse(content.trim());
-      
+
       // Match the returned route references with actual RouteInfo objects
       return this.matchRoutesToReferences(routeReferences, allRoutes);
     }
@@ -270,19 +270,19 @@ If no routes are needed, return an empty array: []`;
 
   private static matchRoutesToReferences(routeReferences: any[], allRoutes: RouteInfo[]): RouteInfo[] {
     const matchedRoutes: RouteInfo[] = [];
-    
+
     for (const ref of routeReferences) {
-      const matchedRoute = allRoutes.find(route => 
+      const matchedRoute = allRoutes.find(route =>
         route.apiName.toLowerCase() === ref.apiName?.toLowerCase() &&
         route.method.toUpperCase() === ref.method?.toUpperCase() &&
         route.path === ref.path
       );
-      
+
       if (matchedRoute) {
         matchedRoutes.push(matchedRoute);
       }
     }
-    
+
     return matchedRoutes;
   }
 
@@ -290,46 +290,118 @@ If no routes are needed, return an empty array: []`;
     const routeResponses: Record<string, any> = {};
 
     for (const route of routes) {
-      const camelCaseApiName = route.apiName.charAt(0).toLowerCase() + route.apiName.slice(1);
+      // Fix: route.apiName comes as lowercase "membershipapi", but token key needs "membershipApiToken"
+      // Convert "membershipapi" -> "membershipApiToken"
+      const apiNameParts = route.apiName.toLowerCase().split("api");
+      const camelCaseApiName = apiNameParts[0] + "Api";
       const tokenKey = `${camelCaseApiName}Token` as keyof ApiTokens;
       const token = tokens[tokenKey];
 
-      const routeKey = `${route.apiName}_${route.method}_${route.path.replace(/\//g, '_')}`;
+      // Debug logging
+      console.log(`Looking for token key: ${tokenKey}, Found: ${token ? "Yes" : "No"}`);
+      if (!token) {
+        console.log("Available tokens:", Object.keys(tokens));
+      }
+
+      const routeKey = `${route.apiName}_${route.method}_${route.path.replace(/\//g, "_")}`;
 
       if (!token) {
-        routeResponses[routeKey] = { 
+        routeResponses[routeKey] = {
           error: `No token provided for ${route.apiName}`,
           route: route
         };
         continue;
       }
 
-      // For now, we'll store the route information and indicate it's ready to be called
-      // In a real implementation, you would make the actual API call to this specific route
-      routeResponses[routeKey] = {
-        route: route,
-        status: "ready_to_call",
-        hasToken: true,
-        // This would be replaced with actual API call results
-        mockResponse: `Ready to call ${route.method} ${route.path} on ${route.apiName}`
-      };
+      try {
+        // Build the API URL - using correct staging patterns
+        const baseUrls = {
+          "membershipapi": "https://membershipapi.staging.churchapps.org",
+          "attendanceapi": "https://attendanceapi.staging.churchapps.org",
+          "contentapi": "https://contentapi.staging.churchapps.org",
+          "doingapi": "https://doingapi.staging.churchapps.org",
+          "givingapi": "https://givingapi.staging.churchapps.org",
+          "messagingapi": "https://messagingapi.staging.churchapps.org"
+        };
+
+        const baseUrl = baseUrls[route.apiName.toLowerCase() as keyof typeof baseUrls];
+        if (!baseUrl) {
+          routeResponses[routeKey] = {
+            error: `Unknown API: ${route.apiName}`,
+            route: route
+          };
+          continue;
+        }
+
+        const url = `${baseUrl}${route.path}`;
+        console.log(`Making API call: ${route.method} ${url}`);
+
+        // Make the actual API call
+        const response = await axios({
+          method: route.method.toLowerCase() as any,
+          url: url,
+          headers: {
+            "Authorization": `Bearer ${token}`,
+            "Content-Type": "application/json"
+          },
+          timeout: 10000 // 10 second timeout
+        });
+
+        routeResponses[routeKey] = {
+          route: route,
+          status: "success",
+          data: response.data,
+          dataType: Array.isArray(response.data) ? `array (${response.data.length} items)` : typeof response.data,
+          summary: Array.isArray(response.data)
+            ? `Retrieved ${response.data.length} ${route.apiName === "membershipapi" && route.path === "/people" ? "people/members" : "records"}`
+            : `Retrieved ${typeof response.data} data`
+        };
+
+      } catch (error: any) {
+        console.error(`API call failed for ${routeKey}:`, error.message);
+        routeResponses[routeKey] = {
+          error: error.response?.data?.message || error.message || "API call failed",
+          status: "failed",
+          route: route,
+          statusCode: error.response?.status
+        };
+      }
     }
 
     return routeResponses;
   }
 
   private static buildAnswerPrompt(question: string, instructions: string, apiResponses: Record<string, any>): string {
+    // Process API responses to create a more readable summary
+    let apiSummary = "";
+    let actualData: any = null;
+
+    for (const [key, response] of Object.entries(apiResponses)) {
+      if (response.status === "success" && response.data) {
+        apiSummary += `\n${key}: ${response.summary}`;
+
+        // For people count questions, store the actual data
+        if (response.route?.apiName === "membershipapi" && response.route?.path === "/people") {
+          actualData = response.data;
+          apiSummary += ` (${Array.isArray(response.data) ? response.data.length : "unknown count"} total)`;
+        }
+      } else if (response.error) {
+        apiSummary += `\n${key}: Error - ${response.error}`;
+      }
+    }
+
     return `You are a helpful church management assistant. Answer the user's question based on the following information.
 
 Instructions:
 ${instructions}
 
-Available API Information:
-${JSON.stringify(apiResponses, null, 2)}
+API Data Retrieved:${apiSummary}
 
 User Question: "${question}"
 
-Please provide a helpful and accurate answer based on the available information. If you need to make API calls to get specific data, explain what data would be needed and from which endpoints.`;
+${actualData ? `\nActual Data: ${JSON.stringify(actualData?.slice?.(0, 3) || actualData, null, 2)}${Array.isArray(actualData) && actualData.length > 3 ? "\n... (showing first 3 records)" : ""}` : ""}
+
+Please provide a helpful and accurate answer based on the available information. For questions about counts or numbers, use the actual data counts provided above. Be specific and include relevant numbers when available.`;
   }
 
   private static async getAnswerCompletion(prompt: string): Promise<any> {

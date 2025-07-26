@@ -1,0 +1,21 @@
+{
+  "routeKey": "messagingapi.GET._notifications_my",
+  "parameters": [],
+  "responses": {
+    "200": {
+      "description": "User's notifications",
+      "content": {
+        "application/json": {
+          "schema": {
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/Notification"
+            }
+          }
+        }
+      }
+    }
+  },
+  "security": [],
+  "examples": []
+}

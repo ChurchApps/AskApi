@@ -1,0 +1,28 @@
+{
+  "routeKey": "doingapi.POST._planItems_sort",
+  "parameters": [],
+  "requestBody": {
+    "required": true,
+    "content": {
+      "application/json": {
+        "schema": {
+          "$ref": "#/components/schemas/PlanItem"
+        }
+      }
+    }
+  },
+  "responses": {
+    "200": {
+      "description": "Successful response",
+      "content": {
+        "application/json": {
+          "schema": {
+            "type": "array"
+          }
+        }
+      }
+    }
+  },
+  "security": [],
+  "examples": []
+}

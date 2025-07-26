@@ -1,0 +1,24 @@
+{
+  "routeKey": "contentapi.POST._events",
+  "parameters": [],
+  "requestBody": {
+    "required": true,
+    "content": {
+      "application/json": {
+        "schema": {
+          "type": "array",
+          "items": {
+            "$ref": "#/components/schemas/Event"
+          }
+        }
+      }
+    }
+  },
+  "responses": {
+    "200": {
+      "description": "Successful response"
+    }
+  },
+  "security": [],
+  "examples": []
+}

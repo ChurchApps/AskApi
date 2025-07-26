@@ -1,0 +1,41 @@
+{
+  "routeKey": "messagingapi.POST._connections_tmpSendAlert",
+  "parameters": [],
+  "requestBody": {
+    "required": true,
+    "content": {
+      "application/json": {
+        "schema": {
+          "type": "object",
+          "properties": {
+            "churchId": {
+              "type": "string"
+            },
+            "personId": {
+              "type": "string"
+            }
+          }
+        }
+      }
+    }
+  },
+  "responses": {
+    "200": {
+      "description": "Alert sent",
+      "content": {
+        "application/json": {
+          "schema": {
+            "type": "object",
+            "properties": {
+              "deliveryCount": {
+                "type": "number"
+              }
+            }
+          }
+        }
+      }
+    }
+  },
+  "security": [],
+  "examples": []
+}

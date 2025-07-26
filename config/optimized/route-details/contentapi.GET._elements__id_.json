@@ -1,0 +1,27 @@
+{
+  "routeKey": "contentapi.GET._elements__id_",
+  "parameters": [
+    {
+      "name": "id",
+      "in": "path",
+      "required": true,
+      "schema": {
+        "type": "string"
+      }
+    }
+  ],
+  "responses": {
+    "200": {
+      "description": "Successful response",
+      "content": {
+        "application/json": {
+          "schema": {
+            "$ref": "#/components/schemas/Element"
+          }
+        }
+      }
+    }
+  },
+  "security": [],
+  "examples": []
+}

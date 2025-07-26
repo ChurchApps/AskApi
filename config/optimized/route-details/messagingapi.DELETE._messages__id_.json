@@ -1,0 +1,27 @@
+{
+  "routeKey": "messagingapi.DELETE._messages__id_",
+  "parameters": [
+    {
+      "name": "id",
+      "in": "path",
+      "required": true,
+      "schema": {
+        "type": "string"
+      }
+    }
+  ],
+  "responses": {
+    "200": {
+      "description": "Message deleted",
+      "content": {
+        "application/json": {
+          "schema": {
+            "$ref": "#/components/schemas/Message"
+          }
+        }
+      }
+    }
+  },
+  "security": [],
+  "examples": []
+}

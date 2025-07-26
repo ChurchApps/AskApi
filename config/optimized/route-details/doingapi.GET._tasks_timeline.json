@@ -1,0 +1,30 @@
+{
+  "routeKey": "doingapi.GET._tasks_timeline",
+  "parameters": [
+    {
+      "name": "taskIds",
+      "in": "query",
+      "schema": {
+        "type": "string"
+      },
+      "description": "Comma-separated task IDs (optional)"
+    }
+  ],
+  "responses": {
+    "200": {
+      "description": "Successful response",
+      "content": {
+        "application/json": {
+          "schema": {
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/Task"
+            }
+          }
+        }
+      }
+    }
+  },
+  "security": [],
+  "examples": []
+}

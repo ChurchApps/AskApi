@@ -1,0 +1,18 @@
+{
+  "routeKey": "givingapi.GET._donations_testEmail",
+  "parameters": [],
+  "responses": {
+    "200": {
+      "description": "Test result",
+      "content": {
+        "application/json": {
+          "schema": {
+            "type": "object"
+          }
+        }
+      }
+    }
+  },
+  "security": [],
+  "examples": []
+}

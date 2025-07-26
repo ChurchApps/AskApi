@@ -1,0 +1,37 @@
+{
+  "routeKey": "attendanceapi.GET._attendancerecords",
+  "parameters": [
+    {
+      "name": "personId",
+      "in": "query",
+      "required": false,
+      "schema": {
+        "type": "string"
+      }
+    }
+  ],
+  "responses": {
+    "200": {
+      "description": "Successful response",
+      "content": {
+        "application/json": {
+          "schema": {
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/AttendanceRecord"
+            }
+          }
+        }
+      }
+    }
+  },
+  "security": [
+    {
+      "bearerAuth": [],
+      "permissions": [
+        "attendance.view"
+      ]
+    }
+  ],
+  "examples": []
+}

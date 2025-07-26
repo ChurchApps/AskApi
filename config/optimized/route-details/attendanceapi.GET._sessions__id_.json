@@ -1,0 +1,34 @@
+{
+  "routeKey": "attendanceapi.GET._sessions__id_",
+  "parameters": [
+    {
+      "name": "id",
+      "in": "path",
+      "required": true,
+      "schema": {
+        "type": "string"
+      }
+    }
+  ],
+  "responses": {
+    "200": {
+      "description": "Successful response",
+      "content": {
+        "application/json": {
+          "schema": {
+            "$ref": "#/components/schemas/Session"
+          }
+        }
+      }
+    }
+  },
+  "security": [
+    {
+      "bearerAuth": [],
+      "permissions": [
+        "attendance.view"
+      ]
+    }
+  ],
+  "examples": []
+}

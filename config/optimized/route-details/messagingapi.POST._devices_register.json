@@ -1,0 +1,33 @@
+{
+  "routeKey": "messagingapi.POST._devices_register",
+  "parameters": [],
+  "requestBody": {
+    "required": true,
+    "content": {
+      "application/json": {
+        "schema": {
+          "$ref": "#/components/schemas/Device"
+        }
+      }
+    }
+  },
+  "responses": {
+    "200": {
+      "description": "Device registered",
+      "content": {
+        "application/json": {
+          "schema": {
+            "type": "object",
+            "properties": {
+              "id": {
+                "type": "string"
+              }
+            }
+          }
+        }
+      }
+    }
+  },
+  "security": [],
+  "examples": []
+}

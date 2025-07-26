@@ -1,0 +1,36 @@
+{
+  "routeKey": "givingapi.POST._paymentmethods_addcard",
+  "parameters": [],
+  "requestBody": {
+    "required": true,
+    "content": {
+      "application/json": {
+        "schema": {
+          "type": "object"
+        }
+      }
+    }
+  },
+  "responses": {
+    "200": {
+      "description": "Payment method and customer ID",
+      "content": {
+        "application/json": {
+          "schema": {
+            "type": "object",
+            "properties": {
+              "paymentMethod": {
+                "type": "object"
+              },
+              "customerId": {
+                "type": "string"
+              }
+            }
+          }
+        }
+      }
+    }
+  },
+  "security": [],
+  "examples": []
+}

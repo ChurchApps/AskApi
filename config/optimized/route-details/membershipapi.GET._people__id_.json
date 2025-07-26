@@ -1,0 +1,37 @@
+{
+  "routeKey": "membershipapi.GET._people__id_",
+  "parameters": [
+    {
+      "name": "id",
+      "in": "path",
+      "required": true,
+      "schema": {
+        "type": "string"
+      }
+    }
+  ],
+  "responses": {
+    "200": {
+      "description": "Person details",
+      "content": {
+        "application/json": {
+          "schema": {
+            "$ref": "#/components/schemas/Person"
+          }
+        }
+      }
+    },
+    "401": {
+      "description": "Unauthorized"
+    },
+    "404": {
+      "description": "Person not found"
+    }
+  },
+  "security": [
+    {
+      "bearerAuth": []
+    }
+  ],
+  "examples": []
+}

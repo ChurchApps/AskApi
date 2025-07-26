@@ -1,0 +1,37 @@
+{
+  "routeKey": "contentapi.GET._arrangements_songDetail__songDetailId_",
+  "parameters": [
+    {
+      "name": "songDetailId",
+      "in": "path",
+      "required": true,
+      "schema": {
+        "type": "string"
+      }
+    }
+  ],
+  "responses": {
+    "200": {
+      "description": "Successful response",
+      "content": {
+        "application/json": {
+          "schema": {
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/Arrangement"
+            }
+          }
+        }
+      }
+    }
+  },
+  "security": [
+    {
+      "bearerAuth": [],
+      "permissions": [
+        "content.edit"
+      ]
+    }
+  ],
+  "examples": []
+}
