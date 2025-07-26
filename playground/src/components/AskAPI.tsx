@@ -1,7 +1,8 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import axios from 'axios';
 import { AuthConfig, APIResponse } from '../App';
 import { EnvironmentHelper } from '../helpers/EnvironmentHelper';
+import { useUserContext } from '../contexts/UserContext';
 
 interface AskAPIProps {
   auth: AuthConfig;
@@ -19,6 +20,7 @@ interface ApiTokens {
 }
 
 const AskAPI: React.FC<AskAPIProps> = ({ auth, setResponse }) => {
+  const { userChurch } = useUserContext();
   const [question, setQuestion] = useState('');
   const [tokens, setTokens] = useState<ApiTokens>({
     attendanceApiToken: '',
@@ -31,6 +33,50 @@ const AskAPI: React.FC<AskAPIProps> = ({ auth, setResponse }) => {
   });
   const [loading, setLoading] = useState(false);
   const [showTokens, setShowTokens] = useState(false);
+
+  // Auto-populate tokens from userChurch context when it changes
+  useEffect(() => {
+    if (userChurch && userChurch.apis && userChurch.apis.length > 0) {
+      const newTokens: ApiTokens = {
+        attendanceApiToken: '',
+        contentApiToken: '',
+        doingApiToken: '',
+        givingApiToken: '',
+        membershipApiToken: '',
+        messagingApiToken: '',
+        reportingApiToken: ''
+      };
+
+      // Map API tokens from userChurch.apis array
+      userChurch.apis.forEach(api => {
+        switch (api.keyName) {
+          case 'AttendanceApi':
+            newTokens.attendanceApiToken = api.jwt;
+            break;
+          case 'ContentApi':
+            newTokens.contentApiToken = api.jwt;
+            break;
+          case 'DoingApi':
+            newTokens.doingApiToken = api.jwt;
+            break;
+          case 'GivingApi':
+            newTokens.givingApiToken = api.jwt;
+            break;
+          case 'MembershipApi':
+            newTokens.membershipApiToken = api.jwt;
+            break;
+          case 'MessagingApi':
+            newTokens.messagingApiToken = api.jwt;
+            break;
+          case 'ReportingApi':
+            newTokens.reportingApiToken = api.jwt;
+            break;
+        }
+      });
+
+      setTokens(newTokens);
+    }
+  }, [userChurch]);
 
   const handleTokenChange = (apiName: keyof ApiTokens, value: string) => {
     setTokens(prev => ({
