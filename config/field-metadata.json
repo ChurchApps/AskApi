@@ -1,0 +1,215 @@
+{
+  "membershipapi": {
+    "clientErrors": {
+      "errorType": [
+        "500",
+        "401",
+        "404",
+        "400"
+      ]
+    },
+    "formSubmissions": {
+      "contentType": [
+        "form",
+        "person"
+      ]
+    },
+    "forms": {
+      "contentType": [
+        "person",
+        "form"
+      ]
+    },
+    "memberPermissions": {
+      "contentType": [
+        "form"
+      ]
+    },
+    "notes": {
+      "contentType": [
+        "person"
+      ],
+      "noteType": [
+        "person"
+      ]
+    },
+    "people": {
+      "gender": [
+        "Female",
+        "Male"
+      ],
+      "maritalStatus": [
+        "Married",
+        "Single",
+        "Divorced",
+        "Widowed",
+        "Unknown"
+      ],
+      "membershipStatus": [
+        "Member",
+        "Guest",
+        "Visitor",
+        "Regular Attendee",
+        "Inactive",
+        "Staff",
+        "Long time Attendee"
+      ],
+      "householdRole": [
+        "Other",
+        "Head",
+        "Child",
+        "Spouse"
+      ]
+    },
+    "questions": {
+      "fieldType": [
+        "Textbox",
+        "Email",
+        "Multiple Choice",
+        "Date",
+        "Yes/No",
+        "Phone Number",
+        "Whole Number",
+        "Decimal",
+        "Text Area",
+        "Checkbox",
+        "Payment"
+      ]
+    }
+  },
+  "contentapi": {
+    "blocks": {
+      "blockType": [
+        "sectionBlock",
+        "footerBlock",
+        "elementBlock"
+      ]
+    },
+    "events": {
+      "visibility": [
+        "public"
+      ]
+    },
+    "files": {
+      "contentType": [
+        "website",
+        "group"
+      ],
+      "fileType": [
+        "application/pdf",
+        "text/csv"
+      ]
+    },
+    "links": {
+      "linkType": [
+        "url",
+        "chat",
+        "prayer",
+        "donation",
+        "page",
+        "bible",
+        "directory",
+        "lessons",
+        "groups",
+        "checkin",
+        "stream",
+        "donationLanding",
+        "votd"
+      ]
+    },
+    "sermons": {
+      "videoType": [
+        "youtube_watchparty",
+        "youtube",
+        "vimeo",
+        "custom",
+        "youtube_channel"
+      ]
+    }
+  },
+  "doingapi": {
+    "actions": {
+      "actionType": [
+        "task"
+      ]
+    },
+    "assignments": {
+      "status": [
+        "Unconfirmed",
+        "Accepted"
+      ]
+    },
+    "conjunctions": {
+      "groupType": [
+        "and",
+        "or"
+      ]
+    },
+    "notes": {
+      "contentType": [
+        "task",
+        "person"
+      ],
+      "noteType": [
+        "task",
+        "person"
+      ]
+    },
+    "planItems": {
+      "itemType": [
+        "item",
+        "header",
+        "arrangementKey"
+      ]
+    },
+    "tasks": {
+      "taskType": [
+        "directoryUpdate"
+      ],
+      "associatedWithType": [
+        "person",
+        "group"
+      ],
+      "createdByType": [
+        "person",
+        "system"
+      ],
+      "assignedToType": [
+        "person",
+        "group"
+      ],
+      "status": [
+        "Open",
+        "Closed"
+      ]
+    }
+  },
+  "givingapi": {
+    "donations": {
+      "method": [
+        "Check",
+        "Cash",
+        "Card",
+        "Credit/Debit Online",
+        "ACH Debit"
+      ]
+    },
+    "eventLogs": {
+      "status": [
+        "paid",
+        "succeeded"
+      ],
+      "eventType": [
+        "invoice.paid",
+        "charge.succeeded"
+      ]
+    }
+  },
+  "messagingapi": {
+    "messages": {
+      "messageType": [
+        "message"
+      ]
+    }
+  }
+}
