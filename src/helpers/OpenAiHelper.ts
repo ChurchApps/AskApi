@@ -1,8 +1,9 @@
 import OpenAI from "openai";
 import axios from "axios";
-import { Environment } from "./Environment";
 import fs from "fs";
 import path from "path";
+import { Environment } from "./Environment";
+import { SwaggerHelper, RouteInfo } from "./SwaggerHelper";
 
 interface ApiTokens {
   attendanceApiToken?: string;
@@ -42,6 +43,9 @@ export class OpenAiHelper {
     if (this.provider === "openrouter" && !this.OPENROUTER_API_KEY) {
       throw new Error("Missing ApiKey for OpenRouter provider.");
     }
+
+    // Load all swagger files on startup
+    await SwaggerHelper.loadAllSwaggerFiles();
 
     return this.openai;
   }
@@ -153,17 +157,22 @@ export class OpenAiHelper {
       const instructionsPath = path.join(__dirname, "../../config/Instructions.md");
       const instructions = fs.readFileSync(instructionsPath, "utf-8");
 
-      // Determine which APIs are needed based on the question
-      const apiDetermination = await this.determineRequiredApis(question, instructions);
+      // Determine which routes are needed based on the question
+      const requiredRoutes = await this.determineRequiredRoutes(question, instructions);
+      console.log("Determined Routes:", requiredRoutes);
 
-      // Call the required APIs
-      const apiResponses = await this.callRequiredApis(apiDetermination, tokens);
+      // Call the required routes
+      const apiResponses = await this.callRequiredRoutes(requiredRoutes, tokens);
+      console.log("API Responses:", apiResponses, tokens);
 
+      /*
       // Build the final prompt with API responses
       const finalPrompt = this.buildAnswerPrompt(question, instructions, apiResponses);
-
+      console.log("Final Prompt:", finalPrompt);
+*/
       // Get the answer from OpenAI/OpenRouter
-      const result = await this.getAnswerCompletion(finalPrompt);
+      const result = await this.getAnswerCompletion("test");
+      //console.log("AI Result:", result);
 
       const endTime = Date.now();
 
@@ -185,32 +194,48 @@ export class OpenAiHelper {
     }
   }
 
-  private static async determineRequiredApis(question: string, instructions: string): Promise<string[]> {
-    const prompt = `Based on the following instructions and user question, determine which APIs need to be called.
+  private static async determineRequiredRoutes(question: string, instructions: string): Promise<RouteInfo[]> {
+    const allRoutes = SwaggerHelper.getAllRoutes();
+    
+    // Build a comprehensive prompt with all available routes
+    const routesInfo = allRoutes.map(route => 
+      `${route.apiName} ${route.method} ${route.path} - ${route.summary || route.description || 'No description'}`
+    ).join('\n');
+
+    const prompt = `Based on the following instructions, user question, and available API routes, determine which specific routes need to be called.
 
 Instructions:
 ${instructions}
 
+Available Routes:
+${routesInfo}
+
 User Question: "${question}"
 
-Respond with ONLY a JSON array of API names that need to be called, e.g.:
-["MembershipApi", "AttendanceApi"]
+Respond with ONLY a JSON array of route objects that need to be called. Each route object should have the exact apiName, method, and path from the available routes above, e.g.:
+[
+  {"apiName": "membershipapi", "method": "GET", "path": "/people"},
+  {"apiName": "attendanceapi", "method": "POST", "path": "/visits"}
+]
 
-If no APIs are needed, return an empty array: []`;
+If no routes are needed, return an empty array: []`;
 
     if (this.provider === "openai") {
       const response = await this.openai.chat.completions.create({
         model: "gpt-4.1-mini",
         messages: [
-          { role: "system", content: "You are an API routing assistant." },
+          { role: "system", content: "You are an API routing assistant that selects specific routes based on user questions." },
           { role: "user", content: prompt }
         ],
         temperature: 0,
-        max_tokens: 100
+        max_tokens: 500
       });
 
       const content = response.choices[0]?.message?.content || "[]";
-      return JSON.parse(content.trim());
+      const routeReferences = JSON.parse(content.trim());
+      
+      // Match the returned route references with actual RouteInfo objects
+      return this.matchRoutesToReferences(routeReferences, allRoutes);
     }
 
     if (this.provider === "openrouter") {
@@ -219,11 +244,11 @@ If no APIs are needed, return an empty array: []`;
         {
           model: "tngtech/deepseek-r1t2-chimera:free",
           messages: [
-            { role: "system", content: "You are an API routing assistant." },
+            { role: "system", content: "You are an API routing assistant that selects specific routes based on user questions." },
             { role: "user", content: prompt }
           ],
           temperature: 0,
-          max_tokens: 100
+          max_tokens: 500
         },
         {
           headers: {
@@ -234,45 +259,63 @@ If no APIs are needed, return an empty array: []`;
       );
 
       const content = response.data.choices[0]?.message?.content || "[]";
-      return JSON.parse(content.trim());
+      const routeReferences = JSON.parse(content.trim());
+      
+      // Match the returned route references with actual RouteInfo objects
+      return this.matchRoutesToReferences(routeReferences, allRoutes);
     }
 
     return [];
   }
 
-  private static async callRequiredApis(apiNames: string[], tokens: ApiTokens): Promise<Record<string, any>> {
-    const apiResponses: Record<string, any> = {};
+  private static matchRoutesToReferences(routeReferences: any[], allRoutes: RouteInfo[]): RouteInfo[] {
+    const matchedRoutes: RouteInfo[] = [];
+    
+    for (const ref of routeReferences) {
+      const matchedRoute = allRoutes.find(route => 
+        route.apiName.toLowerCase() === ref.apiName?.toLowerCase() &&
+        route.method.toUpperCase() === ref.method?.toUpperCase() &&
+        route.path === ref.path
+      );
+      
+      if (matchedRoute) {
+        matchedRoutes.push(matchedRoute);
+      }
+    }
+    
+    return matchedRoutes;
+  }
 
-    for (const apiName of apiNames) {
-      const lowerApiName = apiName.toLowerCase();
-      const tokenKey = `${lowerApiName}Token` as keyof ApiTokens;
+  private static async callRequiredRoutes(routes: RouteInfo[], tokens: ApiTokens): Promise<Record<string, any>> {
+    const routeResponses: Record<string, any> = {};
+
+    for (const route of routes) {
+      const camelCaseApiName = route.apiName.charAt(0).toLowerCase() + route.apiName.slice(1);
+      const tokenKey = `${camelCaseApiName}Token` as keyof ApiTokens;
       const token = tokens[tokenKey];
 
+      const routeKey = `${route.apiName}_${route.method}_${route.path.replace(/\//g, '_')}`;
+
       if (!token) {
-        apiResponses[apiName] = { error: `No token provided for ${apiName}` };
+        routeResponses[routeKey] = { 
+          error: `No token provided for ${route.apiName}`,
+          route: route
+        };
         continue;
       }
 
-      // Read the swagger file for the API
-      const swaggerPath = path.join(__dirname, `../../config/swagger/${lowerApiName}.json`);
-      let swaggerContent: any = {};
-
-      try {
-        swaggerContent = JSON.parse(fs.readFileSync(swaggerPath, "utf-8"));
-      } catch (error) {
-        apiResponses[apiName] = { error: `Could not read swagger for ${apiName}` };
-        continue;
-      }
-
-      // For now, we'll store the swagger content as available endpoints
-      // In a real implementation, you would make actual API calls based on the question context
-      apiResponses[apiName] = {
-        availableEndpoints: Object.keys(swaggerContent.paths || {}),
-        swagger: swaggerContent
+      // For now, we'll store the route information and indicate it's ready to be called
+      // In a real implementation, you would make the actual API call to this specific route
+      routeResponses[routeKey] = {
+        route: route,
+        status: "ready_to_call",
+        hasToken: true,
+        // This would be replaced with actual API call results
+        mockResponse: `Ready to call ${route.method} ${route.path} on ${route.apiName}`
       };
     }
 
-    return apiResponses;
+    return routeResponses;
   }
 
   private static buildAnswerPrompt(question: string, instructions: string, apiResponses: Record<string, any>): string {

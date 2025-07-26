@@ -6,10 +6,11 @@ import { Question } from "../models";
 
 @controller("/query")
 export class QueryController extends AskBaseController {
+  /*
   @httpPost("/questions")
   public async queryQuestions(req: express.Request<{}, {}, any>, res: express.Response): Promise<any> {
     return this.actionWrapper(req, res, async (au) => {
-      const { text, subDomain, siteUrl } = req.body;
+      const { text } = req.body;
 
       if (text && text !== "") {
         OpenAiHelper.initialize();
@@ -20,7 +21,12 @@ export class QueryController extends AskBaseController {
 
       }
     });
-  }
+  }*/
+
+
+
+
+
 
   @httpPost("/ask")
   public async askQuestion(req: express.Request<{}, {}, any>, res: express.Response): Promise<any> {
@@ -28,10 +34,6 @@ export class QueryController extends AskBaseController {
       console.log("Made it");
       const { question, tokens } = req.body;
       console.log("Received question:", question);
-
-      if (!question || question.trim() === "") {
-        return res.status(400).json({ error: "Question is required" });
-      }
 
       try {
         console.log("initializing OpenAI", question);
