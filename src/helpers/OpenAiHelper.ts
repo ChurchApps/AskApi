@@ -46,7 +46,7 @@ export class OpenAiHelper {
     return this.openai;
   }
 
-  public static async getCompletion(prompt: string, subDomain?: string, siteUrl?: string) {
+  public static async getCompletion(prompt: string) {
     if (this.provider === "openai") {
       const response = await this.openai.chat.completions.create({
         model: "gpt-4.1-mini",
@@ -81,8 +81,8 @@ export class OpenAiHelper {
           headers: {
             Authorization: `Bearer ${this.OPENROUTER_API_KEY}`,
             "Content-Type": "application/json",
-            "HTTP-Referer": siteUrl,
-            "X-Title": subDomain
+            "HTTP-Referer": "https://chums.org/",
+            "X-Title": "Chums"
           }
         }
       );
