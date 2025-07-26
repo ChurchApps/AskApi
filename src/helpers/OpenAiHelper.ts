@@ -52,7 +52,7 @@ export class OpenAiHelper {
 
   public static async getCompletion(prompt: string) {
     if (this.provider === "openai") {
-      const response = await this.openai.chat.completions.create({
+      const openAiPayload = {
         model: "gpt-4.1-mini",
         messages: [
           {
@@ -63,24 +63,41 @@ export class OpenAiHelper {
         ],
         temperature: 0.7,
         max_tokens: 500
+      };
+      
+      console.log("=== OpenAI API Request (getCompletion) ===");
+      console.log("Payload:", JSON.stringify(openAiPayload, null, 2));
+      
+      const response = await this.openai.chat.completions.create(openAiPayload);
+      
+      console.log("OpenAI Response:", {
+        model: response.model,
+        usage: response.usage,
+        finishReason: response.choices[0]?.finish_reason
       });
 
       return this.parseAIResponse(response.choices[0]?.message?.content || "");
     }
 
     if (this.provider === "openrouter") {
+      const openRouterPayload = {
+        model: "tngtech/deepseek-r1t2-chimera:free",
+        messages: [
+          {
+            role: "system",
+            content: "You are an API assistant for a church Q&A system."
+          },
+          { role: "user", content: prompt }
+        ]
+      };
+      
+      console.log("=== OpenRouter API Request (getCompletion) ===");
+      console.log("URL:", "https://openrouter.ai/api/v1/chat/completions");
+      console.log("Payload:", JSON.stringify(openRouterPayload, null, 2));
+      
       const response = await axios.post(
         "https://openrouter.ai/api/v1/chat/completions",
-        {
-          model: "tngtech/deepseek-r1t2-chimera:free",
-          messages: [
-            {
-              role: "system",
-              content: "You are an API assistant for a church Q&A system."
-            },
-            { role: "user", content: prompt }
-          ]
-        },
+        openRouterPayload,
         {
           headers: {
             Authorization: `Bearer ${this.OPENROUTER_API_KEY}`,
@@ -90,6 +107,12 @@ export class OpenAiHelper {
           }
         }
       );
+      
+      console.log("OpenRouter Response:", {
+        status: response.status,
+        usage: response.data.usage,
+        finishReason: response.data.choices[0]?.finish_reason
+      });
 
       return this.parseAIResponse(response.data.choices[0]?.message?.content || "");
     }
@@ -221,7 +244,7 @@ Respond with ONLY a JSON array of route objects that need to be called. Each rou
 If no routes are needed, return an empty array: []`;
 
     if (this.provider === "openai") {
-      const response = await this.openai.chat.completions.create({
+      const openAiPayload = {
         model: "gpt-4.1-mini",
         messages: [
           { role: "system", content: "You are an API routing assistant that selects specific routes based on user questions." },
@@ -229,6 +252,17 @@ If no routes are needed, return an empty array: []`;
         ],
         temperature: 0,
         max_tokens: 500
+      };
+      
+      console.log("=== OpenAI API Request (determineRequiredRoutes) ===");
+      console.log("Payload:", JSON.stringify(openAiPayload, null, 2));
+      
+      const response = await this.openai.chat.completions.create(openAiPayload);
+      
+      console.log("OpenAI Response:", {
+        model: response.model,
+        usage: response.usage,
+        content: response.choices[0]?.message?.content
       });
 
       const content = response.choices[0]?.message?.content || "[]";
@@ -239,17 +273,23 @@ If no routes are needed, return an empty array: []`;
     }
 
     if (this.provider === "openrouter") {
+      const openRouterPayload = {
+        model: "tngtech/deepseek-r1t2-chimera:free",
+        messages: [
+          { role: "system", content: "You are an API routing assistant that selects specific routes based on user questions." },
+          { role: "user", content: prompt }
+        ],
+        temperature: 0,
+        max_tokens: 500
+      };
+      
+      console.log("=== OpenRouter API Request (determineRequiredRoutes) ===");
+      console.log("URL:", "https://openrouter.ai/api/v1/chat/completions");
+      console.log("Payload:", JSON.stringify(openRouterPayload, null, 2));
+      
       const response = await axios.post(
         "https://openrouter.ai/api/v1/chat/completions",
-        {
-          model: "tngtech/deepseek-r1t2-chimera:free",
-          messages: [
-            { role: "system", content: "You are an API routing assistant that selects specific routes based on user questions." },
-            { role: "user", content: prompt }
-          ],
-          temperature: 0,
-          max_tokens: 500
-        },
+        openRouterPayload,
         {
           headers: {
             Authorization: `Bearer ${this.OPENROUTER_API_KEY}`,
@@ -257,6 +297,12 @@ If no routes are needed, return an empty array: []`;
           }
         }
       );
+      
+      console.log("OpenRouter Response:", {
+        status: response.status,
+        usage: response.data.usage,
+        content: response.data.choices[0]?.message?.content
+      });
 
       const content = response.data.choices[0]?.message?.content || "[]";
       const routeReferences = JSON.parse(content.trim());
@@ -334,10 +380,8 @@ If no routes are needed, return an empty array: []`;
         }
 
         const url = `${baseUrl}${route.path}`;
-        console.log(`Making API call: ${route.method} ${url}`);
-
-        // Make the actual API call
-        const response = await axios({
+        
+        const apiRequest = {
           method: route.method.toLowerCase() as any,
           url: url,
           headers: {
@@ -345,6 +389,22 @@ If no routes are needed, return an empty array: []`;
             "Content-Type": "application/json"
           },
           timeout: 10000 // 10 second timeout
+        };
+        
+        console.log(`=== External API Request (${route.apiName}) ===`);
+        console.log("URL:", `${route.method} ${url}`);
+        console.log("Headers:", {
+          ...apiRequest.headers,
+          Authorization: "Bearer [REDACTED]"
+        });
+
+        // Make the actual API call
+        const response = await axios(apiRequest);
+        
+        console.log(`External API Response (${route.apiName}):`, {
+          status: response.status,
+          statusText: response.statusText,
+          dataType: Array.isArray(response.data) ? `array (${response.data.length} items)` : typeof response.data
         });
 
         routeResponses[routeKey] = {
@@ -406,7 +466,7 @@ Please provide a helpful and accurate answer based on the available information.
 
   private static async getAnswerCompletion(prompt: string): Promise<any> {
     if (this.provider === "openai") {
-      const response = await this.openai.chat.completions.create({
+      const openAiPayload = {
         model: "gpt-4.1-mini",
         messages: [
           {
@@ -417,6 +477,24 @@ Please provide a helpful and accurate answer based on the available information.
         ],
         temperature: 0.7,
         max_tokens: 1000
+      };
+      
+      console.log("=== OpenAI API Request (getAnswerCompletion) ===");
+      console.log("Payload:", JSON.stringify({
+        ...openAiPayload,
+        messages: [
+          openAiPayload.messages[0],
+          { role: "user", content: prompt.substring(0, 200) + "..." }
+        ]
+      }, null, 2));
+      
+      const response = await this.openai.chat.completions.create(openAiPayload);
+      
+      console.log("OpenAI Response:", {
+        model: response.model,
+        usage: response.usage,
+        finishReason: response.choices[0]?.finish_reason,
+        answerLength: response.choices[0]?.message?.content?.length
       });
 
       return {
@@ -428,20 +506,32 @@ Please provide a helpful and accurate answer based on the available information.
     }
 
     if (this.provider === "openrouter") {
+      const openRouterPayload = {
+        model: "tngtech/deepseek-r1t2-chimera:free",
+        messages: [
+          {
+            role: "system",
+            content: "You are a helpful church management assistant with access to various church APIs."
+          },
+          { role: "user", content: prompt }
+        ],
+        temperature: 0.7,
+        max_tokens: 1000
+      };
+      
+      console.log("=== OpenRouter API Request (getAnswerCompletion) ===");
+      console.log("URL:", "https://openrouter.ai/api/v1/chat/completions");
+      console.log("Payload:", JSON.stringify({
+        ...openRouterPayload,
+        messages: [
+          openRouterPayload.messages[0],
+          { role: "user", content: prompt.substring(0, 200) + "..." }
+        ]
+      }, null, 2));
+      
       const response = await axios.post(
         "https://openrouter.ai/api/v1/chat/completions",
-        {
-          model: "tngtech/deepseek-r1t2-chimera:free",
-          messages: [
-            {
-              role: "system",
-              content: "You are a helpful church management assistant with access to various church APIs."
-            },
-            { role: "user", content: prompt }
-          ],
-          temperature: 0.7,
-          max_tokens: 1000
-        },
+        openRouterPayload,
         {
           headers: {
             Authorization: `Bearer ${this.OPENROUTER_API_KEY}`,
@@ -451,6 +541,13 @@ Please provide a helpful and accurate answer based on the available information.
           }
         }
       );
+      
+      console.log("OpenRouter Response:", {
+        status: response.status,
+        usage: response.data.usage,
+        finishReason: response.data.choices[0]?.finish_reason,
+        answerLength: response.data.choices[0]?.message?.content?.length
+      });
 
       return {
         answer: response.data.choices[0]?.message?.content || "I couldn't generate an answer.",
