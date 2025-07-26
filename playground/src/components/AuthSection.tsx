@@ -43,13 +43,13 @@ const AuthSection: React.FC<AuthSectionProps> = ({ auth, setAuth }) => {
         <LoginPage
           context={userContext}
           jwt=""
-          auth={EnvironmentHelper.getMembershipApiUrl()}
-          keyName="MembershipApi"
+          auth=""
+          keyName=""
           appName="AskApi Playground"
           appUrl={window.location.origin}
           returnUrl="/"
           handleRedirect={handleLoginSuccess}
-          showLogo={true}
+          showLogo={false}
         />
 
         <div style={{ marginTop: '15px' }}>
@@ -129,9 +129,9 @@ const AuthSection: React.FC<AuthSectionProps> = ({ auth, setAuth }) => {
                   type="text"
                   value={api.jwt ? `${api.jwt.substring(0, 40)}...` : 'No token'}
                   disabled
-                  style={{ 
-                    backgroundColor: '#f8f9fa', 
-                    fontFamily: 'monospace', 
+                  style={{
+                    backgroundColor: '#f8f9fa',
+                    fontFamily: 'monospace',
                     fontSize: '0.75em',
                     width: '100%',
                     marginTop: '5px'
@@ -140,7 +140,7 @@ const AuthSection: React.FC<AuthSectionProps> = ({ auth, setAuth }) => {
                 {api.permissions && api.permissions.length > 0 && (
                   <div className="permissions-list">
                     <small>Permissions: {api.permissions.slice(0, 3).map((p: any) => p.action).join(', ')}
-                    {api.permissions.length > 3 && ` +${api.permissions.length - 3} more`}</small>
+                      {api.permissions.length > 3 && ` +${api.permissions.length - 3} more`}</small>
                   </div>
                 )}
               </div>

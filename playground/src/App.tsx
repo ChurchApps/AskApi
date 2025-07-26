@@ -3,6 +3,7 @@ import './App.css';
 import AuthSection from './components/AuthSection';
 import QuestionsAPI from './components/QuestionsAPI';
 import QueryAPI from './components/QueryAPI';
+import AskAPI from './components/AskAPI';
 import ResponseViewer from './components/ResponseViewer';
 import { EnvironmentHelper } from './helpers/EnvironmentHelper';
 import { UserContextProvider } from './contexts/UserContext';
@@ -54,6 +55,7 @@ function App() {
           <AuthSection auth={auth} setAuth={handleAuthChange} />
           {auth.isAuthenticated && (
             <>
+              <AskAPI auth={auth} setResponse={setResponse} />
               <QuestionsAPI auth={auth} setResponse={setResponse} />
               <QueryAPI auth={auth} setResponse={setResponse} />
             </>
