@@ -5,6 +5,7 @@ import QuestionsAPI from './components/QuestionsAPI';
 import QueryAPI from './components/QueryAPI';
 import AskAPI from './components/AskAPI';
 import EnhancedQueryAPI from './components/EnhancedQueryAPI';
+import QueryV2Tester from './components/QueryV2Tester';
 import ResponseViewer from './components/ResponseViewer';
 import { EnvironmentHelper } from './helpers/EnvironmentHelper';
 import { UserContextProvider, useUserContext } from './contexts/UserContext';
@@ -44,6 +45,7 @@ function AppContent() {
           <>
             <EnhancedQueryAPI setResponse={setResponse} />
             <AskAPI setResponse={setResponse} />
+            <QueryV2Tester setResponse={setResponse} />
             <QuestionsAPI setResponse={setResponse} />
             <QueryAPI setResponse={setResponse} />
           </>
