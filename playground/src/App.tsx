@@ -4,6 +4,7 @@ import AuthSection from './components/AuthSection';
 import QuestionsAPI from './components/QuestionsAPI';
 import QueryAPI from './components/QueryAPI';
 import AskAPI from './components/AskAPI';
+import EnhancedQueryAPI from './components/EnhancedQueryAPI';
 import ResponseViewer from './components/ResponseViewer';
 import { EnvironmentHelper } from './helpers/EnvironmentHelper';
 import { UserContextProvider, useUserContext } from './contexts/UserContext';
@@ -41,6 +42,7 @@ function AppContent() {
         <AuthSection />
         {isAuthenticated && (
           <>
+            <EnhancedQueryAPI setResponse={setResponse} />
             <AskAPI setResponse={setResponse} />
             <QuestionsAPI setResponse={setResponse} />
             <QueryAPI setResponse={setResponse} />

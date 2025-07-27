@@ -50,8 +50,7 @@ export class EnvironmentHelper {
   };
 
   static populateApiConfigs = () => {
-    // Use CommonEnvironmentHelper URLs for MembershipApi
-    const membershipApiUrl = CommonEnvironmentHelper.MembershipApi;
+    // Use CommonEnvironmentHelper URLs for MembershipApi and get AskApi URL
     const askApiUrl = this.getAskApiUrl();
 
     ApiHelper.apiConfigs = [

@@ -4,6 +4,7 @@ import { AskBaseController } from "./AskBaseController";
 import { OpenAiHelper, ArrayHelper } from "../helpers";
 import { Question } from "../models";
 import { OpenAIQueryService } from "../services/OpenAIQueryService";
+import { EnhancedQueryService } from "../services/EnhancedQueryService";
 
 @controller("/query")
 export class QueryController extends AskBaseController {
@@ -196,6 +197,110 @@ export class QueryController extends AskBaseController {
         console.error("Error getting stats:", error);
         return res.status(500).json({
           error: "Failed to get stats",
+          details: error.message
+        });
+      }
+    });
+  }
+
+  @httpPost("/enhanced-ask")
+  public async enhancedAsk(req: express.Request<{}, {}, any>, res: express.Response): Promise<any> {
+    return this.actionWrapper(req, res, async (au) => {
+      const { question, tokens } = req.body;
+
+      if (!question || typeof question !== 'string') {
+        return res.status(400).json({
+          error: "Question parameter is required and must be a string"
+        });
+      }
+
+      if (!tokens || typeof tokens !== 'object') {
+        return res.status(400).json({
+          error: "Tokens parameter is required and must be an object with API tokens"
+        });
+      }
+
+      try {
+        const enhancedQueryService = EnhancedQueryService.getInstance();
+        
+        const result = await enhancedQueryService.executeQuery(question, {
+          churchId: au.churchId,
+          userId: au.personId,
+          tokens: tokens
+        });
+
+        // Create question record for logging
+        const questionRecord: Question = {
+          churchId: au.churchId,
+          userId: au.personId,
+          question: question,
+          answer: result.answer,
+          dateAnswered: new Date(),
+          inputTokens: result.tokenUsage.totalTokens,
+          cachedInputTokens: 0, // Enhanced system doesn't use cached tokens in same way
+          outputTokens: result.tokenUsage.finalAnswerTokens,
+          seconds: result.execution.totalTime / 1000
+        };
+
+        // Save to database
+        await this.repositories.question.save(questionRecord);
+
+        const response = {
+          answer: result.answer,
+          questionId: questionRecord.id,
+          enhanced: {
+            classification: result.classification,
+            routeSelection: {
+              primaryRoute: result.routeSelection.primaryRoute.route,
+              confidence: result.routeSelection.primaryRoute.confidence,
+              reason: result.routeSelection.primaryRoute.reason
+            },
+            dataProcessing: {
+              totalRecords: result.processedData.metadata.totalRecords,
+              filteredRecords: result.processedData.metadata.filteredRecords,
+              fieldsExtracted: result.processedData.metadata.fieldsExtracted
+            },
+            execution: result.execution,
+            tokenUsage: result.tokenUsage,
+            confidence: result.confidence
+          },
+          // Legacy format for compatibility
+          tokensUsed: {
+            input: result.tokenUsage.totalTokens - result.tokenUsage.finalAnswerTokens,
+            cachedInput: 0,
+            output: result.tokenUsage.finalAnswerTokens
+          },
+          processingTime: result.execution.totalTime / 1000
+        };
+
+        return response;
+      } catch (error) {
+        console.error("Error processing enhanced question:", error);
+        return res.status(500).json({
+          error: "Failed to process enhanced question",
+          details: error.message
+        });
+      }
+    });
+  }
+
+  @httpGet("/enhanced-stats")
+  public async getEnhancedStats(req: express.Request, res: express.Response): Promise<any> {
+    return this.actionWrapper(req, res, async (au) => {
+      try {
+        const enhancedQueryService = EnhancedQueryService.getInstance();
+        await enhancedQueryService.initialize();
+
+        const stats = enhancedQueryService.getServiceStats();
+
+        return {
+          enhancedQueryStats: stats,
+          message: "Enhanced query execution statistics"
+        };
+      } catch (error) {
+        console.error("Error getting enhanced stats:", error);
+        return res.status(500).json({
+          error: "Failed to get enhanced stats",
           details: error.message
         });
       }
