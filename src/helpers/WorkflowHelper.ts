@@ -17,7 +17,7 @@ export class WorkflowHelper {
     const routes = await WorkflowHelper.determineRoutes(userQuery);
     const fullQuestion = InstructionsHelper.getAnswerQuestionInstructions(userQuery, jwts, routes);
     console.log("Full Question for answerQuestion:", fullQuestion);
-    const result = await OpenAiHelper.execute("You call API routes to select specific data based on user questions.", fullQuestion);
+    const result = await OpenAiHelper.executeText("You call API routes to select specific data based on user questions.", fullQuestion);
     console.log("Result from OpenAiHelper for answerQuestion:", result);
     return result;
   }

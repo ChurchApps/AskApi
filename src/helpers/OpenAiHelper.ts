@@ -63,7 +63,7 @@ export class OpenAiHelper {
 
   public static async execute(systemRole: string, prompt: string): Promise<AskQuestionResult> {
     const openAiPayload: OpenAI.Chat.ChatCompletionCreateParams = {
-      model: "gpt-4o",
+      model: "gpt-4o-mini",
       messages: [
         { role: "system", content: systemRole },
         { role: "user", content: prompt }
@@ -90,6 +90,33 @@ export class OpenAiHelper {
     };*/
   }
 
+  public static async executeText(systemRole: string, prompt: string) {
+    const openAiPayload: OpenAI.Chat.ChatCompletionCreateParams = {
+      model: "gpt-4o-mini",
+      messages: [
+        { role: "system", content: systemRole },
+        { role: "user", content: prompt }
+      ],
+      temperature: 0,
+      max_tokens: 500
+    };
+
+
+    const response = await this.openai.chat.completions.create(openAiPayload);
+    console.log("RESPONSE IS:", response.choices[0]?.message?.content);
+
+    /*
+    const endTime = Date.now();
+    
+    return {
+      answer: result.answer,
+      inputTokens: result.inputTokens,
+      cachedInputTokens: result.cachedInputTokens,
+      outputTokens: result.outputTokens,
+      startTime,
+      endTime
+    };*/
+  }
 
 
 
