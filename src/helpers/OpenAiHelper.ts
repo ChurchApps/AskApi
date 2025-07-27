@@ -61,11 +61,11 @@ export class OpenAiHelper {
   }
 
 
-  public static async execute(prompt: string): Promise<AskQuestionResult> {
+  public static async execute(systemRole: string, prompt: string): Promise<AskQuestionResult> {
     const openAiPayload: OpenAI.Chat.ChatCompletionCreateParams = {
       model: "gpt-4o",
       messages: [
-        { role: "system", content: "You are an API routing assistant that selects specific routes based on user questions." },
+        { role: "system", content: systemRole },
         { role: "user", content: prompt }
       ],
       temperature: 0,
@@ -74,6 +74,7 @@ export class OpenAiHelper {
 
 
     const response = await this.openai.chat.completions.create(openAiPayload);
+    console.log("RESPONSE IS:", response.choices[0]?.message?.content);
 
     return this.parseAIResponse(response.choices[0]?.message?.content || "");
     /*
