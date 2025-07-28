@@ -10,23 +10,31 @@ export class InstructionsHelper {
     return contents;
   }
 
-  static getAnswerQuestionInstructions(userQuery: string, jwts: any, routes: any): string {
-    let contents = this.readFile("/config/instructions/answerQuestion.md");
+  static getFormApiCallsInstructions(userQuery: string, routes: any): string {
+    let contents = this.readFile("/config/instructions/formApiCalls.md");
     contents = contents.replace("{query}", userQuery);
-
-    // Routes should be passed to filterRelevantJwts BEFORE stringifying
-    // Filter JWTs to only include tokens for services used in routes
-    const filteredJwts = this.filterRelevantJwts(jwts, routes);
-    console.log("Debug - Routes type:", typeof routes);
-    console.log("Debug - Routes structure:", JSON.stringify(routes).substring(0, 100));
-    console.log("Debug - Filtered JWTs:", Object.keys(filteredJwts));
-
-    // Now stringify routes for the instruction template
     contents = contents.replace("{routesDetails}", JSON.stringify(routes));
-    contents = contents.replace("{jwts}", JSON.stringify(filteredJwts));
-
     return contents;
   }
+
+  /*
+    static getAnswerQuestionInstructions(userQuery: string, jwts: any, routes: any): string {
+      let contents = this.readFile("/config/instructions/answerQuestion.md");
+      contents = contents.replace("{query}", userQuery);
+  
+      // Routes should be passed to filterRelevantJwts BEFORE stringifying
+      // Filter JWTs to only include tokens for services used in routes
+      const filteredJwts = this.filterRelevantJwts(jwts, routes);
+      console.log("Debug - Routes type:", typeof routes);
+      console.log("Debug - Routes structure:", JSON.stringify(routes).substring(0, 100));
+      console.log("Debug - Filtered JWTs:", Object.keys(filteredJwts));
+  
+      // Now stringify routes for the instruction template
+      contents = contents.replace("{routesDetails}", JSON.stringify(routes));
+      contents = contents.replace("{jwts}", JSON.stringify(filteredJwts));
+  
+      return contents;
+    }*/
 
   /**
    * Filters JWT tokens to only include tokens for services that are actually used in the routes

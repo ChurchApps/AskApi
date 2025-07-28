@@ -3,6 +3,7 @@ import './App.css';
 import AuthSection from './components/AuthSection';
 import QueryV2Tester from './components/QueryV2Tester';
 import QueryV2AnswerTester from './components/QueryV2AnswerTester';
+import QueryV2FormApiCallsTester from './components/QueryV2FormApiCallsTester';
 import ResponseViewer from './components/ResponseViewer';
 import { EnvironmentHelper } from './helpers/EnvironmentHelper';
 import { UserContextProvider, useUserContext } from './contexts/UserContext';
@@ -41,6 +42,7 @@ function AppContent() {
         {isAuthenticated && (
           <>
             <QueryV2AnswerTester setResponse={setResponse} />
+            <QueryV2FormApiCallsTester setResponse={setResponse} />
             <QueryV2Tester setResponse={setResponse} />
           </>
         )}

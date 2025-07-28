@@ -15,6 +15,16 @@ export class QueryV2Controller extends AskBaseController {
     });
   }
 
+  @httpPost("/formApiCalls")
+  public async formApiCalls(req: express.Request<{}, {}, any>, res: express.Response): Promise<any> {
+    return this.actionWrapper(req, res, async (au) => {
+      const { question } = req.body;
+      await OpenAiHelper.initialize();
+      return WorkflowHelper.formApiCalls(question);
+    });
+  }
+
+  /*
   @httpPost("/answerQuestion")
   public async getData(req: express.Request<{}, {}, any>, res: express.Response): Promise<any> {
     return this.actionWrapper(req, res, async (au) => {
@@ -22,5 +32,6 @@ export class QueryV2Controller extends AskBaseController {
       await OpenAiHelper.initialize();
       return WorkflowHelper.answerQuestion(question, jwts);
     });
-  }
+  }*/
+
 }
