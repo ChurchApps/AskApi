@@ -24,6 +24,24 @@ export class QueryV2Controller extends AskBaseController {
     });
   }
 
+  @httpPost("/executeApiCalls")
+  public async executeApiCalls(req: express.Request<{}, {}, any>, res: express.Response): Promise<any> {
+    return this.actionWrapper(req, res, async (au) => {
+      const { question, jwts } = req.body;
+      await OpenAiHelper.initialize();
+      return WorkflowHelper.executeApiCalls(question, jwts);
+    });
+  }
+
+  @httpPost("/answerQuestion")
+  public async answerQuestion(req: express.Request<{}, {}, any>, res: express.Response): Promise<any> {
+    return this.actionWrapper(req, res, async (au) => {
+      const { question, jwts } = req.body;
+      await OpenAiHelper.initialize();
+      return WorkflowHelper.answerQuestion(question, jwts);
+    });
+  }
+
   /*
   @httpPost("/answerQuestion")
   public async getData(req: express.Request<{}, {}, any>, res: express.Response): Promise<any> {
@@ -33,5 +51,4 @@ export class QueryV2Controller extends AskBaseController {
       return WorkflowHelper.answerQuestion(question, jwts);
     });
   }*/
-
 }
