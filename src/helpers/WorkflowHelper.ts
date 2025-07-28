@@ -2,7 +2,6 @@ import { DataHelper } from "./DataHelper";
 import { InstructionsHelper } from "./InstructionsHelper";
 import { OpenAiHelper } from "./OpenAiHelper";
 
-
 export class WorkflowHelper {
   /*
   Step 1 - Determine needed routes - Give it a list of available routes and descriptions and have it pick the ones needed for the job
@@ -10,7 +9,6 @@ export class WorkflowHelper {
   Step 3 - Manual code to make API calls and return data.
   Step 4 - Parse the data and provide answer.
   */
-
 
   static async determineRoutes(userQuery: string) {
     const fullQuestion = InstructionsHelper.getDetermineRoutesInstructions(userQuery);
@@ -69,5 +67,4 @@ export class WorkflowHelper {
     console.log("Result from OpenAiHelper for answerQuestion:", result);
     return result;
   }
-
 }

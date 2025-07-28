@@ -68,7 +68,7 @@ export class SwaggerHelper {
 
       return {
         availableEndpoints: Object.keys(swaggerContent.paths || {}),
-        swagger: swaggerContent,
+        swagger: swaggerContent
       };
     } catch (error) {
       console.error(`Could not read swagger file for ${apiName}:`, error);
@@ -128,7 +128,7 @@ export class SwaggerHelper {
               method: method.toUpperCase(),
               summary: methodData.summary,
               description: methodData.description,
-              tags: methodData.tags,
+              tags: methodData.tags
             };
             routes.push(route);
           }
@@ -163,7 +163,7 @@ export class SwaggerHelper {
 
           this.apiCollections.push({
             apiName,
-            routes,
+            routes
           });
         }
       }
@@ -243,9 +243,9 @@ export class SwaggerHelper {
    * @param refs Set to collect unique references
    */
   private static findSchemaRefs(obj: any, refs: Set<string>): void {
-    if (!obj || typeof obj !== 'object') return;
+    if (!obj || typeof obj !== "object") return;
 
-    if (obj.$ref && typeof obj.$ref === 'string') {
+    if (obj.$ref && typeof obj.$ref === "string") {
       const match = obj.$ref.match(/#\/components\/schemas\/(.+)/);
       if (match) {
         refs.add(match[1]);
@@ -253,9 +253,9 @@ export class SwaggerHelper {
     }
 
     if (Array.isArray(obj)) {
-      obj.forEach(item => this.findSchemaRefs(item, refs));
+      obj.forEach((item) => this.findSchemaRefs(item, refs));
     } else {
-      Object.values(obj).forEach(value => this.findSchemaRefs(value, refs));
+      Object.values(obj).forEach((value) => this.findSchemaRefs(value, refs));
     }
   }
 
@@ -281,15 +281,15 @@ export class SwaggerHelper {
     while (refsToProcess.length > 0) {
       const ref = refsToProcess.pop()!;
       if (processedRefs.has(ref)) continue;
-      
+
       processedRefs.add(ref);
-      
+
       if (allSchemas[ref]) {
         schemas[ref] = allSchemas[ref];
         // Find nested refs
         const nestedRefs = new Set<string>();
         this.findSchemaRefs(allSchemas[ref], nestedRefs);
-        nestedRefs.forEach(nestedRef => {
+        nestedRefs.forEach((nestedRef) => {
           if (!processedRefs.has(nestedRef)) {
             refsToProcess.push(nestedRef);
           }
@@ -319,7 +319,7 @@ export class SwaggerHelper {
           tags: route.tags || [],
           requiresAuth: true, // Most endpoints require auth in this system
           permissions: [], // Will be populated from detailed swagger data
-          routeKey,
+          routeKey
         });
       });
     });
@@ -354,7 +354,7 @@ export class SwaggerHelper {
       responses: methodData.responses || {},
       security: methodData.security || [],
       examples: methodData.examples || [],
-      schemas: Object.keys(referencedSchemas).length > 0 ? referencedSchemas : undefined,
+      schemas: Object.keys(referencedSchemas).length > 0 ? referencedSchemas : undefined
     };
   }
 
@@ -390,7 +390,7 @@ export class SwaggerHelper {
           const filename = `${details.routeKey}.json`;
           // Write compact JSON (no pretty printing)
           fs.writeFileSync(path.join(detailsDir, filename), JSON.stringify(details));
-          
+
           if (details.schemas) {
             routesWithSchemas++;
             totalSchemas += Object.keys(details.schemas).length;

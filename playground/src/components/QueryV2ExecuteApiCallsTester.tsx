@@ -22,7 +22,7 @@ interface ApiTokens {
 const QueryV2ExecuteApiCallsTester: React.FC<QueryV2ExecuteApiCallsTesterProps> = ({ setResponse }) => {
   const { userChurch } = useUserContext();
   const [question, setQuestion] = useState('');
-  const [executionResults, setExecutionResults] = useState<any[][]>([]);
+  const [executionResults, setExecutionResults] = useState<string[]>([]);
   const [loading, setLoading] = useState(false);
   const [showTokens, setShowTokens] = useState(false);
   const [tokens, setTokens] = useState<ApiTokens>({
@@ -158,8 +158,8 @@ const QueryV2ExecuteApiCallsTester: React.FC<QueryV2ExecuteApiCallsTesterProps> 
         }
       );
 
-      // Extract the execution results from the response
-      let resultsData: any[][] = [];
+      // Extract the execution results from the response (now CSV strings)
+      let resultsData: string[] = [];
       if (Array.isArray(response.data)) {
         resultsData = response.data;
       } else if (response.data.results && Array.isArray(response.data.results)) {
@@ -173,10 +173,10 @@ const QueryV2ExecuteApiCallsTester: React.FC<QueryV2ExecuteApiCallsTesterProps> 
           }
         } catch (e) {
           console.log('Could not parse answer as JSON, using full response');
-          resultsData = [[response.data]];
+          resultsData = [String(response.data)];
         }
       } else {
-        resultsData = [[response.data]];
+        resultsData = [String(response.data)];
       }
 
       setExecutionResults(resultsData);
@@ -205,43 +205,32 @@ const QueryV2ExecuteApiCallsTester: React.FC<QueryV2ExecuteApiCallsTesterProps> 
   };
 
   const getTotalItemCount = () => {
-    return executionResults.reduce((total, dataArray) => {
-      return total + (Array.isArray(dataArray) ? dataArray.length : 0);
+    return executionResults.reduce((total, csvData) => {
+      if (csvData) {
+        // Count lines minus header = number of data rows
+        const lines = csvData.split('\n').filter(line => line.trim());
+        return total + Math.max(0, lines.length - 1);
+      }
+      return total;
     }, 0);
   };
 
-
-
-  const formatDataPreview = (data: any): string => {
-    if (Array.isArray(data)) {
-      if (data.length === 0) return 'Empty array';
-      if (data.length <= 3) {
-        return JSON.stringify(data, null, 2);
-      } else {
-        return `[${JSON.stringify(data[0], null, 2)}, ... and ${data.length - 1} more items]`;
-      }
-    } else if (typeof data === 'object' && data !== null) {
-      const keys = Object.keys(data).slice(0, 5);
-      const preview = keys.reduce((acc, key) => {
-        acc[key] = data[key];
-        return acc;
-      }, {} as any);
-      if (Object.keys(data).length > 5) {
-        preview['...'] = `and ${Object.keys(data).length - 5} more properties`;
-      }
-      return JSON.stringify(preview, null, 2);
-    } else {
-      return String(data);
-    }
+  const getCsvPreview = (csvData: string, maxLines: number = 10): string => {
+    if (!csvData) return '';
+    const lines = csvData.split('\n');
+    if (lines.length <= maxLines) return csvData;
+    return lines.slice(0, maxLines).join('\n') + `\n... (${lines.length - maxLines} more rows)`;
   };
+
+
 
   return (
     <div className="section">
       <h2 className="section-title">🚀 API Execution (QueryV2)</h2>
-      <p>Execute the formed API calls with appropriate tokens and return actual data</p>
+      <p>Execute the formed API calls with appropriate tokens and return actual data in CSV format</p>
 
       <div className="info-box">
-        ℹ️ This endpoint forms API calls based on your question, then executes them with the provided JWT tokens to return real data from the APIs.
+        ℹ️ This endpoint forms API calls based on your question, then executes them with the provided JWT tokens to return real data from the APIs in CSV format for optimal token efficiency.
       </div>
 
       <div className="form-group">
@@ -283,15 +272,15 @@ const QueryV2ExecuteApiCallsTester: React.FC<QueryV2ExecuteApiCallsTesterProps> 
         </label>
         {showTokens && (
           <>
-            <button 
-              type="button" 
+            <button
+              type="button"
               onClick={handleUseAuthToken}
               className="btn btn-secondary"
               style={{ marginBottom: '10px' }}
             >
               Use Auth Token for All APIs
             </button>
-            
+
             <div style={{ display: 'grid', gap: '10px' }}>
               {Object.entries(tokens).map(([key, value]) => (
                 <div key={key} style={{ display: 'flex', gap: '10px', alignItems: 'center' }}>
@@ -313,8 +302,8 @@ const QueryV2ExecuteApiCallsTester: React.FC<QueryV2ExecuteApiCallsTesterProps> 
         )}
       </div>
 
-      <button 
-        onClick={handleExecuteApiCalls} 
+      <button
+        onClick={handleExecuteApiCalls}
         disabled={loading || !question.trim()}
         className="btn btn-primary"
       >
@@ -344,51 +333,57 @@ const QueryV2ExecuteApiCallsTester: React.FC<QueryV2ExecuteApiCallsTesterProps> 
           </div>
 
           <div style={{ display: 'grid', gap: '15px' }}>
-            {executionResults.map((dataArray, index) => (
-              <div
-                key={index}
-                style={{
-                  border: '1px solid #e1e8ed',
-                  borderRadius: '8px',
-                  padding: '15px',
-                  backgroundColor: '#fff',
-                  borderLeft: `4px solid #3498db`
-                }}
-              >
-                <div style={{ marginBottom: '10px' }}>
-                  <h4 style={{ margin: 0, color: '#2c3e50' }}>
-                    API Call #{index + 1} Result
-                  </h4>
-                  <div style={{ fontSize: '0.9em', color: '#555', marginTop: '5px' }}>
-                    <strong>Data Type:</strong> {Array.isArray(dataArray) ? `Array (${dataArray.length} items)` : typeof dataArray}
+            {executionResults.map((csvData, index) => {
+              const lines = csvData ? csvData.split('\n').filter(line => line.trim()) : [];
+              const itemCount = Math.max(0, lines.length - 1); // Subtract header row
+
+              return (
+                <div
+                  key={index}
+                  style={{
+                    border: '1px solid #e1e8ed',
+                    borderRadius: '8px',
+                    padding: '15px',
+                    backgroundColor: '#fff',
+                    borderLeft: `4px solid #3498db`
+                  }}
+                >
+                  <div style={{ marginBottom: '10px' }}>
+                    <h4 style={{ margin: 0, color: '#2c3e50' }}>
+                      API Call #{index + 1} Result
+                    </h4>
+                    <div style={{ fontSize: '0.9em', color: '#555', marginTop: '5px' }}>
+                      <strong>Data Format:</strong> CSV ({itemCount} rows, {csvData ? csvData.length : 0} characters)
+                    </div>
+                  </div>
+
+                  <div>
+                    <strong style={{ fontSize: '0.9em', color: '#333' }}>CSV Data:</strong>
+                    <pre style={{
+                      backgroundColor: '#f8f9fa',
+                      border: '1px solid #e9ecef',
+                      borderRadius: '4px',
+                      padding: '10px',
+                      fontSize: '0.75em',
+                      maxHeight: '300px',
+                      overflow: 'auto',
+                      marginTop: '5px',
+                      fontFamily: 'Consolas, Monaco, "Lucida Console", monospace'
+                    }}>
+                      {csvData ? getCsvPreview(csvData, 15) : 'No data'}
+                    </pre>
                   </div>
                 </div>
-                
-                <div>
-                  <strong style={{ fontSize: '0.9em', color: '#333' }}>Response Data:</strong>
-                  <pre style={{
-                    backgroundColor: '#f8f9fa',
-                    border: '1px solid #e9ecef',
-                    borderRadius: '4px',
-                    padding: '10px',
-                    fontSize: '0.8em',
-                    maxHeight: '300px',
-                    overflow: 'auto',
-                    marginTop: '5px'
-                  }}>
-                    {formatDataPreview(dataArray)}
-                  </pre>
-                </div>
-              </div>
-            ))}
+              );
+            })}
           </div>
 
           <div style={{ marginTop: '15px', padding: '10px', backgroundColor: '#f8f9fa', borderRadius: '6px', fontSize: '0.9em' }}>
             <strong>Execution Summary:</strong>
             <div style={{ marginTop: '5px' }}>
-              📊 Total API Calls: {executionResults.length} | 
+              📊 Total API Calls: {executionResults.length} |
               📋 Total Items Retrieved: {getTotalItemCount()} |
-              💾 Data Arrays: {executionResults.filter(r => Array.isArray(r)).length}
+              💾 CSV Datasets: {executionResults.filter(csv => csv && csv.trim()).length}
             </div>
           </div>
         </div>
