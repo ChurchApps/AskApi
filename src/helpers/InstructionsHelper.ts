@@ -25,6 +25,13 @@ export class InstructionsHelper {
     return contents;
   }
 
+  static getQueryPeopleInstructions(userQuery: string, data: any): string {
+    let contents = this.readFile("/config/instructions/queryPeople.md");
+    contents = contents.replace("{query}", userQuery);
+    contents = contents.replace("{data}", JSON.stringify(data));
+    return contents;
+  }
+
   /*
     static getAnswerQuestionInstructions(userQuery: string, jwts: any, routes: any): string {
       let contents = this.readFile("/config/instructions/answerQuestion.md");

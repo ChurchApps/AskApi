@@ -17,7 +17,7 @@ export class WorkflowHelper {
       "You are an API routing assistant that selects specific routes based on user questions.",
       fullQuestion
     );
-    //console.log("Result from OpenAiHelper:", result);
+    console.log("Result from OpenAiHelper:", result);
     return result;
   }
 
@@ -65,6 +65,19 @@ export class WorkflowHelper {
       fullQuestion
     );
     console.log("Result from OpenAiHelper for answerQuestion:", result);
+    return result;
+  }
+
+  static async queryPeople(userQuery: string, jwts: any) {
+    const prepQuery = userQuery + " - Find people ids matching this query. You're not allowed to use the advanced search route.";
+    const data = await WorkflowHelper.executeApiCalls(prepQuery, jwts);
+
+    const fullQuestion = InstructionsHelper.getQueryPeopleInstructions(userQuery, data);
+    const result = await OpenAiHelper.executeText(
+      "You are a people search assistant that returns person IDs matching the query criteria.",
+      fullQuestion
+    );
+    console.log("Result from OpenAiHelper for queryPeople:", result);
     return result;
   }
 }
