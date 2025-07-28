@@ -1,10 +1,6 @@
 import React, { useEffect, useState } from 'react';
 import './App.css';
 import AuthSection from './components/AuthSection';
-import QuestionsAPI from './components/QuestionsAPI';
-import QueryAPI from './components/QueryAPI';
-import AskAPI from './components/AskAPI';
-import EnhancedQueryAPI from './components/EnhancedQueryAPI';
 import QueryV2Tester from './components/QueryV2Tester';
 import QueryV2AnswerTester from './components/QueryV2AnswerTester';
 import ResponseViewer from './components/ResponseViewer';
@@ -44,12 +40,8 @@ function AppContent() {
         <AuthSection />
         {isAuthenticated && (
           <>
-            <EnhancedQueryAPI setResponse={setResponse} />
-            <AskAPI setResponse={setResponse} />
             <QueryV2AnswerTester setResponse={setResponse} />
             <QueryV2Tester setResponse={setResponse} />
-            <QuestionsAPI setResponse={setResponse} />
-            <QueryAPI setResponse={setResponse} />
           </>
         )}
         {response && <ResponseViewer response={response} />}

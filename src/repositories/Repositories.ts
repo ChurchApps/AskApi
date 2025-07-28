@@ -1,7 +1,6 @@
-import { QuestionRepository } from ".";
-
 export class Repositories {
-  public question: QuestionRepository;
+  // Currently no repositories as Question has been removed
+  // This class is kept for the base controller infrastructure
 
   private static _current: Repositories = null;
   public static getCurrent = () => {
@@ -10,6 +9,6 @@ export class Repositories {
   };
 
   constructor() {
-    this.question = new QuestionRepository();
+    // No repositories to initialize currently
   }
 }

@@ -1,9 +1,7 @@
 import fs from "fs";
 import path from "path";
 
-
 export class InstructionsHelper {
-
   static getDetermineRoutesInstructions(userQuery: string): string {
     let contents = this.readFile("/config/instructions/determineRoutes.md");
     const routeIndex = this.readFile("/config/optimized/route-index.json");
@@ -62,17 +60,16 @@ export class InstructionsHelper {
 
     // Extract unique services from routes
     const uniqueServices = new Set<string>();
-    flatRoutes.forEach(route => {
+    flatRoutes.forEach((route) => {
       if (route.service) {
         uniqueServices.add(route.service.toLowerCase());
         console.log("filterRelevantJwts - Found service:", route.service);
       }
     });
 
-
     // Filter JWTs based on services used
     const filteredJwts: any = {};
-    uniqueServices.forEach(service => {
+    uniqueServices.forEach((service) => {
       if (jwts[service]) {
         filteredJwts[service] = jwts[service];
         console.log("filterRelevantJwts - Including token:", service);

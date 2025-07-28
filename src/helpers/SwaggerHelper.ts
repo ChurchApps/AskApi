@@ -61,13 +61,13 @@ export class SwaggerHelper {
    */
   public static async readSwaggerFile(apiName: string): Promise<SwaggerResult | null> {
     const swaggerPath = path.join(__dirname, this.SWAGGER_CONFIG_PATH, `${apiName.toLowerCase()}.json`);
-    
+
     try {
       const swaggerContent: SwaggerContent = JSON.parse(fs.readFileSync(swaggerPath, "utf-8"));
-      
+
       return {
         availableEndpoints: Object.keys(swaggerContent.paths || {}),
-        swagger: swaggerContent
+        swagger: swaggerContent,
       };
     } catch (error) {
       console.error(`Could not read swagger file for ${apiName}:`, error);
@@ -85,7 +85,7 @@ export class SwaggerHelper {
 
     for (const apiName of apiNames) {
       const swaggerResult = await this.readSwaggerFile(apiName);
-      
+
       if (swaggerResult) {
         results[apiName] = swaggerResult;
       } else {
@@ -117,9 +117,9 @@ export class SwaggerHelper {
     const paths = swaggerContent.paths || {};
 
     Object.entries(paths).forEach(([pathString, pathObject]) => {
-      if (typeof pathObject === 'object' && pathObject !== null) {
+      if (typeof pathObject === "object" && pathObject !== null) {
         Object.entries(pathObject).forEach(([method, methodObject]) => {
-          if (typeof methodObject === 'object' && methodObject !== null) {
+          if (typeof methodObject === "object" && methodObject !== null) {
             const methodData = methodObject as any; // Type assertion for swagger method object
             const route: RouteInfo = {
               apiName,
@@ -127,7 +127,7 @@ export class SwaggerHelper {
               method: method.toUpperCase(),
               summary: methodData.summary,
               description: methodData.description,
-              tags: methodData.tags
+              tags: methodData.tags,
             };
             routes.push(route);
           }
@@ -144,32 +144,32 @@ export class SwaggerHelper {
    */
   public static async loadAllSwaggerFiles(): Promise<void> {
     const swaggerDir = path.join(__dirname, this.SWAGGER_CONFIG_PATH);
-    
+
     try {
       const files = fs.readdirSync(swaggerDir);
-      const swaggerFiles = files.filter(file => file.endsWith('.json'));
-      
+      const swaggerFiles = files.filter((file) => file.endsWith(".json"));
+
       this.allRoutes = [];
       this.apiCollections = [];
 
       for (const file of swaggerFiles) {
-        const apiName = file.replace('.json', '');
+        const apiName = file.replace(".json", "");
         const swaggerResult = await this.readSwaggerFile(apiName);
-        
+
         if (swaggerResult) {
           const routes = this.parseRoutesFromSwagger(apiName, swaggerResult.swagger);
           this.allRoutes.push(...routes);
-          
+
           this.apiCollections.push({
             apiName,
-            routes
+            routes,
           });
         }
       }
 
       console.log(`Loaded ${this.allRoutes.length} routes from ${this.apiCollections.length} APIs`);
     } catch (error) {
-      console.error('Error loading swagger files:', error);
+      console.error("Error loading swagger files:", error);
     }
   }
 
@@ -187,7 +187,7 @@ export class SwaggerHelper {
    * @returns Array of routes for the specified API
    */
   public static getRoutesForApi(apiName: string): RouteInfo[] {
-    const collection = this.apiCollections.find(c => c.apiName.toLowerCase() === apiName.toLowerCase());
+    const collection = this.apiCollections.find((c) => c.apiName.toLowerCase() === apiName.toLowerCase());
     return collection ? [...collection.routes] : [];
   }
 
@@ -198,11 +198,12 @@ export class SwaggerHelper {
    */
   public static searchRoutes(searchTerm: string): RouteInfo[] {
     const term = searchTerm.toLowerCase();
-    return this.allRoutes.filter(route => 
-      route.summary?.toLowerCase().includes(term) ||
-      route.description?.toLowerCase().includes(term) ||
-      route.tags?.some(tag => tag.toLowerCase().includes(term)) ||
-      route.path.toLowerCase().includes(term)
+    return this.allRoutes.filter(
+      (route) =>
+        route.summary?.toLowerCase().includes(term) ||
+        route.description?.toLowerCase().includes(term) ||
+        route.tags?.some((tag) => tag.toLowerCase().includes(term)) ||
+        route.path.toLowerCase().includes(term)
     );
   }
 
@@ -214,7 +215,7 @@ export class SwaggerHelper {
    * @returns Unique route key
    */
   private static generateRouteKey(service: string, method: string, path: string): string {
-    return `${service}.${method}.${path.replace(/[^a-zA-Z0-9]/g, '_')}`;
+    return `${service}.${method}.${path.replace(/[^a-zA-Z0-9]/g, "_")}`;
   }
 
   /**
@@ -224,14 +225,14 @@ export class SwaggerHelper {
    */
   private static extractPermissions(security?: any[]): string[] {
     if (!security || !Array.isArray(security)) return [];
-    
+
     const permissions: string[] = [];
-    security.forEach(securityItem => {
+    security.forEach((securityItem) => {
       if (securityItem.permissions && Array.isArray(securityItem.permissions)) {
         permissions.push(...securityItem.permissions);
       }
     });
-    
+
     return permissions;
   }
 
@@ -241,24 +242,24 @@ export class SwaggerHelper {
    */
   public static generateRouteIndex(): RouteIndex[] {
     const index: RouteIndex[] = [];
-    
-    this.apiCollections.forEach(collection => {
-      collection.routes.forEach(route => {
+
+    this.apiCollections.forEach((collection) => {
+      collection.routes.forEach((route) => {
         const routeKey = this.generateRouteKey(route.apiName, route.method, route.path);
-        
+
         index.push({
           service: route.apiName,
           method: route.method,
           path: route.path,
-          summary: route.summary || '',
+          summary: route.summary || "",
           tags: route.tags || [],
           requiresAuth: true, // Most endpoints require auth in this system
           permissions: [], // Will be populated from detailed swagger data
-          routeKey
+          routeKey,
         });
       });
     });
-    
+
     return index;
   }
 
@@ -274,17 +275,17 @@ export class SwaggerHelper {
     if (!swaggerResult?.swagger.paths?.[path]?.[method.toLowerCase()]) {
       return null;
     }
-    
+
     const methodData = swaggerResult.swagger.paths[path][method.toLowerCase()];
     const routeKey = this.generateRouteKey(apiName, method, path);
-    
+
     return {
       routeKey,
       parameters: methodData.parameters || [],
       requestBody: methodData.requestBody,
       responses: methodData.responses || {},
       security: methodData.security || [],
-      examples: methodData.examples || []
+      examples: methodData.examples || [],
     };
   }
 
@@ -292,40 +293,34 @@ export class SwaggerHelper {
    * Generates optimized files for OpenAI integration
    * @param outputDir Directory to save the optimized files
    */
-  public static async generateOptimizedFiles(outputDir: string = './config/optimized'): Promise<void> {
+  public static async generateOptimizedFiles(outputDir: string = "./config/optimized"): Promise<void> {
     await this.loadAllSwaggerFiles();
-    
+
     // Ensure output directory exists
     if (!fs.existsSync(outputDir)) {
       fs.mkdirSync(outputDir, { recursive: true });
     }
-    
+
     // Generate route index
     const routeIndex = this.generateRouteIndex();
-    fs.writeFileSync(
-      path.join(outputDir, 'route-index.json'),
-      JSON.stringify(routeIndex, null, 2)
-    );
-    
+    fs.writeFileSync(path.join(outputDir, "route-index.json"), JSON.stringify(routeIndex, null, 2));
+
     // Generate detailed route files
-    const detailsDir = path.join(outputDir, 'route-details');
+    const detailsDir = path.join(outputDir, "route-details");
     if (!fs.existsSync(detailsDir)) {
       fs.mkdirSync(detailsDir, { recursive: true });
     }
-    
+
     for (const collection of this.apiCollections) {
       for (const route of collection.routes) {
         const details = await this.extractRouteDetails(route.apiName, route.path, route.method);
         if (details) {
           const filename = `${details.routeKey}.json`;
-          fs.writeFileSync(
-            path.join(detailsDir, filename),
-            JSON.stringify(details, null, 2)
-          );
+          fs.writeFileSync(path.join(detailsDir, filename), JSON.stringify(details, null, 2));
         }
       }
     }
-    
+
     console.log(`Generated optimized files: ${routeIndex.length} routes indexed, details saved to ${detailsDir}`);
   }
 }
