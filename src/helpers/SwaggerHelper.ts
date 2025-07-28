@@ -37,6 +37,7 @@ export interface RouteDetails {
   responses?: any;
   security?: any[];
   examples?: any[];
+  schemas?: Record<string, any>;
 }
 
 export interface SwaggerResult {
@@ -237,6 +238,69 @@ export class SwaggerHelper {
   }
 
   /**
+   * Recursively finds all schema references in an object
+   * @param obj Object to search for references
+   * @param refs Set to collect unique references
+   */
+  private static findSchemaRefs(obj: any, refs: Set<string>): void {
+    if (!obj || typeof obj !== 'object') return;
+
+    if (obj.$ref && typeof obj.$ref === 'string') {
+      const match = obj.$ref.match(/#\/components\/schemas\/(.+)/);
+      if (match) {
+        refs.add(match[1]);
+      }
+    }
+
+    if (Array.isArray(obj)) {
+      obj.forEach(item => this.findSchemaRefs(item, refs));
+    } else {
+      Object.values(obj).forEach(value => this.findSchemaRefs(value, refs));
+    }
+  }
+
+  /**
+   * Extracts all referenced schemas for a route
+   * @param routeData Route data containing parameters, requestBody, responses
+   * @param allSchemas All available schemas from swagger
+   * @returns Object containing only referenced schemas
+   */
+  private static extractReferencedSchemas(routeData: any, allSchemas: Record<string, any>): Record<string, any> {
+    const refs = new Set<string>();
+    const schemas: Record<string, any> = {};
+
+    // Find all refs in route data
+    this.findSchemaRefs(routeData.parameters, refs);
+    this.findSchemaRefs(routeData.requestBody, refs);
+    this.findSchemaRefs(routeData.responses, refs);
+
+    // Process refs recursively to get nested schemas
+    const processedRefs = new Set<string>();
+    const refsToProcess = Array.from(refs);
+
+    while (refsToProcess.length > 0) {
+      const ref = refsToProcess.pop()!;
+      if (processedRefs.has(ref)) continue;
+      
+      processedRefs.add(ref);
+      
+      if (allSchemas[ref]) {
+        schemas[ref] = allSchemas[ref];
+        // Find nested refs
+        const nestedRefs = new Set<string>();
+        this.findSchemaRefs(allSchemas[ref], nestedRefs);
+        nestedRefs.forEach(nestedRef => {
+          if (!processedRefs.has(nestedRef)) {
+            refsToProcess.push(nestedRef);
+          }
+        });
+      }
+    }
+
+    return schemas;
+  }
+
+  /**
    * Converts swagger routes to optimized route index
    * @returns Array of route index entries
    */
@@ -279,6 +343,10 @@ export class SwaggerHelper {
     const methodData = swaggerResult.swagger.paths[path][method.toLowerCase()];
     const routeKey = this.generateRouteKey(apiName, method, path);
 
+    // Extract only the schemas referenced by this route
+    const allSchemas = swaggerResult.swagger.components?.schemas || {};
+    const referencedSchemas = this.extractReferencedSchemas(methodData, allSchemas);
+
     return {
       routeKey,
       parameters: methodData.parameters || [],
@@ -286,6 +354,7 @@ export class SwaggerHelper {
       responses: methodData.responses || {},
       security: methodData.security || [],
       examples: methodData.examples || [],
+      schemas: Object.keys(referencedSchemas).length > 0 ? referencedSchemas : undefined,
     };
   }
 
@@ -301,9 +370,9 @@ export class SwaggerHelper {
       fs.mkdirSync(outputDir, { recursive: true });
     }
 
-    // Generate route index
+    // Generate route index (compact format)
     const routeIndex = this.generateRouteIndex();
-    fs.writeFileSync(path.join(outputDir, "route-index.json"), JSON.stringify(routeIndex, null, 2));
+    fs.writeFileSync(path.join(outputDir, "route-index.json"), JSON.stringify(routeIndex));
 
     // Generate detailed route files
     const detailsDir = path.join(outputDir, "route-details");
@@ -311,16 +380,28 @@ export class SwaggerHelper {
       fs.mkdirSync(detailsDir, { recursive: true });
     }
 
+    let totalSchemas = 0;
+    let routesWithSchemas = 0;
+
     for (const collection of this.apiCollections) {
       for (const route of collection.routes) {
         const details = await this.extractRouteDetails(route.apiName, route.path, route.method);
         if (details) {
           const filename = `${details.routeKey}.json`;
-          fs.writeFileSync(path.join(detailsDir, filename), JSON.stringify(details, null, 2));
+          // Write compact JSON (no pretty printing)
+          fs.writeFileSync(path.join(detailsDir, filename), JSON.stringify(details));
+          
+          if (details.schemas) {
+            routesWithSchemas++;
+            totalSchemas += Object.keys(details.schemas).length;
+          }
         }
       }
     }
 
-    console.log(`Generated optimized files: ${routeIndex.length} routes indexed, details saved to ${detailsDir}`);
+    console.log(`Generated optimized files: ${routeIndex.length} routes indexed`);
+    console.log(`Routes with schemas: ${routesWithSchemas}/${routeIndex.length}`);
+    console.log(`Total unique schemas extracted: ${totalSchemas}`);
+    console.log(`Details saved to: ${detailsDir}`);
   }
 }

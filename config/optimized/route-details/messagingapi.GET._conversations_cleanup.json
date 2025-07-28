@@ -1,18 +1,1 @@
-{
-  "routeKey": "messagingapi.GET._conversations_cleanup",
-  "parameters": [],
-  "responses": {
-    "200": {
-      "description": "Cleanup complete",
-      "content": {
-        "text/plain": {
-          "schema": {
-            "type": "string"
-          }
-        }
-      }
-    }
-  },
-  "security": [],
-  "examples": []
-}
+{"routeKey":"messagingapi.GET._conversations_cleanup","parameters":[],"responses":{"200":{"description":"Cleanup complete","content":{"text/plain":{"schema":{"type":"string"}}}}},"security":[],"examples":[]}

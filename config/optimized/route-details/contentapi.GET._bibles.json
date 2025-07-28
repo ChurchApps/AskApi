@@ -1,11 +1,1 @@
-{
-  "routeKey": "contentapi.GET._bibles",
-  "parameters": [],
-  "responses": {
-    "200": {
-      "description": "Successful response"
-    }
-  },
-  "security": [],
-  "examples": []
-}
+{"routeKey":"contentapi.GET._bibles","parameters":[],"responses":{"200":{"description":"Successful response"}},"security":[],"examples":[]}
