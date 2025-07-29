@@ -1,0 +1,1 @@
+{"routeKey":"givingapi.GET._customers__id__subscriptions","parameters":[{"name":"id","in":"path","required":true,"schema":{"type":"string"}}],"responses":{"200":{"description":"Stripe subscription list","content":{"application/json":{"schema":{"type":"object"}}}}},"security":[{"bearerAuth":[],"permissions":["donations.viewSummary"]}],"examples":[]}

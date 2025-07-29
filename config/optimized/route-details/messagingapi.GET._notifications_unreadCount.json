@@ -1,0 +1,1 @@
+{"routeKey":"messagingapi.GET._notifications_unreadCount","parameters":[],"responses":{"200":{"description":"Unread notification count","content":{"application/json":{"schema":{"type":"object","properties":{"count":{"type":"number"}}}}}}},"security":[],"examples":[]}

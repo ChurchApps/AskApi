@@ -1,0 +1,91 @@
+{
+  "membershipapi.POST._people_advancedSearch": {
+    "examples": {
+      "age_search": {
+        "summary": "Search by age range",
+        "value": [
+          {
+            "field": "age",
+            "value": "13",
+            "operator": "greaterThanEqual"
+          },
+          {
+            "field": "age",
+            "value": "19",
+            "operator": "lessThanEqual"
+          }
+        ]
+      },
+      "name_search": {
+        "summary": "Search by name",
+        "value": [
+          {
+            "field": "displayName",
+            "value": "John",
+            "operator": "contains"
+          }
+        ]
+      },
+      "status_search": {
+        "summary": "Search by membership status",
+        "value": [
+          {
+            "field": "membershipStatus",
+            "value": "Member",
+            "operator": "equals"
+          }
+        ]
+      },
+      "multiple_conditions": {
+        "summary": "Multiple search conditions",
+        "value": [
+          {
+            "field": "membershipStatus",
+            "value": "Member",
+            "operator": "equals"
+          },
+          {
+            "field": "age",
+            "value": "25",
+            "operator": "greaterThanEqual"
+          }
+        ]
+      },
+      "gender_search_male": {
+        "summary": "Search for men/males",
+        "value": [
+          {
+            "field": "gender",
+            "value": "Male",
+            "operator": "equals"
+          }
+        ]
+      },
+      "gender_search_female": {
+        "summary": "Search for women/females",
+        "value": [
+          {
+            "field": "gender",
+            "value": "Female",
+            "operator": "equals"
+          }
+        ]
+      },
+      "gender_and_marital": {
+        "summary": "Search by gender and marital status",
+        "value": [
+          {
+            "field": "gender",
+            "value": "Female",
+            "operator": "equals"
+          },
+          {
+            "field": "maritalStatus",
+            "value": "Married",
+            "operator": "equals"
+          }
+        ]
+      }
+    }
+  }
+}

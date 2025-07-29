@@ -1,0 +1,1 @@
+{"routeKey":"contentapi.GET._events_timeline","parameters":[{"name":"eventIds","in":"query","schema":{"type":"string"},"description":"Comma-separated event IDs"}],"responses":{"200":{"description":"Successful response"}},"security":[],"examples":[]}

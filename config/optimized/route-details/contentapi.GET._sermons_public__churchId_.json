@@ -1,0 +1,1 @@
+{"routeKey":"contentapi.GET._sermons_public__churchId_","parameters":[{"name":"churchId","in":"path","required":true,"schema":{"type":"string"}}],"responses":{"200":{"description":"Successful response"}},"security":[],"examples":[]}

@@ -21,7 +21,7 @@ export const init = async () => {
         origin: true,
         credentials: true,
         methods: ["GET", "POST", "PUT", "DELETE", "PATCH", "OPTIONS"],
-        allowedHeaders: ["Content-Type", "Authorization", "X-Requested-With", "Accept", "Origin"],
+        allowedHeaders: ["Content-Type", "Authorization", "X-Requested-With", "Accept", "Origin"]
       })
     );
 
@@ -34,13 +34,13 @@ export const init = async () => {
     });
 
     // Add standard Express JSON parsing middleware
-    expApp.use(express.json({ limit: '10mb' }));
-    expApp.use(express.urlencoded({ extended: true, limit: '10mb' }));
+    expApp.use(express.json({ limit: "10mb" }));
+    expApp.use(express.urlencoded({ extended: true, limit: "10mb" }));
 
     // Handle body parsing from @codegenie/serverless-express (for Lambda deployment)
     expApp.use((req, res, next) => {
       // Skip if body is already parsed as an object (from express.json())
-      if (req.body && typeof req.body === 'object' && !Buffer.isBuffer(req.body)) {
+      if (req.body && typeof req.body === "object" && !Buffer.isBuffer(req.body)) {
         return next();
       }
 

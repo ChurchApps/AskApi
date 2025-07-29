@@ -1,9 +1,12 @@
 import React, { useEffect, useState } from 'react';
 import './App.css';
 import AuthSection from './components/AuthSection';
-import QuestionsAPI from './components/QuestionsAPI';
-import QueryAPI from './components/QueryAPI';
-import AskAPI from './components/AskAPI';
+import QueryV2Tester from './components/QueryV2Tester';
+import QueryV2AnswerTester from './components/QueryV2AnswerTester';
+import QueryV2FormApiCallsTester from './components/QueryV2FormApiCallsTester';
+import QueryV2ExecuteApiCallsTester from './components/QueryV2ExecuteApiCallsTester';
+import QueryPeopleTester from './components/QueryPeopleTester';
+import PeopleAdvancedSearchTester from './components/PeopleAdvancedSearchTester';
 import ResponseViewer from './components/ResponseViewer';
 import { EnvironmentHelper } from './helpers/EnvironmentHelper';
 import { UserContextProvider, useUserContext } from './contexts/UserContext';
@@ -41,9 +44,12 @@ function AppContent() {
         <AuthSection />
         {isAuthenticated && (
           <>
-            <AskAPI setResponse={setResponse} />
-            <QuestionsAPI setResponse={setResponse} />
-            <QueryAPI setResponse={setResponse} />
+            <PeopleAdvancedSearchTester setResponse={setResponse} />
+            <QueryPeopleTester setResponse={setResponse} />
+            <QueryV2AnswerTester setResponse={setResponse} />
+            <QueryV2ExecuteApiCallsTester setResponse={setResponse} />
+            <QueryV2FormApiCallsTester setResponse={setResponse} />
+            <QueryV2Tester setResponse={setResponse} />
           </>
         )}
         {response && <ResponseViewer response={response} />}

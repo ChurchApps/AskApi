@@ -1,0 +1,1 @@
+{"routeKey":"givingapi.POST._donate_subscribe","parameters":[],"requestBody":{"required":true,"content":{"application/json":{"schema":{"type":"object"}}}},"responses":{"200":{"description":"Stripe subscription response","content":{"application/json":{"schema":{"type":"object"}}}}},"security":[],"examples":[]}
