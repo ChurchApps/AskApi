@@ -32,6 +32,12 @@ export class InstructionsHelper {
     return contents;
   }
 
+  static getPeopleAdvancedSearchInstructions(userQuery: string): string {
+    let contents = this.readFile("/config/instructions/peopleAdvancedSearch.md");
+    contents = contents.replace("{query}", userQuery);
+    return contents;
+  }
+
   /*
     static getAnswerQuestionInstructions(userQuery: string, jwts: any, routes: any): string {
       let contents = this.readFile("/config/instructions/answerQuestion.md");
