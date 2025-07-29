@@ -38,7 +38,7 @@ const PeopleAdvancedSearchTester: React.FC<PeopleAdvancedSearchTesterProps> = ({
     const timestamp = new Date().toISOString();
 
     try {
-      const response = await fetch(`${EnvironmentHelper.getAskApiUrl()}/queryV2/playground/people-search`, {
+      const response = await fetch(`${EnvironmentHelper.getAskApiUrl()}/query/people`, {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',

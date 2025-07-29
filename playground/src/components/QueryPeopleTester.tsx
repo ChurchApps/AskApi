@@ -143,7 +143,7 @@ const QueryPeopleTester: React.FC<QueryPeopleTesterProps> = ({ setResponse }) =>
       };
 
       const response = await axios.post(
-        `${EnvironmentHelper.getAskApiUrl()}/query/people`,
+        `${EnvironmentHelper.getAskApiUrl()}/query/peopleOld`,
         {
           question: query.trim(),
           jwts
