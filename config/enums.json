@@ -20,7 +20,7 @@
   "eventType": ["Donation", "Registration", "Attendance", "Payment"],
   "deliveryMethod": ["email", "sms", "push", "web"],
   "streamingProvider": ["YouTube", "Vimeo", "Facebook", "Custom"],
-  "field": ["displayName", "age"],
+  "field": ["displayName", "firstName", "lastName", "middleName", "nickName", "prefix", "suffix", "birthDate", "birthMonth", "age", "gender", "maritalStatus", "anniversary", "anniversaryMonth", "yearsMarried", "phone", "email", "address", "city", "state", "zip", "membershipStatus", "groupMember", "memberAttendance"],
   "operator": ["=", "!=", ">", ">=", "<", "<=", "contains", "startsWith", "endsWith", "equals", "notEquals", "greaterThan", "lessThan", "greaterThanEqual", "lessThanEqual"],
   "fieldType": ["Textbox", "Whole Number", "Decimal", "Date", "Yes/No", "Email", "Phone Number", "Text Area", "Multiple Choice", "Checkbox", "Payment"],
   "interval": ["one_week", "two_week", "one_month", "three_month", "one_year"],

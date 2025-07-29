@@ -42,13 +42,26 @@ IMPORTANT: For /people/advancedSearch, the body must be an array of SearchCondit
 Available search fields: displayName, age, gender, maritalStatus, membershipStatus, householdRole
 Available operators: equals, notEquals, contains, startsWith, endsWith, greaterThan, lessThan, greaterThanEqual, lessThanEqual
 
-IMPORTANT: For age ranges (like "13-19" or "teens"), use TWO separate conditions:
-- One with "greaterThanEqual" for the minimum age
-- One with "lessThanEqual" for the maximum age
+IMPORTANT SEARCH RULES:
+1. For age ranges (like "13-19" or "teens"), use TWO separate conditions:
+   - One with "greaterThanEqual" for the minimum age
+   - One with "lessThanEqual" for the maximum age
+
+2. For gender searches, recognize these terms:
+   - "men", "male", "males" → {"field":"gender","value":"Male","operator":"equals"}
+   - "women", "female", "females" → {"field":"gender","value":"Female","operator":"equals"}
+
+3. For membership status searches:
+   - "members" → {"field":"membershipStatus","value":"Member","operator":"equals"}
+   - "visitors" → {"field":"membershipStatus","value":"Visitor","operator":"equals"}
+
+4. Always use exact enum values from the documentation, not the user's terminology
 
 Examples:
 - Age range search: [{"field":"age","value":"13","operator":"greaterThanEqual"},{"field":"age","value":"19","operator":"lessThanEqual"}]
 - Name search: [{"field":"displayName","value":"John","operator":"contains"}]
+- Gender search (men): [{"field":"gender","value":"Male","operator":"equals"}]
+- Gender search (women): [{"field":"gender","value":"Female","operator":"equals"}]
 - Status search: [{"field":"membershipStatus","value":"Member","operator":"equals"}]
 - Age minimum: [{"field":"age","value":"25","operator":"greaterThanEqual"}]
 - Multiple conditions: [{"field":"membershipStatus","value":"Member","operator":"equals"},{"field":"age","value":"18","operator":"greaterThanEqual"}]

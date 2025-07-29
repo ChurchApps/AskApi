@@ -51,6 +51,26 @@
           }
         ]
       },
+      "gender_search_male": {
+        "summary": "Search for men/males",
+        "value": [
+          {
+            "field": "gender",
+            "value": "Male",
+            "operator": "equals"
+          }
+        ]
+      },
+      "gender_search_female": {
+        "summary": "Search for women/females",
+        "value": [
+          {
+            "field": "gender",
+            "value": "Female",
+            "operator": "equals"
+          }
+        ]
+      },
       "gender_and_marital": {
         "summary": "Search by gender and marital status",
         "value": [
