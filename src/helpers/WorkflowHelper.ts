@@ -69,7 +69,7 @@ export class WorkflowHelper {
   }
 
   static async queryPeople(userQuery: string, jwts: any) {
-    const prepQuery = userQuery + " - Find people ids matching this query. You're not allowed to use the advanced search route.";
+    const prepQuery = userQuery + " - Find people ids matching this query.";
     const data = await WorkflowHelper.executeApiCalls(prepQuery, jwts);
 
     const fullQuestion = InstructionsHelper.getQueryPeopleInstructions(userQuery, data);

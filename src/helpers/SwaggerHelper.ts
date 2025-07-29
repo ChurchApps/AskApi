@@ -38,6 +38,7 @@ export interface RouteDetails {
   security?: any[];
   examples?: any[];
   schemas?: Record<string, any>;
+  enums?: Record<string, string[]>;
 }
 
 export interface SwaggerResult {
@@ -52,8 +53,10 @@ export interface ApiRouteCollection {
 
 export class SwaggerHelper {
   private static readonly SWAGGER_CONFIG_PATH = "../../config/swagger";
+  private static readonly ENUMS_CONFIG_PATH = "../../config/enums.json";
   private static allRoutes: RouteInfo[] = [];
   private static apiCollections: ApiRouteCollection[] = [];
+  private static enumDefinitions: Record<string, string[]> = {};
 
   /**
    * Reads and parses a swagger JSON file for the specified API
@@ -68,7 +71,7 @@ export class SwaggerHelper {
 
       return {
         availableEndpoints: Object.keys(swaggerContent.paths || {}),
-        swagger: swaggerContent
+        swagger: swaggerContent,
       };
     } catch (error) {
       console.error(`Could not read swagger file for ${apiName}:`, error);
@@ -128,7 +131,7 @@ export class SwaggerHelper {
               method: method.toUpperCase(),
               summary: methodData.summary,
               description: methodData.description,
-              tags: methodData.tags
+              tags: methodData.tags,
             };
             routes.push(route);
           }
@@ -140,10 +143,53 @@ export class SwaggerHelper {
   }
 
   /**
+   * Loads enum definitions from the enums.json file
+   * @returns Promise that resolves when enums are loaded
+   */
+  private static async loadEnumDefinitions(): Promise<void> {
+    const enumsPath = path.join(__dirname, this.ENUMS_CONFIG_PATH);
+
+    try {
+      const enumsContent = fs.readFileSync(enumsPath, "utf-8");
+      this.enumDefinitions = JSON.parse(enumsContent);
+      console.log(`Loaded ${Object.keys(this.enumDefinitions).length} enum definitions`);
+    } catch (error) {
+      console.warn("Could not load enum definitions:", error);
+      this.enumDefinitions = {};
+    }
+  }
+
+  /**
+   * Finds enum fields used in schemas
+   * @param schemas Object containing schema definitions
+   * @returns Record of enum names to their values that are used in the schemas
+   */
+  private static findUsedEnums(schemas: Record<string, any>): Record<string, string[]> {
+    const usedEnums: Record<string, string[]> = {};
+
+    // Check each schema for enum fields
+    Object.values(schemas).forEach((schema) => {
+      if (schema && typeof schema === "object" && schema.properties) {
+        Object.entries(schema.properties).forEach(([fieldName]: [string, any]) => {
+          // Check if this field matches any of our enum definitions
+          if (this.enumDefinitions[fieldName]) {
+            usedEnums[fieldName] = this.enumDefinitions[fieldName];
+          }
+        });
+      }
+    });
+
+    return usedEnums;
+  }
+
+  /**
    * Loads all swagger files on startup and builds the complete routes array
    * @returns Promise that resolves when all swagger files are loaded
    */
   public static async loadAllSwaggerFiles(): Promise<void> {
+    // Load enum definitions first
+    await this.loadEnumDefinitions();
+
     const swaggerDir = path.join(__dirname, this.SWAGGER_CONFIG_PATH);
 
     try {
@@ -163,7 +209,7 @@ export class SwaggerHelper {
 
           this.apiCollections.push({
             apiName,
-            routes
+            routes,
           });
         }
       }
@@ -319,7 +365,7 @@ export class SwaggerHelper {
           tags: route.tags || [],
           requiresAuth: true, // Most endpoints require auth in this system
           permissions: [], // Will be populated from detailed swagger data
-          routeKey
+          routeKey,
         });
       });
     });
@@ -347,6 +393,9 @@ export class SwaggerHelper {
     const allSchemas = swaggerResult.swagger.components?.schemas || {};
     const referencedSchemas = this.extractReferencedSchemas(methodData, allSchemas);
 
+    // Find enums used in the referenced schemas
+    const usedEnums = this.findUsedEnums(referencedSchemas);
+
     return {
       routeKey,
       parameters: methodData.parameters || [],
@@ -354,7 +403,8 @@ export class SwaggerHelper {
       responses: methodData.responses || {},
       security: methodData.security || [],
       examples: methodData.examples || [],
-      schemas: Object.keys(referencedSchemas).length > 0 ? referencedSchemas : undefined
+      schemas: Object.keys(referencedSchemas).length > 0 ? referencedSchemas : undefined,
+      enums: Object.keys(usedEnums).length > 0 ? usedEnums : undefined,
     };
   }
 
@@ -382,6 +432,8 @@ export class SwaggerHelper {
 
     let totalSchemas = 0;
     let routesWithSchemas = 0;
+    let totalEnums = 0;
+    let routesWithEnums = 0;
 
     for (const collection of this.apiCollections) {
       for (const route of collection.routes) {
@@ -395,6 +447,11 @@ export class SwaggerHelper {
             routesWithSchemas++;
             totalSchemas += Object.keys(details.schemas).length;
           }
+
+          if (details.enums) {
+            routesWithEnums++;
+            totalEnums += Object.keys(details.enums).length;
+          }
         }
       }
     }
@@ -402,6 +459,8 @@ export class SwaggerHelper {
     console.log(`Generated optimized files: ${routeIndex.length} routes indexed`);
     console.log(`Routes with schemas: ${routesWithSchemas}/${routeIndex.length}`);
     console.log(`Total unique schemas extracted: ${totalSchemas}`);
+    console.log(`Routes with enums: ${routesWithEnums}/${routeIndex.length}`);
+    console.log(`Total enum definitions included: ${totalEnums}`);
     console.log(`Details saved to: ${detailsDir}`);
   }
 }

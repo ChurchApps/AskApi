@@ -42,10 +42,10 @@ export class OpenAiHelper {
       model: "gpt-4o-mini",
       messages: [
         { role: "system", content: systemRole },
-        { role: "user", content: prompt }
+        { role: "user", content: prompt },
       ],
       temperature: 0,
-      max_tokens: 500
+      max_tokens: 500,
     };
 
     const response = await this.openai.chat.completions.create(openAiPayload);
@@ -67,10 +67,10 @@ export class OpenAiHelper {
       model: "gpt-4o-mini",
       messages: [
         { role: "system", content: systemRole },
-        { role: "user", content: prompt }
+        { role: "user", content: prompt },
       ],
       temperature: 0,
-      max_tokens: 500
+      max_tokens: 500,
     };
 
     const response = await this.openai.chat.completions.create(openAiPayload);
