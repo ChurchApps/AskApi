@@ -54,9 +54,11 @@ export interface ApiRouteCollection {
 export class SwaggerHelper {
   private static readonly SWAGGER_CONFIG_PATH = "../../config/swagger";
   private static readonly ENUMS_CONFIG_PATH = "../../config/enums.json";
+  private static readonly ROUTE_EXAMPLES_CONFIG_PATH = "../../config/route-examples.json";
   private static allRoutes: RouteInfo[] = [];
   private static apiCollections: ApiRouteCollection[] = [];
   private static enumDefinitions: Record<string, string[]> = {};
+  private static routeExamples: Record<string, any> = {};
 
   /**
    * Reads and parses a swagger JSON file for the specified API
@@ -160,6 +162,23 @@ export class SwaggerHelper {
   }
 
   /**
+   * Loads route examples from the route-examples.json file
+   * @returns Promise that resolves when examples are loaded
+   */
+  private static async loadRouteExamples(): Promise<void> {
+    const examplesPath = path.join(__dirname, this.ROUTE_EXAMPLES_CONFIG_PATH);
+
+    try {
+      const examplesContent = fs.readFileSync(examplesPath, "utf-8");
+      this.routeExamples = JSON.parse(examplesContent);
+      console.log(`Loaded examples for ${Object.keys(this.routeExamples).length} routes`);
+    } catch (error) {
+      console.warn("Could not load route examples:", error);
+      this.routeExamples = {};
+    }
+  }
+
+  /**
    * Finds enum fields used in schemas
    * @param schemas Object containing schema definitions
    * @returns Record of enum names to their values that are used in the schemas
@@ -187,8 +206,9 @@ export class SwaggerHelper {
    * @returns Promise that resolves when all swagger files are loaded
    */
   public static async loadAllSwaggerFiles(): Promise<void> {
-    // Load enum definitions first
+    // Load enum definitions and route examples first
     await this.loadEnumDefinitions();
+    await this.loadRouteExamples();
 
     const swaggerDir = path.join(__dirname, this.SWAGGER_CONFIG_PATH);
 
@@ -396,10 +416,28 @@ export class SwaggerHelper {
     // Find enums used in the referenced schemas
     const usedEnums = this.findUsedEnums(referencedSchemas);
 
+    // Check if we have custom examples for this route
+    const customExamples = this.routeExamples[routeKey];
+    
+    // Merge custom examples into requestBody if they exist
+    let requestBody = methodData.requestBody;
+    if (customExamples && requestBody && requestBody.content && requestBody.content["application/json"]) {
+      requestBody = {
+        ...requestBody,
+        content: {
+          ...requestBody.content,
+          "application/json": {
+            ...requestBody.content["application/json"],
+            examples: customExamples.examples
+          }
+        }
+      };
+    }
+
     return {
       routeKey,
       parameters: methodData.parameters || [],
-      requestBody: methodData.requestBody,
+      requestBody: requestBody,
       responses: methodData.responses || {},
       security: methodData.security || [],
       examples: methodData.examples || [],

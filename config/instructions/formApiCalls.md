@@ -15,7 +15,7 @@ I want you to return a list of API calls to make in the following format:
 "apiName": "MembershipApi",
 "method": "POST",
 "path": "/people/advancedSearch",
-"body": "{\"firstName\":\"Jeremy\"}",
+"body": "[{\"field\":\"displayName\",\"value\":\"Jeremy\",\"operator\":\"contains\"}]",
 "fields": ["id", "name", "email"]
 }
 ]
@@ -29,5 +29,28 @@ IMPORTANT: The "fields" property is REQUIRED and should contain only the fields 
 - For full details: omit the fields property to get all fields
 
 Common person fields: id, name (object with first/last/display), email, phone, birthDate, age, gender, maritalStatus, membershipStatus, householdId, householdRole, photoUrl, address
+
+IMPORTANT: For /people/advancedSearch, the body must be an array of SearchCondition objects with this exact format:
+[
+  {
+    "field": "fieldName",
+    "value": "searchValue", 
+    "operator": "operatorType"
+  }
+]
+
+Available search fields: displayName, age, gender, maritalStatus, membershipStatus, householdRole
+Available operators: equals, notEquals, contains, startsWith, endsWith, greaterThan, lessThan, greaterThanEqual, lessThanEqual
+
+IMPORTANT: For age ranges (like "13-19" or "teens"), use TWO separate conditions:
+- One with "greaterThanEqual" for the minimum age
+- One with "lessThanEqual" for the maximum age
+
+Examples:
+- Age range search: [{"field":"age","value":"13","operator":"greaterThanEqual"},{"field":"age","value":"19","operator":"lessThanEqual"}]
+- Name search: [{"field":"displayName","value":"John","operator":"contains"}]
+- Status search: [{"field":"membershipStatus","value":"Member","operator":"equals"}]
+- Age minimum: [{"field":"age","value":"25","operator":"greaterThanEqual"}]
+- Multiple conditions: [{"field":"membershipStatus","value":"Member","operator":"equals"},{"field":"age","value":"18","operator":"greaterThanEqual"}]
 
 The response should only be the JSON array and nothing else.

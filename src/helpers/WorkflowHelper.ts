@@ -69,7 +69,7 @@ export class WorkflowHelper {
   }
 
   static async queryPeople(userQuery: string, jwts: any) {
-    const prepQuery = userQuery + " - Find people ids matching this query.";
+    const prepQuery = userQuery + " - Find people ids matching this query.  Use /people/advancedSearch when possible.";
     const data = await WorkflowHelper.executeApiCalls(prepQuery, jwts);
 
     const fullQuestion = InstructionsHelper.getQueryPeopleInstructions(userQuery, data);
@@ -77,6 +77,12 @@ export class WorkflowHelper {
       "You are a people search assistant that returns person IDs matching the query criteria.",
       fullQuestion
     );
+
+    console.log("DATA", data);
+    console.log("Full Question for queryPeople:", fullQuestion);
+    console.log("Result from OpenAiHelper for queryPeople:", result);
+
+
     console.log("Result from OpenAiHelper for queryPeople:", result);
     return result;
   }
