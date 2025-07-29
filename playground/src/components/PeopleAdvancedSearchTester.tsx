@@ -15,7 +15,7 @@ const PeopleAdvancedSearchTester: React.FC<PeopleAdvancedSearchTesterProps> = ({
 
   const exampleQueries = [
     'Find all men',
-    'Show me teenagers', 
+    'Show me teenagers',
     'Married women over 40',
     'People in Dallas',
     'Single men under 30',
@@ -68,40 +68,6 @@ const PeopleAdvancedSearchTester: React.FC<PeopleAdvancedSearchTesterProps> = ({
     }
   };
 
-  const handleTestAll = async () => {
-    setIsLoading(true);
-    const timestamp = new Date().toISOString();
-
-    try {
-      const response = await fetch(`${EnvironmentHelper.getAskApiUrl()}/queryV2/playground/people-search-test`, {
-        method: 'POST',
-        headers: {
-          'Content-Type': 'application/json',
-          'Authorization': `Bearer ${userChurch?.jwt}`
-        },
-        body: JSON.stringify({})
-      });
-
-      const data = await response.json();
-      const apiResponse = {
-        status: response.status,
-        data,
-        timestamp
-      };
-      setResponse(apiResponse);
-      setLocalResponse(apiResponse);
-    } catch (error) {
-      const errorResponse = {
-        status: 0,
-        data: { error: `Network error: ${error instanceof Error ? error.message : String(error)}` },
-        timestamp
-      };
-      setResponse(errorResponse);
-      setLocalResponse(errorResponse);
-    } finally {
-      setIsLoading(false);
-    }
-  };
 
   const renderLocalResponse = () => {
     if (!localResponse) return null;
@@ -139,12 +105,12 @@ const PeopleAdvancedSearchTester: React.FC<PeopleAdvancedSearchTesterProps> = ({
           // Single query result
           <div>
             {/* Query Section */}
-            <div style={{ 
-              background: '#e3f2fd', 
-              border: '1px solid #2196f3', 
-              borderRadius: '6px', 
-              padding: '15px', 
-              marginBottom: '15px' 
+            <div style={{
+              background: '#e3f2fd',
+              border: '1px solid #2196f3',
+              borderRadius: '6px',
+              padding: '15px',
+              marginBottom: '15px'
             }}>
               <h4 style={{ color: '#2196f3', margin: '0 0 10px 0' }}>🔍 Query</h4>
               <div style={{ fontSize: '1.1em', fontStyle: 'italic' }}>
@@ -153,12 +119,12 @@ const PeopleAdvancedSearchTester: React.FC<PeopleAdvancedSearchTesterProps> = ({
             </div>
 
             {/* Filters Section */}
-            <div style={{ 
-              background: '#e8f5e8', 
-              border: '1px solid #27ae60', 
-              borderRadius: '6px', 
-              padding: '15px', 
-              marginBottom: '15px' 
+            <div style={{
+              background: '#e8f5e8',
+              border: '1px solid #27ae60',
+              borderRadius: '6px',
+              padding: '15px',
+              marginBottom: '15px'
             }}>
               <h4 style={{ color: '#27ae60', margin: '0 0 15px 0' }}>🎯 Generated Filters</h4>
               {data.filters.length === 0 ? (
@@ -175,19 +141,19 @@ const PeopleAdvancedSearchTester: React.FC<PeopleAdvancedSearchTesterProps> = ({
                     }}>
                       <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr 1fr', gap: '15px' }}>
                         <div>
-                          <strong style={{ color: '#2c3e50' }}>Field:</strong><br/>
+                          <strong style={{ color: '#2c3e50' }}>Field:</strong><br />
                           <code style={{ background: '#f8f9fa', padding: '2px 6px', borderRadius: '3px' }}>
                             {filter.field}
                           </code>
                         </div>
                         <div>
-                          <strong style={{ color: '#2c3e50' }}>Operator:</strong><br/>
+                          <strong style={{ color: '#2c3e50' }}>Operator:</strong><br />
                           <code style={{ background: '#f8f9fa', padding: '2px 6px', borderRadius: '3px' }}>
                             {filter.operator}
                           </code>
                         </div>
                         <div>
-                          <strong style={{ color: '#2c3e50' }}>Value:</strong><br/>
+                          <strong style={{ color: '#2c3e50' }}>Value:</strong><br />
                           <code style={{ background: '#f8f9fa', padding: '2px 6px', borderRadius: '3px' }}>
                             {filter.value}
                           </code>
@@ -197,24 +163,24 @@ const PeopleAdvancedSearchTester: React.FC<PeopleAdvancedSearchTesterProps> = ({
                   ))}
                 </div>
               )}
-              
+
               {/* JSON Preview */}
               <details style={{ marginTop: '15px' }}>
-                <summary style={{ 
-                  cursor: 'pointer', 
-                  padding: '8px', 
-                  background: 'rgba(255,255,255,0.7)', 
-                  border: '1px solid #27ae60', 
+                <summary style={{
+                  cursor: 'pointer',
+                  padding: '8px',
+                  background: 'rgba(255,255,255,0.7)',
+                  border: '1px solid #27ae60',
                   borderRadius: '4px',
                   fontWeight: '600'
                 }}>
                   📋 Copy JSON Array
                 </summary>
-                <div style={{ 
-                  marginTop: '10px', 
-                  padding: '12px', 
-                  background: 'rgba(255,255,255,0.7)', 
-                  border: '1px solid #27ae60', 
+                <div style={{
+                  marginTop: '10px',
+                  padding: '12px',
+                  background: 'rgba(255,255,255,0.7)',
+                  border: '1px solid #27ae60',
                   borderRadius: '4px',
                   fontFamily: 'monospace',
                   fontSize: '0.9em',
@@ -228,32 +194,32 @@ const PeopleAdvancedSearchTester: React.FC<PeopleAdvancedSearchTesterProps> = ({
         ) : data.testResults ? (
           // Test results
           <div>
-            <div style={{ 
-              background: '#e3f2fd', 
-              border: '1px solid #2196f3', 
-              borderRadius: '6px', 
-              padding: '15px', 
-              marginBottom: '15px' 
+            <div style={{
+              background: '#e3f2fd',
+              border: '1px solid #2196f3',
+              borderRadius: '6px',
+              padding: '15px',
+              marginBottom: '15px'
             }}>
               <h4 style={{ color: '#2196f3', margin: '0 0 10px 0' }}>🧪 Test Results</h4>
               <div>Tested {data.testResults.length} queries</div>
             </div>
 
             {data.testResults.map((result: any, index: number) => (
-              <div key={index} style={{ 
-                background: result.error ? '#ffebee' : '#e8f5e8', 
-                border: `1px solid ${result.error ? '#f44336' : '#27ae60'}`, 
-                borderRadius: '6px', 
-                padding: '15px', 
-                marginBottom: '15px' 
+              <div key={index} style={{
+                background: result.error ? '#ffebee' : '#e8f5e8',
+                border: `1px solid ${result.error ? '#f44336' : '#27ae60'}`,
+                borderRadius: '6px',
+                padding: '15px',
+                marginBottom: '15px'
               }}>
-                <h5 style={{ 
-                  color: result.error ? '#f44336' : '#27ae60', 
-                  margin: '0 0 10px 0' 
+                <h5 style={{
+                  color: result.error ? '#f44336' : '#27ae60',
+                  margin: '0 0 10px 0'
                 }}>
                   Query {index + 1}: "{result.query}"
                 </h5>
-                
+
                 {result.error ? (
                   <div style={{ color: '#f44336' }}>
                     <strong>Error:</strong> {result.error}
@@ -261,11 +227,11 @@ const PeopleAdvancedSearchTester: React.FC<PeopleAdvancedSearchTesterProps> = ({
                 ) : (
                   <div>
                     <strong>Filters Generated:</strong>
-                    <pre style={{ 
-                      background: 'rgba(255,255,255,0.7)', 
-                      padding: '10px', 
-                      borderRadius: '4px', 
-                      marginTop: '5px', 
+                    <pre style={{
+                      background: 'rgba(255,255,255,0.7)',
+                      padding: '10px',
+                      borderRadius: '4px',
+                      marginTop: '5px',
                       fontSize: '0.9em',
                       margin: '5px 0 0 0'
                     }}>
@@ -296,7 +262,7 @@ const PeopleAdvancedSearchTester: React.FC<PeopleAdvancedSearchTesterProps> = ({
     <div className="tester-section">
       <h2>🔍 People Advanced Search Tester</h2>
       <p>Test the natural language to search filter conversion system</p>
-      
+
       <div className="input-group">
         <label htmlFor="peopleQuery">Enter your search query in natural language:</label>
         <input
@@ -312,9 +278,6 @@ const PeopleAdvancedSearchTester: React.FC<PeopleAdvancedSearchTesterProps> = ({
       <div className="button-group">
         <button onClick={handleTest} disabled={isLoading}>
           {isLoading ? '🔄 Converting...' : '🔍 Convert to Filters'}
-        </button>
-        <button onClick={handleTestAll} disabled={isLoading}>
-          {isLoading ? '🔄 Testing...' : '🧪 Test All Examples'}
         </button>
         <button onClick={() => setQuery('')} disabled={isLoading}>
           🗑️ Clear
