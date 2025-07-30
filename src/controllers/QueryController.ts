@@ -1,11 +1,42 @@
-import { controller, httpPost } from "inversify-express-utils";
+import { controller, httpGet, httpPost } from "inversify-express-utils";
 import express from "express";
 import { AskBaseController } from "./AskBaseController";
 import { OpenAiHelper, InstructionsHelper } from "../helpers";
 import { WorkflowHelper } from "../helpers/WorkflowHelper";
 
+import fs from "fs";
+import path from "path";
+
+
 @controller("/query")
 export class QueryController extends AskBaseController {
+
+  @httpGet("/test")
+  public async test(req: express.Request<{}, {}, any>, res: express.Response): Promise<any> {
+    return this.actionWrapperAnon(req, res, async () => {
+
+      const environment = process.env.APP_ENV;
+      let file = "dev.json";
+      if (environment === "staging") file = "staging.json";
+      if (environment === "prod") file = "prod.json";
+
+      const relativePath = "../../config/" + file;
+      const physicalPath = path.resolve(__dirname, relativePath);
+
+      const json = fs.readFileSync(physicalPath, "utf8");
+      const jsonData = JSON.parse(json);
+
+
+      const appName = jsonData.appName as string;
+      const appEnv = jsonData.appEnv as string;
+      const connectionString = `/${appEnv}/${appName}/connectionString`;
+
+
+      return { environment, physicalPath, appName, appEnv, connectionString };
+    });
+  }
+
+
   @httpPost("/peopleOld")
   public async queryPeopleOld(req: express.Request<{}, {}, any>, res: express.Response): Promise<any> {
     return this.actionWrapper(req, res, async (au) => {
