@@ -4,3 +4,8 @@ CONNECTION_STRING=mysql://
 ENCRYPTION_KEY=aSecretKeyOfExactly192BitsLength
 JWT_SECRET=this is a test key that is a sentence
 SERVER_PORT=8097
+
+# AWS Deployment Configuration (optional - defaults are provided)
+# AWS_REGION=us-east-2
+# SECURITY_GROUP_IDS=sg-052314a1eec2f2567
+# SUBNET_IDS=subnet-01a6b61d749d10c46

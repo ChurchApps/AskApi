@@ -73,7 +73,7 @@ export class SwaggerHelper {
 
       return {
         availableEndpoints: Object.keys(swaggerContent.paths || {}),
-        swagger: swaggerContent,
+        swagger: swaggerContent
       };
     } catch (error) {
       console.error(`Could not read swagger file for ${apiName}:`, error);
@@ -133,7 +133,7 @@ export class SwaggerHelper {
               method: method.toUpperCase(),
               summary: methodData.summary,
               description: methodData.description,
-              tags: methodData.tags,
+              tags: methodData.tags
             };
             routes.push(route);
           }
@@ -229,7 +229,7 @@ export class SwaggerHelper {
 
           this.apiCollections.push({
             apiName,
-            routes,
+            routes
           });
         }
       }
@@ -385,7 +385,7 @@ export class SwaggerHelper {
           tags: route.tags || [],
           requiresAuth: true, // Most endpoints require auth in this system
           permissions: [], // Will be populated from detailed swagger data
-          routeKey,
+          routeKey
         });
       });
     });
@@ -418,7 +418,7 @@ export class SwaggerHelper {
 
     // Check if we have custom examples for this route
     const customExamples = this.routeExamples[routeKey];
-    
+
     // Merge custom examples into requestBody if they exist
     let requestBody = methodData.requestBody;
     if (customExamples && requestBody && requestBody.content && requestBody.content["application/json"]) {
@@ -442,7 +442,7 @@ export class SwaggerHelper {
       security: methodData.security || [],
       examples: methodData.examples || [],
       schemas: Object.keys(referencedSchemas).length > 0 ? referencedSchemas : undefined,
-      enums: Object.keys(usedEnums).length > 0 ? usedEnums : undefined,
+      enums: Object.keys(usedEnums).length > 0 ? usedEnums : undefined
     };
   }
 

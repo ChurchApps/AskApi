@@ -82,7 +82,6 @@ export class WorkflowHelper {
     console.log("Full Question for queryPeople:", fullQuestion);
     console.log("Result from OpenAiHelper for queryPeople:", result);
 
-
     console.log("Result from OpenAiHelper for queryPeople:", result);
     return result;
   }

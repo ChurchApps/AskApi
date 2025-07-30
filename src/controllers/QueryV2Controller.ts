@@ -1,7 +1,7 @@
 import { controller, httpPost } from "inversify-express-utils";
 import express from "express";
 import { AskBaseController } from "./AskBaseController";
-import { OpenAiHelper, InstructionsHelper } from "../helpers";
+import { OpenAiHelper } from "../helpers";
 import { WorkflowHelper } from "../helpers/WorkflowHelper";
 
 @controller("/queryV2")
@@ -41,5 +41,4 @@ export class QueryV2Controller extends AskBaseController {
       return WorkflowHelper.answerQuestion(question, jwts);
     });
   }
-
 }

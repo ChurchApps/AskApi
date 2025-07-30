@@ -1,68 +1,70 @@
 service: ask-api
 
-package:
-  individually: true
-  exclude:
-    - node_modules/**
+useDotenv: true
 
 custom:
-  env: ${lower(${opt:stage, self:provider.stage})}
-  vpcSettings:
-    prod:
-      securityGroupIds:
-        - sg-052314a1eec2f2567
-      subnetIds:
-        - subnet-01a6b61d749d10c46
-    current: ${ternary(${self:custom.env}, prod, ${self:custom.vpcSettings.prod}, ~)}
+  stage: ${opt:stage, 'dev'}
+  env: ${self:custom.stage}
+  layerName: ${self:service}-dependencies-${self:custom.stage}
+  serverless-offline:
+    httpPort: 3000
+    lambdaPort: 3002
+    useChildProcesses: true
+    noTimeout: true
 
 provider:
   name: aws
   runtime: nodejs20.x
   memorySize: 512
-  timeout: 30
-  region: us-east-2
+  timeout: 10
+  region: ${env:AWS_REGION, 'us-east-2'}
+  stage: ${self:custom.stage}
   iam:
-    role: arn:aws:iam::428019619026:role/ChurchAppsRole
+    role: arn:aws:iam::${aws:accountId}:role/ChurchAppsRole
   environment:
     APP_ENV: ${self:custom.env}
-  logs:
-    httpApi:
-      logRetentionInDays: 1
-  httpApi:
-    binaryMediaTypes:
-      - "*/*"
-  apiGateway:
-    throttle:
-      rateLimit: 5
-      burstLimit: 20
+
+package:
+  individually: true
+  patterns:
+    - "!.git/**"
+    - "!.gitignore"
+    - "!README.md"
+    - "!*.md"
+    - "!node_modules/**"
+    - "!src/**"
+    - "!tools/**"
+    - "!playground/**"
+    - "!config/**"
+    - "!package-lock.json"
+    - "!tsconfig.json"
+    - "!eslint.config.js"
+    - "!dotenv.sample.txt"
+    - "dist/**"
+    - "lambda.js"
 
 layers:
   dependencies:
+    name: ${self:custom.layerName}
     path: layer
-    name: ${self:service}-${sls:stage}-dependencies
-    description: Dependencies for ${self:service}
-    compatibleRuntimes:
-      - nodejs20.x
+    retain: false
 
 functions:
   api:
-    name: ask-api-${sls:stage}-api
+    name: ask-api-${self:custom.stage}-api
     handler: lambda.universal
+    layers:
+      - { Ref: DependenciesLambdaLayer }
     events:
       - http:
           path: /{proxy+}
           method: ANY
+          cors: true
       - http:
           path: /
           method: ANY
-    vpc: ${self:custom.vpcSettings.current}
-    layers:
-      - { Ref: DependenciesLambdaLayer }
-    package:
-      patterns:
-        - "!node_modules/**"
-        - "!package-lock.json"
-        - "**"
+          cors: true
 
 plugins:
   - serverless-plugin-utils
+  - serverless-offline

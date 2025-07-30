@@ -113,7 +113,7 @@ export class DataHelper {
       return {
         success: false,
         error: `Unknown API: ${apiCall.apiName}`,
-        apiCall: apiCall,
+        apiCall: apiCall
       };
     }
 
@@ -123,7 +123,7 @@ export class DataHelper {
       return {
         success: false,
         error: `No token provided for ${apiCall.apiName}`,
-        apiCall: apiCall,
+        apiCall: apiCall
       };
     }
 
@@ -142,7 +142,7 @@ export class DataHelper {
         apiCall: apiCall,
         status: response.status,
         data: filteredData,
-        dataType: Array.isArray(filteredData) ? `array (${filteredData.length} items)` : typeof filteredData,
+        dataType: Array.isArray(filteredData) ? `array (${filteredData.length} items)` : typeof filteredData
       };
     } catch (error: any) {
       console.error(
@@ -154,7 +154,7 @@ export class DataHelper {
         success: false,
         error: error.response?.data?.message || error.message || "API call failed",
         apiCall: apiCall,
-        status: error.response?.status,
+        status: error.response?.status
       };
     }
   }
@@ -168,7 +168,7 @@ export class DataHelper {
       doingapi: jwts.doingapi,
       givingapi: jwts.givingapi,
       messagingapi: jwts.messagingapi,
-      reportingapi: jwts.reportingapi,
+      reportingapi: jwts.reportingapi
     };
     return tokenMap[apiName] || "";
   }
@@ -184,7 +184,7 @@ export class DataHelper {
       doingapi: "https://doingapi.staging.churchapps.org",
       givingapi: "https://givingapi.staging.churchapps.org",
       messagingapi: "https://messagingapi.staging.churchapps.org",
-      reportingapi: "https://reportingapi.staging.churchapps.org",
+      reportingapi: "https://reportingapi.staging.churchapps.org"
     };
 
     // Execute each API call
@@ -220,9 +220,9 @@ export class DataHelper {
       url: url,
       headers: {
         Authorization: `Bearer ${token}`,
-        "Content-Type": "application/json",
+        "Content-Type": "application/json"
       },
-      timeout: 15000,
+      timeout: 15000
     };
 
     // Add body data if present and it's a POST/PUT/PATCH request

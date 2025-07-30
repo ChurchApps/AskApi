@@ -24,22 +24,22 @@ export class QueryController extends AskBaseController {
   public async peopleSearch(req: express.Request<{}, {}, any>, res: express.Response): Promise<any> {
     return this.actionWrapper(req, res, async (au) => {
       const { query } = req.body;
-      
+
       if (!query) {
         return { error: "Query is required" };
       }
 
       await OpenAiHelper.initialize();
-      
+
       // Get the instruction prompt
       const instructions = InstructionsHelper.getPeopleAdvancedSearchInstructions(query);
-      
+
       // Call OpenAI to convert the query
       const openAiResponse = await OpenAiHelper.executeText(
         "You are a helpful assistant that converts natural language queries into search filter arrays.",
         instructions
       );
-      
+
       // Parse the response - it should be a JSON array
       let filters: any[];
       try {
@@ -86,17 +86,17 @@ export class QueryController extends AskBaseController {
 
       await OpenAiHelper.initialize();
       const results = [];
-      
+
       for (const query of testQueries) {
         const instructions = InstructionsHelper.getPeopleAdvancedSearchInstructions(query);
         const openAiResponse = await OpenAiHelper.executeText(
           "You are a helpful assistant that converts natural language queries into search filter arrays.",
           instructions
         );
-        
+
         let filters: any[];
         let error: string | null = null;
-        
+
         try {
           // Try to extract JSON from the response
           const jsonMatch = openAiResponse.match(/\[.*\]/s);

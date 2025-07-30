@@ -1,7 +1,7 @@
 const serverlessExpress = require('@codegenie/serverless-express');
-const { init } = require('./dist/app');
+const { init } = require('./dist/src/app');
 const { Pool } = require('@churchapps/apihelper');
-const { Environment } = require('./dist/helpers/Environment');
+const { Environment } = require('./dist/src/helpers/Environment');
 
 const checkPool = async () => {
   if (!Environment.connectionString) {
