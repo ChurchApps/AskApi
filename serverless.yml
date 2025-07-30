@@ -4,7 +4,7 @@ useDotenv: true
 
 custom:
   stage: ${opt:stage, 'dev'}
-  env: ${self:custom.stage}
+  env: ${lower(${self:custom.stage})}
   layerName: ${self:service}-dependencies-${self:custom.stage}
   serverless-offline:
     httpPort: 3000
