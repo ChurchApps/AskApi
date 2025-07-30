@@ -33,11 +33,11 @@ export const init = async () => {
       res.sendStatus(200);
     });
 
-    // Handle body parsing from @codegenie/serverless-express
+    // Handle body parsing - works for both Lambda and localhost
     expApp.use((req, res, next) => {
       const contentType = req.headers["content-type"] || "";
 
-      // Handle Buffer instances (most common case with serverless-express)
+      // Handle Buffer instances (most common case with serverless-express in Lambda)
       if (Buffer.isBuffer(req.body)) {
         try {
           const bodyString = req.body.toString("utf8");
@@ -75,9 +75,17 @@ export const init = async () => {
           // Failed to parse string body as JSON - leave as string
         }
       }
+      // If no body or body is undefined (localhost case), set empty object
+      else if (!req.body) {
+        req.body = {};
+      }
 
       next();
     });
+
+    // Add Express body parsing as fallback for localhost (when not in Lambda)
+    expApp.use(express.json({ limit: "10mb" }));
+    expApp.use(express.urlencoded({ extended: true, limit: "10mb" }));
 
     expApp.use("/public", express.static(path.join(__dirname, "public")));
   };

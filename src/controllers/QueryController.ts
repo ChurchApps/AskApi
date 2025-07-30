@@ -98,6 +98,8 @@ export class QueryController extends AskBaseController {
         };
       }
 
+      return filters;
+      /*
       return {
         query,
         filters,
@@ -105,7 +107,7 @@ export class QueryController extends AskBaseController {
           instructions: instructions.substring(0, 500) + "...",
           rawResponse: openAiResponse
         }
-      };
+      };*/
     });
   }
 
