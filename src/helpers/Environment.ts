@@ -1,7 +1,7 @@
 import fs from "fs";
 import path from "path";
 
-import { EnvironmentBase } from "@churchapps/apihelper";
+import { AwsHelper, EnvironmentBase } from "@churchapps/apihelper";
 
 export class Environment extends EnvironmentBase {
   static membershipApi: string;
@@ -25,7 +25,7 @@ export class Environment extends EnvironmentBase {
     this.membershipApi = data.membershipApi;
     this.messagingApi = data.messagingApi;
     this.aiProvider = data.aiProvider || "openai";
-    this.openAiApiKey = data.openAiApiKey || process.env.OPENAI_API_KEY;
+    this.openAiApiKey = process.env.OPENAI_API_KEY || await AwsHelper.readParameter(`/${environment}/openAIKey`);;
     this.openRouterApiKey = data.openRouterApiKey || process.env.OPENROUTER_API_KEY;
   }
 }
