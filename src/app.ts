@@ -33,17 +33,8 @@ export const init = async () => {
       res.sendStatus(200);
     });
 
-    // Add standard Express JSON parsing middleware
-    expApp.use(express.json({ limit: "10mb" }));
-    expApp.use(express.urlencoded({ extended: true, limit: "10mb" }));
-
-    // Handle body parsing from @codegenie/serverless-express (for Lambda deployment)
+    // Handle body parsing from @codegenie/serverless-express
     expApp.use((req, res, next) => {
-      // Skip if body is already parsed as an object (from express.json())
-      if (req.body && typeof req.body === "object" && !Buffer.isBuffer(req.body)) {
-        return next();
-      }
-
       const contentType = req.headers["content-type"] || "";
 
       // Handle Buffer instances (most common case with serverless-express)
@@ -55,7 +46,8 @@ export const init = async () => {
           } else {
             req.body = bodyString;
           }
-        } catch {
+        } catch (_e) {
+          // Failed to parse Buffer body - set empty object
           req.body = {};
         }
       }
@@ -68,7 +60,8 @@ export const init = async () => {
           } else {
             req.body = bodyString;
           }
-        } catch {
+        } catch (_e) {
+          // Failed to parse Buffer-like body - set empty object
           req.body = {};
         }
       }
@@ -78,13 +71,9 @@ export const init = async () => {
           if (contentType.includes("application/json")) {
             req.body = JSON.parse(req.body);
           }
-        } catch {
-          // Silently ignore JSON parse errors
+        } catch (_e) {
+          // Failed to parse string body as JSON - leave as string
         }
-      }
-      // If no body was provided, ensure body is set to prevent parsing attempts
-      else if (!req.body) {
-        req.body = {};
       }
 
       next();
