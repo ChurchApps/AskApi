@@ -20,7 +20,7 @@ export class Environment extends EnvironmentBase {
 
     const json = fs.readFileSync(physicalPath, "utf8");
     const data = JSON.parse(json);
-    await this.populateBase(data, "askApi", environment);
+    //await this.populateBase(data, "askApi", environment);
 
     this.membershipApi = data.membershipApi;
     this.messagingApi = data.messagingApi;

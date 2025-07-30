@@ -36,6 +36,15 @@ export class QueryController extends AskBaseController {
     });
   }
 
+  @httpGet("/test")
+  public async test2(req: express.Request<{}, {}, any>, res: express.Response): Promise<any> {
+    return this.actionWrapperAnon(req, res, async () => {
+
+
+      return { "hello": "world" };
+    });
+  }
+
 
   @httpPost("/peopleOld")
   public async queryPeopleOld(req: express.Request<{}, {}, any>, res: express.Response): Promise<any> {
