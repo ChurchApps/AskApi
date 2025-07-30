@@ -6,7 +6,5 @@
   "membershipApi": "http://localhost:8083",
   "s3Bucket": "",
   "messagingApi": "http://localhost:8086",
-  "aiProvider": "openai",
-  "openAiApiKey": "",
-  "openRouterApiKey": ""
+  "aiProvider": "openai"
 }
