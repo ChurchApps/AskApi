@@ -28,8 +28,7 @@ jobs:
         with:
           path: ~/.npm
           key: ${{ runner.os }}-node-${{ hashFiles('**/package-lock.json') }}
-          restore-keys:
-            |
+          restore-keys: |
             ${{ runner.os }}-node-
 
       - name: Configure AWS Credentials
@@ -43,31 +42,11 @@ jobs:
         run: export SERVERLESS_ACCESS_KEY="$SERVERLESS_ACCESS_KEY"
 
       - name: Deploy API
-        run:
-          |
+        run: |
           npm install
           npm run deploy-demo
 
       - name: Serverless package contents
-        run:
-          |
+        run: |
           npx serverless package --stage Demo
           ls -R .serverless
-
-  cleanup:
-    name: Trigger Database Cleanup
-    needs: deploy
-    runs-on: ubuntu-latest
-    steps:
-      - name: Trigger Cleanup Demo Workflow
-        uses: actions/github-script@v6
-        with:
-          github-token: ${{ secrets.GITHUB_TOKEN }}
-          script:
-            |
-            await github.rest.actions.createWorkflowDispatch({
-              owner: context.repo.owner,
-              repo: context.repo.repo,
-              workflow_id: 'cleanup-demo.yml',
-              ref: 'main'
-            })
