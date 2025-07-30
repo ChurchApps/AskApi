@@ -35,7 +35,6 @@ package:
     - "!src/**"
     - "!tools/**"
     - "!playground/**"
-    - "!config/**"
     - "!package-lock.json"
     - "!tsconfig.json"
     - "!eslint.config.js"

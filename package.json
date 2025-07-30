@@ -19,7 +19,7 @@
     "format:check": "prettier --check \"src/**/*.{ts,js,json}\"",
     "tsc": "tsc",
     "build-fast": "npm-run-all clean tsc",
-    "build": "npm-run-all clean lint tsc",
+    "build": "npm-run-all clean lint tsc copy-assets",
     "dev:ts": "ts-node src/index.ts",
     "dev": "nodemon --watch src -e ts,ejs --exec \"ts-node src/index.ts\"",
     "build-layer": "rimraf layer && mkdir -p layer/nodejs && cp tools/layer-package.json layer/nodejs/package.json && cd layer/nodejs && npm install --production --legacy-peer-deps",
