@@ -1,7 +1,7 @@
 import { controller, httpGet, httpPost } from "inversify-express-utils";
 import express from "express";
 import { AskBaseController } from "./AskBaseController";
-import { OpenAiHelper, InstructionsHelper } from "../helpers";
+import { OpenAiHelper, InstructionsHelper, Environment } from "../helpers";
 import { WorkflowHelper } from "../helpers/WorkflowHelper";
 
 import fs from "fs";
@@ -32,11 +32,11 @@ export class QueryController extends AskBaseController {
       const connectionString = `/${appEnv}/${appName}/connectionString`;
 
 
-      return { environment, physicalPath, appName, appEnv, connectionString };
+      return { environment, physicalPath, appName, appEnv, connectionString, openAIKey: Environment.openAiApiKey };
     });
   }
 
-  @httpGet("/test")
+  @httpGet("/test2")
   public async test2(req: express.Request<{}, {}, any>, res: express.Response): Promise<any> {
     return this.actionWrapperAnon(req, res, async () => {
 
