@@ -33,7 +33,13 @@ export const init = async () => {
       res.sendStatus(200);
     });
 
-    // Handle body parsing - works for both Lambda and localhost
+    // Only use Express body parsing when NOT in Lambda environment
+    if (!process.env.AWS_LAMBDA_FUNCTION_NAME) {
+      expApp.use(express.json({ limit: "10mb" }));
+      expApp.use(express.urlencoded({ extended: true, limit: "10mb" }));
+    }
+
+    // Handle body parsing from @codegenie/serverless-express (for Lambda)
     expApp.use((req, res, next) => {
       const contentType = req.headers["content-type"] || "";
 
@@ -75,17 +81,9 @@ export const init = async () => {
           // Failed to parse string body as JSON - leave as string
         }
       }
-      // If no body or body is undefined (localhost case), set empty object
-      else if (!req.body) {
-        req.body = {};
-      }
 
       next();
     });
-
-    // Add Express body parsing as fallback for localhost (when not in Lambda)
-    expApp.use(express.json({ limit: "10mb" }));
-    expApp.use(express.urlencoded({ extended: true, limit: "10mb" }));
 
     expApp.use("/public", express.static(path.join(__dirname, "public")));
   };
