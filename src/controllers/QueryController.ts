@@ -7,14 +7,11 @@ import { WorkflowHelper } from "../helpers/WorkflowHelper";
 import fs from "fs";
 import path from "path";
 
-
 @controller("/query")
 export class QueryController extends AskBaseController {
-
   @httpGet("/test")
   public async test(req: express.Request<{}, {}, any>, res: express.Response): Promise<any> {
     return this.actionWrapperAnon(req, res, async () => {
-
       const environment = process.env.APP_ENV;
       let file = "dev.json";
       if (environment === "staging") file = "staging.json";
@@ -26,11 +23,9 @@ export class QueryController extends AskBaseController {
       const json = fs.readFileSync(physicalPath, "utf8");
       const jsonData = JSON.parse(json);
 
-
       const appName = jsonData.appName as string;
       const appEnv = jsonData.appEnv as string;
       const connectionString = `/${appEnv}/${appName}/connectionString`;
-
 
       return { environment, physicalPath, appName, appEnv, connectionString, openAIKey: Environment.openAiApiKey };
     });
@@ -39,12 +34,9 @@ export class QueryController extends AskBaseController {
   @httpGet("/test2")
   public async test2(req: express.Request<{}, {}, any>, res: express.Response): Promise<any> {
     return this.actionWrapperAnon(req, res, async () => {
-
-
-      return { "hello": "world" };
+      return { hello: "world" };
     });
   }
-
 
   @httpPost("/peopleOld")
   public async queryPeopleOld(req: express.Request<{}, {}, any>, res: express.Response): Promise<any> {

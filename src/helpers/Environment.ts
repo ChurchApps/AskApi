@@ -22,11 +22,11 @@ export class Environment extends EnvironmentBase {
     const data = JSON.parse(json);
     await this.populateBase(data, "askApi", environment);
 
-
     this.membershipApi = data.membershipApi;
     this.messagingApi = data.messagingApi;
     this.aiProvider = data.aiProvider || "openai";
-    this.openAiApiKey = process.env.OPENAI_API_KEY || await AwsHelper.readParameter(`/${environment}/openAIKey`);;
-    this.openRouterApiKey = process.env.OPENROUTER_API_KEY || await AwsHelper.readParameter(`/${environment}/openReouterApiKey`);;
+    this.openAiApiKey = process.env.OPENAI_API_KEY || (await AwsHelper.readParameter(`/${environment}/openAIKey`));
+    this.openRouterApiKey =
+      process.env.OPENROUTER_API_KEY || (await AwsHelper.readParameter(`/${environment}/openReouterApiKey`));
   }
 }

@@ -7,6 +7,7 @@ import QueryV2FormApiCallsTester from './components/QueryV2FormApiCallsTester';
 import QueryV2ExecuteApiCallsTester from './components/QueryV2ExecuteApiCallsTester';
 import QueryPeopleTester from './components/QueryPeopleTester';
 import PeopleAdvancedSearchTester from './components/PeopleAdvancedSearchTester';
+import WebsiteCreationTester from './components/WebsiteCreationTester';
 import ResponseViewer from './components/ResponseViewer';
 import { EnvironmentHelper } from './helpers/EnvironmentHelper';
 import { UserContextProvider, useUserContext } from './contexts/UserContext';
@@ -44,6 +45,7 @@ function AppContent() {
         <AuthSection />
         {isAuthenticated && (
           <>
+            <WebsiteCreationTester setResponse={setResponse} />
             <PeopleAdvancedSearchTester setResponse={setResponse} />
             <QueryPeopleTester setResponse={setResponse} />
             <QueryV2AnswerTester setResponse={setResponse} />

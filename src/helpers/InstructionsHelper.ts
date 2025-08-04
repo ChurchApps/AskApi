@@ -38,6 +38,26 @@ export class InstructionsHelper {
     return contents;
   }
 
+  static getCreateWebpageInstructions(description: string, churchId?: string, title?: string, url?: string): string {
+    let contents = this.readFile("/config/instructions/createWebpage.md");
+    contents = contents.replace("{query}", description);
+
+    // Build context information
+    let context = "";
+    if (churchId) {
+      context += `Church ID: ${churchId}\n`;
+    }
+    if (title) {
+      context += `Page Title: ${title}\n`;
+    }
+    if (url) {
+      context += `Page URL: ${url}\n`;
+    }
+
+    contents = contents.replace("{context}", context);
+    return contents;
+  }
+
   /*
     static getAnswerQuestionInstructions(userQuery: string, jwts: any, routes: any): string {
       let contents = this.readFile("/config/instructions/answerQuestion.md");
