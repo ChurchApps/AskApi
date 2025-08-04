@@ -1,0 +1,449 @@
+{
+  "id": "T3mK9qW7nLx",
+  "churchId": "ironwood-christian-church",
+  "url": "/",
+  "title": "Home - Ironwood Christian Church",
+  "layout": "headerFooter",
+  "sections": [
+    {
+      "id": "H8vY2bN5gRp",
+      "churchId": "ironwood-christian-church",
+      "pageId": "T3mK9qW7nLx",
+      "zone": "main",
+      "background": "https://content.churchapps.org/stockPhotos/church/church-cross-sunset.jpg",
+      "textColor": "#FFFFFF",
+      "headingColor": "#FFFFFF",
+      "linkColor": "#FFD700",
+      "sort": 1,
+      "stylesJSON": "{\"all\":{\"padding-top\":\"120px\",\"padding-bottom\":\"120px\",\"text-align\":\"center\"}}",
+      "elements": [
+        {
+          "id": "Q7rF4uJ1sPz",
+          "churchId": "ironwood-christian-church",
+          "sectionId": "H8vY2bN5gRp",
+          "elementType": "text",
+          "sort": 1,
+          "answersJSON": "{\"text\":\"# Welcome to Ironwood Christian Church\\n\\n### Growing in Faith, Serving in Love\",\"textAlignment\":\"center\"}"
+        },
+        {
+          "id": "D6xM3kV8tCw",
+          "churchId": "ironwood-christian-church",
+          "sectionId": "H8vY2bN5gRp",
+          "elementType": "row",
+          "sort": 2,
+          "answersJSON": "{\"columns\":\"4,4,4\",\"mobileSizes\":\"12,12,12\"}",
+          "elements": [
+            {
+              "id": "N9pL7zB2hQm",
+              "churchId": "ironwood-christian-church",
+              "sectionId": "H8vY2bN5gRp",
+              "parentId": "D6xM3kV8tCw",
+              "elementType": "column",
+              "sort": 1,
+              "answersJSON": "{\"size\":4,\"mobileSize\":12}",
+              "elements": [
+                {
+                  "id": "E4jS8wK6fGd",
+                  "churchId": "ironwood-christian-church",
+                  "sectionId": "H8vY2bN5gRp",
+                  "parentId": "N9pL7zB2hQm",
+                  "elementType": "card",
+                  "sort": 1,
+                  "answersJSON": "{\"title\":\"Plan Your Visit\",\"text\":\"Join us for worship this Sunday at 9:00 AM or 11:00 AM\",\"titleAlignment\":\"center\",\"textAlignment\":\"center\",\"url\":\"/visit\"}"
+                }
+              ]
+            },
+            {
+              "id": "V5gT1nR9mXc",
+              "churchId": "ironwood-christian-church",
+              "sectionId": "H8vY2bN5gRp",
+              "parentId": "D6xM3kV8tCw",
+              "elementType": "column",
+              "sort": 2,
+              "answersJSON": "{\"size\":4,\"mobileSize\":12}",
+              "elements": [
+                {
+                  "id": "L2yH5qP4bNv",
+                  "churchId": "ironwood-christian-church",
+                  "sectionId": "H8vY2bN5gRp",
+                  "parentId": "V5gT1nR9mXc",
+                  "elementType": "card",
+                  "sort": 1,
+                  "answersJSON": "{\"title\":\"Watch Online\",\"text\":\"Can't make it in person? Join us for live streaming\",\"titleAlignment\":\"center\",\"textAlignment\":\"center\",\"url\":\"/stream/live\"}"
+                }
+              ]
+            },
+            {
+              "id": "A8cW6dZ3uFr",
+              "churchId": "ironwood-christian-church",
+              "sectionId": "H8vY2bN5gRp",
+              "parentId": "D6xM3kV8tCw",
+              "elementType": "column",
+              "sort": 3,
+              "answersJSON": "{\"size\":4,\"mobileSize\":12}",
+              "elements": [
+                {
+                  "id": "K1oI7eU9lTy",
+                  "churchId": "ironwood-christian-church",
+                  "sectionId": "H8vY2bN5gRp",
+                  "parentId": "A8cW6dZ3uFr",
+                  "elementType": "card",
+                  "sort": 1,
+                  "answersJSON": "{\"title\":\"Give Online\",\"text\":\"Support our ministry and community outreach\",\"titleAlignment\":\"center\",\"textAlignment\":\"center\",\"url\":\"/give\"}"
+                }
+              ]
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "R7sQ4vM2jPn",
+      "churchId": "ironwood-christian-church",
+      "pageId": "T3mK9qW7nLx",
+      "zone": "main",
+      "background": "#F8F9FA",
+      "textColor": "#333333",
+      "headingColor": "#2C5D3F",
+      "linkColor": "#4A7C59",
+      "sort": 2,
+      "stylesJSON": "{\"all\":{\"padding\":\"80px 0\"}}",
+      "elements": [
+        {
+          "id": "G3bX8fC1iWk",
+          "churchId": "ironwood-christian-church",
+          "sectionId": "R7sQ4vM2jPn",
+          "elementType": "row",
+          "sort": 1,
+          "answersJSON": "{\"columns\":\"6,6\",\"mobileSizes\":\"12,12\"}",
+          "elements": [
+            {
+              "id": "Z9hA5mY7qDt",
+              "churchId": "ironwood-christian-church",
+              "sectionId": "R7sQ4vM2jPn",
+              "parentId": "G3bX8fC1iWk",
+              "elementType": "column",
+              "sort": 1,
+              "answersJSON": "{\"size\":6,\"mobileSize\":12}",
+              "elements": [
+                {
+                  "id": "P6rL4xN8oBv",
+                  "churchId": "ironwood-christian-church",
+                  "sectionId": "R7sQ4vM2jPn",
+                  "parentId": "Z9hA5mY7qDt",
+                  "elementType": "text",
+                  "sort": 1,
+                  "answersJSON": "{\"text\":\"## Welcome to Our Church Family\\n\\nAt Ironwood Christian Church, we believe that faith is a journey best traveled together. Whether you're seeking spiritual growth, community connection, or simply have questions about faith, you'll find a warm welcome here.\\n\\nOur mission is to create a place where everyone can experience God's love, grow in their faith, and serve others with compassion. We're excited to walk alongside you on your spiritual journey.\",\"textAlignment\":\"left\"}"
+                }
+              ]
+            },
+            {
+              "id": "S2uK6wE9gHj",
+              "churchId": "ironwood-christian-church",
+              "sectionId": "R7sQ4vM2jPn",
+              "parentId": "G3bX8fC1iWk",
+              "elementType": "column",
+              "sort": 2,
+              "answersJSON": "{\"size\":6,\"mobileSize\":12}",
+              "elements": [
+                {
+                  "id": "B5tR1nF3yJq",
+                  "churchId": "ironwood-christian-church",
+                  "sectionId": "R7sQ4vM2jPn",
+                  "parentId": "S2uK6wE9gHj",
+                  "elementType": "image",
+                  "sort": 1,
+                  "answersJSON": "{\"photo\":\"https://content.churchapps.org/stockPhotos/people/church-community.jpg\",\"photoAlt\":\"Church community gathering together\",\"noResize\":false}"
+                }
+              ]
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "M4zV7cG2kLs",
+      "churchId": "ironwood-christian-church",
+      "pageId": "T3mK9qW7nLx",
+      "zone": "main",
+      "background": "#FFFFFF",
+      "textColor": "#333333",
+      "headingColor": "#2C5D3F",
+      "linkColor": "#4A7C59",
+      "sort": 3,
+      "stylesJSON": "{\"all\":{\"padding\":\"80px 0\"}}",
+      "elements": [
+        {
+          "id": "J8dQ3pW5rMx",
+          "churchId": "ironwood-christian-church",
+          "sectionId": "M4zV7cG2kLs",
+          "elementType": "text",
+          "sort": 1,
+          "answersJSON": "{\"text\":\"## Sunday Services\\n\\nJoin us for worship every Sunday\",\"textAlignment\":\"center\"}"
+        },
+        {
+          "id": "F1nT9bH4eCu",
+          "churchId": "ironwood-christian-church",
+          "sectionId": "M4zV7cG2kLs",
+          "elementType": "whiteSpace",
+          "sort": 2,
+          "answersJSON": "{\"height\":\"30\"}"
+        },
+        {
+          "id": "C6yL8sK3vBp",
+          "churchId": "ironwood-christian-church",
+          "sectionId": "M4zV7cG2kLs",
+          "elementType": "row",
+          "sort": 3,
+          "answersJSON": "{\"columns\":\"6,6\",\"mobileSizes\":\"12,12\"}",
+          "elements": [
+            {
+              "id": "X7rD2mA9fQw",
+              "churchId": "ironwood-christian-church",
+              "sectionId": "M4zV7cG2kLs",
+              "parentId": "C6yL8sK3vBp",
+              "elementType": "column",
+              "sort": 1,
+              "answersJSON": "{\"size\":6,\"mobileSize\":12}",
+              "elements": [
+                {
+                  "id": "U3hZ5nJ1iGt",
+                  "churchId": "ironwood-christian-church",
+                  "sectionId": "M4zV7cG2kLs",
+                  "parentId": "X7rD2mA9fQw",
+                  "elementType": "box",
+                  "sort": 1,
+                  "answersJSON": "{\"background\":\"#F8F9FA\",\"textColor\":\"#333333\",\"headingColor\":\"#2C5D3F\",\"linkColor\":\"#4A7C59\",\"rounded\":\"true\"}",
+                  "stylesJSON": "{\"all\":{\"padding\":\"30px\",\"text-align\":\"center\"}}",
+                  "elements": [
+                    {
+                      "id": "Y9kS6wV4aPz",
+                      "churchId": "ironwood-christian-church",
+                      "sectionId": "M4zV7cG2kLs",
+                      "parentId": "U3hZ5nJ1iGt",
+                      "elementType": "text",
+                      "sort": 1,
+                      "answersJSON": "{\"text\":\"### Traditional Service\\n**9:00 AM**\\n\\nClassic hymns, liturgy, and inspiring messages in a reverent atmosphere\",\"textAlignment\":\"center\"}"
+                    }
+                  ]
+                }
+              ]
+            },
+            {
+              "id": "O4fI8qR7dNm",
+              "churchId": "ironwood-christian-church",
+              "sectionId": "M4zV7cG2kLs",
+              "parentId": "C6yL8sK3vBp",
+              "elementType": "column",
+              "sort": 2,
+              "answersJSON": "{\"size\":6,\"mobileSize\":12}",
+              "elements": [
+                {
+                  "id": "T1vP9xE2cWl",
+                  "churchId": "ironwood-christian-church",
+                  "sectionId": "M4zV7cG2kLs",
+                  "parentId": "O4fI8qR7dNm",
+                  "elementType": "box",
+                  "sort": 1,
+                  "answersJSON": "{\"background\":\"#F8F9FA\",\"textColor\":\"#333333\",\"headingColor\":\"#2C5D3F\",\"linkColor\":\"#4A7C59\",\"rounded\":\"true\"}",
+                  "stylesJSON": "{\"all\":{\"padding\":\"30px\",\"text-align\":\"center\"}}",
+                  "elements": [
+                    {
+                      "id": "W5gB3lM6oFh",
+                      "churchId": "ironwood-christian-church",
+                      "sectionId": "M4zV7cG2kLs",
+                      "parentId": "T1vP9xE2cWl",
+                      "elementType": "text",
+                      "sort": 1,
+                      "answersJSON": "{\"text\":\"### Contemporary Service\\n**11:00 AM**\\n\\nModern worship music and practical teaching for everyday life\",\"textAlignment\":\"center\"}"
+                    }
+                  ]
+                }
+              ]
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "I7bU2sQ9jKr",
+      "churchId": "ironwood-christian-church",
+      "pageId": "T3mK9qW7nLx",
+      "zone": "main",
+      "background": "#2C5D3F",
+      "textColor": "#FFFFFF",
+      "headingColor": "#FFFFFF",
+      "linkColor": "#A4D4B4",
+      "sort": 4,
+      "stylesJSON": "{\"all\":{\"padding\":\"80px 0\"}}",
+      "elements": [
+        {
+          "id": "L8mN4xC1vRy",
+          "churchId": "ironwood-christian-church",
+          "sectionId": "I7bU2sQ9jKr",
+          "elementType": "text",
+          "sort": 1,
+          "answersJSON": "{\"text\":\"## Get Connected\\n\\nFind your place in our church family\",\"textAlignment\":\"center\"}"
+        },
+        {
+          "id": "H6tZ9pF5oDs",
+          "churchId": "ironwood-christian-church",
+          "sectionId": "I7bU2sQ9jKr",
+          "elementType": "whiteSpace",
+          "sort": 2,
+          "answersJSON": "{\"height\":\"40\"}"
+        },
+        {
+          "id": "G2wV7kA3iBq",
+          "churchId": "ironwood-christian-church",
+          "sectionId": "I7bU2sQ9jKr",
+          "elementType": "row",
+          "sort": 3,
+          "answersJSON": "{\"columns\":\"4,4,4\",\"mobileSizes\":\"12,12,12\"}",
+          "elements": [
+            {
+              "id": "R5jY8hL6mTn",
+              "churchId": "ironwood-christian-church",
+              "sectionId": "I7bU2sQ9jKr",
+              "parentId": "G2wV7kA3iBq",
+              "elementType": "column",
+              "sort": 1,
+              "answersJSON": "{\"size\":4,\"mobileSize\":12}",
+              "elements": [
+                {
+                  "id": "D4uS1fX9pCz",
+                  "churchId": "ironwood-christian-church",
+                  "sectionId": "I7bU2sQ9jKr",
+                  "parentId": "R5jY8hL6mTn",
+                  "elementType": "card",
+                  "sort": 1,
+                  "answersJSON": "{\"title\":\"Youth Ministry\",\"text\":\"Middle and high school students gather every Wednesday at 6:30 PM for games, worship, and biblical teaching.\",\"titleAlignment\":\"center\",\"textAlignment\":\"center\",\"photo\":\"https://content.churchapps.org/stockPhotos/youth/youth-group.jpg\",\"photoAlt\":\"Youth group activities\",\"url\":\"/ministries/youth\"}"
+                }
+              ]
+            },
+            {
+              "id": "K7qM3eI2wGv",
+              "churchId": "ironwood-christian-church",
+              "sectionId": "I7bU2sQ9jKr",
+              "parentId": "G2wV7kA3iBq",
+              "elementType": "column",
+              "sort": 2,
+              "answersJSON": "{\"size\":4,\"mobileSize\":12}",
+              "elements": [
+                {
+                  "id": "V9nB6dR4tJx",
+                  "churchId": "ironwood-christian-church",
+                  "sectionId": "I7bU2sQ9jKr",
+                  "parentId": "K7qM3eI2wGv",
+                  "elementType": "card",
+                  "sort": 1,
+                  "answersJSON": "{\"title\":\"Small Groups\",\"text\":\"Connect with others through Bible study, fellowship, and prayer in homes throughout the week.\",\"titleAlignment\":\"center\",\"textAlignment\":\"center\",\"photo\":\"https://content.churchapps.org/stockPhotos/groups/small-group.jpg\",\"photoAlt\":\"Small group Bible study\",\"url\":\"/ministries/small-groups\"}"
+                }
+              ]
+            },
+            {
+              "id": "A1cP8gH5lWu",
+              "churchId": "ironwood-christian-church",
+              "sectionId": "I7bU2sQ9jKr",
+              "parentId": "G2wV7kA3iBq",
+              "elementType": "column",
+              "sort": 3,
+              "answersJSON": "{\"size\":4,\"mobileSize\":12}",
+              "elements": [
+                {
+                  "id": "F3oT7bK9sPm",
+                  "churchId": "ironwood-christian-church",
+                  "sectionId": "I7bU2sQ9jKr",
+                  "parentId": "A1cP8gH5lWu",
+                  "elementType": "card",
+                  "sort": 1,
+                  "answersJSON": "{\"title\":\"Community Outreach\",\"text\":\"Serve our neighbors through food drives, community events, and volunteer opportunities.\",\"titleAlignment\":\"center\",\"textAlignment\":\"center\",\"photo\":\"https://content.churchapps.org/stockPhotos/service/community-service.jpg\",\"photoAlt\":\"Community service volunteers\",\"url\":\"/ministries/outreach\"}"
+                }
+              ]
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "N2vJ6rZ4eLk",
+      "churchId": "ironwood-christian-church",
+      "pageId": "T3mK9qW7nLx",
+      "zone": "main",
+      "background": "#F8F9FA",
+      "textColor": "#333333",
+      "headingColor": "#2C5D3F",
+      "linkColor": "#4A7C59",
+      "sort": 5,
+      "stylesJSON": "{\"all\":{\"padding\":\"80px 0\"}}",
+      "elements": [
+        {
+          "id": "Q8sG1mW3yFd",
+          "churchId": "ironwood-christian-church",
+          "sectionId": "N2vJ6rZ4eLk",
+          "elementType": "text",
+          "sort": 1,
+          "answersJSON": "{\"text\":\"## Visit Us\\n\\nWe'd love to meet you in person\",\"textAlignment\":\"center\"}"
+        },
+        {
+          "id": "E5hU9cN7pBt",
+          "churchId": "ironwood-christian-church",
+          "sectionId": "N2vJ6rZ4eLk",
+          "elementType": "whiteSpace",
+          "sort": 2,
+          "answersJSON": "{\"height\":\"40\"}"
+        },
+        {
+          "id": "X6rL4aD8qVw",
+          "churchId": "ironwood-christian-church",
+          "sectionId": "N2vJ6rZ4eLk",
+          "elementType": "row",
+          "sort": 3,
+          "answersJSON": "{\"columns\":\"6,6\",\"mobileSizes\":\"12,12\"}",
+          "elements": [
+            {
+              "id": "C9kY2fS5iMn",
+              "churchId": "ironwood-christian-church",
+              "sectionId": "N2vJ6rZ4eLk",
+              "parentId": "X6rL4aD8qVw",
+              "elementType": "column",
+              "sort": 1,
+              "answersJSON": "{\"size\":6,\"mobileSize\":12}",
+              "elements": [
+                {
+                  "id": "Z3pV7xB1oHj",
+                  "churchId": "ironwood-christian-church",
+                  "sectionId": "N2vJ6rZ4eLk",
+                  "parentId": "C9kY2fS5iMn",
+                  "elementType": "text",
+                  "sort": 1,
+                  "answersJSON": "{\"text\":\"### Contact Information\\n\\n**Address:**\\n1425 Ironwood Drive\\nSpringfield, IL 62704\\n\\n**Phone:**\\n(217) 555-0123\\n\\n**Email:**\\ninfo@ironwoodchristian.org\\n\\n**Office Hours:**\\nMonday - Friday: 9:00 AM - 4:00 PM\",\"textAlignment\":\"left\"}"
+                }
+              ]
+            },
+            {
+              "id": "B4tQ8wE6gRu",
+              "churchId": "ironwood-christian-church",
+              "sectionId": "N2vJ6rZ4eLk",
+              "parentId": "X6rL4aD8qVw",
+              "elementType": "column",
+              "sort": 2,
+              "answersJSON": "{\"size\":6,\"mobileSize\":12}",
+              "elements": [
+                {
+                  "id": "M7nA5jI9lTy",
+                  "churchId": "ironwood-christian-church",
+                  "sectionId": "N2vJ6rZ4eLk",
+                  "parentId": "B4tQ8wE6gRu",
+                  "elementType": "map",
+                  "sort": 1,
+                  "answersJSON": "{\"mapAddress\":\"1425 Ironwood Drive, Springfield, IL 62704\",\"mapLabel\":\"Ironwood Christian Church\",\"mapZoom\":15}"
+                }
+              ]
+            }
+          ]
+        }
+      ]
+    }
+  ]
+}
