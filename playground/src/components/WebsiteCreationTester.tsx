@@ -12,7 +12,6 @@ interface WebsitePageData {
   title?: string;
   url?: string;
   description: string;
-  churchId?: string;
 }
 
 interface WebsitePageResponse {
@@ -29,7 +28,6 @@ const WebsiteCreationTester: React.FC<WebsiteCreationTesterProps> = ({ setRespon
   const { userChurch } = useUserContext();
   const [formData, setFormData] = useState<WebsitePageData>({
     description: '',
-    churchId: '',
     title: '',
     url: ''
   });
@@ -79,7 +77,6 @@ const WebsiteCreationTester: React.FC<WebsiteCreationTesterProps> = ({ setRespon
       // Prepare the request payload
       const payload: WebsitePageData = {
         description: formData.description.trim(),
-        ...(formData.churchId?.trim() && { churchId: formData.churchId.trim() }),
         ...(formData.title?.trim() && { title: formData.title.trim() }),
         ...(formData.url?.trim() && { url: formData.url.trim() })
       };
@@ -193,20 +190,7 @@ const WebsiteCreationTester: React.FC<WebsiteCreationTesterProps> = ({ setRespon
         </div>
       </div>
 
-      <div className="form-group">
-        <label htmlFor="churchId">Church ID (Optional):</label>
-        <input
-          id="churchId"
-          type="text"
-          value={formData.churchId}
-          onChange={(e) => handleInputChange('churchId', e.target.value)}
-          placeholder="e.g., my-church-123"
-          style={{ width: '100%' }}
-          disabled={loading}
-        />
-      </div>
-
-      <div className="form-group">
+<div className="form-group">
         <label htmlFor="title">Page Title (Optional):</label>
         <input
           id="title"

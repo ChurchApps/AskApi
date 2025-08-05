@@ -71,8 +71,8 @@ export class DataHelper {
     }
 
     // Escape CSV special characters
-    if (stringValue.includes(",") || stringValue.includes("\"") || stringValue.includes("\n")) {
-      stringValue = `"${stringValue.replace(/"/g, "\"\"")}"`;
+    if (stringValue.includes(",") || stringValue.includes('"') || stringValue.includes("\n")) {
+      stringValue = `"${stringValue.replace(/"/g, '""')}"`;
     }
 
     return stringValue;

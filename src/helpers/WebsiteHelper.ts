@@ -2,14 +2,6 @@ import { OpenAiHelper } from "./OpenAiHelper";
 import { InstructionsHelper } from "./InstructionsHelper";
 
 export class WebsiteHelper {
-  /**
-   * Generates a complete webpage JSON structure from a natural language description
-   * @param description Natural language description of the webpage to create
-   * @param churchId Optional church ID to associate with the page
-   * @param title Optional title for the page
-   * @param url Optional URL path for the page
-   * @returns Complete page JSON structure matching the webpage.md format
-   */
   public static async generatePageFromDescription(
     description: string,
     churchId?: string,
@@ -41,18 +33,154 @@ export class WebsiteHelper {
         }
 
         // Wait briefly before retrying
-        await new Promise(resolve => setTimeout(resolve, 1000));
+        await new Promise((resolve) => setTimeout(resolve, 1000));
       }
     }
 
-    throw new Error(`Failed to generate page from description after ${maxRetries} attempts. Last error: ${lastError.message}`);
+    throw new Error(
+      `Failed to generate page from description after ${maxRetries} attempts. Last error: ${lastError.message}`
+    );
   }
 
   /**
-   * Extracts and parses JSON from AI response using multiple strategies
-   * @param response Raw AI response text
-   * @returns Parsed JSON object
+   * Flattens a hierarchical page structure into separate arrays for page, sections, and elements
+   * @param pageData The hierarchical page data with nested sections and elements
+   * @returns Object containing flat arrays of page, sections, and elements
    */
+  /**
+   * Example usage:
+   *
+   * Input:
+   * {
+   *   id: "page-123456",
+   *   title: "Home Page",
+   *   sections: [
+   *     {
+   *       id: "section-001",
+   *       type: "hero",
+   *       elements: [
+   *         { id: "elem-001", type: "heading", content: "Welcome" },
+   *         { id: "elem-002", type: "text", content: "Hello world" }
+   *       ],
+   *       sections: [
+   *         {
+   *           id: "section-002",
+   *           type: "content",
+   *           elements: [
+   *             { id: "elem-003", type: "image", src: "image.jpg" }
+   *           ]
+   *         }
+   *       ]
+   *     }
+   *   ]
+   * }
+   *
+   * Output:
+   * {
+   *   page: { id: "page-123456", title: "Home Page" },
+   *   sections: [
+   *     { id: "section-001", type: "hero" },
+   *     { id: "section-002", type: "content", parentSectionId: "section-001" }
+   *   ],
+   *   elements: [
+   *     { id: "elem-001", type: "heading", content: "Welcome", sectionId: "section-001" },
+   *     { id: "elem-002", type: "text", content: "Hello world", sectionId: "section-001" },
+   *     { id: "elem-003", type: "image", src: "image.jpg", sectionId: "section-002" }
+   *   ]
+   * }
+   */
+
+  /**
+   * Flattens a hierarchical page structure into separate arrays for page, sections, and elements
+   * @param pageData The hierarchical page data with nested sections and elements
+   * @returns Object containing flat arrays of page, sections, and elements
+   */
+  public static flattenPageStructure(pageData: any): { page: any; sections: any[]; elements: any[] } {
+    if (!pageData) {
+      throw new Error("Page data is required");
+    }
+
+    // Create a copy of the page without sections
+    const page = { ...pageData };
+    delete page.sections;
+
+    const sections: any[] = [];
+    const elements: any[] = [];
+
+    // Recursive function to process sections and their elements
+    const processSections = (sectionsArray: any[], parentSectionId?: string) => {
+      if (!Array.isArray(sectionsArray)) {
+        return;
+      }
+
+      sectionsArray.forEach((section: any) => {
+        // Create a copy of the section without elements and child sections
+        const flatSection = { ...section };
+        delete flatSection.elements;
+        delete flatSection.sections;
+
+        // Add parent section reference if applicable
+        if (parentSectionId) {
+          flatSection.parentSectionId = parentSectionId;
+        }
+
+        sections.push(flatSection);
+
+        // Process elements in this section
+        if (Array.isArray(section.elements)) {
+          section.elements.forEach((element: any) => {
+            // Create a copy of the element without child elements
+            const flatElement = { ...element };
+            delete flatElement.elements;
+
+            // Add section reference
+            flatElement.sectionId = section.id;
+
+            elements.push(flatElement);
+
+            // Process child elements if they exist
+            if (Array.isArray(element.elements)) {
+              const processChildElements = (childElements: any[], parentElementId: string) => {
+                childElements.forEach((childElement: any) => {
+                  const flatChildElement = { ...childElement };
+                  delete flatChildElement.elements;
+
+                  flatChildElement.sectionId = section.id;
+                  flatChildElement.parentElementId = parentElementId;
+
+                  elements.push(flatChildElement);
+
+                  // Recursively process nested child elements
+                  if (Array.isArray(childElement.elements)) {
+                    processChildElements(childElement.elements, childElement.id);
+                  }
+                });
+              };
+
+              processChildElements(element.elements, element.id);
+            }
+          });
+        }
+
+        // Process child sections if they exist
+        if (Array.isArray(section.sections)) {
+          processSections(section.sections, section.id);
+        }
+      });
+    };
+
+    // Start processing from the top-level sections
+    if (Array.isArray(pageData.sections)) {
+      processSections(pageData.sections);
+    }
+
+    return {
+      page,
+      sections,
+      elements
+    };
+  }
+
   private static extractAndParseJson(response: string): any {
     // Strategy 1: Try to find complete JSON object with balanced braces
     const balancedJsonMatch = this.extractBalancedJson(response);
@@ -190,14 +318,18 @@ export class WebsiteHelper {
 
     // Validate page ID
     if (!validIdPattern.test(pageJson.id)) {
-      throw new Error(`Invalid page ID '${pageJson.id}': Must be exactly 11 characters using A-Za-z0-9 and hyphens only`);
+      throw new Error(
+        `Invalid page ID '${pageJson.id}': Must be exactly 11 characters using A-Za-z0-9 and hyphens only`
+      );
     }
     seenIds.add(pageJson.id);
 
     // Validate section and element IDs
     pageJson.sections.forEach((section: any, sectionIndex: number) => {
       if (!validIdPattern.test(section.id)) {
-        throw new Error(`Invalid section ID '${section.id}' at index ${sectionIndex}: Must be exactly 11 characters using A-Za-z0-9 and hyphens only`);
+        throw new Error(
+          `Invalid section ID '${section.id}' at index ${sectionIndex}: Must be exactly 11 characters using A-Za-z0-9 and hyphens only`
+        );
       }
 
       if (seenIds.has(section.id)) {
@@ -221,7 +353,9 @@ export class WebsiteHelper {
 
     elements.forEach((element: any, elementIndex: number) => {
       if (!validIdPattern.test(element.id)) {
-        throw new Error(`Invalid element ID '${element.id}' at ${context}.elements[${elementIndex}]: Must be exactly 11 characters using A-Za-z0-9 and hyphens only`);
+        throw new Error(
+          `Invalid element ID '${element.id}' at ${context}.elements[${elementIndex}]: Must be exactly 11 characters using A-Za-z0-9 and hyphens only`
+        );
       }
 
       if (seenIds.has(element.id)) {

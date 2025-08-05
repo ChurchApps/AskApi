@@ -9,9 +9,10 @@ export class WebsiteController extends AskBaseController {
   @httpPost("/createPage")
   public async createPage(req: express.Request<{}, {}, any>, res: express.Response): Promise<any> {
     return this.actionWrapper(req, res, async (au) => {
-      const { description, churchId, title, url } = req.body;
+      const { description, title, url } = req.body;
       await OpenAiHelper.initialize();
-      return WebsiteHelper.generatePageFromDescription(description, churchId, title, url);
+      const pageData = await WebsiteHelper.generatePageFromDescription(description, au.churchId, title, url);
+      return WebsiteHelper.flattenPageStructure(pageData);
     });
   }
 }
