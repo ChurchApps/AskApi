@@ -29,12 +29,12 @@ You must create a complete webpage JSON object that follows this exact structure
       "churchId": "string (optional)",
       "pageId": "string (required - must match parent page id)",
       "blockId": "string (optional)",
-      "zone": "string (optional)",
+      "zone": "string (typically 'main')",
       "background": "string (optional)",
       "textColor": "string (optional)",
       "headingColor": "string (optional)",
       "linkColor": "string (optional)",
-      "sort": "number (optional)",
+      "sort": "number",
       "targetBlockId": "string (optional)",
       "answersJSON": "string (optional)",
       "stylesJSON": "string (optional)",
@@ -46,7 +46,7 @@ You must create a complete webpage JSON object that follows this exact structure
           "sectionId": "string (required - must match parent section id)",
           "blockId": "string (optional)",
           "elementType": "string (optional)",
-          "sort": "number (optional)",
+          "sort": "number",
           "parentId": "string (optional - must match parent element id if nested)",
           "answersJSON": "string (optional)",
           "stylesJSON": "string (optional)",
@@ -61,10 +61,89 @@ You must create a complete webpage JSON object that follows this exact structure
 
 ## ID Generation Requirements
 
-**CRITICAL**: All `id` fields must follow these strict requirements:
+**CRITICAL**: All `id` fields must use the following shortId function to generate an id:
 
-- **Length**: Exactly 11 characters (char(11))
-- **Characters**: Only A-Z, a-z, 0-9, and hyphen (-) are allowed
+```javascript
+function generate(charList, length) {
+  let result = "";
+  for (let i = 0; i < length; i++) {
+    const idx = Math.floor(Math.random() * charList.length);
+    result += charList[idx];
+  }
+  return result;
+}
+
+function shortId() {
+  const chars = [
+    "A",
+    "B",
+    "C",
+    "D",
+    "E",
+    "F",
+    "G",
+    "H",
+    "I",
+    "J",
+    "K",
+    "L",
+    "M",
+    "N",
+    "O",
+    "P",
+    "Q",
+    "R",
+    "S",
+    "T",
+    "U",
+    "V",
+    "W",
+    "X",
+    "Y",
+    "Z",
+    "a",
+    "b",
+    "c",
+    "d",
+    "e",
+    "f",
+    "g",
+    "h",
+    "i",
+    "j",
+    "k",
+    "l",
+    "m",
+    "n",
+    "o",
+    "p",
+    "q",
+    "r",
+    "s",
+    "t",
+    "u",
+    "v",
+    "w",
+    "x",
+    "y",
+    "z",
+    "0",
+    "1",
+    "2",
+    "3",
+    "4",
+    "5",
+    "6",
+    "7",
+    "8",
+    "9",
+    "-",
+    "_"
+  ];
+  return generate(chars, 11);
+}
+```
+
 - **Uniqueness**: Each ID must be unique across the entire page structure
 - **Parent References**: Child elements must reference their parent's exact ID in `parentId`, `pageId`, or `sectionId` fields
 - **ChurchId**: The id field for page should not be the same as the churchId
@@ -219,5 +298,10 @@ Here is the JSON for your webpage:
 6. **Use** appropriate element types based on the content described
 7. **Escape all JSON strings properly** (use \" for quotes, \n for newlines, \\ for backslashes)
 8. **Return ONLY the JSON object** - your entire response should be parseable by JSON.parse()
+
+## Design Guide
+
+1. Build out the full content you would expect to see in a production church website. Don't just generate the bare minimum.
+2. Follow the styling you would expect to see at a medium size church.
 
 **FINAL REMINDER**: Your response must start with { and end with }. Nothing else.
