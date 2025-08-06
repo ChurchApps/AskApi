@@ -18,7 +18,7 @@ You must create a complete webpage JSON object that follows this exact structure
 
 ```json
 {
-  "id": "string (required - exactly 11 chars, A-Za-z0-9-)",
+  "id": "string (required - exactly 11 chars, A-Za-z0-9- , different from churchId)",
   "churchId": "string (optional)",
   "url": "string (optional)",
   "title": "string (optional)",
@@ -62,12 +62,15 @@ You must create a complete webpage JSON object that follows this exact structure
 ## ID Generation Requirements
 
 **CRITICAL**: All `id` fields must follow these strict requirements:
+
 - **Length**: Exactly 11 characters (char(11))
 - **Characters**: Only A-Z, a-z, 0-9, and hyphen (-) are allowed
 - **Uniqueness**: Each ID must be unique across the entire page structure
 - **Parent References**: Child elements must reference their parent's exact ID in `parentId`, `pageId`, or `sectionId` fields
+- **ChurchId**: The id field for page should not be the same as the churchId
 
 **Examples of valid IDs:**
+
 - `A1b2C3d4E5f`
 - `Kx9Qm7Zp2Vw`
 - `3nR8wL5tY9s`
@@ -76,15 +79,18 @@ You must create a complete webpage JSON object that follows this exact structure
 **IMPORTANT**: Do NOT use predictable patterns like "hero-sect01" or "page-001234". Always generate truly random combinations of characters.
 
 **ID Generation Examples:**
+
 - Good: `Kx9Qm7Zp2Vw`, `B6jH4fN1qWe`, `3nR8wL5tY9s`
 - Bad: `hero-sect01`, `page-001234`, `section-001`
 
 **JSON String Escaping Examples:**
+
 - Text with quotes: `"He said \"Hello\" to me"`
 - Text with newlines: `"Line 1\nLine 2"`
 - Text with backslashes: `"Path: C:\\folder\\file.txt"`
 
 ## Layout Types
+
 - `headerFooter` - Standard layout with header/footer navigation (most common)
 - `embed` - Embedded content or iframe-style pages
 - `cleanCentered` - Minimal centered content, no navigation
@@ -92,6 +98,7 @@ You must create a complete webpage JSON object that follows this exact structure
 ## Common Element Types and Properties
 
 ### Text Elements
+
 - **text**: Simple text content (supports markdown)
   - `text` - Content with markdown support
   - `textAlignment` - left, center, right
@@ -104,6 +111,7 @@ You must create a complete webpage JSON object that follows this exact structure
   - `photoPosition` - top, bottom, left, right
 
 ### Media Elements
+
 - **image**: Display images with optional links
   - `photo` - Image URL (required)
   - `photoAlt` - Alt text for accessibility
@@ -114,6 +122,7 @@ You must create a complete webpage JSON object that follows this exact structure
   - `videoId` - Video ID or URL
 
 ### Layout Elements
+
 - **row**: Row container for columns
   - `columns` - Comma-separated column sizes (1-12 grid)
   - `mobileSizes` - Optional mobile column sizes
@@ -130,6 +139,7 @@ You must create a complete webpage JSON object that follows this exact structure
   - `rounded` - Boolean for rounded corners
 
 ### Interactive Elements
+
 - **card**: Card-style content blocks
   - `title` - Card title
   - `text` - Card content
@@ -145,6 +155,7 @@ You must create a complete webpage JSON object that follows this exact structure
 - **donation**: Donation widget (usually empty properties)
 
 ### Specialized Elements
+
 - **map**: Embedded maps
   - `mapAddress` - Address to display
   - `mapLabel` - Optional label
@@ -162,12 +173,14 @@ You must create a complete webpage JSON object that follows this exact structure
 ## Styling Guidelines
 
 ### Section Colors
+
 - **Background**: #FFFFFF, var(--primary), image URLs, or CSS colors
 - **Text Color**: #333333 (dark text), #FFFFFF (light text)
 - **Heading Color**: #012B5D, var(--primary), or complementary colors
 - **Link Color**: #007BFF, var(--accent), or theme colors
 
 ### Zone Types
+
 - `main` - Primary content area (most common)
 - `footer` - Footer area
 - `block` - Block-specific sections
@@ -175,6 +188,7 @@ You must create a complete webpage JSON object that follows this exact structure
 ## JSON Format Requirements
 
 **CRITICAL**: Your response must be valid JSON that can be parsed by JSON.parse(). This means:
+
 - All strings must be properly escaped (use \" for quotes inside strings)
 - No trailing commas
 - No comments or additional text
@@ -182,13 +196,14 @@ You must create a complete webpage JSON object that follows this exact structure
 - No explanations before or after the JSON
 
 **Invalid Response Examples:**
+
 ```
 Here is the JSON for your webpage:
 {"id": "..."} // DON'T DO THIS
 ```
 
 ```json
-{"id": "..."} // DON'T DO THIS
+{ "id": "..." } // DON'T DO THIS
 ```
 
 **Valid Response Example:**

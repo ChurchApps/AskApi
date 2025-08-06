@@ -12,7 +12,11 @@ export class WebsiteController extends AskBaseController {
       const { description, title, url } = req.body;
       await OpenAiHelper.initialize();
       const pageData = await WebsiteHelper.generatePageFromDescription(description, au.churchId, title, url);
-      return WebsiteHelper.flattenPageStructure(pageData);
+      const flat = WebsiteHelper.flattenPageStructure(pageData);
+      flat.page.churchId = au.churchId;
+      flat.sections.forEach((s) => (s.churchId = au.churchId));
+      flat.elements.forEach((e) => (e.churchId = au.churchId));
+      return flat;
     });
   }
 }
