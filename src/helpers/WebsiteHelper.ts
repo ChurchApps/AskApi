@@ -14,7 +14,7 @@ export class WebsiteHelper {
     for (let attempt = 1; attempt <= maxRetries; attempt++) {
       try {
         const systemPrompt = this.buildSystemPrompt(description, churchId, title, url);
-        const response = await OpenAiHelper.executeText(systemPrompt, "");
+        const response = await OpenAiHelper.executeWebsiteGeneration(systemPrompt, "");
 
         console.log(`Attempt ${attempt} - AI Response (first 200 chars):`, response.substring(0, 200));
 

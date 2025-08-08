@@ -78,4 +78,23 @@ export class OpenAiHelper {
 
     return response.choices[0]?.message?.content || "";
   }
+
+  public static async executeWebsiteGeneration(systemRole: string, prompt: string) {
+    const openAiPayload: OpenAI.Chat.ChatCompletionCreateParams = {
+      model: "gpt-4o",
+      messages: [
+        { role: "system", content: systemRole },
+        { role: "user", content: prompt }
+      ],
+      temperature: 0,
+      max_tokens: 6000
+      // Optional: Force JSON response format if available
+      // response_format: { type: "json_object" }
+    };
+
+    const response = await this.openai.chat.completions.create(openAiPayload);
+    console.log("Website Generation Response:", response.choices[0]?.message?.content);
+
+    return response.choices[0]?.message?.content || "";
+  }
 }
