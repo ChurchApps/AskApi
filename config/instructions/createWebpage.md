@@ -61,106 +61,23 @@ You must create a complete webpage JSON object that follows this exact structure
 
 ## ID Generation Requirements
 
-**CRITICAL**: All `id` fields must use the following shortId function to generate an id:
+**IMPORTANT**: For all `id` fields, use simple placeholder IDs that follow this pattern:
 
-```javascript
-function generate(charList, length) {
-  let result = "";
-  for (let i = 0; i < length; i++) {
-    const idx = Math.floor(Math.random() * charList.length);
-    result += charList[idx];
-  }
-  return result;
-}
+- Page ID: `page-{number}` (e.g., `page-001`)
+- Section IDs: `sect-{number}` (e.g., `sect-001`, `sect-002`)
+- Element IDs: `elem-{number}` (e.g., `elem-001`, `elem-002`)
 
-function shortId() {
-  const chars = [
-    "A",
-    "B",
-    "C",
-    "D",
-    "E",
-    "F",
-    "G",
-    "H",
-    "I",
-    "J",
-    "K",
-    "L",
-    "M",
-    "N",
-    "O",
-    "P",
-    "Q",
-    "R",
-    "S",
-    "T",
-    "U",
-    "V",
-    "W",
-    "X",
-    "Y",
-    "Z",
-    "a",
-    "b",
-    "c",
-    "d",
-    "e",
-    "f",
-    "g",
-    "h",
-    "i",
-    "j",
-    "k",
-    "l",
-    "m",
-    "n",
-    "o",
-    "p",
-    "q",
-    "r",
-    "s",
-    "t",
-    "u",
-    "v",
-    "w",
-    "x",
-    "y",
-    "z",
-    "0",
-    "1",
-    "2",
-    "3",
-    "4",
-    "5",
-    "6",
-    "7",
-    "8",
-    "9",
-    "-",
-    "_"
-  ];
-  return generate(chars, 11);
-}
-```
+**ID Rules:**
+- Use sequential numbering (001, 002, 003, etc.)
+- Each ID must be exactly 11 characters long (pad with zeros if needed)
+- Parent references must use the exact parent ID (e.g., element's `sectionId` must match its parent section's `id`)
+- The system will automatically replace these with unique IDs after generation
 
-- **Uniqueness**: Each ID must be unique across the entire page structure
-- **Parent References**: Child elements must reference their parent's exact ID in `parentId`, `pageId`, or `sectionId` fields
-- **ChurchId**: The id field for page should not be the same as the churchId
+**Examples:**
+- Page: `page-000001`
+- Sections: `sect-000001`, `sect-000002`
+- Elements: `elem-000001`, `elem-000002`
 
-**Examples of valid IDs:**
-
-- `A1b2C3d4E5f`
-- `Kx9Qm7Zp2Vw`
-- `3nR8wL5tY9s`
-- `B6jH4fN1qWe`
-
-**IMPORTANT**: Do NOT use predictable patterns like "hero-sect01" or "page-001234". Always generate truly random combinations of characters.
-
-**ID Generation Examples:**
-
-- Good: `Kx9Qm7Zp2Vw`, `B6jH4fN1qWe`, `3nR8wL5tY9s`
-- Bad: `hero-sect01`, `page-001234`, `section-001`
 
 **JSON String Escaping Examples:**
 
@@ -185,14 +102,14 @@ function shortId() {
 - **textWithPhoto**: Combined text and image layouts
   - `text` - Text content (supports markdown)
   - `textAlignment` - left, center, right
-  - `photo` - Image URL
+  - `photo` - Image URL - MUST be a real, working image URL from the internet
   - `photoAlt` - Alt text
   - `photoPosition` - top, bottom, left, right
 
 ### Media Elements
 
 - **image**: Display images with optional links
-  - `photo` - Image URL (required)
+  - `photo` - Image URL (required) - MUST be a real, working image URL from the internet
   - `photoAlt` - Alt text for accessibility
   - `url` - Optional link URL
   - `external` - Boolean for external links
@@ -224,7 +141,7 @@ function shortId() {
   - `text` - Card content
   - `titleAlignment` - Title alignment
   - `textAlignment` - Text alignment
-  - `photo` - Optional image URL
+  - `photo` - Optional image URL - MUST be a real, working image URL from the internet
   - `photoAlt` - Image alt text
   - `url` - Optional link URL
 
@@ -299,9 +216,46 @@ Here is the JSON for your webpage:
 7. **Escape all JSON strings properly** (use \" for quotes, \n for newlines, \\ for backslashes)
 8. **Return ONLY the JSON object** - your entire response should be parseable by JSON.parse()
 
+## Image Requirements
+
+**CRITICAL**: All images MUST use real, working URLs from the internet. When you need an image:
+
+1. Use these reliable image services:
+   - Picsum (Lorem Picsum): https://picsum.photos/{width}/{height}
+   - Specific Picsum images: https://picsum.photos/id/{id}/{width}/{height}
+   - Placeholder.com: https://via.placeholder.com/{width}x{height}
+   - PlaceIMG (archived but still works): https://placeimg.com/{width}/{height}/people
+
+2. For church-specific themed images, use these exact working URLs:
+   - Church building: https://picsum.photos/id/1048/1200/800
+   - Community gathering: https://picsum.photos/id/1027/1200/800
+   - Nature/creation: https://picsum.photos/id/1043/1200/800
+   - Hands/prayer: https://picsum.photos/id/1073/1200/800
+   - Group of people: https://picsum.photos/id/1011/1200/800
+   - Study/books: https://picsum.photos/id/1073/1200/800
+   - Children/youth: https://picsum.photos/id/1004/1200/800
+   - Volunteer work: https://picsum.photos/id/1027/1200/800
+
+3. Size variations for different contexts:
+   - Hero images: 1920x1080 or 1600x900
+   - Cards: 800x600 or 600x400
+   - Thumbnails: 400x300
+
+**Examples of valid image URLs:**
+- https://picsum.photos/1200/800
+- https://picsum.photos/id/1048/800/600
+- https://via.placeholder.com/1200x800
+- https://placeimg.com/1200/800/people
+
+**NEVER use placeholder URLs like:**
+- /images/hero.jpg
+- placeholder.com/image.jpg
+- example.com/photo.png
+
 ## Design Guide
 
 1. Build out the full content you would expect to see in a production church website. Don't just generate the bare minimum.
 2. Follow the styling you would expect to see at a medium size church.
+3. Always use real, working image URLs from the internet for any visual content.
 
 **FINAL REMINDER**: Your response must start with { and end with }. Nothing else.

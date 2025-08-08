@@ -19,6 +19,17 @@ export class WebsiteHelper {
         console.log(`Attempt ${attempt} - AI Response (first 200 chars):`, response.substring(0, 200));
 
         const pageJson = this.extractAndParseJson(response);
+        console.log("Parsed JSON structure:", {
+          hasId: !!pageJson.id,
+          hasSections: !!pageJson.sections,
+          sectionsLength: pageJson.sections?.length || 0,
+          firstSectionElementsLength: pageJson.sections?.[0]?.elements?.length || 0
+        });
+
+        // Replace all IDs with unique generated ones
+        this.replaceIdsWithUniqueOnes(pageJson);
+        console.log("Replaced IDs with unique generated ones");
+        
         this.validatePageStructure(pageJson);
         this.validateIdStructure(pageJson);
 
@@ -96,8 +107,21 @@ export class WebsiteHelper {
    * @returns Object containing flat arrays of page, sections, and elements
    */
   public static flattenPageStructure(pageData: any): { page: any; sections: any[]; elements: any[] } {
+    console.log("flattenPageStructure called with type:", typeof pageData);
+    console.log("flattenPageStructure called with:", JSON.stringify(pageData).substring(0, 200));
+    
     if (!pageData) {
       throw new Error("Page data is required");
+    }
+    
+    // If pageData is a string, try to parse it
+    if (typeof pageData === 'string') {
+      try {
+        pageData = JSON.parse(pageData);
+        console.log("Parsed string to object");
+      } catch (e) {
+        throw new Error("Page data is a string but not valid JSON");
+      }
     }
 
     // Create a copy of the page without sections
@@ -110,6 +134,7 @@ export class WebsiteHelper {
     // Recursive function to process sections and their elements
     const processSections = (sectionsArray: any[], parentSectionId?: string) => {
       if (!Array.isArray(sectionsArray)) {
+        console.error("processSections called with non-array:", sectionsArray);
         return;
       }
 
@@ -133,8 +158,10 @@ export class WebsiteHelper {
             const flatElement = { ...element };
             delete flatElement.elements;
 
-            // Add section reference
-            flatElement.sectionId = section.id;
+            // Ensure sectionId is set (don't override if already exists)
+            if (!flatElement.sectionId) {
+              flatElement.sectionId = section.id;
+            }
 
             elements.push(flatElement);
 
@@ -170,11 +197,19 @@ export class WebsiteHelper {
     };
 
     // Start processing from the top-level sections
-    if (Array.isArray(pageData.sections)) {
-      processSections(pageData.sections);
+    try {
+      if (Array.isArray(pageData.sections)) {
+        console.log("Processing", pageData.sections.length, "top-level sections");
+        processSections(pageData.sections);
+      } else {
+        console.log("pageData.sections is not an array:", typeof pageData.sections);
+      }
+    } catch (error) {
+      console.error("Error during section processing:", error);
+      throw error;
     }
 
-
+    console.log("Final counts - sections:", sections.length, "elements:", elements.length);
 
     return {
       page,
@@ -257,7 +292,7 @@ export class WebsiteHelper {
         continue;
       }
 
-      if (char === "\"" && !escaped) {
+      if (char === '"' && !escaped) {
         inString = !inString;
         continue;
       }
@@ -315,7 +350,7 @@ export class WebsiteHelper {
    * @param pageJson Parsed page JSON object
    */
   private static validateIdStructure(pageJson: any): void {
-    const validIdPattern = /^[A-Za-z0-9-]{11}$/;
+    const validIdPattern = /^[A-Za-z0-9-_]{11}$/;
     const seenIds = new Set<string>();
 
     // Validate page ID
@@ -351,7 +386,7 @@ export class WebsiteHelper {
    * @param context Context string for error messages
    */
   private static validateElementIds(elements: any[], seenIds: Set<string>, context: string): void {
-    const validIdPattern = /^[A-Za-z0-9-]{11}$/;
+    const validIdPattern = /^[A-Za-z0-9-_]{11}$/;
 
     elements.forEach((element: any, elementIndex: number) => {
       if (!validIdPattern.test(element.id)) {
@@ -372,6 +407,21 @@ export class WebsiteHelper {
     });
   }
 
+  private static generateIdSet(count: number): string[] {
+    const ids: string[] = [];
+    const usedIds = new Set<string>();
+    
+    while (ids.length < count) {
+      const id = this.generateId();
+      if (!usedIds.has(id)) {
+        usedIds.add(id);
+        ids.push(id);
+      }
+    }
+    
+    return ids;
+  }
+
   private static buildSystemPrompt(description: string, churchId?: string, title?: string, url?: string): string {
     return InstructionsHelper.getCreateWebpageInstructions(description, churchId, title, url);
   }
@@ -387,5 +437,74 @@ export class WebsiteHelper {
       result += chars.charAt(Math.floor(Math.random() * chars.length));
     }
     return result;
+  }
+
+  private static replaceIdsWithUniqueOnes(pageData: any): void {
+    const idMap = new Map<string, string>();
+    const usedIds = new Set<string>();
+    
+    // Helper to get or create a new ID for a given placeholder ID
+    const getNewId = (oldId: string): string => {
+      if (idMap.has(oldId)) {
+        return idMap.get(oldId)!;
+      }
+      
+      let newId: string;
+      do {
+        newId = this.generateId();
+      } while (usedIds.has(newId));
+      
+      usedIds.add(newId);
+      idMap.set(oldId, newId);
+      return newId;
+    };
+    
+    // Replace page ID
+    if (pageData.id) {
+      pageData.id = getNewId(pageData.id);
+    }
+    
+    // Replace section IDs and update references
+    if (Array.isArray(pageData.sections)) {
+      pageData.sections.forEach((section: any) => {
+        if (section.id) {
+          const newSectionId = getNewId(section.id);
+          section.id = newSectionId;
+          
+          // Update pageId reference
+          if (section.pageId) {
+            section.pageId = idMap.get(section.pageId) || section.pageId;
+          }
+          
+          // Replace element IDs and update references
+          if (Array.isArray(section.elements)) {
+            const processElements = (elements: any[], parentSectionId: string) => {
+              elements.forEach((element: any) => {
+                if (element.id) {
+                  element.id = getNewId(element.id);
+                }
+                
+                // Update sectionId reference
+                if (element.sectionId) {
+                  element.sectionId = idMap.get(element.sectionId) || parentSectionId;
+                }
+                
+                // Update parentId reference for nested elements
+                if (element.parentId) {
+                  element.parentId = idMap.get(element.parentId) || element.parentId;
+                }
+                
+                // Process nested elements
+                if (Array.isArray(element.elements)) {
+                  processElements(element.elements, parentSectionId);
+                }
+              });
+            };
+            
+            processElements(section.elements, newSectionId);
+          }
+        }
+      });
+    }
   }
 }
