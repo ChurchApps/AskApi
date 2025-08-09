@@ -29,7 +29,7 @@ export class WebsiteHelper {
         // Replace all IDs with unique generated ones
         this.replaceIdsWithUniqueOnes(pageJson);
         console.log("Replaced IDs with unique generated ones");
-        
+
         this.validatePageStructure(pageJson);
         this.validateIdStructure(pageJson);
 
@@ -109,13 +109,13 @@ export class WebsiteHelper {
   public static flattenPageStructure(pageData: any): { page: any; sections: any[]; elements: any[] } {
     console.log("flattenPageStructure called with type:", typeof pageData);
     console.log("flattenPageStructure called with:", JSON.stringify(pageData).substring(0, 200));
-    
+
     if (!pageData) {
       throw new Error("Page data is required");
     }
-    
+
     // If pageData is a string, try to parse it
-    if (typeof pageData === 'string') {
+    if (typeof pageData === "string") {
       try {
         pageData = JSON.parse(pageData);
         console.log("Parsed string to object");
@@ -292,7 +292,7 @@ export class WebsiteHelper {
         continue;
       }
 
-      if (char === '"' && !escaped) {
+      if (char === "\"" && !escaped) {
         inString = !inString;
         continue;
       }
@@ -410,7 +410,7 @@ export class WebsiteHelper {
   private static generateIdSet(count: number): string[] {
     const ids: string[] = [];
     const usedIds = new Set<string>();
-    
+
     while (ids.length < count) {
       const id = this.generateId();
       if (!usedIds.has(id)) {
@@ -418,7 +418,7 @@ export class WebsiteHelper {
         ids.push(id);
       }
     }
-    
+
     return ids;
   }
 
@@ -442,40 +442,40 @@ export class WebsiteHelper {
   private static replaceIdsWithUniqueOnes(pageData: any): void {
     const idMap = new Map<string, string>();
     const usedIds = new Set<string>();
-    
+
     // Helper to get or create a new ID for a given placeholder ID
     const getNewId = (oldId: string): string => {
       if (idMap.has(oldId)) {
         return idMap.get(oldId)!;
       }
-      
+
       let newId: string;
       do {
         newId = this.generateId();
       } while (usedIds.has(newId));
-      
+
       usedIds.add(newId);
       idMap.set(oldId, newId);
       return newId;
     };
-    
+
     // Replace page ID
     if (pageData.id) {
       pageData.id = getNewId(pageData.id);
     }
-    
+
     // Replace section IDs and update references
     if (Array.isArray(pageData.sections)) {
       pageData.sections.forEach((section: any) => {
         if (section.id) {
           const newSectionId = getNewId(section.id);
           section.id = newSectionId;
-          
+
           // Update pageId reference
           if (section.pageId) {
             section.pageId = idMap.get(section.pageId) || section.pageId;
           }
-          
+
           // Replace element IDs and update references
           if (Array.isArray(section.elements)) {
             const processElements = (elements: any[], parentSectionId: string) => {
@@ -483,24 +483,24 @@ export class WebsiteHelper {
                 if (element.id) {
                   element.id = getNewId(element.id);
                 }
-                
+
                 // Update sectionId reference
                 if (element.sectionId) {
                   element.sectionId = idMap.get(element.sectionId) || parentSectionId;
                 }
-                
+
                 // Update parentId reference for nested elements
                 if (element.parentId) {
                   element.parentId = idMap.get(element.parentId) || element.parentId;
                 }
-                
+
                 // Process nested elements
                 if (Array.isArray(element.elements)) {
                   processElements(element.elements, parentSectionId);
                 }
               });
             };
-            
+
             processElements(section.elements, newSectionId);
           }
         }

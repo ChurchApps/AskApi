@@ -87,7 +87,7 @@ export class OpenAiHelper {
         { role: "user", content: prompt }
       ],
       temperature: 0,
-      max_tokens: 6000
+      max_tokens: 8000
       // Optional: Force JSON response format if available
       // response_format: { type: "json_object" }
     };
