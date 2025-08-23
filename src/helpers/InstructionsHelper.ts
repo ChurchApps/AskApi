@@ -38,6 +38,12 @@ export class InstructionsHelper {
     return contents;
   }
 
+  static getPeopleAdvancedSearchWithApiCallsInstructions(userQuery: string): string {
+    let contents = this.readFile("/config/instructions/peopleAdvancedSearchWithApiCalls.md");
+    contents = contents.replace("{query}", userQuery);
+    return contents;
+  }
+
   static getCreateWebpageInstructions(description: string, churchId?: string, title?: string, url?: string): string {
     let contents = this.readFile("/config/instructions/createWebpage.md");
     contents = contents.replace("{query}", description);
