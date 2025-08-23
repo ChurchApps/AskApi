@@ -104,6 +104,26 @@ export class DataHelper {
     return data;
   }
 
+  static flattenObject(obj: any): any {
+    var toReturn: any = {};
+
+    for (var i in obj) {
+        if (!obj.hasOwnProperty(i)) continue;
+
+        if ((typeof obj[i]) == 'object' && obj[i] !== null) {
+            var flatObject = this.flattenObject(obj[i]);
+            for (var x in flatObject) {
+                if (!flatObject.hasOwnProperty(x)) continue;
+
+                toReturn[x] = flatObject[x];
+            }
+        } else {
+            toReturn[i] = obj[i];
+        }
+    }
+    return toReturn;
+  }
+
   static async executeSingleApiCall(apiCall: any, jwts: any, baseUrls: { [key: string]: string }) {
     const apiName = apiCall.apiName.toLowerCase();
     const baseUrl = baseUrls[apiName];
@@ -173,7 +193,7 @@ export class DataHelper {
     return tokenMap[apiName] || "";
   }
 
-  static async executeApiCalls(apiCalls: any[], jwts: any) {
+  static async executeApiCalls(apiCalls: any[], jwts: any, resultType: "csv" | "json" = "csv") {
     const results: any[] = [];
 
     // Base URLs for different APIs
@@ -210,7 +230,11 @@ export class DataHelper {
       }
     });
 
-    return csvArrays;
+    const flattenedDataArrays = dataArrays.map((dataArray) => {
+      return dataArray.map((item: any) => this.flattenObject(item));
+    });
+
+    return resultType === "csv" ? csvArrays : [...flattenedDataArrays];
   }
 
   private static buildRequestConfig(apiCall: any, baseUrl: string, token: string) {
