@@ -2,6 +2,8 @@ service: ask-api
 
 useDotenv: true
 
+disableSchemaValidation: true
+
 custom:
   stage: ${opt:stage, 'dev'}
   env: ${lower(${self:custom.stage})}
@@ -14,7 +16,7 @@ custom:
 
 provider:
   name: aws
-  runtime: nodejs20.x
+  runtime: nodejs22.x
   memorySize: 512
   timeout: 10
   region: ${env:AWS_REGION, 'us-east-2'}
