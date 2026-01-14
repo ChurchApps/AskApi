@@ -146,6 +146,126 @@ export class InstructionsHelper {
     return contents;
   }
 
+  static getGenerateOutlineInstructions(
+    prompt: string,
+    churchContext?: any,
+    availableElementTypes?: string[],
+    constraints?: any
+  ): string {
+    let contents = this.readFile("/config/instructions/generatePageOutline.md");
+
+    // Replace prompt
+    contents = contents.replace("{prompt}", prompt);
+
+    // Build church context string
+    let contextStr = "## Church Information\n\n";
+    if (churchContext) {
+      if (churchContext.churchName) {
+        contextStr += `**Church Name**: ${churchContext.churchName}\n`;
+        contextStr += `Use "${churchContext.churchName}" in content, NOT generic "Our Church"\n\n`;
+      }
+      if (churchContext.subdomain) {
+        contextStr += `**Subdomain**: ${churchContext.subdomain}\n\n`;
+      }
+      if (churchContext.theme) {
+        contextStr += "### Brand Colors\n";
+        if (churchContext.theme.primaryColor) {
+          contextStr += `**Primary Color**: ${churchContext.theme.primaryColor}\n`;
+        }
+        if (churchContext.theme.secondaryColor) {
+          contextStr += `**Secondary Color**: ${churchContext.theme.secondaryColor}\n`;
+        }
+        contextStr += "\n";
+      }
+    } else {
+      contextStr += "No specific church context provided.\n";
+    }
+    contents = contents.replace("{churchContext}", contextStr);
+
+    // Build element types list
+    let elementTypesStr = "";
+    if (availableElementTypes && availableElementTypes.length > 0) {
+      elementTypesStr = "Available element types:\n";
+      elementTypesStr += availableElementTypes.join(", ");
+    } else {
+      elementTypesStr = "No element type restrictions.";
+    }
+    contents = contents.replace("{availableElementTypes}", elementTypesStr);
+
+    // Build constraints string
+    let constraintsStr = "";
+    if (constraints) {
+      if (constraints.maxSections) {
+        constraintsStr += `Maximum sections: ${constraints.maxSections}\n`;
+      }
+      if (constraints.preferredLayout) {
+        constraintsStr += `Preferred layout: ${constraints.preferredLayout}\n`;
+      }
+    }
+    if (!constraintsStr) {
+      constraintsStr = "No specific constraints.";
+    }
+    contents = contents.replace("{constraints}", constraintsStr);
+
+    return contents;
+  }
+
+  static getGenerateSectionInstructions(
+    sectionOutline: any,
+    churchContext?: any,
+    availableElementTypes?: string[],
+    pageContext?: any
+  ): string {
+    let contents = this.readFile("/config/instructions/generateSection.md");
+
+    // Replace section outline
+    contents = contents.replace("{sectionOutline}", JSON.stringify(sectionOutline, null, 2));
+
+    // Build church context string
+    let contextStr = "## Church Information\n\n";
+    if (churchContext) {
+      if (churchContext.churchName) {
+        contextStr += `**Church Name**: ${churchContext.churchName}\n\n`;
+      }
+      if (churchContext.theme) {
+        contextStr += "### Brand Colors\n";
+        if (churchContext.theme.primaryColor) {
+          contextStr += `**Primary Color**: ${churchContext.theme.primaryColor}\n`;
+        }
+        if (churchContext.theme.secondaryColor) {
+          contextStr += `**Secondary Color**: ${churchContext.theme.secondaryColor}\n`;
+        }
+        contextStr += "\n";
+      }
+    } else {
+      contextStr += "No specific church context provided.\n";
+    }
+    contents = contents.replace("{churchContext}", contextStr);
+
+    // Build element types list
+    let elementTypesStr = "";
+    if (availableElementTypes && availableElementTypes.length > 0) {
+      elementTypesStr = "Available element types:\n";
+      elementTypesStr += availableElementTypes.join(", ");
+    } else {
+      elementTypesStr = "No element type restrictions.";
+    }
+    contents = contents.replace("{availableElementTypes}", elementTypesStr);
+
+    // Build page context string
+    let pageContextStr = "";
+    if (pageContext) {
+      pageContextStr += `**Page Title**: ${pageContext.title || "Untitled"}\n`;
+      pageContextStr += `**Total Sections**: ${pageContext.totalSections || "Unknown"}\n`;
+      pageContextStr += `**This Section Index**: ${pageContext.sectionIndex ?? "Unknown"} (0-based)\n`;
+    } else {
+      pageContextStr = "No page context provided.";
+    }
+    contents = contents.replace("{pageContext}", pageContextStr);
+
+    return contents;
+  }
+
   /*
     static getAnswerQuestionInstructions(userQuery: string, jwts: any, routes: any): string {
       let contents = this.readFile("/config/instructions/answerQuestion.md");

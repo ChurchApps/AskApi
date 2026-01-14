@@ -88,10 +88,12 @@ export class OpenAiHelper {
     return response.choices[0]?.message?.content || "";
   }
 
-  public static async executeWebsiteGeneration(systemRole: string, prompt: string) {
+  public static async executeWebsiteGeneration(systemRole: string, prompt: string, modelOverride?: string) {
     const client = this.provider === "openrouter" ? this.openrouter : this.openai;
-    // claude-3.5-haiku is fast enough for API Gateway's 29s timeout
-    const model = this.provider === "openrouter" ? "anthropic/claude-3.5-haiku" : "gpt-4o-mini";
+    // Default: claude-3.5-haiku is fast enough for API Gateway's 29s timeout
+    // For section generation, can use claude-3.5-sonnet for better quality
+    const defaultModel = this.provider === "openrouter" ? "anthropic/claude-3.5-haiku" : "gpt-4o-mini";
+    const model = modelOverride || defaultModel;
 
     console.log(`Using provider: ${this.provider}, model: ${model}`);
 

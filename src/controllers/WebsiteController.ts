@@ -48,4 +48,70 @@ export class WebsiteController extends AskBaseController {
       };
     });
   }
+
+  /**
+   * Generates a lightweight page outline with section descriptions and content hints.
+   * This is the first step in the multi-step page generation flow.
+   * Uses a fast model (haiku) for quick response.
+   */
+  @httpPost("/generatePageOutline")
+  public async generatePageOutline(req: express.Request<{}, {}, any>, res: express.Response): Promise<any> {
+    return this.actionWrapper(req, res, async (au) => {
+      const { prompt, churchContext, availableElementTypes, constraints } = req.body;
+
+      // Validation
+      if (!prompt || typeof prompt !== "string" || prompt.trim().length < 10) {
+        return { error: "Prompt is required and must be at least 10 characters" };
+      }
+
+      await OpenAiHelper.initialize();
+
+      // Generate page outline
+      const outlineData = await WebsiteHelper.generatePageOutline(
+        prompt,
+        churchContext,
+        availableElementTypes,
+        constraints
+      );
+
+      return {
+        outline: outlineData
+      };
+    });
+  }
+
+  /**
+   * Generates full content for a single section based on an outline.
+   * This is the second step in the multi-step page generation flow.
+   * Uses a better model (sonnet) for quality content generation.
+   */
+  @httpPost("/generateSection")
+  public async generateSection(req: express.Request<{}, {}, any>, res: express.Response): Promise<any> {
+    return this.actionWrapper(req, res, async (au) => {
+      const { sectionOutline, churchContext, availableElementTypes, pageContext } = req.body;
+
+      // Validation
+      if (!sectionOutline || typeof sectionOutline !== "object") {
+        return { error: "sectionOutline is required and must be an object" };
+      }
+
+      if (!sectionOutline.id || !sectionOutline.purpose) {
+        return { error: "sectionOutline must have id and purpose fields" };
+      }
+
+      await OpenAiHelper.initialize();
+
+      // Generate section content
+      const sectionData = await WebsiteHelper.generateSectionContent(
+        sectionOutline,
+        churchContext,
+        availableElementTypes,
+        pageContext
+      );
+
+      return {
+        section: sectionData
+      };
+    });
+  }
 }

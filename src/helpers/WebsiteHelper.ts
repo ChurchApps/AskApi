@@ -115,6 +115,258 @@ export class WebsiteHelper {
   }
 
   /**
+   * Generates a page outline with section descriptions and content hints.
+   * This is a lightweight call that returns structure without full element content.
+   * Uses haiku model for speed.
+   */
+  public static async generatePageOutline(
+    prompt: string,
+    churchContext?: any,
+    availableElementTypes?: string[],
+    constraints?: any
+  ): Promise<any> {
+    const maxRetries = 2;
+    let lastError: Error;
+
+    for (let attempt = 1; attempt <= maxRetries; attempt++) {
+      try {
+        const systemPrompt = InstructionsHelper.getGenerateOutlineInstructions(
+          prompt,
+          churchContext,
+          availableElementTypes,
+          constraints
+        );
+
+        console.log(`Outline generation attempt ${attempt}`);
+        // Use haiku for outline - small response, speed is critical
+        const response = await OpenAiHelper.executeWebsiteGeneration(systemPrompt, "");
+
+        console.log(`Outline response (first 300 chars):`, response.substring(0, 300));
+
+        const outlineJson = this.extractAndParseJson(response);
+
+        // Validate outline structure
+        this.validateOutlineStructure(outlineJson);
+
+        console.log(`Successfully generated outline with ${outlineJson.sections?.length || 0} sections`);
+        return outlineJson;
+      } catch (error) {
+        console.error(`Outline attempt ${attempt} failed:`, error.message);
+        lastError = error;
+
+        if (attempt === maxRetries) {
+          break;
+        }
+
+        await new Promise((resolve) => setTimeout(resolve, 500));
+      }
+    }
+
+    throw new Error(
+      `Failed to generate page outline after ${maxRetries} attempts. Last error: ${lastError.message}`
+    );
+  }
+
+  /**
+   * Generates a single section's full content based on the section outline.
+   * Uses sonnet model for better quality content generation.
+   */
+  public static async generateSectionContent(
+    sectionOutline: any,
+    churchContext?: any,
+    availableElementTypes?: string[],
+    pageContext?: any
+  ): Promise<any> {
+    const maxRetries = 2;
+    let lastError: Error;
+
+    for (let attempt = 1; attempt <= maxRetries; attempt++) {
+      try {
+        const systemPrompt = InstructionsHelper.getGenerateSectionInstructions(
+          sectionOutline,
+          churchContext,
+          availableElementTypes,
+          pageContext
+        );
+
+        console.log(`Section generation attempt ${attempt} for section: ${sectionOutline.id}`);
+        // Use sonnet for section content - quality matters, focused scope fits in timeout
+        const model = "anthropic/claude-3.5-sonnet";
+        const response = await OpenAiHelper.executeWebsiteGeneration(systemPrompt, "", model);
+
+        console.log(`Section response (first 200 chars):`, response.substring(0, 200));
+
+        const sectionJson = this.extractAndParseJson(response);
+
+        // Validate section structure
+        this.validateSectionStructure(sectionJson, availableElementTypes);
+
+        // Sanitize section data
+        this.sanitizeSectionData(sectionJson);
+
+        console.log(`Successfully generated section with ${sectionJson.elements?.length || 0} elements`);
+        return sectionJson;
+      } catch (error) {
+        console.error(`Section attempt ${attempt} failed:`, error.message);
+        lastError = error;
+
+        if (attempt === maxRetries) {
+          break;
+        }
+
+        await new Promise((resolve) => setTimeout(resolve, 500));
+      }
+    }
+
+    throw new Error(
+      `Failed to generate section content after ${maxRetries} attempts. Last error: ${lastError.message}`
+    );
+  }
+
+  /**
+   * Validates the outline structure
+   */
+  private static validateOutlineStructure(outlineJson: any): void {
+    if (!outlineJson || typeof outlineJson !== "object") {
+      throw new Error("Invalid outline JSON: Not an object");
+    }
+
+    if (!outlineJson.title || typeof outlineJson.title !== "string") {
+      throw new Error("Invalid outline: Missing or invalid title");
+    }
+
+    if (!outlineJson.sections || !Array.isArray(outlineJson.sections)) {
+      throw new Error("Invalid outline: Missing or invalid sections array");
+    }
+
+    if (outlineJson.sections.length === 0) {
+      throw new Error("Invalid outline: Must have at least one section");
+    }
+
+    // Validate each section has required outline fields
+    outlineJson.sections.forEach((section: any, index: number) => {
+      if (!section.id || typeof section.id !== "string") {
+        throw new Error(`Invalid outline section ${index}: Missing id`);
+      }
+      if (!section.purpose || typeof section.purpose !== "string") {
+        throw new Error(`Invalid outline section ${index}: Missing purpose`);
+      }
+    });
+  }
+
+  /**
+   * Validates a generated section structure
+   */
+  private static validateSectionStructure(sectionJson: any, availableElementTypes?: string[]): void {
+    if (!sectionJson || typeof sectionJson !== "object") {
+      throw new Error("Invalid section JSON: Not an object");
+    }
+
+    if (!sectionJson.elements || !Array.isArray(sectionJson.elements)) {
+      throw new Error("Invalid section: Missing or invalid elements array");
+    }
+
+    // Validate element types if available
+    if (availableElementTypes && sectionJson.elements.length > 0) {
+      sectionJson.elements.forEach((element: any, elemIndex: number) => {
+        if (!element.elementType) {
+          throw new Error(`Invalid element ${elemIndex}: Missing elementType`);
+        }
+        if (!availableElementTypes.includes(element.elementType)) {
+          console.warn(`Warning: Element ${elemIndex} has unknown type '${element.elementType}'. Replacing with 'text'.`);
+          element.elementType = "text";
+        }
+      });
+    }
+  }
+
+  /**
+   * Sanitizes section data to ensure proper format
+   */
+  private static sanitizeSectionData(sectionJson: any): void {
+    // Ensure zone exists
+    if (!sectionJson.zone) {
+      sectionJson.zone = "main";
+    }
+
+    // Ensure answersJSON and stylesJSON are strings
+    if (sectionJson.answersJSON && typeof sectionJson.answersJSON !== "string") {
+      sectionJson.answersJSON = JSON.stringify(sectionJson.answersJSON);
+    } else if (!sectionJson.answersJSON) {
+      sectionJson.answersJSON = "{}";
+    }
+
+    if (sectionJson.stylesJSON && typeof sectionJson.stylesJSON !== "string") {
+      sectionJson.stylesJSON = JSON.stringify(sectionJson.stylesJSON);
+    }
+
+    if (sectionJson.animationsJSON && typeof sectionJson.animationsJSON !== "string") {
+      sectionJson.animationsJSON = JSON.stringify(sectionJson.animationsJSON);
+    }
+
+    // Sanitize elements
+    if (Array.isArray(sectionJson.elements)) {
+      sectionJson.elements.forEach((element: any, elemIndex: number) => {
+        // Ensure sort order
+        if (element.sort === undefined || element.sort === null) {
+          element.sort = elemIndex;
+        }
+
+        // Ensure answersJSON is a string
+        if (element.answersJSON && typeof element.answersJSON !== "string") {
+          element.answersJSON = JSON.stringify(element.answersJSON);
+        } else if (!element.answersJSON) {
+          element.answersJSON = "{}";
+        }
+
+        // Ensure stylesJSON is a string
+        if (element.stylesJSON && typeof element.stylesJSON !== "string") {
+          element.stylesJSON = JSON.stringify(element.stylesJSON);
+        }
+
+        // Ensure animationsJSON is a string
+        if (element.animationsJSON && typeof element.animationsJSON !== "string") {
+          element.animationsJSON = JSON.stringify(element.animationsJSON);
+        }
+
+        // Recursively sanitize nested elements
+        if (Array.isArray(element.elements)) {
+          this.sanitizeNestedElements(element.elements);
+        }
+      });
+    }
+  }
+
+  /**
+   * Recursively sanitizes nested elements
+   */
+  private static sanitizeNestedElements(elements: any[]): void {
+    elements.forEach((element: any, index: number) => {
+      if (element.sort === undefined || element.sort === null) {
+        element.sort = index;
+      }
+
+      if (element.answersJSON && typeof element.answersJSON !== "string") {
+        element.answersJSON = JSON.stringify(element.answersJSON);
+      } else if (!element.answersJSON) {
+        element.answersJSON = "{}";
+      }
+
+      if (element.stylesJSON && typeof element.stylesJSON !== "string") {
+        element.stylesJSON = JSON.stringify(element.stylesJSON);
+      }
+
+      if (element.animationsJSON && typeof element.animationsJSON !== "string") {
+        element.animationsJSON = JSON.stringify(element.animationsJSON);
+      }
+
+      if (Array.isArray(element.elements)) {
+        this.sanitizeNestedElements(element.elements);
+      }
+    });
+  }
+
+  /**
    * Flattens a hierarchical page structure into separate arrays for page, sections, and elements
    * @param pageData The hierarchical page data with nested sections and elements
    * @returns Object containing flat arrays of page, sections, and elements
