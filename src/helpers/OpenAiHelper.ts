@@ -90,8 +90,8 @@ export class OpenAiHelper {
 
   public static async executeWebsiteGeneration(systemRole: string, prompt: string) {
     const client = this.provider === "openrouter" ? this.openrouter : this.openai;
-    // claude-3.5-sonnet is a good balance of speed and quality
-    const model = this.provider === "openrouter" ? "anthropic/claude-3.5-sonnet" : "gpt-4o";
+    // claude-3.5-haiku is fast enough for API Gateway's 29s timeout
+    const model = this.provider === "openrouter" ? "anthropic/claude-3.5-haiku" : "gpt-4o-mini";
 
     console.log(`Using provider: ${this.provider}, model: ${model}`);
 

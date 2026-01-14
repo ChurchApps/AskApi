@@ -61,7 +61,7 @@ export class WebsiteHelper {
     availableElementTypes?: string[],
     constraints?: any
   ): Promise<any> {
-    const maxRetries = 3;
+    const maxRetries = 2; // Reduced to stay within API Gateway 29s timeout
     let lastError: Error;
 
     for (let attempt = 1; attempt <= maxRetries; attempt++) {
@@ -104,8 +104,8 @@ export class WebsiteHelper {
           break;
         }
 
-        // Wait briefly before retrying
-        await new Promise((resolve) => setTimeout(resolve, 1000 * attempt));
+        // Wait briefly before retrying (reduced delay for timeout constraints)
+        await new Promise((resolve) => setTimeout(resolve, 500));
       }
     }
 
