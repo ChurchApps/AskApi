@@ -115,18 +115,20 @@ Column options: "6,6" (2 cols), "4,4,4" (3 cols), "3,3,3,3" (4 cols), "8,4", "3,
 ```json
 {
   "elementType": "box",
-  "answersJSON": "{\"background\":\"#f5f5f5\"}",
+  "answersJSON": "{\"background\":\"var(--light)\",\"textColor\":\"var(--dark)\",\"headingColor\":\"var(--primary)\",\"linkColor\":\"var(--accent)\",\"rounded\":\"true\",\"translucent\":\"false\"}",
   "elements": [...]
 }
 ```
+Colors can be CSS variables (var(--light), var(--dark), var(--primary), var(--accent)) or hex colors
 
 **carousel** - Image/content carousel
 ```json
 {
   "elementType": "carousel",
-  "answersJSON": "{\"height\":400,\"slides\":3,\"animationOptions\":\"fade\",\"autoplay\":\"true\",\"interval\":5}"
+  "answersJSON": "{\"height\":\"250\",\"slides\":\"3\",\"animationOptions\":\"fade\",\"autoplay\":\"true\",\"interval\":\"4\"}"
 }
 ```
+Note: All values are strings. animationOptions: "fade" or "slide". Contains nested elements.
 
 ### Content Elements
 
@@ -138,21 +140,23 @@ Column options: "6,6" (2 cols), "4,4,4" (3 cols), "3,3,3,3" (4 cols), "8,4", "3,
 }
 ```
 
-**faq** - FAQ item
+**faq** - FAQ expandable item
 ```json
 {
   "elementType": "faq",
-  "answersJSON": "{\"headingType\":\"h3\",\"title\":\"Question here?\",\"description\":\"Answer here.\"}"
+  "answersJSON": "{\"title\":\"Question here?\",\"description\":\"<p>Answer here.</p>\",\"headingType\":\"h6\",\"iconColor\":\"#03a9f4\"}"
 }
 ```
+headingType options: "h6" or "link"
 
 **table** - Data table
 ```json
 {
   "elementType": "table",
-  "answersJSON": "{\"headers\":[\"Column 1\",\"Column 2\"],\"rows\":[[\"Data 1\",\"Data 2\"]]}"
+  "answersJSON": "{\"contents\":[[\"Header 1\",\"Header 2\"],[\"Data 1\",\"Data 2\"]],\"head\":true,\"markdown\":false,\"size\":\"medium\"}"
 }
 ```
+head: true means first row is header. size options: "medium" or "small"
 
 ### Media Elements
 
@@ -176,9 +180,10 @@ Column options: "6,6" (2 cols), "4,4,4" (3 cols), "3,3,3,3" (4 cols), "8,4", "3,
 ```json
 {
   "elementType": "map",
-  "answersJSON": "{\"address\":\"123 Main St, City, State 12345\",\"zoom\":15}"
+  "answersJSON": "{\"mapAddress\":\"123 Main St, City, State 12345\",\"mapLabel\":\"Church Location\",\"mapZoom\":15}"
 }
 ```
+mapZoom range: 8-20 (higher = more zoomed in)
 
 ### Church-Specific Elements
 
@@ -186,9 +191,10 @@ Column options: "6,6" (2 cols), "4,4,4" (3 cols), "3,3,3,3" (4 cols), "8,4", "3,
 ```json
 {
   "elementType": "logo",
-  "answersJSON": "{\"size\":\"medium\"}"
+  "answersJSON": "{\"url\":\"/\"}"
 }
 ```
+url is optional link when logo is clicked
 
 **sermons** - Sermon listings (auto-populated)
 ```json
@@ -242,9 +248,10 @@ Column options: "6,6" (2 cols), "4,4,4" (3 cols), "3,3,3,3" (4 cols), "8,4", "3,
 ```json
 {
   "elementType": "groupList",
-  "answersJSON": "{}"
+  "answersJSON": "{\"label\":\"\"}"
 }
 ```
+label is optional category filter
 
 ### Interactive Elements
 
@@ -252,33 +259,38 @@ Column options: "6,6" (2 cols), "4,4,4" (3 cols), "3,3,3,3" (4 cols), "8,4", "3,
 ```json
 {
   "elementType": "buttonLink",
-  "answersJSON": "{\"text\":\"Click Here\",\"url\":\"/destination\",\"style\":\"primary\"}"
+  "answersJSON": "{\"buttonLinkText\":\"Click Here\",\"buttonLinkUrl\":\"/destination\",\"buttonLinkVariant\":\"contained\",\"buttonLinkColor\":\"primary\",\"external\":\"false\",\"fullWidth\":\"false\"}"
 }
 ```
+buttonLinkVariant: "contained" or "outlined"
+buttonLinkColor: "primary", "secondary", "error", "warning", "info", "success"
 
 **iframe** - Embedded external content
 ```json
 {
   "elementType": "iframe",
-  "answersJSON": "{\"iframeSrc\":\"https://example.com\",\"iframeHeight\":600}"
+  "answersJSON": "{\"iframeSrc\":\"https://example.com\",\"iframeHeight\":\"400\"}"
 }
 ```
+iframeHeight is a string value in pixels
 
 **rawHTML** - Custom HTML (use sparingly)
 ```json
 {
   "elementType": "rawHTML",
-  "answersJSON": "{\"html\":\"<div>Custom HTML</div>\"}"
+  "answersJSON": "{\"rawHTML\":\"<div>Custom HTML</div>\",\"javascript\":\"\"}"
 }
 ```
+javascript field is optional, do not include script tags
 
 **whiteSpace** - Spacing element
 ```json
 {
   "elementType": "whiteSpace",
-  "answersJSON": "{\"height\":50}"
+  "answersJSON": "{\"height\":\"25\"}"
 }
 ```
+Note: height is a string value in pixels
 
 ## Visual Design Excellence (CRITICAL)
 
@@ -391,17 +403,17 @@ For a request like "Create a welcoming homepage with our church name, mission st
         {
           "elementType": "whiteSpace",
           "sort": 1,
-          "answersJSON": "{\"height\":30}"
+          "answersJSON": "{\"height\":\"30\"}"
         },
         {
           "elementType": "card",
           "sort": 2,
-          "answersJSON": "{\"title\":\"Sunday Services\",\"titleAlignment\":\"center\",\"text\":\"<p><strong>Morning Service:</strong> 9:00 AM<br><strong>Evening Service:</strong> 11:00 AM</p>\",\"textAlignment\":\"center\"}"
+          "answersJSON": "{\"title\":\"Sunday Services\",\"titleAlignment\":\"center\",\"text\":\"<p><strong>Morning Service:</strong> 9:00 AM<br><strong>Evening Service:</strong> 11:00 AM</p>\",\"textAlignment\":\"center\",\"photo\":\"\",\"photoAlt\":\"\"}"
         },
         {
           "elementType": "whiteSpace",
           "sort": 3,
-          "answersJSON": "{\"height\":30}"
+          "answersJSON": "{\"height\":\"30\"}"
         },
         {
           "elementType": "donation",
