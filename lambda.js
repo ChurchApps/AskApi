@@ -1,7 +1,7 @@
-const serverlessExpress = require("@codegenie/serverless-express");
-const { init } = require("./dist/src/app");
-const { Pool } = require("@churchapps/apihelper");
-const { Environment } = require("./dist/src/helpers/Environment");
+import serverlessExpress from "@codegenie/serverless-express";
+import { init } from "./dist/src/app.js";
+import { Pool } from "@churchapps/apihelper";
+import { Environment } from "./dist/src/helpers/Environment.js";
 
 const checkPool = async () => {
   if (!Environment.connectionString) {
@@ -47,4 +47,4 @@ const universal = async function universal(event, context) {
   }
 };
 
-module.exports.universal = universal;
+export { universal };
