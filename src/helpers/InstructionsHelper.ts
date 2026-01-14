@@ -64,6 +64,81 @@ export class InstructionsHelper {
     return contents;
   }
 
+  static getGeneratePageInstructions(
+    prompt: string,
+    churchContext?: any,
+    availableBlocks?: any[],
+    availableElementTypes?: string[],
+    constraints?: any
+  ): string {
+    let contents = this.readFile("/config/instructions/generatePage.md");
+
+    // Replace prompt
+    contents = contents.replace("{prompt}", prompt);
+
+    // Build church context string
+    let contextStr = "";
+    if (churchContext) {
+      if (churchContext.churchName) {
+        contextStr += `Church Name: ${churchContext.churchName}\n`;
+      }
+      if (churchContext.subdomain) {
+        contextStr += `Subdomain: ${churchContext.subdomain}\n`;
+      }
+      if (churchContext.theme) {
+        if (churchContext.theme.primaryColor) {
+          contextStr += `Primary Color: ${churchContext.theme.primaryColor}\n`;
+        }
+        if (churchContext.theme.secondaryColor) {
+          contextStr += `Secondary Color: ${churchContext.theme.secondaryColor}\n`;
+        }
+        if (churchContext.theme.fonts) {
+          contextStr += `Fonts: ${churchContext.theme.fonts}\n`;
+        }
+      }
+    }
+    contents = contents.replace("{churchContext}", contextStr || "No specific church context provided.");
+
+    // Build available blocks list
+    let blocksStr = "";
+    if (availableBlocks && availableBlocks.length > 0) {
+      blocksStr = "The following reusable blocks are available:\n";
+      availableBlocks.forEach((block) => {
+        blocksStr += `- ${block.name} (ID: ${block.id}, Type: ${block.blockType})\n`;
+      });
+    } else {
+      blocksStr = "No reusable blocks available.";
+    }
+    contents = contents.replace("{availableBlocks}", blocksStr);
+
+    // Build element types list
+    let elementTypesStr = "";
+    if (availableElementTypes && availableElementTypes.length > 0) {
+      elementTypesStr = "ONLY use these element types (any other types will cause errors):\n";
+      elementTypesStr += availableElementTypes.join(", ");
+    } else {
+      elementTypesStr = "No element type restrictions.";
+    }
+    contents = contents.replace("{availableElementTypes}", elementTypesStr);
+
+    // Build constraints string
+    let constraintsStr = "";
+    if (constraints) {
+      if (constraints.maxSections) {
+        constraintsStr += `Maximum sections: ${constraints.maxSections}\n`;
+      }
+      if (constraints.preferredLayout) {
+        constraintsStr += `Preferred layout: ${constraints.preferredLayout}\n`;
+      }
+    }
+    if (!constraintsStr) {
+      constraintsStr = "No specific constraints.";
+    }
+    contents = contents.replace("{constraints}", constraintsStr);
+
+    return contents;
+  }
+
   /*
     static getAnswerQuestionInstructions(userQuery: string, jwts: any, routes: any): string {
       let contents = this.readFile("/config/instructions/answerQuestion.md");

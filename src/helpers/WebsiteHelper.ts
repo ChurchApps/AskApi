@@ -53,6 +53,67 @@ export class WebsiteHelper {
     );
   }
 
+  public static async generatePageFromPromptWithContext(
+    prompt: string,
+    churchId: string,
+    churchContext?: any,
+    availableBlocks?: any[],
+    availableElementTypes?: string[],
+    constraints?: any
+  ): Promise<any> {
+    const maxRetries = 3;
+    let lastError: Error;
+
+    for (let attempt = 1; attempt <= maxRetries; attempt++) {
+      try {
+        // Build enhanced system prompt with full context
+        const systemPrompt = InstructionsHelper.getGeneratePageInstructions(
+          prompt,
+          churchContext,
+          availableBlocks,
+          availableElementTypes,
+          constraints
+        );
+
+        console.log(`Attempt ${attempt} - Generating page with enhanced context`);
+        const response = await OpenAiHelper.executeWebsiteGeneration(systemPrompt, "");
+
+        console.log(`Attempt ${attempt} - AI Response (first 200 chars):`, response.substring(0, 200));
+
+        const pageJson = this.extractAndParseJson(response);
+        console.log("Parsed JSON structure:", {
+          hasTitle: !!pageJson.title,
+          hasLayout: !!pageJson.layout,
+          hasSections: !!pageJson.sections,
+          sectionsCount: pageJson.sections?.length || 0
+        });
+
+        // Validate structure
+        this.validateGeneratedPageStructure(pageJson, availableElementTypes);
+
+        // Sanitize and ensure proper data types
+        this.sanitizePageData(pageJson);
+
+        console.log(`Successfully generated page on attempt ${attempt}`);
+        return pageJson;
+      } catch (error) {
+        console.error(`Attempt ${attempt} failed:`, error.message);
+        lastError = error;
+
+        if (attempt === maxRetries) {
+          break;
+        }
+
+        // Wait briefly before retrying
+        await new Promise((resolve) => setTimeout(resolve, 1000 * attempt));
+      }
+    }
+
+    throw new Error(
+      `Failed to generate page from prompt after ${maxRetries} attempts. Last error: ${lastError.message}`
+    );
+  }
+
   /**
    * Flattens a hierarchical page structure into separate arrays for page, sections, and elements
    * @param pageData The hierarchical page data with nested sections and elements
@@ -424,6 +485,116 @@ export class WebsiteHelper {
 
   private static buildSystemPrompt(description: string, churchId?: string, title?: string, url?: string): string {
     return InstructionsHelper.getCreateWebpageInstructions(description, churchId, title, url);
+  }
+
+  /**
+   * Validates the generated page structure for the new prompt-based generation
+   * @param pageJson Parsed page JSON object
+   * @param availableElementTypes List of valid element types
+   */
+  private static validateGeneratedPageStructure(pageJson: any, availableElementTypes?: string[]): void {
+    if (!pageJson || typeof pageJson !== "object") {
+      throw new Error("Invalid JSON: Not an object");
+    }
+
+    if (!pageJson.title || typeof pageJson.title !== "string") {
+      throw new Error("Invalid page structure: Missing or invalid title field");
+    }
+
+    if (!pageJson.sections || !Array.isArray(pageJson.sections)) {
+      throw new Error("Invalid page structure: Missing or invalid sections array");
+    }
+
+    if (pageJson.sections.length === 0) {
+      throw new Error("Invalid page structure: Page must have at least one section");
+    }
+
+    // Validate each section
+    pageJson.sections.forEach((section: any, index: number) => {
+      if (!section.elements || !Array.isArray(section.elements)) {
+        throw new Error(`Invalid section ${index}: Missing or invalid elements array`);
+      }
+
+      // Validate element types if available
+      if (availableElementTypes && section.elements.length > 0) {
+        section.elements.forEach((element: any, elemIndex: number) => {
+          if (!element.elementType) {
+            throw new Error(`Invalid element ${elemIndex} in section ${index}: Missing elementType`);
+          }
+          if (!availableElementTypes.includes(element.elementType)) {
+            console.warn(
+              `Warning: Element ${elemIndex} in section ${index} has unknown type '${element.elementType}'. Will be replaced with 'text'.`
+            );
+            element.elementType = "text";
+          }
+        });
+      }
+    });
+  }
+
+  /**
+   * Sanitizes page data to ensure proper format and safe content
+   * @param pageJson Page JSON object to sanitize
+   */
+  private static sanitizePageData(pageJson: any): void {
+    // Ensure layout is valid
+    const validLayouts = ["headerFooter", "cleanCentered", "embed"];
+    if (!pageJson.layout || !validLayouts.includes(pageJson.layout)) {
+      pageJson.layout = "headerFooter";
+    }
+
+    // Sanitize sections
+    if (Array.isArray(pageJson.sections)) {
+      pageJson.sections.forEach((section: any, index: number) => {
+        // Ensure zone exists
+        if (!section.zone) {
+          section.zone = "main";
+        }
+
+        // Ensure sort order
+        if (section.sort === undefined || section.sort === null) {
+          section.sort = index;
+        }
+
+        // Ensure answersJSON and stylesJSON are strings
+        if (section.answersJSON && typeof section.answersJSON !== "string") {
+          section.answersJSON = JSON.stringify(section.answersJSON);
+        }
+        if (section.stylesJSON && typeof section.stylesJSON !== "string") {
+          section.stylesJSON = JSON.stringify(section.stylesJSON);
+        }
+        if (section.animationsJSON && typeof section.animationsJSON !== "string") {
+          section.animationsJSON = JSON.stringify(section.animationsJSON);
+        }
+
+        // Sanitize elements
+        if (Array.isArray(section.elements)) {
+          section.elements.forEach((element: any, elemIndex: number) => {
+            // Ensure sort order
+            if (element.sort === undefined || element.sort === null) {
+              element.sort = elemIndex;
+            }
+
+            // Ensure answersJSON is a string
+            if (element.answersJSON && typeof element.answersJSON !== "string") {
+              element.answersJSON = JSON.stringify(element.answersJSON);
+            } else if (!element.answersJSON) {
+              element.answersJSON = "{}";
+            }
+
+            // Ensure stylesJSON is a string
+            if (element.stylesJSON && typeof element.stylesJSON !== "string") {
+              element.stylesJSON = JSON.stringify(element.stylesJSON);
+            }
+
+            // Ensure animationsJSON is a string
+            if (element.animationsJSON && typeof element.animationsJSON !== "string") {
+              element.animationsJSON = JSON.stringify(element.animationsJSON);
+            }
+          });
+        }
+      });
+    }
   }
 
   /**

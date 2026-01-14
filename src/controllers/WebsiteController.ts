@@ -19,4 +19,33 @@ export class WebsiteController extends AskBaseController {
       return flat;
     });
   }
+
+  @httpPost("/generatePage")
+  public async generatePage(req: express.Request<{}, {}, any>, res: express.Response): Promise<any> {
+    return this.actionWrapper(req, res, async (au) => {
+      const { prompt, churchContext, availableBlocks, availableElementTypes, constraints } = req.body;
+
+      // Validation
+      if (!prompt || typeof prompt !== "string" || prompt.trim().length < 10) {
+        return { error: "Prompt is required and must be at least 10 characters" };
+      }
+
+      await OpenAiHelper.initialize();
+
+      // Generate page structure using WebsiteHelper with enhanced context
+      const pageData = await WebsiteHelper.generatePageFromPromptWithContext(
+        prompt,
+        au.churchId,
+        churchContext,
+        availableBlocks,
+        availableElementTypes,
+        constraints
+      );
+
+      // Return the structured response expected by B1Admin
+      return {
+        page: pageData
+      };
+    });
+  }
 }
