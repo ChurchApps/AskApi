@@ -18,7 +18,7 @@ provider:
   name: aws
   runtime: nodejs22.x
   memorySize: 512
-  timeout: 10
+  timeout: 60
   region: ${env:AWS_REGION, 'us-east-2'}
   stage: ${self:custom.stage}
   iam:
