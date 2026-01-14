@@ -304,46 +304,46 @@ export class WebsiteHelper {
       sectionJson.animationsJSON = JSON.stringify(sectionJson.animationsJSON);
     }
 
-    // Sanitize elements
+    // Sanitize elements and filter out empty rows/containers
     if (Array.isArray(sectionJson.elements)) {
-      sectionJson.elements.forEach((element: any, elemIndex: number) => {
-        // Ensure sort order
-        if (element.sort === undefined || element.sort === null) {
-          element.sort = elemIndex;
-        }
-
-        // Ensure answersJSON is a string
-        if (element.answersJSON && typeof element.answersJSON !== "string") {
-          element.answersJSON = JSON.stringify(element.answersJSON);
-        } else if (!element.answersJSON) {
-          element.answersJSON = "{}";
-        }
-
-        // Ensure stylesJSON is a string
-        if (element.stylesJSON && typeof element.stylesJSON !== "string") {
-          element.stylesJSON = JSON.stringify(element.stylesJSON);
-        }
-
-        // Ensure animationsJSON is a string
-        if (element.animationsJSON && typeof element.animationsJSON !== "string") {
-          element.animationsJSON = JSON.stringify(element.animationsJSON);
-        }
-
-        // Recursively sanitize nested elements
-        if (Array.isArray(element.elements)) {
-          this.sanitizeNestedElements(element.elements);
-        }
+      sectionJson.elements = this.filterAndSanitizeElements(sectionJson.elements);
+      // Re-number sort order after filtering
+      sectionJson.elements.forEach((element: any, idx: number) => {
+        element.sort = idx;
       });
     }
   }
 
   /**
-   * Recursively sanitizes nested elements
+   * Filters out empty container elements (rows, boxes, carousels) and sanitizes the rest
    */
-  private static sanitizeNestedElements(elements: any[]): void {
-    elements.forEach((element: any, index: number) => {
+  private static filterAndSanitizeElements(elements: any[]): any[] {
+    return elements.filter((element: any) => {
+      // Check if this is a container element (row, box, carousel)
+      const isContainer = ["row", "box", "carousel"].includes(element.elementType);
+
+      // If it's a container, check if it has children
+      if (isContainer) {
+        if (!Array.isArray(element.elements) || element.elements.length === 0) {
+          console.warn(`Removing empty ${element.elementType} element`);
+          return false; // Filter out empty containers
+        }
+        // Recursively filter nested elements
+        element.elements = this.filterAndSanitizeElements(element.elements);
+        // If all children were filtered out, remove this container too
+        if (element.elements.length === 0) {
+          console.warn(`Removing ${element.elementType} element after all children were filtered`);
+          return false;
+        }
+        // Re-number child sort order
+        element.elements.forEach((child: any, idx: number) => {
+          child.sort = idx;
+        });
+      }
+
+      // Sanitize this element
       if (element.sort === undefined || element.sort === null) {
-        element.sort = index;
+        element.sort = 0;
       }
 
       if (element.answersJSON && typeof element.answersJSON !== "string") {
@@ -360,9 +360,7 @@ export class WebsiteHelper {
         element.animationsJSON = JSON.stringify(element.animationsJSON);
       }
 
-      if (Array.isArray(element.elements)) {
-        this.sanitizeNestedElements(element.elements);
-      }
+      return true; // Keep non-empty elements
     });
   }
 
