@@ -13,6 +13,7 @@ interface AskQuestionResult {
 
 export class OpenAiHelper {
   private static openai: OpenAI | null = null;
+  private static openrouter: OpenAI | null = null;
   private static provider: string = Environment.aiProvider || "openrouter";
   private static OPENAI_API_KEY = Environment.openAiApiKey || "";
   private static OPENROUTER_API_KEY = Environment.openRouterApiKey || "";
@@ -27,8 +28,16 @@ export class OpenAiHelper {
       }
     }
 
-    if (this.provider === "openrouter" && !this.OPENROUTER_API_KEY) {
-      throw new Error("Missing ApiKey for OpenRouter provider.");
+    if (this.provider === "openrouter") {
+      if (!this.OPENROUTER_API_KEY) {
+        throw new Error("Missing ApiKey for OpenRouter provider.");
+      }
+      if (!this.openrouter) {
+        this.openrouter = new OpenAI({
+          apiKey: this.OPENROUTER_API_KEY,
+          baseURL: "https://openrouter.ai/api/v1"
+        });
+      }
     }
 
     // Load all swagger files on startup
@@ -80,21 +89,35 @@ export class OpenAiHelper {
   }
 
   public static async executeWebsiteGeneration(systemRole: string, prompt: string) {
-    const openAiPayload: OpenAI.Chat.ChatCompletionCreateParams = {
-      model: "gpt-4o",
+    const client = this.provider === "openrouter" ? this.openrouter : this.openai;
+    // claude-3.5-sonnet is a good balance of speed and quality
+    const model = this.provider === "openrouter" ? "anthropic/claude-3.5-sonnet" : "gpt-4o";
+
+    console.log(`Using provider: ${this.provider}, model: ${model}`);
+
+    const payload: OpenAI.Chat.ChatCompletionCreateParams = {
+      model: model,
       messages: [
         { role: "system", content: systemRole },
-        { role: "user", content: prompt }
+        { role: "user", content: prompt || "Generate the page JSON now." }
       ],
-      temperature: 0,
+      temperature: 0.3,
       max_tokens: 8000
-      // Optional: Force JSON response format if available
-      // response_format: { type: "json_object" }
     };
 
-    const response = await this.openai.chat.completions.create(openAiPayload);
-    console.log("Website Generation Response:", response.choices[0]?.message?.content);
-
-    return response.choices[0]?.message?.content || "";
+    try {
+      const response = await client.chat.completions.create(payload);
+      console.log("Website Generation Response:", response.choices[0]?.message?.content);
+      return response.choices[0]?.message?.content || "";
+    } catch (error: any) {
+      console.error("OpenRouter/OpenAI Error Details:", {
+        message: error.message,
+        status: error.status,
+        code: error.code,
+        type: error.type,
+        error: error.error
+      });
+      throw error;
+    }
   }
 }

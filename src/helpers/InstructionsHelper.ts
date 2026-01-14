@@ -76,28 +76,35 @@ export class InstructionsHelper {
     // Replace prompt
     contents = contents.replace("{prompt}", prompt);
 
-    // Build church context string
-    let contextStr = "";
+    // Build church context string - ENHANCED for better personalization
+    let contextStr = "## Church Information (USE THROUGHOUT THE PAGE)\n\n";
     if (churchContext) {
       if (churchContext.churchName) {
-        contextStr += `Church Name: ${churchContext.churchName}\n`;
+        contextStr += `**Church Name**: ${churchContext.churchName}\n`;
+        contextStr += `IMPORTANT: Use "${churchContext.churchName}" in headings and content, NOT generic "Our Church"\n\n`;
       }
       if (churchContext.subdomain) {
-        contextStr += `Subdomain: ${churchContext.subdomain}\n`;
+        contextStr += `**Subdomain**: ${churchContext.subdomain}\n\n`;
       }
       if (churchContext.theme) {
+        contextStr += "### Brand Colors (USE THESE EXACTLY)\n";
         if (churchContext.theme.primaryColor) {
-          contextStr += `Primary Color: ${churchContext.theme.primaryColor}\n`;
+          contextStr += `**Primary Color**: ${churchContext.theme.primaryColor}\n`;
+          contextStr += `- Use for: section backgrounds (at least 1-2), heading colors, button backgrounds\n`;
         }
         if (churchContext.theme.secondaryColor) {
-          contextStr += `Secondary Color: ${churchContext.theme.secondaryColor}\n`;
+          contextStr += `**Secondary Color**: ${churchContext.theme.secondaryColor}\n`;
+          contextStr += `- Use for: accent elements, secondary buttons, links\n`;
         }
         if (churchContext.theme.fonts) {
-          contextStr += `Fonts: ${churchContext.theme.fonts}\n`;
+          contextStr += `**Fonts**: ${churchContext.theme.fonts}\n`;
         }
+        contextStr += "\n";
       }
+    } else {
+      contextStr += "No specific church context provided - use generic church content.\n";
     }
-    contents = contents.replace("{churchContext}", contextStr || "No specific church context provided.");
+    contents = contents.replace("{churchContext}", contextStr);
 
     // Build available blocks list
     let blocksStr = "";
