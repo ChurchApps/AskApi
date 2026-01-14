@@ -2,11 +2,17 @@ import * as dotenv from "dotenv";
 import "reflect-metadata";
 import { Container } from "inversify";
 import { InversifyExpressServer } from "inversify-express-utils";
-import { bindings } from "./inversify.config";
+import { bindings } from "./inversify.config.js";
 import express from "express";
 import { CustomAuthProvider } from "@churchapps/apihelper";
 import cors from "cors";
 import * as path from "path";
+import { fileURLToPath } from "url";
+import { dirname } from "path";
+
+// ESM compatible __dirname
+const __filename = fileURLToPath(import.meta.url);
+const __dirname = dirname(__filename);
 
 export const init = async () => {
   dotenv.config();

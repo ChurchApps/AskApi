@@ -1,3 +1,3 @@
-export { QueryV2Controller } from "./QueryV2Controller";
-export { QueryController } from "./QueryController";
-export { WebsiteController } from "./WebsiteController";
+export { QueryV2Controller } from "./QueryV2Controller.js";
+export { QueryController } from "./QueryController.js";
+export { WebsiteController } from "./WebsiteController.js";

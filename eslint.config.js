@@ -1,7 +1,7 @@
-const tsParser = require('@typescript-eslint/parser');
-const tsPlugin = require('@typescript-eslint/eslint-plugin');
+import tsParser from '@typescript-eslint/parser';
+import tsPlugin from '@typescript-eslint/eslint-plugin';
 
-module.exports = [
+export default [
   {
     files: ['src/**/*.ts'],
     languageOptions: {
@@ -17,8 +17,8 @@ module.exports = [
     rules: {
       // TypeScript-specific rules
       '@typescript-eslint/no-unused-vars': [
-        'warn', 
-        { 
+        'warn',
+        {
           argsIgnorePattern: '^_|^req$|^res$|^au$|^ex$|^e$|^bind$',
           varsIgnorePattern: '^_|^start$|^result$|^app$',
           caughtErrorsIgnorePattern: '^_'
@@ -28,11 +28,11 @@ module.exports = [
       '@typescript-eslint/explicit-function-return-type': 'off',
       '@typescript-eslint/no-require-imports': 'error',
       '@typescript-eslint/no-inferrable-types': 'off',
-      
+
       // General rules
       'no-console': 'off',
       'prefer-const': 'error',
-      
+
       // Code style (enforced by Prettier, but useful for linting)
       'semi': ['error', 'always'],
       'quotes': ['error', 'double'],

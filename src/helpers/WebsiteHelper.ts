@@ -1,5 +1,5 @@
-import { OpenAiHelper } from "./OpenAiHelper";
-import { InstructionsHelper } from "./InstructionsHelper";
+import { OpenAiHelper } from "./OpenAiHelper.js";
+import { InstructionsHelper } from "./InstructionsHelper.js";
 
 export class WebsiteHelper {
   public static async generatePageFromDescription(
@@ -353,7 +353,7 @@ export class WebsiteHelper {
         continue;
       }
 
-      if (char === "\"" && !escaped) {
+      if (char === '"' && !escaped) {
         inString = !inString;
         continue;
       }

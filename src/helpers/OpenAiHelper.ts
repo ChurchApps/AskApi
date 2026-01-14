@@ -1,6 +1,6 @@
 import OpenAI from "openai";
-import { Environment } from "./Environment";
-import { SwaggerHelper } from "./SwaggerHelper";
+import { Environment } from "./Environment.js";
+import { SwaggerHelper } from "./SwaggerHelper.js";
 
 interface AskQuestionResult {
   answer: string;

@@ -108,18 +108,18 @@ export class DataHelper {
     var toReturn: any = {};
 
     for (var i in obj) {
-        if (!obj.hasOwnProperty(i)) continue;
+      if (!obj.hasOwnProperty(i)) continue;
 
-        if ((typeof obj[i]) == 'object' && obj[i] !== null) {
-            var flatObject = this.flattenObject(obj[i]);
-            for (var x in flatObject) {
-                if (!flatObject.hasOwnProperty(x)) continue;
+      if (typeof obj[i] == "object" && obj[i] !== null) {
+        var flatObject = this.flattenObject(obj[i]);
+        for (var x in flatObject) {
+          if (!flatObject.hasOwnProperty(x)) continue;
 
-                toReturn[x] = flatObject[x];
-            }
-        } else {
-            toReturn[i] = obj[i];
+          toReturn[x] = flatObject[x];
         }
+      } else {
+        toReturn[i] = obj[i];
+      }
     }
     return toReturn;
   }

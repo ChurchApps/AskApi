@@ -1,1 +1,1 @@
-export { Repositories } from "./Repositories";
+export { Repositories } from "./Repositories.js";

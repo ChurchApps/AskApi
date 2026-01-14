@@ -2,10 +2,11 @@
   "name": "ask-api",
   "version": "1.0.0",
   "description": "",
+  "type": "module",
   "main": "dist/src/index.js",
   "scripts": {
     "clean": "rimraf dist",
-    "copy-assets": "ts-node tools/copyAssets",
+    "copy-assets": "node --loader ts-node/esm tools/copyAssets.ts",
     "exec-deploy-demo": "serverless deploy --stage Demo",
     "deploy-demo": "npm-run-all build build-layer exec-deploy-demo",
     "exec-deploy-staging": "serverless deploy --stage Staging",
@@ -20,8 +21,8 @@
     "tsc": "tsc",
     "build-fast": "npm-run-all clean tsc",
     "build": "npm-run-all clean lint tsc copy-assets",
-    "dev:ts": "ts-node src/index.ts",
-    "dev": "nodemon --watch src -e ts,ejs --exec \"ts-node src/index.ts\"",
+    "dev:ts": "node --loader ts-node/esm src/index.ts",
+    "dev": "nodemon --watch src -e ts,ejs --exec \"node --loader ts-node/esm src/index.ts\"",
     "build-layer": "rimraf layer && mkdir -p layer/nodejs && cp tools/layer-package.json layer/nodejs/package.json && cd layer/nodejs && npm install --production --legacy-peer-deps",
     "rebuild-layer": "npm run clean-layer && npm run build-layer",
     "clean-layer": "rimraf layer",
@@ -39,6 +40,10 @@
   "engines": {
     "node": ">=22.0.0",
     "npm": ">=10.0.0"
+  },
+  "ts-node": {
+    "esm": true,
+    "experimentalSpecifierResolution": "node"
   },
   "dependencies": {
     "@churchapps/apihelper": "0.5.2",

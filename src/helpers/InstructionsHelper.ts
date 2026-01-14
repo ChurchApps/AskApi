@@ -213,7 +213,10 @@ export class InstructionsHelper {
   }
 
   static readFile(filePath: string) {
-    const instructionsPath = path.join(__dirname, "../.." + filePath);
+    // ESM compatible: use import.meta.url instead of __dirname
+    const currentFileUrl = new URL(import.meta.url);
+    const currentDir = path.dirname(currentFileUrl.pathname.replace(/^\/([A-Z]:)/, "$1")); // Fix Windows drive letter
+    const instructionsPath = path.join(currentDir, "../.." + filePath);
     const instructions = fs.readFileSync(instructionsPath, "utf-8");
     return instructions;
   }

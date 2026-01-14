@@ -1,8 +1,8 @@
 import { controller, httpGet, httpPost } from "inversify-express-utils";
 import express from "express";
-import { AskBaseController } from "./AskBaseController";
-import { OpenAiHelper, InstructionsHelper, Environment, ArrayHelper } from "../helpers";
-import { WorkflowHelper } from "../helpers/WorkflowHelper";
+import { AskBaseController } from "./AskBaseController.js";
+import { OpenAiHelper, InstructionsHelper, Environment, ArrayHelper } from "../helpers/index.js";
+import { WorkflowHelper } from "../helpers/WorkflowHelper.js";
 
 import fs from "fs";
 import path from "path";
@@ -155,12 +155,12 @@ export class QueryController extends AskBaseController {
             // console.log(`API calls executed: ${successfulCalls.length} successful, ${failedCalls.length} failed`);
             if (apiResults.length > 0) {
               const newFilters = [...result.filters];
-              let successfullCallsData: any[] = [];
+              const successfullCallsData: any[] = [];
               apiResults.forEach((r: any) => {
                 successfullCallsData.push(...r);
               });
               // we need personIds to send to the advanced search in membership api
-              const personIds = ArrayHelper.getUniqueValues(successfullCallsData, "personId").filter((f) => f !== null);;
+              const personIds = ArrayHelper.getUniqueValues(successfullCallsData, "personId").filter((f) => f !== null);
               if (personIds.length > 0) {
                 newFilters.push({ field: "id", operator: "equals", value: personIds.join(",") });
                 result.filters = newFilters;
@@ -169,7 +169,7 @@ export class QueryController extends AskBaseController {
 
             if (apiResults.length > 0) {
               console.log(
-                "No valid API calls to execute",
+                "No valid API calls to execute"
                 // failedCalls.map((f: any) => ({
                 //   api: f.apiCall?.apiName,
                 //   path: f.apiCall?.path,

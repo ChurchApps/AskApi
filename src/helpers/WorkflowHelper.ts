@@ -1,6 +1,6 @@
-import { DataHelper } from "./DataHelper";
-import { InstructionsHelper } from "./InstructionsHelper";
-import { OpenAiHelper } from "./OpenAiHelper";
+import { DataHelper } from "./DataHelper.js";
+import { InstructionsHelper } from "./InstructionsHelper.js";
+import { OpenAiHelper } from "./OpenAiHelper.js";
 
 export class WorkflowHelper {
   /*

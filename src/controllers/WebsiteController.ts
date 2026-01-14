@@ -1,8 +1,8 @@
 import { controller, httpPost } from "inversify-express-utils";
 import express from "express";
-import { AskBaseController } from "./AskBaseController";
-import { OpenAiHelper } from "../helpers";
-import { WebsiteHelper } from "../helpers/WebsiteHelper";
+import { AskBaseController } from "./AskBaseController.js";
+import { OpenAiHelper } from "../helpers/index.js";
+import { WebsiteHelper } from "../helpers/WebsiteHelper.js";
 
 @controller("/website")
 export class WebsiteController extends AskBaseController {

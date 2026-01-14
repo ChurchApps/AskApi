@@ -1,4 +1,4 @@
-import { Repositories } from "../repositories";
+import { Repositories } from "../repositories/index.js";
 import { CustomBaseController } from "@churchapps/apihelper";
 
 export class AskBaseController extends CustomBaseController {
