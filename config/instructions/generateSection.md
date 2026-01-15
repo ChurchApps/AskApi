@@ -4,11 +4,12 @@ Generate COMPLETE, PRODUCTION-READY content for a SINGLE section. Respond with O
 
 **CRITICAL REQUIREMENTS**:
 1. Respond with ONLY valid JSON - no markdown, no explanation
-2. Create FULL, RICH CONTENT - each section needs MULTIPLE elements (heading + content + optional CTA)
-3. Follow the section outline's suggestedElements list - create ALL suggested elements
-4. Transform keyPoints into actual content (cards, FAQs, list items, etc.)
-5. Use the church's name and theme colors from context
-6. **ROWS MUST HAVE CONTENT**: A row with columns:"4,4,4" MUST have exactly 3 child elements
+2. **WRITE SUBSTANTIAL CONTENT** - Each text element needs 2-4 sentences minimum. Each card needs a full paragraph. Each FAQ answer needs 2-3 sentences. DO NOT write single sentences.
+3. Create MULTIPLE elements per section (heading + content + optional CTA) - typically 3-6 elements
+4. Follow the section outline's suggestedElements list - create ALL suggested elements
+5. Transform EVERY keyPoint into actual content (cards, FAQs, etc.) with full descriptions
+6. Use the church's name and theme colors from context
+7. **ROWS MUST HAVE CONTENT**: A row with columns:"4,4,4" MUST have exactly 3 child elements
 
 ## Section Outline
 
@@ -43,28 +44,28 @@ Generate COMPLETE, PRODUCTION-READY content for a SINGLE section. Respond with O
 
 ## Element Reference
 
-**text** - Rich text content
+**text** - Rich text content (MINIMUM 2-4 sentences)
 ```json
-{"elementType":"text","sort":0,"answersJSON":"{\"text\":\"<h2>Section Heading</h2><p>Supporting paragraph with details.</p>\",\"textAlignment\":\"center\"}"}
+{"elementType":"text","sort":0,"answersJSON":"{\"text\":\"<h2>Section Heading</h2><p>This is a welcoming paragraph that provides context and sets the tone. We want visitors to feel comfortable and know what to expect. Our community is warm, friendly, and excited to meet new faces every week.</p>\",\"textAlignment\":\"center\"}"}
 ```
 
-**textWithPhoto** - Text with image (photoPosition: "left" or "right")
+**textWithPhoto** - Text with image (MINIMUM 3-4 sentences, photoPosition: "left" or "right")
 ```json
-{"elementType":"textWithPhoto","sort":0,"answersJSON":"{\"text\":\"<h2>Our Mission</h2><p>We exist to connect people with God and each other through authentic community and biblical teaching.</p>\",\"photo\":\"https://picsum.photos/800/600?random=1\",\"photoAlt\":\"Church community\",\"photoPosition\":\"left\"}"}
+{"elementType":"textWithPhoto","sort":0,"answersJSON":"{\"text\":\"<h2>Our Mission</h2><p>We exist to connect people with God and each other through authentic community and biblical teaching. Every Sunday, we gather to worship, learn, and grow together as a family of faith. Whether you're exploring faith for the first time or have been a believer for decades, there's a place for you here. We believe that life is better when we do it together.</p>\",\"photo\":\"https://picsum.photos/800/600?random=1\",\"photoAlt\":\"Church community\",\"photoPosition\":\"left\"}"}
 ```
 
-**row** - Multi-column layout. Child count MUST match column count.
+**row** - Multi-column layout. Child count MUST match column count. Each card needs 2-3 sentences.
 ```json
 {"elementType":"row","sort":1,"answersJSON":"{\"columns\":\"4,4,4\"}","elements":[
-  {"elementType":"card","sort":0,"answersJSON":"{\"photo\":\"https://picsum.photos/600/400?random=1\",\"photoAlt\":\"Youth\",\"title\":\"Youth Ministry\",\"titleAlignment\":\"center\",\"text\":\"<p>Weekly activities for teens.</p>\",\"textAlignment\":\"center\"}"},
-  {"elementType":"card","sort":1,"answersJSON":"{\"photo\":\"https://picsum.photos/600/400?random=2\",\"photoAlt\":\"Worship\",\"title\":\"Worship Team\",\"titleAlignment\":\"center\",\"text\":\"<p>Lead our congregation in praise.</p>\",\"textAlignment\":\"center\"}"},
-  {"elementType":"card","sort":2,"answersJSON":"{\"photo\":\"https://picsum.photos/600/400?random=3\",\"photoAlt\":\"Outreach\",\"title\":\"Outreach\",\"titleAlignment\":\"center\",\"text\":\"<p>Serve our neighbors.</p>\",\"textAlignment\":\"center\"}"}
+  {"elementType":"card","sort":0,"answersJSON":"{\"photo\":\"https://picsum.photos/600/400?random=1\",\"photoAlt\":\"Youth\",\"title\":\"Youth Ministry\",\"titleAlignment\":\"center\",\"text\":\"<p>Our youth ministry meets every Wednesday night for games, worship, and relevant Bible teaching. Students in grades 6-12 build lasting friendships and grow in their faith together.</p>\",\"textAlignment\":\"center\"}"},
+  {"elementType":"card","sort":1,"answersJSON":"{\"photo\":\"https://picsum.photos/600/400?random=2\",\"photoAlt\":\"Worship\",\"title\":\"Worship Team\",\"titleAlignment\":\"center\",\"text\":\"<p>Use your musical gifts to lead our congregation in praise each Sunday. We welcome vocalists, instrumentalists, and tech volunteers who want to serve through music.</p>\",\"textAlignment\":\"center\"}"},
+  {"elementType":"card","sort":2,"answersJSON":"{\"photo\":\"https://picsum.photos/600/400?random=3\",\"photoAlt\":\"Outreach\",\"title\":\"Community Outreach\",\"titleAlignment\":\"center\",\"text\":\"<p>Serve our neighbors through monthly food drives, partnership with local shelters, and seasonal community events. There are opportunities for everyone to make a difference.</p>\",\"textAlignment\":\"center\"}"}
 ]}
 ```
 
-**faq** - Expandable FAQ item (create ONE faq element per question)
+**faq** - Expandable FAQ item (create ONE faq element per question, answer needs 2-3 sentences)
 ```json
-{"elementType":"faq","sort":1,"answersJSON":"{\"title\":\"What should I wear?\",\"description\":\"<p>Come as you are! We have no dress code. You'll see everything from jeans to suits.</p>\",\"headingType\":\"h6\"}"}
+{"elementType":"faq","sort":1,"answersJSON":"{\"title\":\"What should I wear?\",\"description\":\"<p>Come as you are! We have no dress code at all. You'll see everything from jeans and t-shirts to business casual - whatever makes you comfortable. We care about you, not your wardrobe.</p>\",\"headingType\":\"h6\"}"}
 ```
 
 **buttonLink** - Styled button
@@ -230,11 +231,12 @@ Output:
 
 ## Key Rules
 
-1. **Multiple elements per section** - Never just a heading alone. Always heading + content.
-2. **One faq element per question** - If keyPoints has 3 questions, create 3 faq elements.
-3. **Expand keyPoints** - Each keyPoint becomes a card, faq, or content block with full text.
-4. **Use church name** from context, never "Our Church".
-5. **Increment image numbers** - random=1, random=2, etc. for unique images.
+1. **WRITE LONG CONTENT** - Text elements need 2-4 sentences. Cards need 2-3 sentences. FAQ answers need 2-3 sentences. Never write just one sentence.
+2. **Multiple elements per section** - Never just a heading alone. Always heading + substantial content below it.
+3. **One faq element per question** - If keyPoints has 3 questions, create 3 separate faq elements with full answers.
+4. **Expand keyPoints** - Each keyPoint becomes a card, faq, or content block with FULL descriptive text.
+5. **Use church name** from context, never "Our Church".
+6. **Increment image numbers** - random=1, random=2, etc. for unique images.
 
 ## Output
 
