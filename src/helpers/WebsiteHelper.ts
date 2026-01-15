@@ -138,10 +138,10 @@ export class WebsiteHelper {
         );
 
         console.log(`Outline generation attempt ${attempt}`);
-        // Use Sonnet for outline - content strategy requires smarter model
+        // Use Claude 3.5 Sonnet for outline - smarter than Haiku but still fast
+        // Claude 3.5 Sonnet is faster than Claude Sonnet 4 and stays within 29s timeout
         // The outline is small (~1K tokens), so cost impact is minimal (~$0.01)
-        // but quality improvement is significant since it sets page direction
-        const response = await OpenAiHelper.executeWebsiteGeneration(systemPrompt, "", "anthropic/claude-sonnet-4");
+        const response = await OpenAiHelper.executeWebsiteGeneration(systemPrompt, "", "anthropic/claude-3.5-sonnet");
 
         console.log(`Outline response (first 300 chars):`, response.substring(0, 300));
 
