@@ -117,7 +117,7 @@ export class WebsiteHelper {
   /**
    * Generates a page outline with section descriptions and content hints.
    * This is a lightweight call that returns structure without full element content.
-   * Uses haiku model for speed.
+   * Uses Sonnet model for better content strategy and page planning.
    */
   public static async generatePageOutline(
     prompt: string,
@@ -138,8 +138,10 @@ export class WebsiteHelper {
         );
 
         console.log(`Outline generation attempt ${attempt}`);
-        // Use haiku for outline - small response, speed is critical
-        const response = await OpenAiHelper.executeWebsiteGeneration(systemPrompt, "");
+        // Use Sonnet for outline - content strategy requires smarter model
+        // The outline is small (~1K tokens), so cost impact is minimal (~$0.01)
+        // but quality improvement is significant since it sets page direction
+        const response = await OpenAiHelper.executeWebsiteGeneration(systemPrompt, "", "anthropic/claude-sonnet-4");
 
         console.log(`Outline response (first 300 chars):`, response.substring(0, 300));
 
