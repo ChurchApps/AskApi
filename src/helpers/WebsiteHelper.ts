@@ -190,9 +190,9 @@ export class WebsiteHelper {
         );
 
         console.log(`Section generation attempt ${attempt} for section: ${sectionOutline.id}`);
-        // Use sonnet for section content - quality matters, focused scope fits in timeout
-        const model = "anthropic/claude-3.5-sonnet";
-        const response = await OpenAiHelper.executeWebsiteGeneration(systemPrompt, "", model);
+        // Use haiku for section content - fast and cost-effective
+        // Haiku: ~$0.25/1M input, $1.25/1M output vs Sonnet: ~$3/1M input, $15/1M output
+        const response = await OpenAiHelper.executeWebsiteGeneration(systemPrompt, "");
 
         console.log(`Section response (first 200 chars):`, response.substring(0, 200));
 

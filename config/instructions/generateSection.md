@@ -1,377 +1,78 @@
-# Section Generation Instructions
+# Section Generation
 
-You are an expert web designer for churches. Your task is to generate the COMPLETE, PRODUCTION-READY content for a SINGLE webpage section based on the provided outline and content hints.
+Generate COMPLETE, PRODUCTION-READY content for a SINGLE section. Respond with ONLY valid JSON.
 
-**CRITICAL REQUIREMENTS**:
-1. You MUST respond with ONLY valid JSON. No explanations, no markdown code blocks, no additional text.
-2. You MUST create FULL, RICH CONTENT with complete text and professional layouts.
-3. You MUST follow the section outline's purpose and suggested elements.
-4. You MUST use the church's name and theme colors from the context.
-5. You MUST generate complete, production-ready content (no placeholders).
-6. **ROWS MUST HAVE CONTENT**: Every row element MUST have child elements matching the number of columns. A row with columns:"4,4,4" MUST have exactly 3 child elements with full content. NEVER create empty rows or columns.
+**CRITICAL**: Rows MUST have child elements matching column count. "4,4,4" = 3 children. NEVER create empty rows.
 
-## Section Outline
+## Input
 
-{sectionOutline}
+**Section Outline:** {sectionOutline}
 
-## Church Context
+**Church Context:** {churchContext}
 
-{churchContext}
+**Available Elements:** {availableElementTypes}
 
-## Available Element Types
+**Page Context:** {pageContext}
 
-{availableElementTypes}
-
-## Page Context
-
-{pageContext}
-
-## Required JSON Structure
+## Output Structure
 
 ```json
 {
   "zone": "main",
-  "background": "string (hex color or 'none')",
-  "textColor": "light | dark | hex (optional)",
-  "headingColor": "primary | secondary | hex (optional)",
-  "linkColor": "primary | secondary | hex (optional)",
-  "sort": number,
-  "answersJSON": "{}",
-  "stylesJSON": "string (optional CSS as JSON)",
-  "elements": [
-    {
-      "elementType": "string (from available types)",
-      "sort": number,
-      "answersJSON": "string (JSON string with element config)",
-      "stylesJSON": "string (optional)",
-      "animationsJSON": "string (optional)",
-      "elements": []
-    }
-  ]
-}
-```
-
-## Element Types Reference
-
-### Layout Elements
-
-**text** - Rich text content
-```json
-{
-  "elementType": "text",
-  "answersJSON": "{\"text\":\"<h1>Heading</h1><p>Paragraph content</p>\",\"textAlignment\":\"center\"}"
-}
-```
-
-**textWithPhoto** - Text with accompanying image
-```json
-{
-  "elementType": "textWithPhoto",
-  "answersJSON": "{\"text\":\"<h2>Title</h2><p>Description</p>\",\"photo\":\"https://picsum.photos/800/600?random=1\",\"photoAlt\":\"Description\",\"photoPosition\":\"left\"}"
-}
-```
-photoPosition: "left" or "right"
-
-**row** - Multi-column layout (12-column grid)
-**IMPORTANT**: The number of child elements MUST match the number of columns. Never create empty rows.
-```json
-{
-  "elementType": "row",
-  "answersJSON": "{\"columns\":\"4,4,4\"}",
-  "elements": [
-    { "elementType": "card", "answersJSON": "{\"photo\":\"https://picsum.photos/600/400?random=1\",\"photoAlt\":\"Ministry\",\"title\":\"Youth Ministry\",\"titleAlignment\":\"center\",\"text\":\"<p>Join us for weekly activities and Bible study for teens.</p>\",\"textAlignment\":\"center\"}", "sort": 0 },
-    { "elementType": "card", "answersJSON": "{\"photo\":\"https://picsum.photos/600/400?random=2\",\"photoAlt\":\"Worship\",\"title\":\"Worship Team\",\"titleAlignment\":\"center\",\"text\":\"<p>Use your musical gifts to lead our congregation in praise.</p>\",\"textAlignment\":\"center\"}", "sort": 1 },
-    { "elementType": "card", "answersJSON": "{\"photo\":\"https://picsum.photos/600/400?random=3\",\"photoAlt\":\"Outreach\",\"title\":\"Community Outreach\",\"titleAlignment\":\"center\",\"text\":\"<p>Serve our neighbors through food drives and local partnerships.</p>\",\"textAlignment\":\"center\"}", "sort": 2 }
-  ]
-}
-```
-Column options: "6,6" (2 cols = 2 elements), "4,4,4" (3 cols = 3 elements), "3,3,3,3" (4 cols = 4 elements)
-
-**box** - Container with styling
-```json
-{
-  "elementType": "box",
-  "answersJSON": "{\"background\":\"var(--light)\",\"textColor\":\"var(--dark)\",\"headingColor\":\"var(--primary)\",\"linkColor\":\"var(--accent)\",\"rounded\":\"true\"}",
-  "elements": [...]
-}
-```
-
-**carousel** - Image/content carousel
-```json
-{
-  "elementType": "carousel",
-  "answersJSON": "{\"height\":\"250\",\"slides\":\"3\",\"animationOptions\":\"fade\",\"autoplay\":\"true\",\"interval\":\"4\"}",
-  "elements": [...]
-}
-```
-
-### Content Elements
-
-**card** - Card with image, title, and text
-```json
-{
-  "elementType": "card",
-  "answersJSON": "{\"photo\":\"https://picsum.photos/600/400?random=1\",\"photoAlt\":\"Alt text\",\"title\":\"Card Title\",\"titleAlignment\":\"center\",\"text\":\"<p>Card content</p>\",\"textAlignment\":\"left\",\"url\":\"/learn-more\"}"
-}
-```
-
-**faq** - FAQ expandable item
-```json
-{
-  "elementType": "faq",
-  "answersJSON": "{\"title\":\"Question here?\",\"description\":\"<p>Answer here.</p>\",\"headingType\":\"h6\",\"iconColor\":\"#03a9f4\"}"
-}
-```
-
-**table** - Data table
-```json
-{
-  "elementType": "table",
-  "answersJSON": "{\"contents\":[[\"Header 1\",\"Header 2\"],[\"Row 1 Col 1\",\"Row 1 Col 2\"]],\"head\":true,\"markdown\":false,\"size\":\"medium\"}"
-}
-```
-
-### Media Elements
-
-**image** - Standalone image
-```json
-{
-  "elementType": "image",
-  "answersJSON": "{\"photo\":\"https://picsum.photos/1200/600?random=1\",\"photoAlt\":\"Description\",\"imageAlign\":\"center\"}"
-}
-```
-
-**video** - YouTube or Vimeo embed
-```json
-{
-  "elementType": "video",
-  "answersJSON": "{\"videoType\":\"youtube\",\"videoId\":\"VIDEO_ID\"}"
-}
-```
-
-**map** - Google Maps location
-```json
-{
-  "elementType": "map",
-  "answersJSON": "{\"mapAddress\":\"123 Main St, City, State 12345\",\"mapLabel\":\"Church Location\",\"mapZoom\":15}"
-}
-```
-
-### Church-Specific Elements
-
-**logo** - Church logo
-```json
-{ "elementType": "logo", "answersJSON": "{\"url\":\"/\"}" }
-```
-
-**sermons** - Sermon listings (auto-populated)
-```json
-{ "elementType": "sermons", "answersJSON": "{}" }
-```
-
-**stream** - Live streaming
-```json
-{ "elementType": "stream", "answersJSON": "{\"mode\":\"video\",\"offlineContent\":\"hide\"}" }
-```
-
-**donation** - Donation widget
-```json
-{ "elementType": "donation", "answersJSON": "{}" }
-```
-
-**donateLink** - Donation button
-```json
-{ "elementType": "donateLink", "answersJSON": "{}" }
-```
-
-**form** - Contact/custom form
-```json
-{ "elementType": "form", "answersJSON": "{\"formId\":\"contact\"}" }
-```
-
-**calendar** - Events calendar
-```json
-{ "elementType": "calendar", "answersJSON": "{\"calendarType\":\"curated\"}" }
-```
-
-**groupList** - Small groups listing
-```json
-{ "elementType": "groupList", "answersJSON": "{\"label\":\"\"}" }
-```
-
-### Interactive Elements
-
-**buttonLink** - Styled button
-```json
-{
-  "elementType": "buttonLink",
-  "answersJSON": "{\"buttonLinkText\":\"Click Here\",\"buttonLinkUrl\":\"/destination\",\"buttonLinkVariant\":\"contained\",\"buttonLinkColor\":\"primary\",\"external\":\"false\",\"fullWidth\":\"false\"}"
-}
-```
-buttonLinkVariant: "contained" or "outlined"
-buttonLinkColor: "primary", "secondary", "error", "warning", "info", "success"
-
-**whiteSpace** - Spacing element
-```json
-{ "elementType": "whiteSpace", "answersJSON": "{\"height\":\"25\"}" }
-```
-
-## Styling Guidelines
-
-### Section Styling Based on Index
-
-Use the section index from pageContext to apply appropriate styling:
-
-**Hero sections (index 0)**:
-```json
-"stylesJSON": "{\"all\":{\"padding-top\":\"120px\",\"padding-bottom\":\"120px\"}}"
-```
-
-**Content sections (index 1-3)**:
-```json
-"stylesJSON": "{\"all\":{\"padding-top\":\"80px\",\"padding-bottom\":\"80px\"}}"
-```
-
-**CTA sections (last section)**:
-```json
-"stylesJSON": "{\"all\":{\"padding-top\":\"60px\",\"padding-bottom\":\"60px\"}}"
-```
-
-### Using Theme Colors
-
-Apply the church's theme colors from churchContext:
-- Use `primaryColor` for key headings and backgrounds
-- Use `secondaryColor` for accents
-- Reference as hex values in background, headingColor, etc.
-
-### Image URLs
-
-Use Picsum for placeholder images with unique random seeds:
-- Hero images: `https://picsum.photos/1920/1080?random={unique_number}`
-- Card images: `https://picsum.photos/600/400?random={unique_number}`
-- textWithPhoto: `https://picsum.photos/800/600?random={unique_number}`
-
-Increment the random number for each image to ensure variety.
-
-## Content Guidelines
-
-### Use Content Hints
-
-Transform the outline's contentHints into full content:
-
-**headline** → Full h1/h2 heading in text element
-**subheadline** → Paragraph following the heading
-**keyPoints** → Card titles, list items, or FAQ questions
-**ctaText** → Button text in buttonLink element
-
-### Write Engaging Content
-
-1. Use the church name from churchContext throughout
-2. Write complete sentences, not placeholders
-3. Be specific and relevant to the section's purpose
-4. Include appropriate calls to action
-5. Use proper HTML formatting (h1, h2, p, strong, etc.)
-
-### Example Content Transformation
-
-Content hints:
-```json
-{
-  "headline": "What to Expect",
-  "keyPoints": ["Casual dress", "75-minute service", "Children's programs"]
-}
-```
-
-Becomes a row with 3 cards:
-```json
-{
-  "elementType": "row",
-  "answersJSON": "{\"columns\":\"4,4,4\"}",
-  "elements": [
-    {
-      "elementType": "card",
-      "sort": 0,
-      "answersJSON": "{\"photo\":\"https://picsum.photos/600/400?random=10\",\"photoAlt\":\"Casual atmosphere\",\"title\":\"Come As You Are\",\"titleAlignment\":\"center\",\"text\":\"<p>There's no dress code here. Whether you prefer jeans or a suit, you'll fit right in. We care about you, not what you wear.</p>\",\"textAlignment\":\"center\"}"
-    },
-    {
-      "elementType": "card",
-      "sort": 1,
-      "answersJSON": "{\"photo\":\"https://picsum.photos/600/400?random=11\",\"photoAlt\":\"Worship service\",\"title\":\"About 75 Minutes\",\"titleAlignment\":\"center\",\"text\":\"<p>Our services include contemporary worship music, a relevant message from Scripture, and time for prayer. You'll be on your way in about an hour and fifteen minutes.</p>\",\"textAlignment\":\"center\"}"
-    },
-    {
-      "elementType": "card",
-      "sort": 2,
-      "answersJSON": "{\"photo\":\"https://picsum.photos/600/400?random=12\",\"photoAlt\":\"Children's ministry\",\"title\":\"Kids Are Welcome\",\"titleAlignment\":\"center\",\"text\":\"<p>We offer age-appropriate programs for infants through 5th grade. Your children will learn, play, and make friends in a safe environment.</p>\",\"textAlignment\":\"center\"}"
-    }
-  ]
-}
-```
-
-## JSON Formatting Rules
-
-1. **Escape quotes**: Use backslash for quotes in JSON strings: `\"text\"`
-2. **String values**: All answersJSON, stylesJSON, animationsJSON must be JSON strings
-3. **Valid JSON**: Ensure all quotes, braces, and brackets are balanced
-4. **No trailing commas**: Don't include commas after the last item
-
-## Example Output
-
-For a hero section outline:
-```json
-{
-  "id": "section-0",
-  "purpose": "Welcome visitors with warm hero section",
-  "suggestedBackground": "#2c5aa0",
-  "suggestedTextColor": "light",
-  "suggestedElements": ["text (h1 heading)", "buttonLink (CTA)"],
-  "contentHints": {
-    "headline": "Welcome to Grace Church",
-    "subheadline": "A place where everyone belongs",
-    "ctaText": "Plan Your Visit"
-  }
-}
-```
-
-Response:
-```json
-{
-  "zone": "main",
-  "background": "#2c5aa0",
-  "textColor": "light",
-  "headingColor": "light",
+  "background": "hex or 'none'",
+  "textColor": "light|dark",
+  "headingColor": "hex (optional)",
   "sort": 0,
   "answersJSON": "{}",
-  "stylesJSON": "{\"all\":{\"padding-top\":\"120px\",\"padding-bottom\":\"120px\"}}",
-  "elements": [
-    {
-      "elementType": "text",
-      "sort": 0,
-      "answersJSON": "{\"text\":\"<h1>Welcome to Grace Church</h1><p>A place where everyone belongs. Join us this Sunday as we worship together, grow in faith, and build meaningful relationships.</p>\",\"textAlignment\":\"center\"}"
-    },
-    {
-      "elementType": "whiteSpace",
-      "sort": 1,
-      "answersJSON": "{\"height\":\"20\"}"
-    },
-    {
-      "elementType": "buttonLink",
-      "sort": 2,
-      "answersJSON": "{\"buttonLinkText\":\"Plan Your Visit\",\"buttonLinkUrl\":\"/visit\",\"buttonLinkVariant\":\"contained\",\"buttonLinkColor\":\"secondary\",\"external\":\"false\",\"fullWidth\":\"false\"}"
-    }
-  ]
+  "stylesJSON": "{\"all\":{\"padding-top\":\"80px\",\"padding-bottom\":\"80px\"}}",
+  "elements": [{ "elementType": "text", "sort": 0, "answersJSON": "{...}" }]
 }
 ```
 
-## Final Checklist
+## Element Reference
 
-- [ ] JSON is valid (no syntax errors)
-- [ ] Section follows the outline's purpose and suggested elements
-- [ ] All answersJSON values are properly escaped JSON strings
-- [ ] Church name is used where appropriate
-- [ ] Content is complete and professional
-- [ ] Elements have proper sort order (0, 1, 2, etc.)
-- [ ] Response is ONLY the JSON object
+**text**: `{"text":"<h1>Heading</h1><p>Content</p>","textAlignment":"center"}`
 
-## Output Format
+**textWithPhoto**: `{"text":"<h2>Title</h2><p>Desc</p>","photo":"https://picsum.photos/800/600?random=1","photoAlt":"Alt","photoPosition":"left|right"}`
 
-Your response must be ONLY valid JSON. Start with { and end with }. No exceptions.
+**row** (columns: "6,6", "4,4,4", "3,3,3,3"):
+```json
+{"elementType":"row","answersJSON":"{\"columns\":\"4,4,4\"}","elements":[
+  {"elementType":"card","sort":0,"answersJSON":"{\"photo\":\"https://picsum.photos/600/400?random=1\",\"title\":\"Title\",\"text\":\"<p>Content</p>\"}"},
+  {"elementType":"card","sort":1,"answersJSON":"{...}"},
+  {"elementType":"card","sort":2,"answersJSON":"{...}"}
+]}
+```
+
+**card**: `{"photo":"https://picsum.photos/600/400?random=1","photoAlt":"Alt","title":"Title","titleAlignment":"center","text":"<p>Content</p>","textAlignment":"center"}`
+
+**faq**: `{"title":"Question?","description":"<p>Answer</p>","headingType":"h6"}`
+
+**table**: `{"contents":[["H1","H2"],["R1C1","R1C2"]],"head":true}`
+
+**image**: `{"photo":"https://picsum.photos/1200/600?random=1","photoAlt":"Alt","imageAlign":"center"}`
+
+**video**: `{"videoType":"youtube","videoId":"ID"}`
+
+**map**: `{"mapAddress":"123 Main St","mapLabel":"Location","mapZoom":15}`
+
+**buttonLink**: `{"buttonLinkText":"Click","buttonLinkUrl":"/path","buttonLinkVariant":"contained","buttonLinkColor":"primary"}`
+
+**whiteSpace**: `{"height":"25"}`
+
+**Simple elements** (no config needed): `sermons`, `donation`, `donateLink`, `calendar`, `groupList`, `stream`, `form`, `logo`
+
+## Styling by Index
+
+- Index 0 (hero): padding 120px
+- Index 1-3: padding 80px
+- Last section: padding 60px
+
+## Rules
+
+1. Use church name from context, not "Our Church"
+2. Use theme colors (primaryColor, secondaryColor) from context
+3. Transform contentHints: headline→h1/h2, keyPoints→cards/FAQs, ctaText→button
+4. Picsum URLs: increment random number for each image
+5. All answersJSON must be escaped JSON strings
+6. Response is ONLY the JSON object - no markdown, no explanation
