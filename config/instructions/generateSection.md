@@ -88,6 +88,76 @@ Don't just repeat these. Expand each into engaging content:
 
 ---
 
+## IMAGE SELECTION GUIDE
+
+**CRITICAL: Images must be contextually relevant to the content, not random.**
+
+Use Unsplash Source URL format with descriptive keywords:
+`https://source.unsplash.com/featured/{width}x{height}/?{keywords}`
+
+### Image URL Format
+
+```
+https://source.unsplash.com/featured/600x400/?church,worship
+https://source.unsplash.com/featured/800x600/?family,happy
+https://source.unsplash.com/featured/600x400/?children,playing
+```
+
+### Image Size Guidelines
+- **Cards**: `600x400`
+- **textWithPhoto**: `800x600`
+- **Hero backgrounds**: `1920x1080`
+
+### Keyword Examples by Content Type
+
+| Content Type | Recommended Keywords |
+|--------------|---------------------|
+| Pastor/Welcome | `pastor,friendly,man` or `welcome,greeting,smile` |
+| Community | `community,friends,together` or `people,gathering,happy` |
+| Worship/Music | `worship,concert,singing` or `music,praise,hands` |
+| Children/Kids | `children,playing,happy` or `kids,fun,learning` |
+| Youth/Teens | `teenagers,youth,friends` or `students,young,group` |
+| Bible Study | `bible,study,reading` or `book,learning,group` |
+| Prayer | `prayer,peaceful,meditation` or `hands,praying` |
+| Outreach/Service | `volunteer,helping,community` or `service,charity` |
+| Coffee/Casual | `coffee,cafe,relaxed` or `friends,coffee,conversation` |
+| Church Building | `church,building,architecture` or `chapel,steeple` |
+| Family | `family,happy,together` or `parents,children,love` |
+| Seniors | `seniors,elderly,wisdom` or `grandparents,mature` |
+| Small Groups | `discussion,group,meeting` or `conversation,friends` |
+| Nature/Peace | `nature,peaceful,landscape` or `sunset,calm,serene` |
+| Women's Ministry | `women,friends,together` or `ladies,group,happy` |
+| Men's Ministry | `men,friends,outdoor` or `guys,group,fellowship` |
+| Giving/Generosity | `giving,hands,heart` or `generosity,helping` |
+
+### Rules
+1. **Match keywords to content** - A kids ministry section should use keywords like `children,playing,happy`
+2. **Use 2-3 relevant keywords** - More specific is better: `youth,teenagers,friends` not just `people`
+3. **Vary keywords** - Don't use the exact same keyword combo twice on a page
+4. **Use photoAlt** - Describe what the image should show for accessibility
+
+### Examples
+
+**Kids Ministry Card:**
+```json
+"photo": "https://source.unsplash.com/featured/600x400/?children,playing,happy"
+"photoAlt": "Children having fun together"
+```
+
+**Worship Section:**
+```json
+"photo": "https://source.unsplash.com/featured/800x600/?worship,singing,concert"
+"photoAlt": "People worshiping together"
+```
+
+**Pastor Welcome:**
+```json
+"photo": "https://source.unsplash.com/featured/800x600/?pastor,friendly,greeting"
+"photoAlt": "Friendly pastor welcoming visitors"
+```
+
+---
+
 ## ELEMENT REFERENCE WITH QUALITY EXAMPLES
 
 ### text - Rich text content (MINIMUM 3-5 sentences for body text)
@@ -109,18 +179,20 @@ Don't just repeat these. Expand each into engaging content:
 
 ### textWithPhoto - Text with image (MINIMUM 4-6 sentences, photoPosition: "left" or "right")
 
+**IMPORTANT: Use keyword-based Unsplash URLs that match the content.**
+
 ```json
-{"elementType":"textWithPhoto","sort":0,"answersJSON":"{\"text\":\"<h2>A Word From Pastor Mike</h2><p>Hello! I'm Pastor Mike, and I want you to know that Grace Community is more than just a church - it's a family. When you walk through our doors, you'll be greeted by real people who genuinely care about your life, not just your attendance.</p><p>I've been serving here for 15 years, and what I love most is watching people discover that faith isn't about being perfect - it's about being honest about where you are and taking the next step together. Whether you're skeptical, curious, or ready to dive in, there's a place for you here.</p><p>I can't wait to meet you this Sunday. Grab me after service - I'd love to hear your story!</p>\",\"photo\":\"https://picsum.photos/800/600?random=1\",\"photoAlt\":\"Pastor Mike greeting visitors\",\"photoPosition\":\"right\"}"}
+{"elementType":"textWithPhoto","sort":0,"answersJSON":"{\"text\":\"<h2>A Word From Pastor Mike</h2><p>Hello! I'm Pastor Mike, and I want you to know that Grace Community is more than just a church - it's a family. When you walk through our doors, you'll be greeted by real people who genuinely care about your life, not just your attendance.</p><p>I've been serving here for 15 years, and what I love most is watching people discover that faith isn't about being perfect - it's about being honest about where you are and taking the next step together. Whether you're skeptical, curious, or ready to dive in, there's a place for you here.</p><p>I can't wait to meet you this Sunday. Grab me after service - I'd love to hear your story!</p>\",\"photo\":\"https://source.unsplash.com/featured/800x600/?pastor,friendly,welcome\",\"photoAlt\":\"Friendly pastor greeting church visitors\",\"photoPosition\":\"right\"}"}
 ```
 
 ### row - Multi-column layout (Child count MUST match column count)
 
-**3 Cards in a Row:**
+**3 Cards in a Row (with keyword-based contextual images):**
 ```json
 {"elementType":"row","sort":1,"answersJSON":"{\"columns\":\"4,4,4\"}","elements":[
-  {"elementType":"card","sort":0,"answersJSON":"{\"photo\":\"https://picsum.photos/600/400?random=10\",\"photoAlt\":\"People relaxing before service\",\"title\":\"Come As You Are\",\"titleAlignment\":\"center\",\"text\":\"<p>There's no dress code at Grace Community. You'll see everything from jeans and flip-flops to business casual. Grab a coffee from our cafe, find a seat wherever you're comfortable, and relax. We're just glad you're here.</p>\",\"textAlignment\":\"center\"}"},
-  {"elementType":"card","sort":1,"answersJSON":"{\"photo\":\"https://picsum.photos/600/400?random=11\",\"photoAlt\":\"Worship service with contemporary music\",\"title\":\"Engaging Services\",\"titleAlignment\":\"center\",\"text\":\"<p>Our Sunday gatherings last about 75 minutes and include contemporary worship music led by our talented band, a practical message from Scripture, and opportunities to connect with others. We start and end on time because we respect your schedule.</p>\",\"textAlignment\":\"center\"}"},
-  {"elementType":"card","sort":2,"answersJSON":"{\"photo\":\"https://picsum.photos/600/400?random=12\",\"photoAlt\":\"Kids having fun in children's ministry\",\"title\":\"Kids Are Welcome\",\"titleAlignment\":\"center\",\"text\":\"<p>We offer safe, fun programs for children from nursery through 5th grade during all services. Your kids will learn about Jesus through age-appropriate lessons, games, and crafts while you enjoy the adult service. Our secure check-in system keeps everyone safe.</p>\",\"textAlignment\":\"center\"}"}
+  {"elementType":"card","sort":0,"answersJSON":"{\"photo\":\"https://source.unsplash.com/featured/600x400/?coffee,friends,casual\",\"photoAlt\":\"Friends enjoying coffee together\",\"title\":\"Come As You Are\",\"titleAlignment\":\"center\",\"text\":\"<p>There's no dress code at Grace Community. You'll see everything from jeans and flip-flops to business casual. Grab a coffee from our cafe, find a seat wherever you're comfortable, and relax. We're just glad you're here.</p>\",\"textAlignment\":\"center\"}"},
+  {"elementType":"card","sort":1,"answersJSON":"{\"photo\":\"https://source.unsplash.com/featured/600x400/?worship,singing,church\",\"photoAlt\":\"People singing during worship service\",\"title\":\"Engaging Services\",\"titleAlignment\":\"center\",\"text\":\"<p>Our Sunday gatherings last about 75 minutes and include contemporary worship music led by our talented band, a practical message from Scripture, and opportunities to connect with others. We start and end on time because we respect your schedule.</p>\",\"textAlignment\":\"center\"}"},
+  {"elementType":"card","sort":2,"answersJSON":"{\"photo\":\"https://source.unsplash.com/featured/600x400/?children,playing,happy\",\"photoAlt\":\"Happy children playing and learning\",\"title\":\"Kids Are Welcome\",\"titleAlignment\":\"center\",\"text\":\"<p>We offer safe, fun programs for children from nursery through 5th grade during all services. Your kids will learn about Jesus through age-appropriate lessons, games, and crafts while you enjoy the adult service. Our secure check-in system keeps everyone safe.</p>\",\"textAlignment\":\"center\"}"}
 ]}
 ```
 
@@ -273,9 +345,9 @@ Don't just repeat these. Expand each into engaging content:
     {"elementType":"text","sort":0,"answersJSON":"{\"text\":\"<h2>What to Expect on Sunday</h2><p>We want your first visit to feel comfortable and natural. Here's what you can look forward to when you join us.</p>\",\"textAlignment\":\"center\"}"},
     {"elementType":"whiteSpace","sort":1,"answersJSON":"{\"height\":\"30\"}"},
     {"elementType":"row","sort":2,"answersJSON":"{\"columns\":\"4,4,4\"}","elements":[
-      {"elementType":"card","sort":0,"answersJSON":"{\"photo\":\"https://picsum.photos/600/400?random=20\",\"photoAlt\":\"People enjoying coffee before service\",\"title\":\"Come As You Are\",\"titleAlignment\":\"center\",\"text\":\"<p>There's no dress code here. You'll see everything from jeans and sneakers to business casual. Grab a free coffee from our cafe, find a seat wherever you're comfortable, and relax. We're just happy you're here.</p>\",\"textAlignment\":\"center\"}"},
-      {"elementType":"card","sort":1,"answersJSON":"{\"photo\":\"https://picsum.photos/600/400?random=21\",\"photoAlt\":\"Contemporary worship with band\",\"title\":\"Engaging Services\",\"titleAlignment\":\"center\",\"text\":\"<p>Our Sunday gatherings last about 75 minutes and include contemporary worship music, a practical message from Scripture that applies to real life, and time to connect with others. We start and end on time because we know your schedule matters.</p>\",\"textAlignment\":\"center\"}"},
-      {"elementType":"card","sort":2,"answersJSON":"{\"photo\":\"https://picsum.photos/600/400?random=22\",\"photoAlt\":\"Kids having fun learning about Jesus\",\"title\":\"Kids Are Welcome\",\"titleAlignment\":\"center\",\"text\":\"<p>We offer safe, fun programs for kids from birth through 5th grade during all services. Your children will love learning about Jesus through games, music, and hands-on activities. Our secure check-in system and background-checked volunteers keep everyone safe.</p>\",\"textAlignment\":\"center\"}"}
+      {"elementType":"card","sort":0,"answersJSON":"{\"photo\":\"https://source.unsplash.com/featured/600x400/?coffee,casual,relaxed\",\"photoAlt\":\"Coffee cup in casual setting\",\"title\":\"Come As You Are\",\"titleAlignment\":\"center\",\"text\":\"<p>There's no dress code here. You'll see everything from jeans and sneakers to business casual. Grab a free coffee from our cafe, find a seat wherever you're comfortable, and relax. We're just happy you're here.</p>\",\"textAlignment\":\"center\"}"},
+      {"elementType":"card","sort":1,"answersJSON":"{\"photo\":\"https://source.unsplash.com/featured/600x400/?worship,church,singing\",\"photoAlt\":\"People singing during worship\",\"title\":\"Engaging Services\",\"titleAlignment\":\"center\",\"text\":\"<p>Our Sunday gatherings last about 75 minutes and include contemporary worship music, a practical message from Scripture that applies to real life, and time to connect with others. We start and end on time because we know your schedule matters.</p>\",\"textAlignment\":\"center\"}"},
+      {"elementType":"card","sort":2,"answersJSON":"{\"photo\":\"https://source.unsplash.com/featured/600x400/?children,happy,playing\",\"photoAlt\":\"Happy child smiling\",\"title\":\"Kids Are Welcome\",\"titleAlignment\":\"center\",\"text\":\"<p>We offer safe, fun programs for kids from birth through 5th grade during all services. Your children will love learning about Jesus through games, music, and hands-on activities. Our secure check-in system and background-checked volunteers keep everyone safe.</p>\",\"textAlignment\":\"center\"}"}
     ]}
   ]
 }
@@ -396,7 +468,7 @@ Don't just repeat these. Expand each into engaging content:
 3. **One faq element per question** - If keyPoints has 4 questions, create 4 separate faq elements.
 4. **Expand keyPoints** - Each keyPoint becomes a card, faq, or content block with FULL descriptive text.
 5. **Use church name** from context, never "Our Church" or "[Church Name]".
-6. **Increment image numbers** - random=1, random=2, random=3 for unique images.
+6. **Use contextual images** - Select Unsplash images from the IMAGE SELECTION GUIDE that match the content. Kids content needs kids images, worship needs worship images, etc.
 7. **Match column counts** - Row columns MUST equal number of child elements.
 
 ---
