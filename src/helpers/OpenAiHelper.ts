@@ -14,30 +14,24 @@ interface AskQuestionResult {
 export class OpenAiHelper {
   private static openai: OpenAI | null = null;
   private static openrouter: OpenAI | null = null;
-  private static provider: string = Environment.aiProvider || "openrouter";
   private static OPENAI_API_KEY = Environment.openAiApiKey || "";
   private static OPENROUTER_API_KEY = Environment.openRouterApiKey || "";
 
   public static async initialize() {
-    if (this.provider === "openai") {
-      if (!this.OPENAI_API_KEY) {
-        throw new Error("Missing ApiKey for OpenAi provider.");
-      }
-      if (!this.openai) {
-        this.openai = new OpenAI({ apiKey: this.OPENAI_API_KEY });
-      }
+    // Always initialize OpenAI for people search functionality
+    if (!this.OPENAI_API_KEY) {
+      throw new Error("Missing ApiKey for OpenAi provider.");
+    }
+    if (!this.openai) {
+      this.openai = new OpenAI({ apiKey: this.OPENAI_API_KEY });
     }
 
-    if (this.provider === "openrouter") {
-      if (!this.OPENROUTER_API_KEY) {
-        throw new Error("Missing ApiKey for OpenRouter provider.");
-      }
-      if (!this.openrouter) {
-        this.openrouter = new OpenAI({
-          apiKey: this.OPENROUTER_API_KEY,
-          baseURL: "https://openrouter.ai/api/v1"
-        });
-      }
+    // Initialize OpenRouter for website generation
+    if (this.OPENROUTER_API_KEY && !this.openrouter) {
+      this.openrouter = new OpenAI({
+        apiKey: this.OPENROUTER_API_KEY,
+        baseURL: "https://openrouter.ai/api/v1"
+      });
     }
 
     // Load all swagger files on startup
@@ -89,13 +83,14 @@ export class OpenAiHelper {
   }
 
   public static async executeWebsiteGeneration(systemRole: string, prompt: string, modelOverride?: string) {
-    const client = this.provider === "openrouter" ? this.openrouter : this.openai;
+    // Website generation uses OpenRouter with Claude models
+    const client = this.openrouter || this.openai;
     // Default: claude-3.5-haiku is fast enough for API Gateway's 29s timeout
     // For section generation, can use claude-3.5-sonnet for better quality
-    const defaultModel = this.provider === "openrouter" ? "anthropic/claude-3.5-haiku" : "gpt-4o-mini";
+    const defaultModel = this.openrouter ? "anthropic/claude-3.5-haiku" : "gpt-4o-mini";
     const model = modelOverride || defaultModel;
 
-    console.log(`Using provider: ${this.provider}, model: ${model}`);
+    console.log(`Using provider: ${this.openrouter ? "openrouter" : "openai"}, model: ${model}`);
 
     const payload: OpenAI.Chat.ChatCompletionCreateParams = {
       model: model,
