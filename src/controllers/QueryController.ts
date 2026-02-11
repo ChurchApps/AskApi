@@ -94,11 +94,7 @@ export class QueryController extends AskBaseController {
           result.additionalApiCalls = [];
         }
       } catch (parseError) {
-        return {
-          error: "Failed to parse OpenAI response",
-          rawResponse: openAiResponse,
-          parseError: parseError.message
-        };
+        return { error: "Failed to parse OpenAI response", rawResponse: openAiResponse, parseError: parseError.message };
       }
 
       // Initialize apiCallResults to ensure it's always present
@@ -264,12 +260,7 @@ export class QueryController extends AskBaseController {
           error = parseError.message;
         }
 
-        results.push({
-          query,
-          filters,
-          error,
-          rawResponse: openAiResponse
-        });
+        results.push({ query, filters, error, rawResponse: openAiResponse });
       }
 
       return { testResults: results };

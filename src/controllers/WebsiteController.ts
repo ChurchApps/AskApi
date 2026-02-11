@@ -43,9 +43,7 @@ export class WebsiteController extends AskBaseController {
       );
 
       // Return the structured response expected by B1Admin
-      return {
-        page: pageData
-      };
+      return { page: pageData };
     });
   }
 
@@ -74,9 +72,7 @@ export class WebsiteController extends AskBaseController {
         constraints
       );
 
-      return {
-        outline: outlineData
-      };
+      return { outline: outlineData };
     });
   }
 
@@ -109,9 +105,7 @@ export class WebsiteController extends AskBaseController {
         pageContext
       );
 
-      return {
-        section: sectionData
-      };
+      return { section: sectionData };
     });
   }
 }

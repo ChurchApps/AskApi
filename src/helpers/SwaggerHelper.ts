@@ -76,10 +76,7 @@ export class SwaggerHelper {
     try {
       const swaggerContent: SwaggerContent = JSON.parse(fs.readFileSync(swaggerPath, "utf-8"));
 
-      return {
-        availableEndpoints: Object.keys(swaggerContent.paths || {}),
-        swagger: swaggerContent
-      };
+      return { availableEndpoints: Object.keys(swaggerContent.paths || {}), swagger: swaggerContent };
     } catch (error) {
       console.error(`Could not read swagger file for ${apiName}:`, error);
       return null;
@@ -132,14 +129,7 @@ export class SwaggerHelper {
         Object.entries(pathObject).forEach(([method, methodObject]) => {
           if (typeof methodObject === "object" && methodObject !== null) {
             const methodData = methodObject as any; // Type assertion for swagger method object
-            const route: RouteInfo = {
-              apiName,
-              path: pathString,
-              method: method.toUpperCase(),
-              summary: methodData.summary,
-              description: methodData.description,
-              tags: methodData.tags
-            };
+            const route: RouteInfo = { apiName, path: pathString, method: method.toUpperCase(), summary: methodData.summary, description: methodData.description, tags: methodData.tags };
             routes.push(route);
           }
         });
@@ -232,10 +222,7 @@ export class SwaggerHelper {
           const routes = this.parseRoutesFromSwagger(apiName, swaggerResult.swagger);
           this.allRoutes.push(...routes);
 
-          this.apiCollections.push({
-            apiName,
-            routes
-          });
+          this.apiCollections.push({ apiName, routes });
         }
       }
 

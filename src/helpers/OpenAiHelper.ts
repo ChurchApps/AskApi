@@ -107,13 +107,7 @@ export class OpenAiHelper {
       console.log("Website Generation Response:", response.choices[0]?.message?.content);
       return response.choices[0]?.message?.content || "";
     } catch (error: any) {
-      console.error("OpenRouter/OpenAI Error Details:", {
-        message: error.message,
-        status: error.status,
-        code: error.code,
-        type: error.type,
-        error: error.error
-      });
+      console.error("OpenRouter/OpenAI Error Details:", { message: error.message, status: error.status, code: error.code, type: error.type, error: error.error });
       throw error;
     }
   }

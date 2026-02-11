@@ -19,12 +19,7 @@ export class WebsiteHelper {
         console.log(`Attempt ${attempt} - AI Response (first 200 chars):`, response.substring(0, 200));
 
         const pageJson = this.extractAndParseJson(response);
-        console.log("Parsed JSON structure:", {
-          hasId: !!pageJson.id,
-          hasSections: !!pageJson.sections,
-          sectionsLength: pageJson.sections?.length || 0,
-          firstSectionElementsLength: pageJson.sections?.[0]?.elements?.length || 0
-        });
+        console.log("Parsed JSON structure:", { hasId: !!pageJson.id, hasSections: !!pageJson.sections, sectionsLength: pageJson.sections?.length || 0, firstSectionElementsLength: pageJson.sections?.[0]?.elements?.length || 0 });
 
         // Replace all IDs with unique generated ones
         this.replaceIdsWithUniqueOnes(pageJson);
@@ -81,12 +76,7 @@ export class WebsiteHelper {
         console.log(`Attempt ${attempt} - AI Response (first 200 chars):`, response.substring(0, 200));
 
         const pageJson = this.extractAndParseJson(response);
-        console.log("Parsed JSON structure:", {
-          hasTitle: !!pageJson.title,
-          hasLayout: !!pageJson.layout,
-          hasSections: !!pageJson.sections,
-          sectionsCount: pageJson.sections?.length || 0
-        });
+        console.log("Parsed JSON structure:", { hasTitle: !!pageJson.title, hasLayout: !!pageJson.layout, hasSections: !!pageJson.sections, sectionsCount: pageJson.sections?.length || 0 });
 
         // Validate structure
         this.validateGeneratedPageStructure(pageJson, availableElementTypes);
@@ -524,11 +514,7 @@ export class WebsiteHelper {
 
     console.log("Final counts - sections:", sections.length, "elements:", elements.length);
 
-    return {
-      page,
-      sections,
-      elements
-    };
+    return { page, sections, elements };
   }
 
   private static extractAndParseJson(response: string): any {

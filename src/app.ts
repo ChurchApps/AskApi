@@ -62,9 +62,8 @@ export const init = async () => {
           // Failed to parse Buffer body - set empty object
           req.body = {};
         }
-      }
-      // Handle Buffer-like objects
-      else if (req.body && req.body.type === "Buffer" && Array.isArray(req.body.data)) {
+      } else if (req.body && req.body.type === "Buffer" && Array.isArray(req.body.data)) {
+        // Handle Buffer-like objects
         try {
           const bodyString = Buffer.from(req.body.data).toString("utf8");
           if (contentType.includes("application/json")) {
@@ -76,9 +75,8 @@ export const init = async () => {
           // Failed to parse Buffer-like body - set empty object
           req.body = {};
         }
-      }
-      // Handle string JSON bodies
-      else if (typeof req.body === "string" && req.body.length > 0) {
+      } else if (typeof req.body === "string" && req.body.length > 0) {
+        // Handle string JSON bodies
         try {
           if (contentType.includes("application/json")) {
             req.body = JSON.parse(req.body);

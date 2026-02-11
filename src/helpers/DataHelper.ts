@@ -130,21 +130,13 @@ export class DataHelper {
 
     if (!baseUrl) {
       console.error(`Unknown API: ${apiCall.apiName}`);
-      return {
-        success: false,
-        error: `Unknown API: ${apiCall.apiName}`,
-        apiCall: apiCall
-      };
+      return { success: false, error: `Unknown API: ${apiCall.apiName}`, apiCall: apiCall };
     }
 
     const token = this.getApiToken(apiName, jwts);
     if (!token) {
       console.error(`No token found for ${apiCall.apiName}`);
-      return {
-        success: false,
-        error: `No token provided for ${apiCall.apiName}`,
-        apiCall: apiCall
-      };
+      return { success: false, error: `No token provided for ${apiCall.apiName}`, apiCall: apiCall };
     }
 
     try {
@@ -170,12 +162,7 @@ export class DataHelper {
         error.response?.status || "Failed",
         error.message
       );
-      return {
-        success: false,
-        error: error.response?.data?.message || error.message || "API call failed",
-        apiCall: apiCall,
-        status: error.response?.status
-      };
+      return { success: false, error: error.response?.data?.message || error.message || "API call failed", apiCall: apiCall, status: error.response?.status };
     }
   }
 
