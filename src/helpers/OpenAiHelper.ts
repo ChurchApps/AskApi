@@ -109,6 +109,28 @@ export class OpenAiHelper {
     return response.choices[0]?.message?.content || "";
   }
 
+  public static async classifyTopics(indexPrompt: string, question: string): Promise<string[]> {
+    const payload: OpenAI.Chat.ChatCompletionCreateParams = {
+      model: "gpt-4o-mini",
+      messages: [
+        { role: "system", content: indexPrompt },
+        { role: "user", content: question }
+      ],
+      temperature: 0,
+      max_tokens: 100
+    };
+
+    const response = await this.openai.chat.completions.create(payload);
+    const content = response.choices[0]?.message?.content || "[]";
+    try {
+      const jsonStart = content.indexOf("[");
+      const jsonEnd = content.lastIndexOf("]") + 1;
+      return JSON.parse(content.slice(jsonStart, jsonEnd));
+    } catch {
+      return ["index", "introduction"];
+    }
+  }
+
   public static async executeWebsiteGeneration(systemRole: string, prompt: string, modelOverride?: string) {
     // Website generation uses OpenRouter with Claude models
     const client = this.openrouter || this.openai;

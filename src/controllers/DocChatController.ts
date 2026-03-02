@@ -21,4 +21,5 @@ export class DocChatController extends AskBaseController {
       return { answer };
     });
   }
+
 }
