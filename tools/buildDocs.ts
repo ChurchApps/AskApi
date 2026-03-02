@@ -35,17 +35,26 @@ function collectFiles(dir: string): string[] {
   return results;
 }
 
-const files = collectFiles(DOCS_SOURCE);
-let output = "";
-for (const file of files.sort()) {
-  const rel = path.relative(DOCS_SOURCE, file).replace(/\\/g, "/");
-  let content = fs.readFileSync(file, "utf8");
-  content = stripFrontMatter(content);
-  content = stripHtmlTags(content);
-  output += `\n## ${rel}\n\n${content.trim()}\n\n---\n`;
-}
+if (!fs.existsSync(DOCS_SOURCE)) {
+  if (fs.existsSync(DOCS_OUTPUT)) {
+    console.log("Docs source not found; using previously generated file.");
+  } else {
+    console.error(`ERROR: Docs source not found at ${DOCS_SOURCE} and no pre-built file exists at ${DOCS_OUTPUT}`);
+    process.exit(1);
+  }
+} else {
+  const files = collectFiles(DOCS_SOURCE);
+  let output = "";
+  for (const file of files.sort()) {
+    const rel = path.relative(DOCS_SOURCE, file).replace(/\\/g, "/");
+    let content = fs.readFileSync(file, "utf8");
+    content = stripFrontMatter(content);
+    content = stripHtmlTags(content);
+    output += `\n## ${rel}\n\n${content.trim()}\n\n---\n`;
+  }
 
-const outputDir = path.dirname(DOCS_OUTPUT);
-if (!fs.existsSync(outputDir)) fs.mkdirSync(outputDir, { recursive: true });
-fs.writeFileSync(DOCS_OUTPUT, output.trim(), "utf8");
-console.log(`Built docs: ${files.length} files -> ${DOCS_OUTPUT}`);
+  const outputDir = path.dirname(DOCS_OUTPUT);
+  if (!fs.existsSync(outputDir)) fs.mkdirSync(outputDir, { recursive: true });
+  fs.writeFileSync(DOCS_OUTPUT, output.trim(), "utf8");
+  console.log(`Built docs: ${files.length} files -> ${DOCS_OUTPUT}`);
+}
