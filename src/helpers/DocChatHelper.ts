@@ -16,9 +16,10 @@ export class DocChatHelper {
     return this.docsContent;
   }
 
-  static async answerQuestion(question: string, conversationHistory: ChatMessage[]): Promise<string> {
+  static async answerQuestion(question: string, conversationHistory: ChatMessage[], mode: string = "standard"): Promise<string> {
     const docs = this.getDocsContent();
-    let systemPrompt = InstructionsHelper.readFile("/config/instructions/docChat.md");
+    const promptFile = mode === "bez" ? "/config/instructions/bezChat.md" : "/config/instructions/docChat.md";
+    let systemPrompt = InstructionsHelper.readFile(promptFile);
     systemPrompt = systemPrompt.replace("{docs}", docs);
     return OpenAiHelper.executeDocChat(systemPrompt, question, conversationHistory);
   }
