@@ -5,3 +5,4 @@ export { TypedDB } from "./TypedDB.js";
 export { OpenAiHelper } from "./OpenAiHelper.js";
 export { InstructionsHelper } from "./InstructionsHelper.js";
 export { WebsiteHelper } from "./WebsiteHelper.js";
+export { DocChatHelper } from "./DocChatHelper.js";

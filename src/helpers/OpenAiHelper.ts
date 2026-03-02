@@ -82,6 +82,33 @@ export class OpenAiHelper {
     return response.choices[0]?.message?.content || "";
   }
 
+  public static async executeDocChat(
+    systemRole: string,
+    userQuestion: string,
+    conversationHistory: Array<{ role: "user" | "assistant"; content: string }>
+  ): Promise<string> {
+    const messages: OpenAI.Chat.ChatCompletionMessageParam[] = [
+      { role: "system", content: systemRole }
+    ];
+
+    const recentHistory = conversationHistory.slice(-20);
+    for (const msg of recentHistory) {
+      messages.push({ role: msg.role, content: msg.content });
+    }
+
+    messages.push({ role: "user", content: userQuestion });
+
+    const payload: OpenAI.Chat.ChatCompletionCreateParams = {
+      model: "gpt-4o-mini",
+      messages,
+      temperature: 0.2,
+      max_tokens: 1000
+    };
+
+    const response = await this.openai.chat.completions.create(payload);
+    return response.choices[0]?.message?.content || "";
+  }
+
   public static async executeWebsiteGeneration(systemRole: string, prompt: string, modelOverride?: string) {
     // Website generation uses OpenRouter with Claude models
     const client = this.openrouter || this.openai;
