@@ -32,7 +32,7 @@ export const init = async () => {
     );
 
     // Handle preflight requests early
-    expApp.options("*", (req, res) => {
+    expApp.options("*", (_req, res) => {
       res.header("Access-Control-Allow-Origin", "*");
       res.header("Access-Control-Allow-Methods", "GET, POST, PUT, DELETE, PATCH, OPTIONS");
       res.header("Access-Control-Allow-Headers", "Content-Type, Authorization, X-Requested-With, Accept, Origin");
@@ -46,7 +46,7 @@ export const init = async () => {
     }
 
     // Handle body parsing from @codegenie/serverless-express (for Lambda)
-    expApp.use((req, res, next) => {
+    expApp.use((req, _res, next) => {
       const contentType = req.headers["content-type"] || "";
 
       // Handle Buffer instances (most common case with serverless-express in Lambda)

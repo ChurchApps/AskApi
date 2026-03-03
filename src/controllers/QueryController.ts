@@ -45,7 +45,7 @@ export class QueryController extends AskBaseController {
 
   @httpPost("/peopleOld")
   public async queryPeopleOld(req: express.Request<{}, {}, any>, res: express.Response): Promise<any> {
-    return this.actionWrapper(req, res, async (au) => {
+    return this.actionWrapper(req, res, async (_au) => {
       const { question, jwts } = req.body;
       await OpenAiHelper.initialize();
 
@@ -221,7 +221,7 @@ export class QueryController extends AskBaseController {
 
   @httpPost("/people-test")
   public async peopleSearchTest(req: express.Request<{}, {}, any>, res: express.Response): Promise<any> {
-    return this.actionWrapper(req, res, async (au) => {
+    return this.actionWrapper(req, res, async (_au) => {
       // Test multiple queries
       const testQueries = [
         "Find all men",

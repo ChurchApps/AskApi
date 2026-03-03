@@ -54,7 +54,7 @@ export class WebsiteController extends AskBaseController {
    */
   @httpPost("/generatePageOutline")
   public async generatePageOutline(req: express.Request<{}, {}, any>, res: express.Response): Promise<any> {
-    return this.actionWrapper(req, res, async (au) => {
+    return this.actionWrapper(req, res, async (_au) => {
       const { prompt, churchContext, availableElementTypes, constraints } = req.body;
 
       // Validation
@@ -83,7 +83,7 @@ export class WebsiteController extends AskBaseController {
    */
   @httpPost("/generateSection")
   public async generateSection(req: express.Request<{}, {}, any>, res: express.Response): Promise<any> {
-    return this.actionWrapper(req, res, async (au) => {
+    return this.actionWrapper(req, res, async (_au) => {
       const { sectionOutline, churchContext, availableElementTypes, pageContext } = req.body;
 
       // Validation

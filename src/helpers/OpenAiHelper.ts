@@ -87,9 +87,7 @@ export class OpenAiHelper {
     userQuestion: string,
     conversationHistory: Array<{ role: "user" | "assistant"; content: string }>
   ): Promise<string> {
-    const messages: OpenAI.Chat.ChatCompletionMessageParam[] = [
-      { role: "system", content: systemRole }
-    ];
+    const messages: OpenAI.Chat.ChatCompletionMessageParam[] = [{ role: "system", content: systemRole }];
 
     const recentHistory = conversationHistory.slice(-20);
     for (const msg of recentHistory) {

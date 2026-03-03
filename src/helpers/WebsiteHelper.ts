@@ -50,7 +50,7 @@ export class WebsiteHelper {
 
   public static async generatePageFromPromptWithContext(
     prompt: string,
-    churchId: string,
+    _churchId: string,
     churchContext?: any,
     availableBlocks?: any[],
     availableElementTypes?: string[],
@@ -422,7 +422,7 @@ export class WebsiteHelper {
       try {
         pageData = JSON.parse(pageData);
         console.log("Parsed string to object");
-      } catch (e) {
+      } catch (_e) {
         throw new Error("Page data is a string but not valid JSON");
       }
     }

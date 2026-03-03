@@ -8,7 +8,7 @@ import { WorkflowHelper } from "../helpers/WorkflowHelper.js";
 export class QueryV2Controller extends AskBaseController {
   @httpPost("/getRoutes")
   public async getRoutes(req: express.Request<{}, {}, any>, res: express.Response): Promise<any> {
-    return this.actionWrapper(req, res, async (au) => {
+    return this.actionWrapper(req, res, async (_au) => {
       const { question } = req.body;
       await OpenAiHelper.initialize();
       return WorkflowHelper.determineRoutes(question);
@@ -17,7 +17,7 @@ export class QueryV2Controller extends AskBaseController {
 
   @httpPost("/formApiCalls")
   public async formApiCalls(req: express.Request<{}, {}, any>, res: express.Response): Promise<any> {
-    return this.actionWrapper(req, res, async (au) => {
+    return this.actionWrapper(req, res, async (_au) => {
       const { question } = req.body;
       await OpenAiHelper.initialize();
       return WorkflowHelper.formApiCalls(question);
@@ -26,7 +26,7 @@ export class QueryV2Controller extends AskBaseController {
 
   @httpPost("/executeApiCalls")
   public async executeApiCalls(req: express.Request<{}, {}, any>, res: express.Response): Promise<any> {
-    return this.actionWrapper(req, res, async (au) => {
+    return this.actionWrapper(req, res, async (_au) => {
       const { question, jwts } = req.body;
       await OpenAiHelper.initialize();
       return WorkflowHelper.executeApiCalls(question, jwts);
@@ -35,7 +35,7 @@ export class QueryV2Controller extends AskBaseController {
 
   @httpPost("/answerQuestion")
   public async answerQuestion(req: express.Request<{}, {}, any>, res: express.Response): Promise<any> {
-    return this.actionWrapper(req, res, async (au) => {
+    return this.actionWrapper(req, res, async (_au) => {
       const { question, jwts } = req.body;
       await OpenAiHelper.initialize();
       return WorkflowHelper.answerQuestion(question, jwts);
