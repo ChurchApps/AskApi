@@ -63,6 +63,41 @@ Only Brother label printers are compatible with the B1 Checkin app. Other printe
 Follow your printer's setup instructions to connect it to the same WiFi network as your tablet. You can find Brother printer drivers and setup guides on the [Brother support site](https://support.brother.com).
 :::
 
+## Customizing the Kiosk Appearance
+
+You can customize the look and feel of the B1 Checkin app to match your church's branding. In B1 Admin, go to **Attendance > Kiosk Theme** to configure:
+
+### Colors
+
+Customize eight color settings to match your church branding:
+
+- **Primary** and **Primary Contrast** -- Main brand color and its text color.
+- **Secondary** and **Secondary Contrast** -- Accent color and its text color.
+- **Header Background** and **Subheader Background** -- Colors for the kiosk header areas.
+- **Button Background** and **Button Text** -- Colors for interactive buttons.
+
+### Background Image
+
+Upload an optional background image for the kiosk welcome and lookup screens. Recommended size is 1920x1080 pixels.
+
+### Idle Screen / Screensaver
+
+Configure a screensaver that activates after a period of inactivity:
+
+1. Toggle the idle screen **on** or **off**.
+2. Set the **timeout** (how many seconds of inactivity before the screensaver starts, minimum 10 seconds).
+3. Add one or more **slides** -- each slide has an image and a display duration (minimum 3 seconds).
+
+:::tip
+Use the idle screen to display announcements, upcoming events, or welcome messages when the kiosk is not actively being used.
+:::
+
+## Guest Registration via QR Code
+
+The check-in kiosk can display a QR code that visitors scan to register themselves and their family on their own phone. This speeds up the check-in process for first-time guests.
+
+When a guest scans the QR code, they are taken to a [guest registration page](../../b1-church/checkin/guest-registration) where they enter their name, email, and family members. A volunteer can then look them up on the kiosk and check them in.
+
 ## What Gets Recorded
 
 Every check-in creates an attendance record in B1 Admin. You can view these records on the [Attendance](tracking-attendance.md) and [Groups](../groups/group-members.md) tabs just like manually entered attendance. There is no difference in how the data appears — both methods feed into the same reports.
@@ -283,9 +318,41 @@ Connecting groups to your calendar is a powerful way to automatically aggregate 
 If you want to create a single calendar that pulls events from many groups across your church, see [Curated Calendar](curated-calendar) for a streamlined approach.
 :::
 
+## Enabling Event Registration
+
+You can enable registration for any calendar event so members can sign up through the B1 website or mobile app.
+
+1. Click on an existing event or create a new one.
+2. In the event editor, toggle **Registration** to enable it.
+3. Configure the registration settings:
+   - **Capacity** (optional) -- Set a maximum number of registrations. Leave blank for unlimited.
+   - **Registration Opens** -- The date and time when registration becomes available.
+   - **Registration Closes** -- The date and time when registration closes.
+   - **Tags** -- Comma-separated labels (e.g., "youth, retreat, vbs") to help categorize registerable events.
+4. Save the event.
+
+Once registration is enabled, members will see a **Register for this Event** button when they view the event on the [B1 website](../../b1-church/events/registering) or [B1 Mobile app](../../b1-mobile/events/registering).
+
+### Managing Registrations
+
+To view and manage registrations for your events:
+
+1. Navigate to the **Registrations** page in B1 Admin.
+2. You will see a table of all events with registration enabled, showing the event title, date, current registration count vs. capacity, and tags.
+3. Click on an event to see the full list of registrations, including names, member count, status, and registration date.
+4. From the detail page, you can:
+   - **Cancel** individual registrations
+   - **Delete** registrations permanently
+   - **Export** all registrations to CSV
+
+:::tip
+Use the capacity progress bar to monitor how quickly events are filling up. The bar turns red when an event is at or over capacity.
+:::
+
 ## Next Steps
 
 - [Curated Calendar](curated-calendar) -- Create a calendar that pulls from multiple groups
+- [Event Registration Guide](../guides/event-registration) -- Step-by-step guide for setting up event registration
 - [Calendars Overview](./) -- Return to the calendars overview
 
 ---
@@ -456,9 +523,23 @@ B1 Admin gives you several ways to view and analyze your church's giving data. T
 
 
 
+## Giving Dashboard
+
+The **Giving Dashboard** is the first thing you see when you click **Donations** in the sidebar. It provides a high-level view of your giving activity with key performance indicators.
+
+1. Navigate to **Donations** in the sidebar to open the dashboard.
+2. At the top, four **KPI cards** display your giving metrics at a glance:
+   - **Total Giving** -- The total amount donated in the selected period.
+   - **Average Gift** -- The average donation amount.
+   - **Unique Donors** -- The number of distinct people who gave.
+   - **Total Donations** -- The total number of individual donations.
+3. Use the **period toggle** to switch between **Weekly**, **Monthly**, and **Quarterly** views.
+4. Below the KPIs, a chart displays giving trends for the selected period.
+5. Click **Download** to export a CSV file with giving totals.
+
 ## Donations Summary Page
 
-The **Summary** page is the first thing you see when you click **Donations** in the sidebar. It provides a high-level view of your giving activity.
+The **Summary** page provides more detailed aggregate giving data.
 
 1. Navigate to **Donations** in the sidebar to open the Summary page.
 2. Use the **date range filter** to select the time period you want to review. Set the earlier date on top and the more recent date on the bottom.
@@ -1277,6 +1358,22 @@ You can communicate with all members of a group directly from B1 Admin:
 
 Your message will be delivered to all members of the group.
 
+## Emailing Group Members
+
+You can send formatted emails to all members of a group:
+
+1. From the group detail page, click the **email icon**.
+2. The Send Email dialog opens, showing how many members will receive the email and how many have no email address on file.
+3. Optionally select an **email template** from the dropdown, or compose a message from scratch. Click **Manage Templates** to create or edit templates.
+4. Enter a **subject line**. You can insert merge fields by clicking the field chips: `{{firstName}}`, `{{lastName}}`, `{{displayName}}`, `{{email}}`, `{{churchName}}`.
+5. Compose the **email body** using the HTML editor. The same merge fields are available here.
+6. Click **Send**.
+7. A summary shows how many emails were sent successfully and how many members were skipped (no email on file).
+
+:::tip
+Create reusable email templates for recurring communications like weekly updates, event announcements, or prayer requests. Templates save time and ensure consistent messaging.
+:::
+
 ## Exporting Group Data
 
 To download the group member list as a file:
@@ -1461,6 +1558,10 @@ Your children's ministry check-in is ready. Parents can search for their family,
 Create an event registration form, collect attendee information and optional payments, embed it on your church website, and manage submissions as they come in. By the end, you'll have a shareable registration page for any church event.
 
 
+
+:::info
+**Two ways to handle event registration:** This guide covers **forms-based registration**, which gives you full control over custom fields and payment collection. For simpler events where you just need to track who is coming, use **native event registration** built into the calendar -- see [Creating Calendars](../calendars/creating-calendars.md#enabling-event-registration) for setup instructions. Native registration lets members sign up directly from the [B1 website](../../b1-church/events/registering) and [mobile app](../../b1-mobile/events/registering) with capacity tracking, date windows, and email confirmations.
+:::
 
 
 #### Before You Begin
@@ -2131,7 +2232,22 @@ Follow the [Tasks](../serving/tasks.md) and [Automations](../serving/automations
 Set automations to Inactive during holiday breaks or special seasons, then reactivate when you're ready. No need to delete and recreate.
 :::
 
-## Step 6: Let Volunteers Know
+## Step 6: Enable Self-Service Signup (Optional)
+
+Let volunteers sign up for positions themselves instead of waiting for admin assignments.
+
+1. When editing a plan, set a **Signup Deadline** (hours before service) to control when self-signup closes. Leave blank for no deadline.
+2. Optionally toggle **Show volunteer names on signup page** to let volunteers see who else is signed up.
+3. For each position, check the **Allow Self-Signup** checkbox to make it available for self-service.
+4. Add a **Description** to each position so volunteers know what the role involves.
+
+Once self-signup positions are created, they automatically appear on the volunteer signup pages on [B1.church](../../b1-church/serving/volunteer-signup) and the [B1 Mobile app](../../b1-mobile/serving/volunteer-signup). Members can browse open positions, see how many spots remain, and sign up with one click.
+
+:::tip
+Mix admin-assigned and self-signup positions in the same plan. For example, assign your worship leader directly but let greeters and coffee servers self-select.
+:::
+
+## Step 7: Let Volunteers Know
 
 Assigned volunteers automatically see their plans and can respond.
 
@@ -2139,6 +2255,7 @@ Assigned volunteers automatically see their plans and can respond.
 2. They can accept or decline assignments directly from either platform
 3. They can set blockout dates for weeks they're unavailable
 4. Plans can be printed for rehearsals or posted backstage
+5. Volunteers can browse and sign up for open positions via the [volunteer signup page](../../b1-church/serving/volunteer-signup)
 
 :::tip
 Push notifications on the mobile app alert volunteers when they receive new assignments or when plans change.
@@ -2159,6 +2276,8 @@ Your volunteer management system is set up. Each week, create a new plan, assign
 - [Automations](../serving/automations.md) — automate recurring tasks
 - [Viewing Plans (Web)](../../b1-church/plans/viewing-plans.md) — how volunteers see plans online
 - [Viewing Plans (Mobile)](../../b1-mobile/serving/viewing-plans.md) — how volunteers see plans on mobile
+- [Volunteer Signup (Web)](../../b1-church/serving/volunteer-signup) — how members self-select volunteer positions
+- [Volunteer Signup (Mobile)](../../b1-mobile/serving/volunteer-signup) — volunteer self-signup on mobile
 
 ---
 
@@ -2368,7 +2487,7 @@ B1 Admin is your church management dashboard. It provides tools to manage every 
 
 1. Open your browser and go to [admin.b1.church](https://admin.b1.church)
 2. Sign in with your username and password
-3. You'll land on the **Dashboard**, which gives you quick access to all major features
+3. You'll land on the **Dashboard**, which provides an overview of your church data along with **Quick Actions** for common tasks like adding people, creating groups, recording donations, and more
 
 :::tip
 New to B1 Admin? Start with the [Introduction](./introduction) for a video walkthrough, then visit [Settings](./settings/) to configure your church information and invite your team.
@@ -3128,6 +3247,90 @@ Attendance data is recorded through your group and service check-in processes. I
 
 ---
 
+## reports/audit-log.md
+
+# Audit Log
+
+
+
+The audit log tracks all significant actions and changes across your church management system. Use it to review login activity, track who made changes to people records, monitor permission updates, and maintain accountability across your team.
+
+
+
+
+#### Before You Begin
+
+- B1 Admin account with server admin access
+- Navigate to **Settings** to find the Audit Log
+
+
+
+## Viewing the Audit Log
+
+1. Go to **Settings** in B1 Admin.
+2. Select **Audit Log**.
+3. The log displays recent entries in a table with the following columns:
+   - **Date** -- When the action occurred.
+   - **Category** -- The type of action (color-coded for quick scanning).
+   - **Action** -- What was done (e.g., create, update, delete, login_success).
+   - **Entity** -- The type and ID of the record that was affected.
+   - **IP Address** -- The IP address of the user who performed the action.
+   - **Details** -- A summary of the specific changes made.
+
+## Filtering the Log
+
+Use the filters at the top of the page to narrow down the results:
+
+- **Category** -- Filter by action type:
+  - **All Categories** -- Show everything.
+  - **Login** -- Login successes and failures.
+  - **People** -- Creating, updating, or deleting person records.
+  - **Permissions** -- Permission grants and revocations.
+  - **Donations** -- Donation record changes.
+  - **Groups** -- Group management actions.
+  - **Forms** -- Form submission activity.
+  - **Settings** -- Configuration changes.
+- **Start Date** -- Show entries from this date forward.
+- **End Date** -- Show entries up to this date.
+
+Click **Search** after setting your filters to update the results.
+
+## Understanding Categories
+
+Each category is color-coded for quick identification:
+
+- **Login** -- Blue chip. Tracks successful and failed login attempts.
+- **People** -- Purple chip. Tracks person record creates, updates, and deletes.
+- **Permissions** -- Red chip. Tracks when access rights are granted or revoked.
+- **Donations** -- Green chip. Tracks donation record changes.
+- **Groups** -- Gray chip. Tracks group management operations.
+- **Forms** -- Orange chip. Tracks form submission activity.
+- **Settings** -- Yellow chip. Tracks configuration changes.
+
+## Exporting the Log
+
+When log entries are displayed, a **CSV download** button appears. Click it to export the current filtered results to a spreadsheet for offline review or record-keeping.
+
+## Pagination
+
+Use the pagination controls at the bottom of the table to navigate through results. You can display 25, 50, or 100 entries per page.
+
+:::info
+Audit log entries are automatically retained for one year. Entries older than 365 days are removed to keep the system performant.
+:::
+
+:::tip
+Review the audit log regularly, especially after onboarding new team members or making significant configuration changes. It helps identify unexpected activity early.
+:::
+
+## Related Articles
+
+- [Roles & Permissions](../settings/roles-permissions) -- Manage who has access to what
+- [Data Security](../settings/data-security) -- Understand how your data is protected
+- [Reports Overview](./index) -- See all available reports
+
+---
+
 ## reports/birthday-report.md
 
 # Birthday Report
@@ -3243,13 +3446,14 @@ The Reports page gives you quick access to pre-built reports that help you under
 
 ## Available Reports
 
-The Reports page displays five report cards. Click any card to open the report with its filters.
+The Reports page displays report cards for each available report. Click any card to open the report with its filters.
 
 - **[Birthday Report](./birthday-report)** -- View upcoming birthdays for your congregation members.
 - **[Attendance Trend](./attendance-reports)** -- See how attendance patterns change over time across your services.
 - **[Group Attendance](./attendance-reports)** -- View attendance totals by group for a selected date range.
 - **[Daily Group Attendance](./attendance-reports)** -- Get a day-by-day breakdown of group attendance data.
 - **[Donation Summary](./donation-summary)** -- Review giving totals and trends for financial planning.
+- **[Audit Log](./audit-log)** -- Track all changes and actions across your church management system (found under Settings > Audit Log).
 
 ## Using Reports
 
@@ -3271,6 +3475,7 @@ Report data depends on consistent data entry. Make sure your team is [tracking a
 - [Birthday Report](./birthday-report) -- Finding and using birthday data.
 - [Attendance Reports](./attendance-reports) -- Understanding the three attendance reports.
 - [Donation Summary](./donation-summary) -- Reviewing giving data and financial summaries.
+- [Audit Log](./audit-log) -- Tracking system activity and changes.
 
 ---
 
@@ -3902,6 +4107,10 @@ B1 Admin integrates directly with [Lessons.church](https://lessons.church) so yo
 - Have an active [Lessons.church](https://lessons.church) account — sign up there first if your church doesn't have one yet
 
 
+
+:::tip Follow a guided walkthrough
+Want to see the full setup from start to finish? Our **step-by-step guide** covers linking providers, scheduling a lesson, and connecting FreePlay to your classroom TV — with short videos and written steps you can check off as you go.
+:::
 
 ## Step 1 — Link Your Lessons.church Account
 
