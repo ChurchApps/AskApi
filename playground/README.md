@@ -100,8 +100,8 @@ The playground supports multiple environments using the shared `CommonEnvironmen
 The playground automatically configures API URLs based on the environment:
 
 - **Development**: Uses staging URLs by default, with optional localhost overrides
-- **Staging**: Uses `https://membershipapi.staging.churchapps.org` for MembershipApi and `https://askapi.staging.churchapps.org` for AskApi
-- **Production**: Uses `https://membershipapi.churchapps.org` for MembershipApi and `https://askapi.churchapps.org` for AskApi
+- **Staging**: Uses `https://api.staging.churchapps.org` (with `/membership`, `/content`, etc. appended) and `https://askapi.staging.churchapps.org` for AskApi
+- **Production**: Uses `https://api.churchapps.org` and `https://askapi.churchapps.org` for AskApi
 
 ### CommonEnvironmentHelper Integration
 
@@ -115,8 +115,8 @@ Create a `.env` file in the playground directory to customize:
 # Set the stage
 REACT_APP_STAGE=staging
 
-# Override specific APIs (optional)
-REACT_APP_MEMBERSHIP_API=https://membershipapi.staging.churchapps.org
+# Override APIs (optional)
+REACT_APP_API_BASE=https://api.staging.churchapps.org
 REACT_APP_ASK_API=http://localhost:8097
 ```
 
