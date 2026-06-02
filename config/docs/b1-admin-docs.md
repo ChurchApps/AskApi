@@ -98,6 +98,18 @@ The check-in kiosk can display a QR code that visitors scan to register themselv
 
 When a guest scans the QR code, they are taken to a [guest registration page](../../b1-church/checkin/guest-registration) where they enter their name, email, and family members. A volunteer can then look them up on the kiosk and check them in.
 
+### Enabling QR Guest Registration
+
+To turn on the QR code display:
+
+1. In B1 Admin, go to **Mobile** in the left sidebar (phone icon).
+2. Select the **Check-In** tab.
+3. Toggle **QR Guest Registration** on.
+
+:::note
+This setting is under **Mobile**, not under Attendance > Kiosk Theme.
+:::
+
 ## What Gets Recorded
 
 Every check-in creates an attendance record in B1 Admin. You can view these records on the [Attendance](tracking-attendance.md) and [Groups](../groups/group-members.md) tabs just like manually entered attendance. There is no difference in how the data appears — both methods feed into the same reports.
@@ -142,11 +154,78 @@ The **Groups** tab breaks attendance down by individual group. This is helpful w
 ## Next Steps
 
 - [Attendance Setup](setup.md) -- configure campuses, service times, and groups
+- [Recording Attendance](recording-attendance.md) -- manually enter attendance for a group session
 - [Tracking Attendance](tracking-attendance.md) -- view trends and filter reports
 - [Check-In](check-in.md) -- set up self check-in for services
 
 :::tip
-If you are setting up attendance for the first time, start with the [Attendance Setup](setup.md) guide to define your campuses and service times. Once that is in place, you can begin tracking and reviewing attendance data right away.
+If you are setting up attendance for the first time, start with the [Attendance Setup](setup.md) guide to define your campuses and service times. Once that is in place, you can begin [recording attendance](recording-attendance.md) manually or set up [self check-in](check-in.md).
+:::
+
+---
+
+## attendance/recording-attendance.md
+
+# Recording Attendance
+
+
+
+Once your campuses, service times, and groups are set up, you can manually record attendance after each gathering. B1 Admin organizes attendance around **sessions** -- one session per group per meeting date. You create the session, mark who showed up, and the data feeds directly into your attendance reports.
+
+
+
+
+#### Before You Begin
+
+- Your campuses, service times, and groups must be configured. See [Attendance Setup](setup.md) if you haven't done this yet.
+- The groups you want to track must have **Track Attendance** enabled. See [Attendance Setup](setup.md) for details.
+
+
+
+## Creating a Session
+
+A session represents one occurrence of a group meeting -- for example, your K--3rd grade class on a specific Sunday.
+
+1. Open **B1 Admin** and click **Groups** in the sidebar.
+2. Select the group you want to record attendance for.
+3. Click the **Sessions** tab.
+4. Click **New** to create a new session.
+5. If the group is assigned to a service time, choose the **Service Time**. If it is an unscheduled group, this field will not appear.
+6. Select the **Session Date** -- this can be today, a past date, or a future date.
+7. Click **Save**.
+
+:::tip
+You can create sessions for past dates to catch up on attendance you haven't recorded yet, or create them in advance so they are ready when your group meets.
+:::
+
+## Marking Attendance
+
+After saving the session, the group's members appear on the right side of the page.
+
+1. Check the box next to each person who attended.
+2. Changes are saved automatically -- there is no additional Save button for attendance marks.
+
+:::info
+Only current group members appear in the session list. If someone attended but is not yet in the group, [add them to the group](../groups/group-members.md) first, then record their attendance.
+:::
+
+## Exporting Attendance to a Spreadsheet
+
+You can download a record of the session as a CSV file to use in Excel, Numbers, or Google Sheets.
+
+1. Open the session you want to export.
+2. Click the **Download CSV** button.
+3. Open the downloaded file in your spreadsheet application.
+
+## Viewing Recorded Attendance
+
+After recording sessions, the data appears in your attendance reports.
+
+- **Attendance tab** -- shows church-wide trends over time. See [Tracking Attendance](tracking-attendance.md).
+- **Groups tab** -- shows attendance broken down by individual group.
+
+:::tip
+If a session you just created does not appear in reports right away, make sure the session date falls within the date range selected in the report filters.
 :::
 
 ---
@@ -185,6 +264,19 @@ Before you can track attendance, you need to tell B1 Admin about your church's p
 5. Repeat for each service time at that campus.
 6. To assign a group to a service time, select the service time and click **Add Group**. Choose the group from the list and click **Save**.
 
+### Enabling Track Attendance on a Group
+
+Before a group can have attendance recorded, Track Attendance must be turned on for that group.
+
+1. Click **Groups** in the sidebar and select the group.
+2. Click the **Edit** pencil icon.
+3. Set **Track Attendance** to **Yes**.
+4. Click **Save**.
+
+:::tip
+If you assigned the group to a service time in the previous step, also use the **Add Service Time** option on the group's edit screen to link it to the correct service. This ensures sessions are connected to the right campus and time.
+:::
+
 :::tip
 If a group meets outside of a regular service -- like a midweek small group that tracks its own attendance -- you can leave it as an unscheduled group. It will still appear on the Groups tab for attendance reporting.
 :::
@@ -199,7 +291,7 @@ Removing a service time does not delete past attendance records. Your historical
 
 ## What's Next
 
-Once your campuses, service times, and groups are in place, you are ready to start [tracking attendance](tracking-attendance.md) or set up [self check-in](check-in.md) for your services.
+Once your campuses, service times, and groups are in place, you are ready to start [recording attendance](recording-attendance.md) manually or set up [self check-in](check-in.md) for your services.
 
 ---
 
@@ -217,7 +309,7 @@ Once your campuses, service times, and groups are configured, B1 Admin makes it 
 #### Before You Begin
 
 - Your attendance structure must be set up with at least one campus and service time. See [Attendance Setup](setup.md) if you haven't done this yet.
-- Attendance data needs to be recorded before reports will show results. Data can come from manual entry or [self check-in](check-in.md).
+- Attendance data needs to be recorded before reports will show results. Data can come from [manual entry](recording-attendance.md) or [self check-in](check-in.md).
 
 
 
@@ -260,6 +352,11 @@ Group attendance is especially valuable for [small group](../groups/creating-gro
 - Use group-level reports to follow up with [groups](../groups/group-members.md) that show declining attendance.
 - Combine attendance insights with the [AI Search](../people/ai-search.md) tool to find people who haven't attended recently.
 
+## Related Pages
+
+- [Recording Attendance](recording-attendance.md) -- manually enter attendance for a group session
+- [Check-In](check-in.md) -- set up self check-in so attendance is recorded automatically
+
 ---
 
 ## calendars/creating-calendars.md
@@ -268,7 +365,7 @@ Group attendance is especially valuable for [small group](../groups/creating-gro
 
 
 
-Creating a calendar in B1 Admin gives you a central place to manage events for a ministry, department, or your entire church. Each calendar can pull in events from one or more groups, making it easy to keep everything organized.
+Creating a calendar in B1 Admin lets you build a curated view of events by connecting one or more groups. Events are managed by group leaders within their groups, and your calendar displays those events in one place. Even a domain admin cannot add or edit events directly in the calendar section unless they are a leader of the group the events belong to.
 
 
 
@@ -282,7 +379,7 @@ Creating a calendar in B1 Admin gives you a central place to manage events for a
 
 ## Creating a New Calendar
 
-1. Navigate to the **Calendars** section in B1 Admin.
+1. In the B1 Admin, navigate to **Website**, then to the **Calendars** section.
 2. Click **Add Calendar**.
 3. Enter a **name** for your calendar (for example, "Youth Ministry Events" or "Main Church Calendar").
 4. Add an optional **description** to help your team understand what this calendar is for.
@@ -292,14 +389,8 @@ Creating a calendar in B1 Admin gives you a central place to manage events for a
 
 After creating a calendar, click on it to open the detail page. This page has two main areas:
 
-- **Left column** -- The calendar and events editor. Here you can view, add, and manage events on your calendar.
-- **Right column** -- The associated groups list. This shows which groups have events included in this calendar.
-
-## Adding Events
-
-1. On the calendar detail page, use the calendar editor on the left to add new events.
-2. Set the event name, date, time, and any other details.
-3. Events you add will appear on the calendar and can be published to your website.
+- **Left column** -- A view of the calendar showing events pulled in from connected groups.
+- **Right column** -- The associated groups list. This is where you manage which groups are included in this calendar.
 
 ## Connecting Groups
 
@@ -422,20 +513,20 @@ When group leaders add new events to their [groups](../groups/creating-groups.md
 
 
 
-The Calendars section in B1 Admin lets you create and manage event calendars for your church. You can set up calendars for different ministries, aggregate events from multiple groups, and publish calendars on your B1.church website for your congregation to see.
+The Calendars section in B1 Admin lets you create curated calendars for your church by pulling together events from your groups. Group leaders manage their own group's events, and as an admin you can build calendars that display those events on your B1.church website for your congregation to see.
 
 
 
 ## Viewing Your Calendars
 
-1. In the B1 Admin, navigate to the **Calendars** section.
+1. In the B1 Admin, navigate to **Website**, then to the **Calendars** section.
 2. The Calendars page lists all your calendars with their name and status.
 3. Each calendar also shows the groups associated with it.
 
 ## What You Can Do
 
 - **Add a new calendar** -- Click the add button to create a calendar for a specific ministry, event type, or purpose. See [Creating Calendars](creating-calendars) for step-by-step instructions.
-- **Edit a calendar** -- Click on any calendar to open it and manage its events and associated groups.
+- **Edit a calendar** -- Click on any calendar to open it and manage which groups are included in it.
 - **Publish calendars** -- Calendars can be displayed on your B1.church website so visitors can see upcoming events at your church.
 - **Create curated calendars** -- Pull events from multiple groups into a single calendar view for a comprehensive look at everything happening at your church. See [Curated Calendar](curated-calendar) for details.
 
@@ -445,7 +536,7 @@ Calendars work closely with [Groups](../groups/creating-groups.md). When groups 
 
 ## Next Steps
 
-- [Creating Calendars](creating-calendars) -- Set up a new calendar and add events
+- [Creating Calendars](creating-calendars) -- Set up a new calendar and connect groups
 - [Curated Calendar](curated-calendar) -- Aggregate events from multiple groups into one view
 
 ---
@@ -765,6 +856,137 @@ If you are new to donations in B1 Admin, start by [setting up your funds](funds.
 
 ---
 
+## donations/multi-currency.md
+
+# Multi-Currency Support
+
+
+
+B1's multi-currency feature allows your church to accept and track donations in different currencies. This is particularly useful for churches with international members, missionaries, or multiple campuses in different countries.
+
+
+
+
+#### Before You Begin
+
+- You need permission to manage donations. See [Roles & Permissions](../people/roles-permissions.md) for details.
+- Set up your [online giving](./online-giving-setup.md) with Stripe, which supports multi-currency transactions.
+- Understand your church's accounting needs for handling multiple currencies.
+
+
+
+## Enabling Multi-Currency
+
+Multi-currency support is now enabled by default in B1. Once enabled:
+
+- Members can give in their local currency when donating online
+- You can manually record donations in any currency
+- Donation reports show amounts in their original currency
+- Stripe handles currency conversion automatically for online giving
+
+## Supported Currencies
+
+The system supports all major world currencies, including:
+
+- **USD** -- United States Dollar
+- **EUR** -- Euro
+- **GBP** -- British Pound
+- **CAD** -- Canadian Dollar
+- **AUD** -- Australian Dollar
+- **MXN** -- Mexican Peso
+- **BRL** -- Brazilian Real
+- **INR** -- Indian Rupee
+- **CNY** -- Chinese Yuan
+- **JPY** -- Japanese Yen
+- And many more...
+
+The available currencies for online giving depend on your Stripe account's supported currencies.
+
+## Recording Donations in Different Currencies
+
+### Online Donations
+
+When a member gives online through Stripe:
+
+1. They select their preferred currency at checkout
+2. Stripe processes the payment in that currency
+3. The donation is recorded in B1 with the original currency amount
+4. Stripe automatically handles any necessary currency conversion to your account's default currency
+
+### Manual Entry
+
+To record a cash or check donation in a different currency:
+
+1. Navigate to **Donations** in B1 Admin
+2. Click **Add Donation**
+3. Select the currency from the currency dropdown
+4. Enter the amount in that currency
+5. Complete the rest of the donation details
+6. Click **Save**
+
+## Viewing Multi-Currency Donations
+
+### Donation Reports
+
+Donation reports display amounts in their original currency:
+
+- Individual donation records show the currency code (e.g., "$100.00 USD")
+- Totals are calculated per currency
+- You can filter by specific currencies
+
+### Giving Statements
+
+When generating giving statements:
+
+- Each donation appears with its original currency
+- Totals are broken down by currency
+- Members see exactly what they gave in each currency
+
+## Stripe Integration
+
+For online giving, Stripe handles multi-currency transactions:
+
+- **Automatic conversion** -- Stripe converts currencies to your account's default currency
+- **Exchange rates** -- Stripe uses current market exchange rates
+- **Fees** -- Currency conversion may incur additional Stripe fees
+- **Payout currency** -- Funds are deposited in your account's default currency
+
+:::info
+Check your Stripe dashboard to see current conversion rates and any fees associated with multi-currency transactions.
+:::
+
+## Accounting Considerations
+
+When working with multiple currencies:
+
+- **Record-keeping** -- Keep track of original donation amounts and currencies for accurate reporting
+- **Exchange rates** -- Note that Stripe's conversion rates may differ from your bank's rates
+- **Tax receipts** -- Consult your accountant about how to report donations in different currencies for tax purposes
+- **Fund allocation** -- You can allocate donations to specific funds regardless of currency
+
+## Best Practices
+
+- **Default currency** -- Set your primary church currency as the default for most transactions
+- **Clear communication** -- Tell donors what currency they're giving in during the checkout process
+- **Consistent reporting** -- Decide whether to report in original currencies or convert to a single currency for summaries
+- **Regular reconciliation** -- Reconcile Stripe payouts with your donation records, accounting for currency conversions
+
+## Limitations
+
+- Currency conversion is handled by Stripe for online giving only
+- Manual donations are recorded as-entered with no automatic conversion
+- Historical reports show donations in their original currencies
+- Total calculations are done per-currency, not across currencies
+
+## Related Articles
+
+- [Online Giving Setup](./online-giving-setup.md) -- Configure Stripe for accepting donations
+- [Recording Donations](./recording-donations.md) -- Manually enter donation records
+- [Donation Reports](./donation-reports.md) -- Generate and view donation summaries
+- [Giving Statements](./giving-statements.md) -- Create year-end giving statements
+
+---
+
 ## donations/online-giving-setup.md
 
 # Online Giving Setup
@@ -800,6 +1022,20 @@ B1 Admin integrates with **Stripe** and **PayPal** so your members can give onli
 
 :::warning
 Your Stripe Secret Key is only shown once. Copy it to a secure location before navigating away from the Stripe dashboard. If you lose it, you will need to generate a new key.
+:::
+
+## Choosing Your Currency
+
+After selecting Stripe as your provider, a **Currency** dropdown appears alongside your API keys. Pick the currency that matches your Stripe account's settlement currency so donations are charged correctly.
+
+Supported currencies include USD, EUR, GBP, CAD, AUD, INR, JPY, SGD, HKD, SEK, NOK, DKK, CHF, MXN, and BRL. You can confirm or change your account's default currency in your [Stripe Dashboard](https://dashboard.stripe.com/settings/currencies).
+
+:::info
+The currency you select here is used for one-time donations, recurring subscriptions, fee calculations, and donation reports. If you switch currencies later, only new donations and subscriptions will use the new currency — existing recurring gifts continue in the currency they were created with.
+:::
+
+:::warning
+Make sure your Stripe account is configured to accept the currency you choose. If your Stripe account does not support the selected currency, donations will fail at checkout.
 :::
 
 ## Adding a Donation Page to Your B1.church Site
@@ -1162,7 +1398,7 @@ Form members with **Admin** or **View Only** roles can access the Submissions ta
 
 
 
-Creating a group in B1 Admin is straightforward. You will set up a category, name your group, and then configure its settings. Groups help you organize your church into meaningful units like small groups, ministry teams, committees, and classes.
+Creating a group in B1 Admin is straightforward. You will set up a category, name your group, and then configure its settings. Groups help you organize your church into meaningful units like small groups, committees, and classes.
 
 
 
@@ -1191,6 +1427,10 @@ Once your group is created, you can fill in additional details:
 3. Configure the following options:
    - **Description** -- A brief summary of what the group is about. This is visible to members.
    - **Meeting Times** -- When the group typically meets (for example, "Wednesdays at 7 PM").
+   - **Join Policy** -- Choose who can join this group:
+     - **Open** -- Anyone can join immediately without approval
+     - **Request** -- People must submit a join request that requires approval (see [Group Join Requests](./group-join-requests.md))
+     - **Closed** -- Members must be added manually by leaders or administrators
    - **Attendance Tracking** -- Enable this if you want to record [attendance](../attendance/tracking-attendance.md) for this group.
    - **Service Times** -- Associate the group with specific church service times if applicable. See [Attendance Setup](../attendance/setup.md) for details on service times.
 4. Click **Save** to apply your changes.
@@ -1304,13 +1544,128 @@ Subscribing keeps your personal schedule in sync with your group's events withou
 
 ---
 
+## groups/group-join-requests.md
+
+# Group Join Requests
+
+
+
+When a group is configured with an approval-based join policy, people can submit requests to join. Group leaders and administrators review these requests and approve or decline them. This gives your church control over group membership while making it easy for people to express interest in joining.
+
+
+
+
+#### Before You Begin
+
+- You need permission to manage groups, or you need to be a leader of the specific group. See [Roles & Permissions](../people/roles-permissions.md) for details.
+- The group must have its join policy set to **Request** (approval required). See [Creating Groups](./creating-groups.md) for how to configure join policies.
+
+
+
+## Understanding Join Policies
+
+Groups can have three different join policies:
+
+- **Open** -- Anyone can join immediately without approval
+- **Request** -- People submit a join request that requires approval
+- **Closed** -- Nobody can request to join (members must be added manually)
+
+When a group uses the **Request** policy, all join attempts go through the approval workflow described on this page.
+
+## Viewing Pending Requests
+
+### For Group Leaders
+
+1. Navigate to **Groups** in B1 Admin
+2. Click on the group name
+3. Click the **Join Requests** tab
+4. You will see all pending requests for this group
+
+### For Administrators
+
+Administrators with group management permissions can view pending requests across all groups:
+
+1. Navigate to **Groups** in B1 Admin
+2. Look for a notification badge or pending requests indicator
+3. Click to view all pending requests church-wide
+
+## Reviewing a Join Request
+
+Each join request shows:
+
+- **Person's name and photo** -- The person requesting to join
+- **Optional message** -- A personal message explaining why they want to join (if provided)
+- **Request date** -- When the request was submitted
+
+To review a request:
+
+1. Read the person's message if they provided one
+2. Click on the person's name to view their profile if needed
+3. Decide whether to approve or decline
+
+## Approving a Request
+
+1. Click **Approve** on the join request
+2. The person is immediately added to the group as a member
+3. The requester receives a notification that their request was approved
+4. The request is marked as approved in the system
+
+:::tip
+When you approve a request, the person becomes a regular group member. You can later promote them to group leader if needed from the [Group Members](./group-members.md) page.
+:::
+
+## Declining a Request
+
+1. Click **Decline** on the join request
+2. Optionally provide a reason for declining (up to 500 characters)
+3. Click **Confirm**
+4. The requester receives a notification with your decline reason (if provided)
+5. The request is marked as declined
+
+:::info
+Providing a decline reason helps the person understand why their request wasn't approved and may encourage them to try again later or explore other groups.
+:::
+
+## Notifications
+
+The join request system automatically sends notifications:
+
+- **When a request is submitted** -- All group leaders receive a notification
+- **When a request is approved** -- The requester receives a confirmation
+- **When a request is declined** -- The requester receives a notification with any decline reason
+
+Notifications appear in the user's notification center on B1.church and in the mobile app.
+
+## Managing Requests from the Member Side
+
+People can manage their own join requests from B1.church:
+
+- View the status of their pending requests on the group detail page
+- Cancel a pending request if they change their mind
+- See if their request was approved or declined
+
+## Best Practices
+
+- **Respond promptly** -- Try to review requests within 24-48 hours so people aren't left waiting
+- **Be clear in decline reasons** -- Help people understand next steps or alternative options
+- **Check profiles** -- Review the person's profile to see if they're a good fit for the group
+- **Communicate expectations** -- Make sure your group description clearly states who the group is for
+
+## Related Articles
+
+- [Creating Groups](./creating-groups.md) -- Learn how to set up groups and configure join policies
+- [Group Members](./group-members.md) -- Manage existing group members
+- [Group Calendar](./group-calendar.md) -- Schedule group meetings and events
+
+---
+
 ## groups/group-members.md
 
 # Group Members
 
 
 
-Once you have created a group, the next step is adding members. From a group's detail page you can search for people, add them to the group, assign leaders, send messages, and export the member list. Managing group membership is essential for coordinating ministries, small groups, and teams.
+Once you have created a group, the next step is adding members. From a group's detail page you can search for people, add them to the group, assign leaders, send messages, and export the member list. Managing group membership is essential for coordinating small groups, committees, and classes.
 
 
 
@@ -1399,7 +1754,7 @@ Removing a person from a group does not delete them from your church directory. 
 
 
 
-The **Groups** section lets you organize your church members into teams, ministries, small groups, Bible studies, committees, and more. Groups are the backbone of community life at your church, and this section gives you the tools to create, manage, and communicate with every group in one place.
+The **Groups** section lets you organize your church members into ministries, small groups, Bible studies, committees, and more. Groups are the backbone of community life at your church, and this section gives you the tools to create, manage, and communicate with every group in one place. Note that **Teams** are separate from Groups — Teams are used for serving and volunteer scheduling.
 
 
 
@@ -1432,7 +1787,7 @@ Here is what you can accomplish in the Groups section:
 To access Groups, click **People** in the left sidebar of your B1 Admin dashboard, then select **Groups**. You will see all of your existing groups organized by category.
 
 :::tip
-If you are just getting started, begin by creating a few categories that match your church structure (for example, "Ministries," "Small Groups," "Teams"). Then add individual groups within each category. See [Creating Groups](./creating-groups.md) for a step-by-step walkthrough.
+If you are just getting started, begin by creating a few categories that match your church structure (for example, "Ministries," "Small Groups," "Committees"). Then add individual groups within each category. See [Creating Groups](./creating-groups.md) for a step-by-step walkthrough.
 :::
 
 :::info
@@ -2491,16 +2846,16 @@ New to B1 Admin? Start with the [Introduction](./introduction) for a video walkt
 
 ## Key Features
 
-- **[People](./people/)** - Manage your church directory, add members, track households
-- **[Groups](./groups/)** - Create and organize church groups, teams, and ministries
+- **[People](./people/)** - Manage your church directory, add members, bulk edit data, track households
+- **[Groups](./groups/)** - Create and organize church groups with join requests and member management
 - **[Attendance](./attendance/)** - Set up campuses, service times, and track attendance
-- **[Donations](./donations/)** - Record giving, manage funds, generate statements
+- **[Donations](./donations/)** - Record giving in multiple currencies, manage funds, generate statements
 - **[Serving](./serving/)** - Coordinate volunteers, create service plans, manage tasks
 - **[Forms](./forms/)** - Build custom forms for registrations and data collection
 - **[Reports](./reports/)** - View birthday, attendance, and donation reports
-- **[Website](./website/)** - Build and manage your church website
+- **[Website](./website/)** - Build and manage your church website with custom navigation styles
 - **[Sermons](./sermons/)** - Manage your sermon library and live streaming
-- **[Calendars](./calendars/)** - Create and publish event calendars
+- **[Calendars](./calendars/)** - Create curated calendars by connecting group events
 - **[Settings](./settings/)** - Configure church info, roles, and permissions
 
 :::info
@@ -2508,6 +2863,1714 @@ Click the question mark icon in the top-right corner of any page for quick acces
 :::
 
 For support, email [support@churchapps.org](mailto:support@churchapps.org).
+
+---
+
+## integrations/chatgpt.md
+
+# ChatGPT
+
+
+
+Connect OpenAI's ChatGPT to your church's B1 data so you can ask questions like "who hasn't been in a group this quarter?" or "summarize giving for the building fund this month" and have ChatGPT pull the answers directly from B1. Two paths are supported: a **Custom GPT** that works on any ChatGPT Plus plan, and the **MCP server** for developer tooling that supports it.
+
+
+
+
+#### Before You Begin
+
+- A church admin with the **Edit Settings** permission (to mint an API key)
+- A **ChatGPT Plus, Pro, Team, or Enterprise** account (the free tier cannot use Custom GPTs or Connectors)
+- The full URL of your B1 API — usually `https://api.churchapps.org` for hosted churches, or your self-hosted Api host
+
+
+
+## Pick the Right Path
+
+| Path | Plan needed | Effort | What you get |
+|---|---|---|---|
+| **Custom GPT with Actions** | ChatGPT Plus / Team / Enterprise | 10 minutes | A shareable GPT that calls B1's REST API for any teammate to use |
+| **MCP via OpenAI tooling** | Developer / Agent SDK / Pro Connectors | More | Full discovery via the MCP server, suited to coding tools and agent platforms |
+
+For most churches the **Custom GPT** path is the right answer — it requires no developer setup, works inside the regular ChatGPT app and mobile clients, and can be shared with your team. The MCP path is documented below for technical staff using OpenAI's developer tools or agent platforms.
+
+## Path A — Custom GPT with Actions
+
+This wires ChatGPT directly to the B1 REST API. Your Custom GPT will be able to read and (optionally) write B1 records on behalf of whoever uses it.
+
+### 1. Create an API key
+
+1. In B1Admin go to **Settings → Developer → API Keys**.
+2. Click **New API Key**, name it `ChatGPT`, and pick scopes. Common starter sets:
+   - **Read-only assistant:** `people:read`, `groups:read`, `attendance:read`, `donations:read`
+   - **Read + write:** add the matching `:write` scopes
+3. Save and copy the full `cak_…` key.
+
+See [API Keys](/docs/developer/api/api-keys) for the full scope list.
+
+### 2. Build the Custom GPT
+
+1. In ChatGPT, click your profile → **My GPTs** → **Create a GPT**.
+2. Switch to the **Configure** tab and give the GPT a name (e.g. "B1 Assistant") and instructions like:
+
+   ```
+   You help church staff query their B1 records. Use the B1 API actions to
+   look up people, groups, attendance, donations, and content. Always scope
+   answers to data the user has permission to see. Be concise.
+   ```
+
+3. Scroll to **Actions** → **Create new action** → **Authentication**.
+   - **Authentication type:** API Key
+   - **API Key:** `cak_.`
+   - **Auth Type:** Bearer
+   - Save.
+4. In the **Schema** box, paste a minimal OpenAPI spec describing the endpoints you want the GPT to use. A starter that covers the most common reads:
+
+   ```yaml
+   openapi: 3.1.0
+   info:
+     title: B1 API
+     version: "1.0"
+   servers:
+     - url: https://api.churchapps.org
+   paths:
+     /membership/people:
+       get:
+         operationId: listPeople
+         summary: List people in the church
+         parameters:
+           - in: query
+             name: firstName
+             schema: { type: string }
+           - in: query
+             name: lastName
+             schema: { type: string }
+           - in: query
+             name: email
+             schema: { type: string }
+         responses:
+           "200":
+             description: OK
+     /membership/people/{id}:
+       get:
+         operationId: getPerson
+         summary: Get a single person by id
+         parameters:
+           - in: path
+             name: id
+             required: true
+             schema: { type: string }
+         responses:
+           "200":
+             description: OK
+     /membership/groups:
+       get:
+         operationId: listGroups
+         summary: List groups in the church
+         responses:
+           "200":
+             description: OK
+     /giving/donations:
+       get:
+         operationId: listDonations
+         summary: List donations
+         parameters:
+           - in: query
+             name: personId
+             schema: { type: string }
+           - in: query
+             name: startDate
+             schema: { type: string, format: date }
+           - in: query
+             name: endDate
+             schema: { type: string, format: date }
+         responses:
+           "200":
+             description: OK
+     /attendance/attendance:
+       get:
+         operationId: listAttendance
+         summary: List attendance records
+         parameters:
+           - in: query
+             name: serviceTimeId
+             schema: { type: string }
+           - in: query
+             name: campusId
+             schema: { type: string }
+         responses:
+           "200":
+             description: OK
+   ```
+
+   Expand the schema with more endpoints as needed — every authenticated route in B1 accepts the same `cak_…` key. The [REST API reference](/docs/developer/api/endpoints) lists what's available.
+
+5. Save the action. Test it with a prompt like *"how many people are in the church?"* — ChatGPT will call `listPeople` and answer.
+6. **Publish** the GPT (Only me / Anyone with link / Organization) and share with your team.
+
+### 3. Use it
+
+Anyone you share the GPT with can ask natural-language questions — ChatGPT picks the right action, calls B1, and answers. The key's scopes still apply: a read-only key will refuse writes regardless of the action defined in the schema.
+
+## Path B — MCP via OpenAI tooling
+
+The B1 API includes an MCP server at `/mcp` that any MCP-aware OpenAI tool can use — for example the [OpenAI Agents SDK](https://platform.openai.com/docs/guides/agents), the Responses API's MCP tool, or third-party agent platforms that consume MCP servers.
+
+Authenticate with the same `cak_…` key in the `Authorization: Bearer` header. Three tools are exposed: `list_endpoints`, `describe_endpoint`, and `api_call`. See the [MCP Server developer reference](/docs/developer/api/mcp) for the protocol, transport, and tool schemas.
+
+ChatGPT's built-in "Connectors" (Pro/Business/Enterprise) currently expect MCP servers with specific `search` and `fetch` tool shapes and OAuth-based authentication, which the B1 MCP server does not advertise. For ChatGPT inside the consumer app, the Custom GPT path above is the practical choice.
+
+## Safety and Limits
+
+- **Per-church isolation.** The API key resolves to one church. ChatGPT cannot see other churches' data.
+- **Permission-scoped.** If you remove a permission from the person who minted the key, ChatGPT loses it on the next call — instantly.
+- **Revocable.** Delete the key in **Settings → Developer → API Keys** and ChatGPT's access ends immediately.
+- **Sharing a Custom GPT shares the data.** Anyone with access to the GPT can ask it questions and see whatever the key has scopes for. Limit sharing to staff who should see that data, and prefer narrower scopes (e.g. omit `donations:read` for a GPT shared widely).
+- **Audit trail.** Mutations go through the same audit log as B1Admin actions; review them under **Reports → Audit Log**.
+
+## Cost
+
+ChurchApps is free and open-source — the API your Custom GPT calls is part of the API your church already runs. OpenAI charges for ChatGPT usage per their plans. There is no per-call cost from ChurchApps.
+
+## Troubleshooting
+
+**Action returns 401:** the bearer header isn't set correctly. In the action's authentication panel make sure **Auth Type: Bearer** is selected and the key value does not include the word `Bearer` (ChatGPT prepends it for you).
+
+**Action returns 403:** the key doesn't have the scope for that endpoint. Mint a new key with the right scopes and update the GPT.
+
+**ChatGPT calls the wrong action:** tighten the `summary` and `description` fields in your OpenAPI schema so the model picks the right one. Adding example queries to the GPT's instructions also helps.
+
+**The action panel rejects the schema:** ChatGPT requires OpenAPI 3.1 with at least one `paths` entry and a `servers` URL. Validate the YAML in any online OpenAPI validator before pasting.
+
+**Local development:** point the action's `servers` URL at your local Api (e.g. `http://localhost:8084`) — but note ChatGPT's actions only call public URLs, so for local testing use a tunnel like `ngrok` or hit the API directly with `curl` to confirm the key first.
+
+## Related
+
+- [API Keys](/docs/developer/api/api-keys) — full scope reference
+- [MCP Server (developer reference)](/docs/developer/api/mcp) — protocol details and tool schemas
+- [Claude](./claude) — same idea, for Anthropic's models
+- [REST API reference](/docs/developer/api/endpoints) — every endpoint a Custom GPT action can hit
+
+---
+
+## integrations/claude.md
+
+# Claude
+
+
+
+Connect Anthropic's Claude to your church's B1 data. With an API key and a few minutes of setup, you can ask Claude questions like "how many first-time visitors came on Sunday?" or "draft a thank-you email to the people who gave to the building fund this month" — and Claude will read the answers directly from your church's records, scoped to your permissions.
+
+
+
+
+#### Before You Begin
+
+- A church admin with the **Edit Settings** permission (to mint an API key)
+- One of: **Claude Code** (CLI / IDE extension), **Claude Desktop** (Mac/Windows), or a **Claude Pro/Max/Team** account
+- The full URL of your B1 API — usually `https://api.churchapps.org` for hosted churches, or your self-hosted Api host
+
+
+
+## What Claude Can See
+
+Claude talks to B1 through the **Model Context Protocol (MCP) server** built into the B1 API. Every call Claude makes runs through the same auth, permission, and church-scoping rules as a request from B1Admin — meaning Claude:
+
+- Only ever sees data for **your** church
+- Is limited to whatever **permissions and scopes** the API key you give it carries
+- Cannot reach webhooks, OAuth admin endpoints, or other operator-only paths (those are blocklisted)
+
+A `donations:read` key lets Claude summarize giving but cannot record a gift. A `people:write` key can add a person but cannot see donations. Pick the scopes that match the work.
+
+## Setup
+
+### 1. Create an API key
+
+1. In B1Admin go to **Settings → Developer → API Keys**.
+2. Click **New API Key**, name it `Claude`, and select the scopes Claude should have. Common starter sets:
+   - **Read-only assistant:** `people:read`, `groups:read`, `attendance:read`, `donations:read`, `content:read`
+   - **Read + add notes / tasks:** add `people:write`
+   - **Full operational assistant:** add the matching `:write` scopes you want
+3. Save. The full `cak_…` key is shown **once** — copy it.
+
+See [API Keys](/docs/developer/api/api-keys) for what each scope allows.
+
+### 2. Connect Claude
+
+Pick the Claude client you use:
+
+#### Claude Code (CLI)
+
+In a terminal:
+
+```bash
+claude mcp add --transport http b1 https://api.churchapps.org/mcp \
+  --header "Authorization: Bearer cak_."
+```
+
+That's it. Inside any Claude Code session, type `/mcp` to confirm the `b1` server is connected, then ask Claude any question about your church.
+
+#### Claude Desktop
+
+Edit Claude Desktop's config file:
+
+- **macOS:** `~/Library/Application Support/Claude/claude_desktop_config.json`
+- **Windows:** `%APPDATA%\Claude\claude_desktop_config.json`
+
+Add a `b1` server entry. Newer versions of Claude Desktop speak HTTP MCP natively:
+
+```json
+{
+  "mcpServers": {
+    "b1": {
+      "url": "https://api.churchapps.org/mcp",
+      "headers": {
+        "Authorization": "Bearer cak_."
+      }
+    }
+  }
+}
+```
+
+If your Claude Desktop version only supports stdio servers, bridge through `mcp-remote`:
+
+```json
+{
+  "mcpServers": {
+    "b1": {
+      "command": "npx",
+      "args": [
+        "-y", "mcp-remote",
+        "https://api.churchapps.org/mcp",
+        "--header", "Authorization:Bearer cak_."
+      ]
+    }
+  }
+}
+```
+
+Restart Claude Desktop. The connector icon in the chat composer will show `b1` with three tools (`list_endpoints`, `describe_endpoint`, `api_call`).
+
+#### Claude.ai (web) — Custom Connector
+
+Claude.ai's "Add custom connector" feature requires OAuth, which the B1 MCP server does not support today. Use Claude Code or Claude Desktop instead.
+
+### 3. Ask Claude something
+
+Once connected, no special syntax is needed — Claude discovers what's available on the fly. Examples:
+
+- *"How many people are in my church and what are the active groups?"*
+- *"Summarize this month's donations by fund."*
+- *"List the people who attended the 10am service last Sunday but haven't been to a Wednesday group in the last 60 days."*
+- *"Draft a welcome email for the four people added this week, addressed by first name."*
+
+Behind the scenes Claude will call the MCP tools — first to discover the right endpoint, then to fetch the data — and answer in plain language.
+
+## How It Works
+
+The B1 API exposes a single MCP endpoint at `/mcp`. Claude connects to it, authenticates with your `cak_…` key, and gets access to three tools:
+
+| Tool | What it does |
+|---|---|
+| `list_endpoints` | Lists the REST endpoints Claude can call, filterable by path. Used for discovery. |
+| `describe_endpoint` | Returns a short summary and an example request/response for a specific endpoint. |
+| `api_call` | Actually invokes a REST endpoint as the authenticated user. |
+
+This is the same `/membership/people`, `/giving/donations`, `/attendance/visits` etc. surface your B1Admin uses — every authorization rule applies identically.
+
+## Safety and Limits
+
+- **Per-church isolation.** The API key resolves to one church. Claude has no way to see other churches' data.
+- **Permission-scoped.** If you remove a permission from the person who minted the key in B1Admin, Claude loses it on the next call — instantly.
+- **Revocable.** Delete the key in **Settings → Developer → API Keys** and Claude's access ends immediately.
+- **Blocklist.** Provider webhooks, OAuth client admin endpoints, and the operator-only `apiEmails` route are not callable via MCP.
+- **Response size cap.** A single tool response is capped at 64 KB so long lists don't blow out Claude's context — Claude will narrow the query with filters when this happens.
+- **Audit trail.** Mutations go through the same audit log as B1Admin actions; you can review them under **Reports → Audit Log**.
+
+## Cost
+
+ChurchApps is free and open-source — the MCP server is part of the API your church already runs. Anthropic charges for Claude usage per their plans. There is no per-call cost from ChurchApps.
+
+## Troubleshooting
+
+**Claude reports "Unauthorized" or 401:** the bearer token is missing, malformed, or the key has been revoked. Re-check the `Authorization: Bearer cak_…` header (note the space and the literal `Bearer`).
+
+**A tool call returns 403:** the API key doesn't have the scope for that endpoint. Add the scope in **Settings → Developer → API Keys** (you'll need to create a new key — scopes can't be changed in place) and update Claude's config.
+
+**Claude can't find an endpoint:** ask it to call `list_endpoints` with a filter, e.g. *"use list_endpoints with filter 'donations' to find the right path"*. The route inventory is generated from the live API, so anything you can hit with `curl` is there.
+
+**Local development:** swap `https://api.churchapps.org/mcp` for `http://localhost:8084/mcp` — same auth, same tools.
+
+## Related
+
+- [API Keys](/docs/developer/api/api-keys) — full scope reference
+- [MCP Server (developer reference)](/docs/developer/api/mcp) — protocol details and tool schemas
+- [ChatGPT](./chatgpt) — same idea, for OpenAI's models
+
+---
+
+## integrations/google-sheets.md
+
+# Google Sheets
+
+
+
+**B1 Export** is the official Google Sheets add-on for B1.church. It adds a sidebar to any spreadsheet that exports People, Donations, Groups, or Attendance from your B1 church into named tabs — on demand, with one click. The add-on runs entirely inside the user's Google account; nothing about it touches ChurchApps' servers beyond the read-only API calls each export makes.
+
+
+
+
+#### Before You Begin
+
+- A Google account with edit access to the spreadsheet you want to export into
+- A church admin (or someone with read access to the data you want to export) able to mint a B1 API key
+- The B1 Export add-on installed from the Google Workspace Marketplace
+
+
+
+## What It Exports
+
+| Menu item | Sheet tab | Data |
+|---|---|---|
+| Export People | `B1 People` | ID, Display Name, First, Last, Email, Membership Status |
+| Export Donations | `B1 Donations` | ID, Person ID, Date, Amount, Method, Batch ID |
+| Export Groups | `B1 Groups` | ID, Name, Category, Member Count |
+| Export Attendance | `B1 Attendance` | ID, Person ID, Visit Date, Service ID, Group ID |
+
+Each export **replaces** the contents of its named tab — re-running an export gives you a fresh snapshot, not appended rows. Other tabs in the spreadsheet are untouched.
+
+## Setup
+
+### 1. Create a B1 API key with the right scopes
+
+1. In B1Admin go to **Settings → Developer → API Keys**.
+2. Click **New API Key**, name it "Sheets Export", and grant the **read** scopes for whatever you plan to export:
+   - `people:read` for the People export
+   - `donations:read` for Donations
+   - `groups:read` for Groups
+   - `attendance:read` for Attendance
+3. A key that only does exports does **not** need `settings:write` — that scope is only for connectors that register webhooks (Zapier / Make). Keep this key narrow.
+4. Save and copy the `cak_…` key.
+
+### 2. Install the add-on
+
+1. Open the spreadsheet you want to export into.
+2. **Extensions → Add-ons → Get add-ons**.
+3. Search for **B1 Export** and install it. Google asks you to grant access to your sheets and to external HTTP (so the add-on can call the B1 API).
+
+After installation, a **B1 Export** entry appears under the **Extensions** menu of every spreadsheet you open with this Google account.
+
+### 3. Connect the key
+
+1. **Extensions → B1 Export → Connect…** (or **B1 Export → Connect…** from the menu bar after the first open).
+2. Paste the API key into the sidebar, leave the Base URL as `https://api.churchapps.org` (unless you're testing against staging), and click **Save**.
+3. Click **Test Connection** — a green "Connection OK" confirms the key works.
+
+The key is stored in **per-user properties** (`PropertiesService.getUserProperties()`) — it's tied to your Google account, never written into the sheet, and never visible to other editors of the spreadsheet.
+
+## Running an Export
+
+Either:
+
+- **From the menu** — **Extensions → B1 Export → Export People** (or Donations / Groups / Attendance)
+- **From the sidebar** — open the sidebar (Connect…) and click the appropriate dataset button
+
+A toast confirms when it's done — "_N_ row(s) written to 'B1 People'."
+
+## Building Reports On Top
+
+The exported tabs are plain Google Sheets data. Build your own analytics on referencing tabs:
+
+- A **summary tab** with `=SUMIF('B1 Donations'!E:E, "card", 'B1 Donations'!D:D)` to total card gifts
+- A **filtered view** of just members with `=FILTER('B1 People'!A:F, 'B1 People'!F:F = "Member")`
+- A **chart** of attendance trends pulling from `B1 Attendance`
+
+Re-running the export refreshes the underlying tab; your formulas update automatically.
+
+## Scheduling Recurring Exports
+
+The add-on is on-demand by default. For weekly or monthly exports, use Apps Script's built-in time-driven triggers:
+
+1. **Extensions → Apps Script** in the spreadsheet (this opens the add-on's bound script).
+2. Click the **⏰ Triggers** icon in the left sidebar.
+3. **Add Trigger** for `exportPeople` (or any export function) — choose *Time-driven*, *Week timer*, e.g. *Every Monday 6am*.
+
+The export runs in the background under your Google account. If the API key is rotated or revoked, the trigger emails you the next time it fails.
+
+## Permissions & Privacy
+
+- The add-on requests only `spreadsheets.currentonly` (it can only touch the spreadsheet it's open in) and `script.external_request` (so `UrlFetchApp` can call the B1 API). It does **not** see your Drive, Gmail, or other Google data.
+- The B1 API key is stored per-user — other editors of the same spreadsheet cannot see it.
+- All B1 API calls are made over HTTPS with `Authorization: Bearer cak_…`.
+
+## Troubleshooting
+
+- **"No API key set"** — open **Extensions → B1 Export → Connect…** and paste the key.
+- **"B1 rejected the API key (401)"** — the key was revoked or is wrong. Re-mint and re-paste it.
+- **"This API key lacks permission for /giving/donations (403)"** — the key doesn't have `donations:read`. Update the key's scopes in B1Admin.
+- **Sheet doesn't refresh** after running — make sure you're looking at the *correct* tab name (`B1 People` etc.). The export creates the tab if it didn't exist.
+- **"Quota exceeded"** — Apps Script imposes per-user daily quotas on `UrlFetchApp` (typically thousands of calls per day). A large church with many records may need to split exports across multiple days or use [Make](./make) / a custom integration for high-volume sync.
+
+## Customising the Add-On
+
+The add-on is open source — the Apps Script project lives in the `B1Integrations/GoogleSheetsAddon/` repo. If you want a column we don't export, an extra dataset, or a different output format, open an issue or PR there.
+
+## See Also
+
+- [Zapier](./zapier) — for real-time sync rather than on-demand export
+- [Make](./make) — for sync with more complex transformations
+- [API Keys (developer reference)](/docs/developer/api/api-keys)
+
+---
+
+## integrations/index.md
+
+# Integrations
+
+
+
+B1 plugs into the tools your team already uses. Connect Slack or Discord for staff notifications, automate workflows in Zapier or Make, or export data on demand to Google Sheets — without paying for a separate integration platform and without ChurchApps hosting anything extra. Every integration runs on the third party's own infrastructure and talks to your church through B1's webhooks or REST API.
+
+
+
+## What's Available
+
+| Integration | What it does | Direction | Effort to set up |
+|---|---|---|---|
+| **[Slack](./slack-discord)** | Post readable notifications (new people, donations, sign-ups, …) to a Slack channel | B1 → Slack | 2 minutes |
+| **[Discord](./slack-discord)** | Same, in a Discord channel | B1 → Discord | 2 minutes |
+| **[Zapier](./zapier)** | Use B1 events as triggers and B1 actions in any of Zapier's 7,000+ apps | Both | 5–10 min per Zap |
+| **[Make](./make)** | Same idea as Zapier, in Make's visual scenario builder | Both | 5–10 min per scenario |
+| **[Google Sheets](./google-sheets)** | Export People / Donations / Groups / Attendance to a spreadsheet on demand | B1 → Sheet | 5 minutes |
+| **[Claude](./claude)** | Ask Anthropic's Claude questions about your church data, scoped to your permissions | Both | 5 minutes |
+| **[ChatGPT](./chatgpt)** | Same idea with OpenAI's ChatGPT, via a Custom GPT or MCP-aware OpenAI tooling | Both | 10 minutes |
+| **[Connected services](./services/)** | Curated recipes for Mailchimp, Donorbox, Subsplash, VOMO, Clearstream, Text In Church, Mobile Message, Checkr | Varies | 5–10 min each |
+
+## How to Pick
+
+- **Just want a notification in chat?** Use **Slack** or **Discord** — no third-party account, no Zap to maintain. Configured entirely inside B1Admin.
+- **Want to automate something across apps** (e.g. "when someone gives, add them to my Mailchimp list and Slack #donations")? Use **Zapier** or **Make**. Zapier is friendlier; Make is cheaper at scale and has more flexible logic.
+- **Need a one-off data pull or a scheduled report**? Use **Google Sheets** — paste an API key into the add-on's sidebar and click Export.
+- **Want to ask questions in plain English** ("how many first-time visitors last Sunday?", "summarize giving this month")? Use **[Claude](./claude)** or **[ChatGPT](./chatgpt)** — both connect to B1 with a single API key.
+- **Building your own custom integration?** None of the above — talk to the [REST API](/docs/developer/api) directly with an [API key](/docs/developer/api/api-keys), or subscribe a server you control to [webhooks](/docs/developer/api/webhooks).
+
+## What They Have In Common
+
+Every integration authenticates with a **B1 API key**, created in B1Admin under **Settings → Developer → API Keys**. The key:
+
+- Is bound to a specific person in your church and inherits that person's permissions
+- Can be narrowed with **scopes** — for example a Google Sheets export only needs `people:read`, not `settings:write`
+- Can be revoked at any time, instantly cutting the integration's access without affecting anything else
+
+A few connectors (Zapier, Make) also register a [webhook](/docs/developer/api/webhooks) on your behalf when the Zap or scenario is turned on, and remove it when you turn the Zap off — you don't manage the webhook URL yourself.
+
+:::tip
+For Zapier and Make to register webhooks automatically, the API key needs the **`settings:write`** scope (plus the resource scopes for whatever the integration touches). A read-only key works for actions and exports but not for triggers.
+:::
+
+## Cost
+
+ChurchApps is free and open-source. Slack/Discord, the [`@churchapps/integration-sdk`](https://www.npmjs.com/package/@churchapps/integration-sdk), and the official Zapier / Make / Google Sheets connectors are also free from our side. The third parties may charge for their own platforms (Zapier and Make both have generous free tiers; Slack, Discord, and Google Sheets are free for this purpose).
+
+## Building Your Own
+
+If none of the above fits, every B1 surface is open:
+
+- **[REST API](/docs/developer/api)** — call B1 from any language with an `Authorization: Bearer cak_…` header
+- **[Webhooks](/docs/developer/api/webhooks)** — subscribe a public HTTPS endpoint to one or more event types and receive signed JSON payloads
+- **[OAuth + Connected Apps](/docs/developer/api/connected-apps)** — if you're building a SaaS product used by many churches
+
+## Next Steps
+
+- [Slack & Discord](./slack-discord) — post chat notifications
+- [Zapier](./zapier) — connect to 7,000+ apps
+- [Make](./make) — visual workflow automation
+- [Google Sheets](./google-sheets) — export to spreadsheets
+- [Claude](./claude) — ask Anthropic's Claude about your church data
+- [ChatGPT](./chatgpt) — ask OpenAI's ChatGPT about your church data
+- [Connected services](./services/) — per-service recipes (Mailchimp, Donorbox, Clearstream, …)
+
+---
+
+## integrations/make.md
+
+# Make
+
+
+
+[Make](https://www.make.com) (formerly Integromat) is a visual workflow automation platform — similar in spirit to Zapier, with more flexible logic and a cheaper bill at scale. The official B1.church Make app lets you build "scenarios" that react instantly to B1 events and write records back to B1.
+
+
+
+
+#### Before You Begin
+
+- A [Make](https://www.make.com) account (the free tier covers small workflows)
+- A church admin with the **Edit Settings** permission in B1Admin
+- A rough idea of the scenario you want to build
+
+
+
+## Modules
+
+| Type | What | B1 event / endpoint |
+|---|---|---|
+| **Instant Trigger** | Watch Events | any subscribed B1 event (`person.created`, `donation.created`, …) |
+| **Action** | Create Person | adds a new person |
+| **Action** | Add Donation | records a donation |
+| **Action** | Add Group Member | adds a person to a group |
+| **Search** | Search People | finds people by name or email |
+
+The instant trigger lets you pick which event to listen for — one trigger module per scenario, configured per event.
+
+## Setup
+
+### 1. Create a B1 API key
+
+1. In B1Admin go to **Settings → Developer → API Keys**.
+2. Click **New API Key**, name it "Make", and grant the scopes you need.
+3. **Include `settings:write`** if any of your scenarios use the instant trigger — Make registers a webhook on your behalf when the scenario turns on.
+4. Also grant the scopes the action modules need (e.g. `donations:write` for the Add Donation module).
+5. Save and copy the `cak_…` key.
+
+### 2. Install the connection
+
+1. In Make, build a new scenario and drop the **B1.church** trigger module onto the canvas.
+2. When prompted, **Create a connection**. Paste the API key into the *API Key* field and leave *API Base URL* as `https://api.churchapps.org` (unless you're testing against staging).
+3. Click **Save** — Make tests the key by reading your church profile.
+
+The connection is saved on your Make account and reused across scenarios.
+
+### 3. Configure the trigger
+
+1. Open the **Watch Events** module's settings.
+2. Pick the event you want — e.g. `donation.created`.
+3. Save. Make generates a unique webhook URL and stores it internally.
+
+### 4. Add downstream modules
+
+Drop any of Make's hundreds of app modules onto the canvas — Mailchimp, Google Sheets, Slack, HubSpot, your own HTTP endpoint, etc. Map the trigger's output (`event`, `churchId`, `data.id`, `data.amount`, …) into their input fields. Make's flatten / iterator / router / aggregator modules let you build branching and parallel flows that would be hard in Zapier.
+
+### 5. Turn the scenario on
+
+Toggle **Active** in the scenario header. Make calls B1's `POST /membership/webhooks` to register the URL. From that moment, every matching B1 event flows through the scenario in real time.
+
+Turning the scenario off calls `DELETE /membership/webhooks/{id}` so there are no orphan subscriptions.
+
+## Common Recipes
+
+### Sync donations to a Google Sheet for finance review
+
+- **Trigger** — B1: Watch Events (`donation.created`)
+- **Action** — Google Sheets: Add a Row. Map `data.donationDate`, `data.amount`, `data.personId`, `data.method`, `data.batchId` into the sheet's columns.
+
+### Conditional Slack notification by donation amount
+
+- **Trigger** — B1: Watch Events (`donation.created`)
+- **Router**:
+  - Branch A — Filter: `data.amount >= 1000` → Slack: post to `#major-gifts`
+  - Branch B — fallthrough → Slack: post to `#donations`
+
+### New person → CRM + welcome email + Slack
+
+- **Trigger** — B1: Watch Events (`person.created`)
+- **Action** — HubSpot: Create Contact
+- **Action** — Mailgun: Send Welcome Email
+- **Action** — Slack: Notify `#new-people` (in parallel — use Make's router)
+
+## How the Instant Trigger Works
+
+The instant trigger is webhook-backed, not polling — when activated, Make calls `POST /membership/webhooks` with its generated URL and the event you chose. When the event fires in B1, B1 POSTs the envelope to Make's URL and your scenario runs within seconds. Deactivating the scenario removes the webhook.
+
+The trigger only fires for events that happen **while the scenario is active**. There's no backfill.
+
+## Limits & Notes
+
+- **One event per Watch Events module.** To listen for several events in one scenario, drop multiple trigger modules into separate scenarios (or use a single module with the unioned event list — see below).
+- **Signature verification is not exposed** — Make doesn't pass `X-B1-Signature` through to the scenario; the trust boundary is Make's unguessable per-scenario webhook URL. This is normal Make practice. If you need explicit signature checks, build a custom integration with the [SDK](/docs/developer/api/webhooks#sdk-support) instead.
+- **Operation count** — every API call from an action module counts against your Make operations quota, not against anything on B1's side.
+
+## Troubleshooting
+
+- **Connection test fails** — most often a typo in the API key. Re-copy it from B1Admin (the full key is only shown once; if you've lost it, create a new key).
+- **Trigger module doesn't activate** — check **Settings → Developer → Webhooks** in B1Admin. If you don't see a "Make — &lt;event&gt;" row after activating the scenario, the key is missing `settings:write`. Update the key and reactivate.
+- **Action returns `403 Forbidden`** — the API key lacks the scope for that endpoint. For example, Add Donation needs `donations:write`. Update the key in B1Admin and re-test.
+
+## Customising the App
+
+The B1.church Make app is open source — the JSON definitions live in the `B1Integrations/Make/` repo. If you need a module that doesn't exist (e.g. a new action for an endpoint we haven't covered), open an issue or PR there.
+
+## See Also
+
+- [Zapier](./zapier) — same pattern with a simpler UI and a larger app catalog
+- [Slack & Discord](./slack-discord) — built-in chat notifications without Make
+- [Webhooks (developer reference)](/docs/developer/api/webhooks)
+
+---
+
+## integrations/services/checkr.md
+
+# Checkr
+
+
+
+[Checkr](https://checkr.com) runs background screening for staff and volunteers — a near-universal need for any church running a children's or youth program. Checkr doesn't have a Zapier app, but [Make.com's Checkr integration](https://www.make.com/en/integrations/checkr) is verified and exposes the actions you need to kick off a check from a B1 event.
+
+
+
+
+#### Before You Begin
+
+- A [Checkr](https://checkr.com) account with API access and at least one screening package configured
+- A [Make](https://www.make.com) account
+- A B1Admin user with **Edit Settings** permission
+
+
+
+## What You Can Wire Up
+
+Make's Checkr app exposes 1 trigger and 6 actions:
+
+| Direction | B1 / Make trigger | Action |
+|---|---|---|
+| B1 → Checkr | B1 `group.member.added` (filtered to a volunteer group) | Checkr: Create Candidate → Create Background Check Invitation |
+| Checkr → B1 | Checkr webhook (invitation / report event) | B1: Update the person's record (e.g. tag "Checkr cleared") |
+
+Make's Checkr actions: Create Candidate, Create Background Check Invitation, Get Candidate, Get Report, Get Report's ETA, Get an Invitation. Plus 4 search modules.
+
+## Setup
+
+### 1. Mint a B1 API key
+
+**Settings → Developer → API Keys → New API Key**:
+
+- `settings:write` — for the trigger webhook
+- `people:read` — to look up the person's name/email when starting a check
+- (Optional) `people:write` if you want to write the report status back as a custom field or tag
+
+### 2. Build the "kick off a check on volunteer signup" scenario in Make
+
+1. **Trigger** — B1.church: Watch Events (`group.member.added`).
+2. **Filter** — only continue if `data.groupId` matches your "Children's Volunteers" (or equivalent) group.
+3. **Action** — B1.church: Find Person (by `data.personId`) to get email + first/last name.
+4. **Action** — Checkr: Create Candidate. Map first/last/email from step 3.
+5. **Action** — Checkr: Create Background Check Invitation. Map the new candidate id from step 4 to the *candidate_id* field. Pick the screening package (e.g. `tasker_standard` or whatever your account exposes).
+6. (Optional) **Action** — Slack: notify your safe-ministry coordinator that a check has been initiated.
+
+Turn the scenario on. New volunteers in the targeted group get an automatic Checkr invitation by email; they complete it on their phone or laptop; Checkr runs the screen.
+
+### 3. (Optional) Receive the report back
+
+1. **Trigger** — Checkr: Watch Events (webhook). Make registers a Checkr webhook on activation.
+2. **Filter** — only continue if `event_type = report.completed`.
+3. **Action** — Checkr: Get Report (use the report id from the webhook).
+4. **Action** — B1.church: Find Person (by candidate email).
+5. **Action** — Conditional Slack / Email: notify the coordinator with `clear` / `consider` / `suspended` status.
+
+Note: B1 doesn't have a built-in "background-check status" field today. The pragmatic options are (a) post the result to a private Slack channel for review, (b) write it to a Google Sheet for audit, or (c) add the person to a "Cleared volunteers" B1 group on `clear`.
+
+## Common Recipes
+
+### Re-screen volunteers every 2 years
+
+Pair the above with a Make schedule trigger:
+
+- **Trigger** — Make: Schedule (monthly)
+- **Action** — B1.church: List Group Members for "Cleared volunteers"
+- **Action** — Filter by Make: cleared date older than 22 months
+- **Action** — Checkr: Create Background Check Invitation (same as the initial flow)
+
+### Block stage 1 access until check completes
+
+If your church uses B1 group membership to gate access (e.g. only "Cleared" group members appear in serving schedules), keep new volunteers in a holding group until the Checkr `report.completed` event flips them.
+
+## Limits & Notes
+
+- **Checkr is US-only** for most screening packages. Australian, UK, and Canadian churches will need an alternative.
+- **Pricing** is per check — every Create Invitation in Make burns a real check. Test in Checkr's sandbox / staging account first (Make's Checkr app respects the credentials you pass in the connection, so swapping creds switches sandbox/live).
+- **Checkr API access is plan-gated.** Smaller Checkr accounts may be on a UI-only tier; contact Checkr to enable API.
+
+## Troubleshooting
+
+- **Create Candidate fails with `403`** — the Checkr API token is read-only or lacks the right account permissions. Re-issue it from the Checkr dashboard with write scope.
+- **Invitation never arrives** — check the candidate's email in step 3; B1 may have an empty email field for that person. Add an email-required filter before the Checkr step.
+- **Webhook trigger doesn't fire** — Checkr's webhook registration sometimes silently fails if your Make account isn't on a paid tier that supports outbound webhooks. Verify in Checkr's dashboard *Webhooks* page that Make's URL is listed.
+
+## See Also
+
+- [Make (overview)](../make) — B1 side of every Make scenario
+- [Mobile Message](./mobile-message) — for SMS-providers-without-Zapier-apps, same Webhooks/HTTP pattern as the Checkr Make wiring
+- [Checkr API docs](https://docs.checkr.com/)
+
+---
+
+## integrations/services/clearstream.md
+
+# Clearstream
+
+
+
+Trigger a [Clearstream](https://clearstream.io) text message from any B1 event — new person, new gift, form submission, calendar update — and pull replies back as B1 records. Clearstream's Zapier app exposes both directions, so the whole wiring is a recipe and not custom code.
+
+
+
+
+#### Before You Begin
+
+- A [Clearstream](https://clearstream.io) account with at least one list and an SMS allowance
+- A [Zapier](https://zapier.com) account
+- A B1Admin user with **Edit Settings** permission
+
+
+
+## What You Can Wire Up
+
+| Direction | Trigger | Action |
+|---|---|---|
+| B1 → Clearstream | B1 `person.created` | Clearstream: Create/Update Subscriber + Send Text to Number |
+| B1 → Clearstream | B1 `donation.created` | Clearstream: Send Text to List (e.g. notify the finance team) |
+| B1 → Clearstream | B1 `form.submission.created` | Clearstream: Send Text to a routing list (e.g. prayer request team) |
+| Clearstream → B1 | New Incoming Text | B1: Create Person; tag with the keyword they texted |
+
+Clearstream's Zapier actions: *Send Text to Number*, *Send Text to List*, *Create/Update Subscriber*, *Add Subscriber to Automated Workflow*, *Add Tag to Subscriber*, *Remove Subscriber From List*.
+
+## Setup
+
+### 1. Mint a B1 API key
+
+**Settings → Developer → API Keys → New API Key**:
+
+- `settings:write` — required for B1 to register the trigger webhook
+- `people:read` — needed to look up the person from the event (`personId` → name/phone/email)
+- (Optional) `people:write` if Clearstream replies should create B1 contacts
+
+### 2. Build the "text on new gift" Zap
+
+1. **Trigger** — B1.church: New Donation
+2. **Action** — B1.church: Find Person (the donation's `personId`)
+3. **Action** — Clearstream: Send Text to Number. Use the person's phone from step 2 as the recipient, compose the message (`"Thanks for your gift, {first}! …"`).
+
+Turn the Zap on. B1 registers the donation webhook on activation; you'll see `Zapier — donation.created` appear in **Settings → Developer → Webhooks**.
+
+### 3. (Optional) Pull replies back as B1 records
+
+1. **Trigger** — Clearstream: New Incoming Text
+2. **Action** — Filter by Zapier on the keyword — e.g. only continue if the text body starts with `PRAY`
+3. **Action** — B1.church: Find Person (by phone)
+4. **Action** — Filter / Path — if not found, create them; either way, file the text body somewhere (Slack, Google Sheet, or a B1 form submission via Webhooks by Zapier).
+
+## Common Recipes
+
+### Volunteer team paging
+
+- **Trigger** — B1.church: New Form Submission (filtered on the prayer-request form id)
+- **Action** — Clearstream: Send Text to List, where the list is your on-call pastoral team. Compose the body as `New prayer request: {data.questions.0.answer}`.
+
+### First-time visitor follow-up sequence
+
+- **Trigger** — B1.church: New Person, filtered on a B1 person tag of "First-time visitor"
+- **Action** — Clearstream: Add Subscriber to Automated Workflow. Map the workflow id to a pre-built 7-day text drip.
+
+### Keyword-driven group join
+
+- **Trigger** — Clearstream: New Incoming Text (filter to keyword `MENS`)
+- **Action** — B1.church: Find Person (by phone); fork on not-found → Create Person
+- **Action** — B1.church: Add Group Member to the Men's Ministry group
+
+## Limits & Notes
+
+- **Clearstream meters SMS by message.** Every Send Text action consumes one or more credits depending on length and number of recipients — check your plan's allowance.
+- **Phone must be in E.164 format** (e.g. `+15555550199`) for *Send Text to Number*. B1's person record stores whatever was entered; use a *Formatter by Zapier — Numbers → Format Phone Number* step if you can't guarantee the format.
+- **No header is required from B1's side** — Clearstream's auth lives entirely inside its Zapier connection.
+
+## Troubleshooting
+
+- **Trigger never fires** — `Settings → Developer → Webhooks` should show a `Zapier — ` row after the Zap is turned on. If not, the B1 API key is missing `settings:write`. Re-mint and re-connect.
+- **Clearstream returns "Invalid phone number"** — the recipient field isn't in E.164. Add a Format Phone Number step.
+- **Send Text to List fails with `403`** — the Clearstream API user lacks permission for that list, or the list id is wrong. List ids are visible on the Clearstream list detail page.
+
+## See Also
+
+- [Text In Church](./text-in-church) — alternative SMS platform, similar wiring shape
+- [Mobile Message](./mobile-message) — for churches outside the US
+- [Zapier (overview)](../zapier) — B1 side of every Zapier recipe
+- [Clearstream API docs](https://api-docs.clearstream.io/) — for custom integrations beyond the Zapier app
+
+---
+
+## integrations/services/donorbox.md
+
+# Donorbox
+
+
+
+If your church takes donations through Donorbox but tracks people and statements in B1, you can have Donorbox's instant Zapier triggers create matching donation records inside B1 — and create the donor as a B1 person if they don't already exist. No manual reconciliation, no monthly export.
+
+
+
+
+#### Before You Begin
+
+- A [Donorbox](https://donorbox.org) account with at least one campaign
+- A [Zapier](https://zapier.com) account
+- A B1Admin user with **Edit Settings** permission
+
+
+
+## What You Can Wire Up
+
+| Direction | Donorbox trigger | B1 action |
+|---|---|---|
+| Donorbox → B1 | New or Updated Donation (instant) | Find Person → Add Donation |
+| Donorbox → B1 | New or Updated Donor | Create Person |
+| Donorbox → B1 | New or Updated Plan (recurring) | Find Person → Add Donation (use Plan id as note) |
+
+Donorbox publishes its triggers as **instant** — they fire within seconds of a real donation. No polling delay.
+
+## Setup
+
+### 1. Mint a B1 API key
+
+In B1Admin: **Settings → Developer → API Keys → New API Key**. Scopes:
+
+- `people:read` — to look up the donor by email
+- `people:write` — to create them if they're new
+- `donations:write` — to record the gift
+
+Triggers in this direction are Donorbox's, not B1's, so you don't need `settings:write` here.
+
+### 2. Build the "record a donation" Zap
+
+1. **Trigger** — Donorbox: New Donation. Connect with Donorbox's API key (in Donorbox: *Account → Profile → API Settings*).
+2. **Action** — B1.church: Find Person. Map the donor's email from the trigger to the *Email* search field.
+3. **Action** — Filter by Zapier (optional): only continue if the donor wasn't found, then…
+4. **Action** — B1.church: Create Person. Map first/last/email so the donor lands as a member, not just a gift record.
+5. **Action** — B1.church: Add Donation. Map:
+   - Amount → `data.amount`
+   - Donation Date → trigger's donation date
+   - Fund → pick the B1 fund that mirrors the Donorbox campaign (Zapier lets you switch funds based on a filter or formatter step)
+   - Method → "Online"
+   - Notes → Donorbox transaction id (handy when reconciling)
+
+Turn the Zap on. The next live donation through Donorbox lands in **B1Admin → Donations** automatically.
+
+## Common Recipes
+
+### One Zap per fund
+
+If you run multiple Donorbox campaigns that map to separate B1 funds, the cleanest layout is one Zap per campaign with a Donorbox *campaign* filter at the top — that way the fund mapping is hard-coded and you skip the lookup step.
+
+### Treat updated donations as corrections
+
+Donorbox's *New or Updated Donation* fires on edits too. Use a Zapier *Path* step on `event_type` to fork: "new" → Add Donation, "updated" → Find Donation + Update (note: B1's Zapier app does not currently have an Update Donation action — for now, log "updated" events to a Slack channel for manual review).
+
+### Sync recurring plan changes to a Slack channel
+
+- **Trigger** — Donorbox: New or Updated Plan
+- **Action** — Slack: Send Message to `#donations` (e.g. "Plan changed — Sarah's monthly gift is now $200")
+
+## Limits & Notes
+
+- **Match donors by email.** Donorbox doesn't share B1's person id; the only durable join key is email. Donors who give under a different email will create a new B1 person — your monthly reconciliation should look for these.
+- **Refunds aren't separately exposed** — Donorbox emits a status update on the same donation. B1's Zapier app currently doesn't have an *Update Donation* action; the safe pattern today is to log refund events out-of-band and adjust the donation manually.
+- **Test in Donorbox's sandbox first** to avoid creating fake gifts in production B1. Donorbox provides test mode credentials separate from live.
+
+## Troubleshooting
+
+- **"Person not found" warning every run** — that's fine if you've ordered the steps so a *Create Person* runs in the not-found branch. If the Create Person step never runs either, double-check the API key has `people:write`.
+- **Donation amount looks 100× too big or small** — Donorbox sends cents in some payload variants and dollars in others. Use a *Formatter by Zapier — Numbers* step to divide by 100 if needed.
+- **Duplicate donations from a single gift** — Donorbox fires both *New Donation* and *Updated Donation*. Either filter to `event_type = "donation.succeeded"` or build two Zaps with non-overlapping filters.
+
+## See Also
+
+- [Zapier (overview)](../zapier) — the B1 side of every Zapier recipe
+- [Subsplash](./subsplash) — another donation platform with a Zapier app
+- [Mailchimp](./mailchimp) — chain "new gift" into an email tag
+
+---
+
+## integrations/services/index.md
+
+# Connected Services
+
+
+
+The fastest way to connect B1 to another church-tech tool is usually a Zapier or Make recipe — you don't need new B1 infrastructure, and the third party hosts the workflow. This page is a curated list of services we've confirmed are wireable today, with a short, copy-paste setup guide for each.
+
+
+
+## At a Glance
+
+| Service | Category | Bridge | What you can wire |
+|---|---|---|---|
+| [Mailchimp](./mailchimp) | Email | Zapier or Make | Sync new B1 people / givers into a Mailchimp audience |
+| [Donorbox](./donorbox) | Donations | Zapier | Push Donorbox donations and donors back into B1 |
+| [Subsplash](./subsplash) | App / Donations | Zapier | Pull Subsplash giving and people into B1 |
+| [VOMO](./vomo) | Volunteering | Zapier | Sync volunteer signups between B1 groups and VOMO projects |
+| [Clearstream](./clearstream) | SMS | Zapier | Trigger a Clearstream text from B1 events; ingest replies as B1 records |
+| [Text In Church](./text-in-church) | SMS / Workflows | Zapier | Trigger Text In Church workflows from B1; receive Connect Card data |
+| [Mobile Message](./mobile-message) | SMS (AU) | Webhooks by Zapier or Make | Send SMS from any B1 event |
+| [Checkr](./checkr) | Background checks | Make | Kick off a background check when someone joins a serving team |
+
+## What All Of These Have In Common
+
+1. **B1 side of the wiring is identical** — create an API key with the right scopes in **B1Admin → Settings → Developer → API Keys**, then either let the bridge register a webhook for the trigger (Zapier / Make do this automatically, requires `settings:write`) or call B1's REST endpoints from a downstream action.
+2. **The bridge bills you, not us.** ChurchApps is free; Zapier and Make both have free tiers that cover a handful of recipes.
+3. **You can test the wiring without going live.** Both bridges have a "Test step" button that fires the trigger once against B1 and shows you the data shape before you turn the recipe on.
+
+## Picking a Bridge
+
+- **Zapier** is friendlier and has the larger app catalogue — use it as your default unless cost is an issue.
+- **Make** is cheaper at scale and has more flexible routing/filter logic — use it when a single workflow has fan-out, conditionals, or many steps.
+- **Webhooks by Zapier** (used for the Mobile Message doc) is a generic adapter that lets you POST to any HTTP endpoint from a Zap when the destination isn't a first-class Zapier app.
+
+If you want something not on this list, B1's [REST API](/docs/developer/api) and [webhooks](/docs/developer/api/webhooks) are open — you can build a one-off bridge with the [`@churchapps/integration-sdk`](https://www.npmjs.com/package/@churchapps/integration-sdk) in a few hours.
+
+## What's Not Here (and Why)
+
+Several popular church-tech tools — Tithe.ly, Pushpay, Vanco, PastorsLine, Gloo, Notebird, KidCheck, MinistrySafe — don't have a published Zapier app or Make module today. They have their own APIs but wiring them up to B1 is a custom-code job, not a recipe, so they don't fit this list. If a vendor adds a Zapier app or Make module, we'll add the doc.
+
+We've also deliberately skipped Planning Center-Services-specific tools (music, presentation), competing ChMS products, migration consultants, and tools that only clean up PCO-specific data — none of them have a useful wiring path into B1.
+
+## See Also
+
+- [Zapier (overview)](../zapier) — the B1 side of every Zapier recipe is identical; this doc covers it once
+- [Make (overview)](../make) — same for Make scenarios
+- [Slack & Discord](../slack-discord) — chat notifications without any bridge
+- [Google Sheets](../google-sheets) — on-demand exports
+- [Webhooks (developer reference)](/docs/developer/api/webhooks) — the event catalog every recipe relies on
+
+---
+
+## integrations/services/mailchimp.md
+
+# Mailchimp
+
+
+
+Pipe new B1 people, givers, or group members into a Mailchimp audience so the next welcome series, year-end appeal, or volunteer newsletter pulls from a list that's always up to date. The wiring lives entirely in Zapier (or Make) — B1 fires the event, Mailchimp ingests the subscriber.
+
+
+
+
+#### Before You Begin
+
+- A [Mailchimp](https://mailchimp.com) account with at least one audience you want B1 people pushed into
+- A [Zapier](https://zapier.com) account (the free tier covers small churches)
+- A B1Admin user with **Edit Settings** permission so you can mint an API key
+
+
+
+## What You Can Wire Up
+
+| Direction | B1 trigger | Mailchimp action |
+|---|---|---|
+| B1 → Mailchimp | `person.created` | Add/Update Subscriber |
+| B1 → Mailchimp | `donation.created` | Add Subscriber to Tag (e.g. "Gave in 2026") |
+| B1 → Mailchimp | `group.member.added` | Add Subscriber to Tag scoped to that group |
+| Mailchimp → B1 | New Subscriber | B1 *Create Person* |
+
+The Mailchimp side exposes lots more (campaigns, segments, automations) — see [Mailchimp's Zapier triggers](https://zapier.com/apps/mailchimp/integrations) for the full list. Anything mappable from the B1 envelope is fair game.
+
+## Setup
+
+### 1. Mint a B1 API key
+
+In B1Admin go to **Settings → Developer → API Keys → New API Key**. Give it the scopes the Zap needs:
+
+- `settings:write` — required for the trigger to register its webhook
+- `people:read` — so the Zap can read first/last name, email, etc.
+- (Optional) `people:write` if you also plan a Mailchimp → B1 direction
+
+Save and copy the `cak_…` string — it's only shown once.
+
+### 2. Build the Zap
+
+1. **Trigger:** `B1.church — New Person`. On first use Zapier asks you to *Sign in to B1.church*; paste the API key.
+2. **Action:** `Mailchimp — Add/Update Subscriber`. Map the trigger output:
+   - `data.contactInfo.email` → Email Address
+   - `data.name.first` → First Name
+   - `data.name.last` → Last Name
+   - (Optional) `data.id` → a Mailchimp merge field if you want to keep B1's person id alongside.
+3. Turn the Zap on. Zapier registers a `person.created` webhook on B1 — verify in **Settings → Developer → Webhooks** that a row named "Zapier — person.created" appears.
+
+That's it. Add a person in B1Admin to confirm — the new subscriber shows up in Mailchimp within seconds.
+
+## Common Recipes
+
+### Tag givers automatically
+
+- **Trigger** — B1: New Donation
+- **Action** — B1: Find Person (lookup by `personId`) to get the email
+- **Action** — Mailchimp: Add Subscriber to Tag (tag `Gave-2026`)
+
+### Drop a group-specific welcome series
+
+- **Trigger** — B1: New Group Member, filtered by `data.groupId`
+- **Action** — Mailchimp: Add Subscriber to Tag named after the group; trigger your existing automation off that tag
+
+### Two-way: new Mailchimp signups become B1 contacts
+
+- **Trigger** — Mailchimp: New Subscriber
+- **Action** — B1: Create Person (map First/Last/Email)
+
+## Make Alternative
+
+Make's [Mailchimp app](https://www.make.com/en/integrations/mailchimp) covers 44 modules — the wiring is identical, with the B1 *Watch Events* trigger replacing Zapier's. See the [Make overview doc](../make) for the B1 side.
+
+## Limits & Notes
+
+- **Mailchimp's free tier caps contacts and audiences** — a Zap that floods a free audience past its limit will start erroring with `4xx Member limit reached`. Mailchimp's logs make this obvious.
+- **Mailchimp deduplicates by email**, so re-running a Zap on the same B1 person updates them in place; it doesn't create duplicates.
+- **Unsubscribes from Mailchimp don't flow back to B1.** If you want Mailchimp unsubscribes to clear B1's "Send Mail" preference, build the reverse Zap explicitly.
+
+## Troubleshooting
+
+- **Zap never fires** — check `Settings → Developer → Webhooks` for the `Zapier — person.created` row. If absent, the API key was missing `settings:write` when the Zap turned on. Re-mint, re-connect, toggle the Zap off and on.
+- **`Member exists` warning on Add/Update** — switch the action from *Add Subscriber* to *Add/Update Subscriber* (the verb matters). The upsert variant is idempotent.
+- **First name / last name come through blank** — B1's `data.name.first` and `data.name.last` are only populated if those fields are set on the person. Map `data.name.display` as a fallback.
+
+## See Also
+
+- [Zapier (overview)](../zapier) — the B1 side of every Zapier recipe
+- [Make (overview)](../make) — same idea, visual builder
+- [Webhooks (developer reference)](/docs/developer/api/webhooks#event-catalog)
+
+---
+
+## integrations/services/mobile-message.md
+
+# Mobile Message
+
+
+
+[Mobile Message](https://mobilemessage.com.au) is an Australian SMS API — popular with AU churches because it offers local numbers and competitive AU pricing where Clearstream and Text In Church are US-centric. Mobile Message doesn't have a first-class Zapier app today, but it does publish a public REST API, so you can wire B1 events to Mobile Message texts through **Webhooks by Zapier** (or Make's HTTP module) in a few minutes.
+
+
+
+
+#### Before You Begin
+
+- A [Mobile Message](https://mobilemessage.com.au) account with a registered Sender ID and API credentials (API username + password under *Account → API Settings*)
+- A [Zapier](https://zapier.com) account (or [Make](https://www.make.com))
+- A B1Admin user with **Edit Settings** permission
+
+
+
+## What You Can Wire Up
+
+Mobile Message's API is "send SMS"-shaped — no triggers, just outbound text. So the recipes are all B1 → SMS:
+
+| Direction | B1 trigger | Outcome |
+|---|---|---|
+| B1 → Mobile Message | `person.created` | Welcome text to the new person |
+| B1 → Mobile Message | `donation.created` | Thank-you text to the donor |
+| B1 → Mobile Message | `form.submission.created` | Page the on-call team |
+| B1 → Mobile Message | `event.created` | Reminder broadcast to a list |
+
+## Setup
+
+### 1. Mint a B1 API key
+
+**Settings → Developer → API Keys → New API Key**:
+
+- `settings:write` — for the trigger webhook to register
+- `people:read` — to look up the recipient's phone number from a `personId`
+
+### 2. Build the Zap with Webhooks by Zapier
+
+1. **Trigger** — B1.church: pick the event you want (e.g. New Donation).
+2. **Action** — B1.church: Find Person (using `data.personId`) to get the phone number and name.
+3. **Action** — Webhooks by Zapier: **POST**. Configure as below.
+
+The POST step's settings:
+
+- **URL** — `https://api.mobilemessage.com.au/v1/messages`
+- **Payload Type** — JSON
+- **Data** —
+  ```json
+  {
+    "messages": [
+      {
+        "to": "{{step2_phone}}",
+        "message": "Thanks for your gift, {{step2_first_name}}!",
+        "sender": "YourChurch"
+      }
+    ]
+  }
+  ```
+- **Headers** — `Content-Type: application/json` (Webhooks by Zapier adds this automatically)
+- **Basic Auth** — set the *Basic Auth* field to `|` (Zapier converts that to the right `Authorization: Basic …` header)
+
+Turn the Zap on. Send a test gift in B1Admin to verify a text arrives.
+
+## Common Recipes
+
+### Event reminders the morning of
+
+- **Trigger** — Schedule by Zapier (daily, 7am)
+- **Action** — B1.church: Find Events for today (or use a Find step with a fixed date filter, or store today's event list in a Google Sheet)
+- **Action** — Webhooks by Zapier: POST to Mobile Message with the event list to a registered subscriber group
+
+### Use the batch endpoint for a list broadcast
+
+Mobile Message's `/v1/messages` endpoint accepts up to 10,000 messages per call. To broadcast to a B1 group:
+
+- **Trigger** — B1.church: New Form Submission (filter to a specific form)
+- **Action** — B1.church: List Group Members for a target group (via a *Webhooks by Zapier — GET* step on `/membership/groupmembers?groupId=…`)
+- **Action** — Formatter by Zapier → Utilities → Line-itemize the response into a `messages` array
+- **Action** — Webhooks by Zapier: POST the full array to `/v1/messages`
+
+### Make alternative
+
+If you prefer Make, drop the **HTTP — Make a request** module after the B1 Watch Events trigger, configure it the same way (POST, Basic Auth, JSON body). See the [Make overview](../make) for the B1 side.
+
+## Limits & Notes
+
+- **Basic Auth is the only authentication method** — Mobile Message issues a username and password from the dashboard. Treat both as secrets.
+- **`sender` must be a registered Sender ID** on your Mobile Message account, or the send will return `400 Invalid sender`. AU regulations require sender registration.
+- **AU phone numbers** can be `0412345678` (local) or `+61412345678` (international). The API accepts both, but normalise on `+61…` if you're sending overseas as well.
+- **Up to 10,000 messages per request** — useful for broadcasts, but a single B1 webhook delivery will rarely emit a list that big; reserve the batch endpoint for scheduled bulk Zaps.
+
+## Troubleshooting
+
+- **POST returns `401 Unauthorized`** — Basic Auth credentials are wrong. Re-copy from the Mobile Message dashboard *Account → API Settings*. Note the username is your account email by default, not a separate API key.
+- **POST returns `400 Invalid sender`** — the `sender` value isn't a registered Sender ID on your account. Register it in the Mobile Message dashboard first.
+- **Text arrives but is truncated** — Mobile Message splits messages over ~160 characters into multiple parts; you're billed per part. Check the response body — it tells you the part count.
+
+## See Also
+
+- [Clearstream](./clearstream), [Text In Church](./text-in-church) — alternative SMS providers with native Zapier apps (no Webhooks-by-Zapier step needed)
+- [Zapier (overview)](../zapier) — B1 side of every Zapier recipe
+- [Mobile Message API docs](https://mobilemessage.com.au/api-documentation)
+
+---
+
+## integrations/services/subsplash.md
+
+# Subsplash
+
+
+
+If you use Subsplash for your church app, giving, or forms but want B1 as the system of record for people and donations, Subsplash's Zapier app can pipe donations, new profiles, and form responses into B1 in real time. Note that Subsplash's Zapier app is currently **triggers-only** — the wiring is one-way (Subsplash → B1).
+
+
+
+
+#### Before You Begin
+
+- A Subsplash account on a plan that includes **API + Zapier** access (check with your Subsplash Client Success Manager — these gate behind plan tier)
+- A [Zapier](https://zapier.com) account
+- A B1Admin user with **Edit Settings** permission
+
+
+
+## What You Can Wire Up
+
+All triggers below are Subsplash's. The actions are B1's.
+
+| Subsplash trigger | B1 action |
+|---|---|
+| New Donation | Find Person → Add Donation (Create Person if missing) |
+| New Pledge | Add Donation (with `notes` = "Pledge: …") |
+| New Person Created | Create Person |
+| Person Updated Profile | (no direct B1 action — log to a Google Sheet for manual review) |
+| New Form Response | Create Person + (optionally) Add Group Member based on the form |
+
+Subsplash → B1 is the only direction Subsplash's app supports right now.
+
+## Setup
+
+### 1. Mint a B1 API key
+
+In B1Admin: **Settings → Developer → API Keys → New API Key**. Scopes:
+
+- `people:read` — to look up the donor by email
+- `people:write` — to create them if they don't exist
+- `donations:write` — to record the gift
+- (No `settings:write` needed — Subsplash, not B1, owns the trigger here.)
+
+### 2. Connect Subsplash to Zapier
+
+Follow [Subsplash's Zapier integration guide](https://support.subsplash.com/en/articles/9825926-zapier-integration). They issue an API token from inside the Subsplash Dashboard that Zapier uses to authenticate the trigger side.
+
+### 3. Build the "record a donation" Zap
+
+1. **Trigger** — Subsplash: New Donation
+2. **Action** — B1.church: Find Person (by email)
+3. **Filter / Path** — branch on "person found":
+   - **Found:** B1.church: Add Donation. Map amount, date, fund, method = "Online", notes = Subsplash transaction id.
+   - **Not found:** B1.church: Create Person → B1.church: Add Donation (using the newly created person's id).
+
+Turn the Zap on. Future Subsplash donations flow into **B1Admin → Donations** within seconds.
+
+## Common Recipes
+
+### Send a thank-you when a first-time gift lands
+
+- **Trigger** — Subsplash: New Donation
+- **Action** — Filter by Zapier: only continue if it's the donor's first gift (use a *Lookup Table* on Donor Email against a Google Sheet of past givers, or a Zapier *Paths* step on the donor created date)
+- **Action** — Mailchimp / SMTP / SendGrid: send first-gift thank-you message
+- **Action** — B1.church: Add Donation (as usual)
+
+### Filter pledges off the regular giving flow
+
+- **Trigger** — Subsplash: New Pledge
+- **Action** — B1.church: Add Donation with `notes = "Pledge — Subsplash"` and a fund called `Pledges` (separate from your operating fund) so you can report on pledges independently in **B1Admin → Donations → Reports**.
+
+### Sync new app users as B1 people
+
+- **Trigger** — Subsplash: New Person Created
+- **Action** — B1.church: Create Person, populating name, email, phone. Tag in B1 by adding the new person to a group like "Subsplash App Users".
+
+## Limits & Notes
+
+- **Subsplash's Zapier app is triggers-only.** If you want B1-side changes (e.g. a new B1 person to land in Subsplash too), you'd need to build that bridge from B1's Zapier app triggers calling Subsplash's REST API via a custom *Webhooks by Zapier — POST* action. That's a custom integration, not a recipe.
+- **API access is plan-gated.** If Zapier connection fails with `403 Forbidden`, your Subsplash plan likely doesn't include API access — contact your Client Success Manager.
+- **Fund mapping is manual.** Subsplash passes a campaign or category name; B1 needs a numeric fund id. Either hard-code the fund in the Zap or maintain a Zapier *Lookup Table* mapping Subsplash campaigns to B1 funds.
+
+## Troubleshooting
+
+- **No trigger fires after a donation** — verify in Subsplash's Zapier dashboard that the connection still shows *Connected*. If the API token was rotated on the Subsplash side, the Zap silently stops; reconnect.
+- **B1 *Add Donation* fails with 422** — most often a missing or unrecognised `fundId`. List your funds via **B1Admin → Donations → Funds** and copy the exact id into the Zap step.
+- **First gift triggers twice** — Subsplash occasionally re-delivers a trigger if Zapier missed its ack. Add a *Filter by Zapier* on the donation id (Subsplash sends one in the payload) to drop duplicates.
+
+## See Also
+
+- [Donorbox](./donorbox) — same recipe shape, different donation platform
+- [Zapier (overview)](../zapier) — B1 side of every Zapier recipe
+- [Subsplash Zapier integration guide](https://support.subsplash.com/en/articles/9825926-zapier-integration) (Subsplash's docs)
+
+---
+
+## integrations/services/text-in-church.md
+
+# Text In Church
+
+
+
+[Text In Church](https://textinchurch.com) bundles SMS plus drip workflows and connect-card automations. Its Zapier app exposes both directions — pipe B1 events into a Text In Church workflow, and pull connect-card or new-contact triggers out the other side into B1.
+
+
+
+
+#### Before You Begin
+
+- A [Text In Church](https://textinchurch.com) account on a plan that includes the Zapier integration
+- A [Zapier](https://zapier.com) account
+- A B1Admin user with **Edit Settings** permission
+
+
+
+## What You Can Wire Up
+
+| Direction | Trigger | Action |
+|---|---|---|
+| B1 → Text In Church | B1 `person.created` | Create/Update Person + Add to Group |
+| B1 → Text In Church | B1 `form.submission.created` | Send Text Message via the relevant team |
+| B1 → Text In Church | B1 `group.member.added` | Add to Group (mirror group membership) |
+| Text In Church → B1 | Connect Card Submitted | B1: Create Person + Add Group Member |
+| Text In Church → B1 | Person Created | B1: Create Person |
+| Text In Church → B1 | Person Joined Group | B1: Add Group Member |
+
+Text In Church actions also include *Send Text Message*, *Send Voice Broadcast*, *Create Task*, *Find Person/Group*, and group membership add/remove.
+
+## Setup
+
+### 1. Mint a B1 API key
+
+**Settings → Developer → API Keys → New API Key**:
+
+- `settings:write` — required for B1-triggered Zaps
+- `people:read`, `people:write` — to find or create the person
+- `groups:write` — for group syncing
+- (Optional) `donations:write` if you wire gift confirmations to TIC
+
+### 2. Connect Text In Church to Zapier
+
+Follow [Text In Church's Zapier integration guide](https://help.textinchurch.com/en/articles/3943363-text-in-church-s-zapier-integration). They generate an API token from inside the TIC dashboard.
+
+### 3. Build the connect-card-to-B1 Zap
+
+The most common direction. Connect cards fired from TIC become new B1 people automatically.
+
+1. **Trigger** — Text In Church: Connect Card Submitted.
+2. **Action** — B1.church: Find Person (by email).
+3. **Path** — branch on found / not found:
+   - Not found → B1.church: Create Person.
+   - Found → continue.
+4. **Action** — B1.church: Add Group Member to a "New Contact" group.
+
+Turn the Zap on. The next connect card submitted through TIC lands in **B1Admin → People** automatically.
+
+## Common Recipes
+
+### Trigger a connect-card-style workflow from a B1 form
+
+- **Trigger** — B1.church: New Form Submission (filter on the "I'm new here" form id)
+- **Action** — Text In Church: Create/Update Person, mapping the form's email / phone / name answers
+- **Action** — Text In Church: Add to Group, where the group has a pre-built welcome workflow attached
+
+### Mirror group membership
+
+- **Trigger** — B1.church: New Group Member, filtered on a specific `groupId`
+- **Action** — Text In Church: Add to Group (same person, mirror group). Pair with a `group.member.removed` Zap if you want full sync.
+
+### Page a leader when someone joins
+
+- **Trigger** — B1.church: New Group Member
+- **Action** — Text In Church: Send Text Message, recipient = the group leader's phone, body = `"{first} {last} just joined {group}"`.
+
+## Limits & Notes
+
+- **TIC's Zapier app gates behind plan tier.** If the Zapier integration is greyed out in the TIC dashboard, contact TIC support to enable it on your plan.
+- **Group ids are TIC's, not B1's.** When mirroring, you'll maintain a mapping table somewhere (a Zapier *Lookup Table*, or hard-coded per-Zap).
+- **Send Text Message costs credits.** Each Zap that fires *Send Text* consumes from your TIC SMS allotment.
+
+## Troubleshooting
+
+- **Connect-Card trigger doesn't fire** — TIC needs the Zapier integration toggle on. Also verify the form you tested with is configured as a "Connect Card", not a generic survey.
+- **Create Person in B1 fails with 401** — the API key is wrong, revoked, or missing `people:write`. Re-mint.
+- **Duplicate B1 people** — TIC sends both *Person Created* and *Connect Card Submitted* for the same event. Pick one as your source of truth and add a Zapier Filter on the other.
+
+## See Also
+
+- [Clearstream](./clearstream) — alternative SMS platform with similar Zapier shape
+- [Zapier (overview)](../zapier) — B1 side of every Zapier recipe
+- [Text In Church Zapier guide](https://help.textinchurch.com/en/articles/3943363-text-in-church-s-zapier-integration) (TIC's docs)
+
+---
+
+## integrations/services/vomo.md
+
+# VOMO
+
+
+
+VOMO is a volunteer engagement platform — people sign up for projects, check in at the kiosk, and accumulate hours. If you use VOMO for volunteer scheduling but B1 for people records, Zapier can sync membership and check-ins between them so neither side drifts.
+
+
+
+
+#### Before You Begin
+
+- A [VOMO](https://vomo.org) account on a plan that exposes Zapier (check with VOMO support if unsure)
+- A [Zapier](https://zapier.com) account
+- A B1Admin user with **Edit Settings** permission
+
+
+
+## What You Can Wire Up
+
+VOMO's Zapier app exposes four instant triggers and four actions. The recipes most churches want:
+
+| Direction | Trigger | Action |
+|---|---|---|
+| VOMO → B1 | VOMO Membership (created) | B1: Find Person → Create Person (if new) |
+| VOMO → B1 | VOMO Kiosk check-in | B1: Add Group Member to a "Currently Serving" group, or record as attendance |
+| B1 → VOMO | B1 `person.created` | VOMO: Find Organizer (by email); else custom step |
+| Either | VOMO Participation (signups) | B1: Add Group Member to project-specific group |
+
+The VOMO actions are limited to **drafting projects** and **finding** existing organizers/projects — there's no "add this person to a VOMO project" action today. The interesting wiring is mostly VOMO → B1.
+
+## Setup
+
+### 1. Mint a B1 API key
+
+**Settings → Developer → API Keys → New API Key**. Scopes:
+
+- `people:read`, `people:write` — to look up and create volunteers as B1 people
+- `groups:write` — to add them to serving-team groups
+- (Optional) `attendance:write` if you treat kiosk check-ins as attendance
+
+### 2. Build the membership-sync Zap
+
+1. **Trigger** — VOMO: Membership (event = `created`).
+2. **Action** — B1.church: Find Person, matched on email.
+3. **Filter / Path** — fork on found vs. not found:
+   - Not found → B1.church: Create Person, then Add Group Member to the appropriate volunteer group.
+   - Found → B1.church: Add Group Member directly.
+4. Turn on. New VOMO volunteers now appear in B1 with the right group membership.
+
+### 3. (Optional) Build the kiosk-check-in Zap
+
+1. **Trigger** — VOMO: Kiosk
+2. **Action** — B1.church: Find Person (by email)
+3. **Action** — your choice:
+   - *If treating as attendance* — Webhooks by Zapier POST to B1's `/attendance/visits` endpoint (B1's Zapier app doesn't yet have a first-class *Record Attendance* action). The B1 [API key](/docs/developer/api/api-keys) goes in the `Authorization: Bearer cak_…` header.
+   - *If treating as group membership* — B1.church: Add Group Member with a "Currently Serving (Today)" group, and a second Zap later in the day removes them via a scheduled cleanup.
+
+## Common Recipes
+
+### Per-project group sync
+
+- **Trigger** — VOMO: Participation (created)
+- **Action** — Filter by Zapier on project id, then
+- **Action** — B1.church: Add Group Member to a B1 group whose name mirrors the VOMO project.
+
+When the VOMO project ends, manually clear the B1 group (or pair this with a *Participation deleted* trigger that removes them).
+
+### Send a "thanks for signing up" text via SMS
+
+Chain VOMO Participation → Clearstream Send Text or Text In Church Send Message in the same Zap. Both have first-class Zapier actions — see [Clearstream](./clearstream) and [Text In Church](./text-in-church).
+
+### Detect drop-off
+
+Run a daily Zapier *Schedule* trigger that calls Find Organizer in VOMO for a list of B1 people who joined the serving team this month — if VOMO returns "not found", they didn't activate VOMO and need a nudge.
+
+## Limits & Notes
+
+- **Email is the join key.** VOMO's payloads expose a user email but no B1 person id. Donors who use different emails in each system will create duplicates.
+- **No "Add to Project" action in VOMO's Zapier app today.** If you need B1 → VOMO project enrollment, you'd POST to VOMO's REST API from a *Webhooks by Zapier* step, which is a custom integration.
+- **VOMO's free / lower tiers may not include Zapier.** Confirm with VOMO support before promising a wiring date.
+
+## Troubleshooting
+
+- **Trigger never fires** — VOMO's instant triggers require the API token to remain valid. Re-test the Zap; reconnect VOMO if the token was rotated.
+- **B1 *Add Group Member* fails with 422** — the group id in the action doesn't exist. Open **B1Admin → Groups**, click the group, and copy the URL's id segment into the Zap step.
+- **Duplicate B1 people from a single VOMO volunteer** — they probably signed up under a different email than they already had in B1. Either standardise emails, or add a Zapier *Path* that also searches by phone before creating.
+
+## See Also
+
+- [Zapier (overview)](../zapier) — B1 side of every Zapier recipe
+- [Clearstream](./clearstream), [Text In Church](./text-in-church) — pair volunteer signups with SMS confirmations
+- [Webhooks (developer reference)](/docs/developer/api/webhooks) — the events VOMO can trigger on
+
+---
+
+## integrations/slack-discord.md
+
+# Slack & Discord
+
+
+
+Post readable notifications from B1 directly to a Slack or Discord channel — new people, donations, group sign-ups, form submissions, calendar events, and more. No third-party account, no Zap to maintain: B1 reformats events into chat messages and POSTs them to the channel's webhook URL itself.
+
+
+
+
+#### Before You Begin
+
+- You need the **Edit Settings** permission in B1Admin
+- An admin in your Slack workspace or Discord server to create the channel's Incoming Webhook
+- Decide which channel you want notifications in (you can use the same channel for several event types, or split them across channels)
+
+
+
+## How It Works
+
+B1 has a built-in **Connector Type** for chat platforms. When you create a webhook with type **Slack** or **Discord**, the webhook engine still does its usual delivery + retry + signed-header dance, but the body it sends is reshaped from B1's normal `{event,churchId,data}` envelope into the small `{text}` (Slack) or `{content}` (Discord) message those services expect.
+
+No B1 servers reach out to Slack on a per-church basis other than the existing outbound webhook flow — there is nothing new to host, nothing extra to pay for.
+
+## Slack — Step by Step
+
+### 1. Get a Slack Incoming Webhook URL
+
+1. Open [api.slack.com/apps](https://api.slack.com/apps) in the Slack workspace you want notifications in.
+2. Click **Create New App → From scratch**, name it something like "B1 Notifications", and pick the workspace.
+3. In the left nav choose **Incoming Webhooks** and toggle **Activate Incoming Webhooks** to *On*.
+4. Click **Add New Webhook to Workspace**, pick the channel (e.g. `#donations`), then **Allow**.
+5. Slack lands you back on the page with a fresh **Webhook URL** that looks like `https://hooks.slack.com/services/T0XXXXXXX/B0YYYYYYY/zzz…`. Copy it — that's the only piece of information B1 needs.
+
+:::caution
+Treat the Slack webhook URL as a secret. Anyone with it can post arbitrary messages to the channel. If you accidentally expose it, regenerate it from the Slack app page (regenerating just rotates the URL; update B1 to match).
+:::
+
+### 2. Connect it in B1Admin
+
+1. In B1Admin go to **Settings → Developer → Webhooks**.
+2. Click **New Webhook**.
+3. Fill in:
+   - **Name** — something readable like "Donations → #donations". Only your team sees it.
+   - **Connector Type** — choose **Slack**.
+   - **Payload URL** — paste the Slack URL from step 1.
+   - **Events** — tick the events you want as messages. For a donations channel, just `donation.created`. For a #people channel, try `person.created` and `group.member.added`.
+4. Click **Save**. A "Signing Secret" dialog appears — you can ignore it for Slack (Slack doesn't verify B1 signatures) and close it.
+
+### 3. Test it
+
+Re-open the webhook from the list and click **Send Test Event**. Within a second or two a message like
+
+> 💝 New donation: $50.00
+
+appears in your Slack channel, and a new row shows up in the **Recent Deliveries** table on the same screen with status `succeeded`. You're done.
+
+## Discord — Step by Step
+
+### 1. Get a Discord Webhook URL
+
+1. In your Discord server, hover over the channel you want notifications in and click the **⚙ gear** (Edit Channel).
+2. Open **Integrations → Webhooks → New Webhook**.
+3. Give it a name and (optionally) an avatar, then click **Copy Webhook URL** — looks like `https://discord.com/api/webhooks/123…/abc…`.
+
+### 2. Connect it in B1Admin
+
+Identical to the Slack flow above, except set **Connector Type** to **Discord**. Paste the Discord URL into **Payload URL** and save.
+
+:::tip
+You do **not** need to add `/slack` to the end of the Discord URL — B1 sends Discord-native `{content}` payloads, not Slack-compatible ones. Just paste the URL Discord gave you.
+:::
+
+### 3. Test it
+
+Same **Send Test Event** button — Discord shows the message in the chosen channel and the delivery log flips to `succeeded`.
+
+## What the Messages Look Like
+
+| Event | Example message |
+|---|---|
+| `person.created` | 👤 New person added: Jordan Rivera |
+| `person.updated` | 👤 Person updated: Jordan Rivera |
+| `group.created` | 👥 New group created: Tuesday Bible Study |
+| `group.member.added` | ➕ Someone was added to a group |
+| `donation.created` | 💝 New donation: $50.00 |
+| `donation.updated` | 💝 Donation updated: $75.00 |
+| `attendance.recorded` | ✅ Attendance recorded |
+| `form.submission.created` | 📝 New form submission received |
+| `event.created` | 📅 New event: Easter Service |
+
+The full list lives in the [webhook event catalog](/docs/developer/api/webhooks#event-catalog) — any event there can be routed to Slack/Discord.
+
+## One Channel Per Topic
+
+You don't have to put every event in one place. Most churches set up a handful of webhooks:
+
+- A **#donations** channel that only listens to `donation.created`
+- A **#new-people** channel for `person.created` and `group.member.added`
+- A **#admin-alerts** channel for low-volume things like `form.submission.created`
+
+There's no limit on the number of webhooks per church. Each one is independent — deleting or disabling one doesn't affect the others.
+
+## Inspecting Deliveries
+
+The webhook editor's **Recent Deliveries** table shows the last 50 attempts. Click a row to see the exact payload that was sent and the response that came back. For a Slack connector the payload is `{"text":"💝 New donation: $50.00"}` — not the raw `{event,churchId,...}` envelope — because B1 reshapes it before delivery.
+
+If something failed (red `failed` or `exhausted` badge), the dialog shows the HTTP status and response body so you can see exactly what Slack or Discord didn't like — usually a copy/paste error in the URL.
+
+## Troubleshooting
+
+- **No message appears + delivery status `400`** — usually the Connector Type is set to **Standard** but the URL is a Slack/Discord one. Slack/Discord reject the raw envelope. Switch the dropdown to **Slack** or **Discord** and resend the test.
+- **Webhook auto-disabled** — after 3 consecutive failed deliveries B1 turns the webhook off. Fix the URL (or rotate it on Slack/Discord) and toggle **Active** back on.
+- **Message arrived but is missing detail** — every chat platform limits message size. B1's messages are one-liners by design; for richer notifications use [Zapier](./zapier) or [Make](./make) to compose a fuller Slack message via their Slack actions.
+
+## Switching Connector Types Later
+
+You can change the Connector Type on an existing webhook — it takes effect on the next delivery. If you switch from Slack to Standard, point the URL at your own HTTPS endpoint and the same signing secret (it was issued when the webhook was created) starts being verifiable as the raw envelope.
+
+## See Also
+
+- [Zapier](./zapier) — for multi-step workflows triggered by B1 events
+- [Make](./make) — visual scenario builder
+- [Webhooks (developer reference)](/docs/developer/api/webhooks) — the full payload + signature format if you ever point a webhook at your own server
+
+---
+
+## integrations/zapier.md
+
+# Zapier
+
+
+
+The official B1.church app on Zapier lets a Zap react to events in your church (new person, new donation, new group member, …) and write records back to B1. No coding, no infrastructure — you wire it up in Zapier's drag-and-drop editor, paste an API key, and turn the Zap on.
+
+
+
+
+#### Before You Begin
+
+- A [Zapier](https://zapier.com) account (the free tier is enough for a handful of Zaps)
+- A church admin with the **Edit Settings** permission in B1Admin (you'll create an API key)
+- An idea of what you want to do — e.g. "when a person is added in B1, add them to my Mailchimp list"
+
+
+
+## Triggers and Actions
+
+| Type | What | B1 event / endpoint |
+|---|---|---|
+| **Trigger** | New Person | `person.created` |
+| **Trigger** | Updated Person | `person.updated` |
+| **Trigger** | New Donation | `donation.created` |
+| **Trigger** | New Group Member | `group.member.added` |
+| **Trigger** | New Form Submission | `form.submission.created` |
+| **Action** | Create Person | adds a new person |
+| **Action** | Add Donation | records a donation |
+| **Action** | Add Group Member | adds a person to a group |
+| **Search** | Find Person | looks up a person by name or email |
+
+Combine these freely with any of Zapier's 7,000+ supported apps.
+
+## Setup
+
+### 1. Create a B1 API key
+
+1. In B1Admin go to **Settings → Developer → API Keys**.
+2. Click **New API Key**, give it a name like "Zapier", and select the scopes the Zap needs.
+3. **Important:** Zapier triggers register a webhook on your behalf when the Zap turns on, which requires the **`settings:write`** scope. Always include `settings:write` if any of your Zaps use a B1 trigger.
+4. Also grant the scopes the actions need — for example a "Add Donation" action needs `donations:write`, "Create Person" needs `people:write`.
+5. Save. The full `cak_…` key is shown **once** — copy it.
+
+### 2. Connect Zapier to B1
+
+1. In Zapier, build a new Zap.
+2. When you pick a B1 trigger or action for the first time, Zapier asks you to **Sign in to B1.church**.
+3. Paste the API key from step 1 and click **Yes, Continue**. Zapier validates it against your church.
+
+The connection is saved in Zapier and reused by every Zap on your account.
+
+### 3. Build the Zap
+
+Pick a trigger, then add one or more action steps. Examples below.
+
+## Common Recipes
+
+### Add new B1 people to Mailchimp
+
+- **Trigger** — B1: New Person
+- **Action** — Mailchimp: Add/Update Subscriber. Map B1's `name__first`, `name__last`, `contactInfo__email` into Mailchimp's First Name / Last Name / Email fields.
+
+### Post donations to a Slack channel with a richer card than the built-in connector
+
+- **Trigger** — B1: New Donation
+- **Action** — Slack: Send Channel Message. Compose any layout — buttons, attachments, etc. — that the built-in [Slack connector](./slack-discord) can't.
+
+### Add new group members to a Google Group
+
+- **Trigger** — B1: New Group Member (filtered to a specific `groupId`)
+- **Action** — Filter by Zapier: only continue if the B1 group is the one you care about
+- **Action** — B1: Find Person (use the trigger's `personId` to fetch the email)
+- **Action** — Google Groups: Add Member
+
+### Forward form submissions to a project tracker
+
+- **Trigger** — B1: New Form Submission
+- **Action** — Notion / Linear / Asana / Trello: Create page / issue / task
+
+## How Triggers Work Under the Hood
+
+Triggers are **REST hooks**, not polling — Zapier doesn't ping B1 every 15 minutes. When you turn the Zap on, Zapier asks B1 to register a webhook pointing at a private Zapier URL; when the event fires, B1 POSTs the envelope to Zapier and your Zap kicks off **within seconds**. Turn the Zap off and Zapier asks B1 to delete the webhook — no orphan subscriptions.
+
+This means the trigger only fires for events that happen **after** the Zap is turned on. There is no backfill — turning a Zap on does not replay yesterday's donations.
+
+## Limits & Notes
+
+- **Multiple Zaps with the same trigger** each register their own B1 webhook — there's no conflict, but it's worth knowing if you're inspecting **Settings → Developer → Webhooks** and wondering why three identical `Zapier — donation.created` rows are there.
+- **Test data in Zap setup** — when you build a Zap, Zapier asks for sample data to map fields. It will pull the most recent matching event from B1 if there is one; otherwise it uses a synthetic sample from the app definition.
+- **Action failures surface as Zap errors** in Zapier's task history. Common cause: an API key without the right scope (e.g. an "Add Donation" action needs `donations:write`). Re-mint the key with the correct scopes and re-connect in Zapier.
+- **Outbound API call quotas** — every B1 API call from an action counts toward your Zapier task quota, not toward anything on B1's side.
+
+## Troubleshooting
+
+- **"Authentication failed"** when connecting — the API key is wrong, revoked, or missing the scopes the Zap needs. Re-mint it in B1Admin with at least `settings:write` plus whatever resource scopes the Zap touches, then update the connection.
+- **Trigger never fires** — confirm the webhook actually got registered: in B1Admin, **Settings → Developer → Webhooks** should now show a row named "Zapier — &lt;event&gt;". If it's not there, the API key probably lacked `settings:write` when you turned the Zap on. Fix the key, toggle the Zap off and back on.
+- **Trigger fires twice** — Zapier occasionally redelivers if its acknowledgement was lost. Use a "Filter by Zapier" step on a unique id (e.g. the person's `id`) if you need strict deduplication.
+
+## See Also
+
+- [Make](./make) — same pattern, different platform
+- [Slack & Discord](./slack-discord) — simpler chat notifications without Zapier
+- [Webhooks (developer reference)](/docs/developer/api/webhooks)
 
 ---
 
@@ -2685,6 +4748,194 @@ For other search options, see [Searching People](./searching-people.md).
 
 ---
 
+## people/bulk-editing.md
+
+# Bulk Editing People
+
+
+Bulk editing allows you to update multiple people at once, saving time when making the same change to many individuals. You can update membership status, marital status, gender, opt-out preferences, and group memberships in a single operation.
+
+
+
+#### Before You Begin
+
+- You need permission to manage people data. See [Roles & Permissions](./roles-permissions.md) for details.
+- You should have already added or imported the people you want to edit. See [Adding People](./adding-people.md) if needed.
+
+
+## Selecting People for Bulk Editing
+
+1. Navigate to **People** in B1 Admin
+2. Use the search or filter tools to find the people you want to update
+3. Check the boxes next to each person's name to select them
+   - You can select people individually
+   - Or use the header checkbox to select all visible people on the current page
+4. Once you have selected at least one person, the **Bulk Actions** button will appear
+
+:::tip
+If you need to update a large group of people based on specific criteria, use the [AI Search](./ai-search.md) feature or filters to narrow down your list first, then select all matching people.
+:::
+
+## Available Bulk Actions
+
+The **Bulk Actions** menu provides several options:
+
+### Update Membership Status
+
+Update the membership status for all selected people:
+
+1. Click **Bulk Actions** → **Set Membership Status**
+2. Choose the new status:
+   - **Visitor** -- First-time or occasional attendees
+   - **Regular Attendee** -- Frequent attendees who aren't members
+   - **Member** -- Official church members
+   - **Staff** -- Church staff members
+   - **Inactive** -- People who are no longer attending
+3. Choose update mode:
+   - **Overwrite all** -- Replace the current status for all selected people
+   - **Only update empty** -- Only set the status for people who don't have one
+4. Click **Update**
+
+### Update Marital Status
+
+Update marital status in bulk:
+
+1. Click **Bulk Actions** → **Set Marital Status**
+2. Select the new status:
+   - **Unknown**
+   - **Single**
+   - **Married**
+   - **Divorced**
+   - **Widowed**
+3. Choose whether to overwrite existing values or only update empty fields
+4. Click **Update**
+
+### Update Gender
+
+Update gender information for multiple people:
+
+1. Click **Bulk Actions** → **Set Gender**
+2. Select the value:
+   - **Unspecified**
+   - **Male**
+   - **Female**
+3. Choose update mode (overwrite all or only empty)
+4. Click **Update**
+
+### Update Opt-Out Status
+
+Control whether people have opted out of communications:
+
+1. Click **Bulk Actions** → **Set Opted Out**
+2. Choose:
+   - **No** -- Allow communications (remove opt-out)
+   - **Yes** -- Block communications (set opt-out)
+3. Choose update mode
+4. Click **Update**
+
+:::warning
+Be careful when changing opt-out status. People who have explicitly opted out should not receive communications unless they have given new consent.
+:::
+
+### Add to Group
+
+Add all selected people to one or more groups:
+
+1. Click **Bulk Actions** → **Add to Group**
+2. Search for and select the group(s) to add people to
+3. You can select multiple groups to add people to all of them
+4. Click **Add to Groups**
+
+Each person will be added as a regular member of the selected group(s). You can later promote individuals to group leaders if needed from the [Group Members](../groups/group-members.md) page.
+
+### Remove from Group
+
+Remove all selected people from one or more groups:
+
+1. Click **Bulk Actions** → **Remove from Group**
+2. Search for and select the group(s) to remove people from
+3. You can select multiple groups
+4. Click **Remove from Groups**
+
+:::info
+This action only removes people from the specified groups. It does not delete their person records.
+:::
+
+### Delete People
+
+Permanently delete the selected people from your church database:
+
+1. Click **Bulk Actions** → **Delete**
+2. Review the list of people who will be deleted
+3. Type **DELETE** in the confirmation field
+4. Click **Confirm Delete**
+
+:::danger
+Deleting people is permanent and cannot be undone. This will remove all their data including:
+- Personal information
+- Group memberships
+- Attendance records
+- Donation history
+- Form submissions
+
+Only use this action if you are absolutely certain you want to remove these people from your system.
+:::
+
+## Bulk Edit Results
+
+After completing a bulk action, you'll see a summary showing:
+
+- **Total selected** -- How many people were included in the operation
+- **Successfully updated** -- How many records were changed
+- **Failed** -- Any records that couldn't be updated (if applicable)
+- **Unchanged** -- Records that didn't need changes (e.g., when using "only update empty" mode)
+
+If any updates failed, you'll see error details explaining why.
+
+## Best Practices
+
+- **Start small** -- Test bulk operations on a few records first to ensure you're making the right changes
+- **Use filters** -- Narrow your list with filters or AI search before selecting people to ensure you're only updating the right individuals
+- **Double-check selections** -- Review the selected people before applying bulk changes
+- **Use "only update empty" mode** -- When you want to fill in missing data without overwriting existing information
+- **Document major changes** -- Keep notes about bulk updates in case you need to reference them later
+- **Coordinate with your team** -- Let other administrators know when making large bulk changes
+
+## Common Use Cases
+
+### Updating New Members
+
+After a membership class, update all attendees to Member status:
+
+1. Search for the people who attended the class
+2. Select them all
+3. Use **Bulk Actions** → **Set Membership Status** → **Member**
+
+### Organizing Small Groups
+
+Add multiple people to a new small group:
+
+1. Search for the people you want in the group
+2. Select them
+3. Use **Bulk Actions** → **Add to Group** and select the small group
+
+### Cleaning Up Data
+
+Fill in missing marital status for married couples:
+
+1. Filter for people who are married (using household information)
+2. Select those with blank marital status
+3. Use **Bulk Actions** → **Set Marital Status** → **Married** → **Only update empty**
+
+## Related Articles
+
+- [Searching People](./searching-people.md) -- Find people to edit
+- [AI Search](./ai-search.md) -- Use natural language to find specific groups of people
+- [Group Members](../groups/group-members.md) -- Manage group membership
+- [Exporting Data](./exporting-data.md) -- Export people data before making bulk changes
+
+---
+
 ## people/exporting-data.md
 
 # Exporting Data
@@ -2750,68 +5001,166 @@ Exported CSV files work with all major spreadsheet applications including Micros
 
 
 
-B1 Admin makes it easy to bring your existing member data into the system. Whether you are migrating from another church management platform or loading records from a spreadsheet, the import tools save you from manually entering every person. You can import from a CSV file or migrate directly from Breeze ChMS.
+The B1 Transfer tool makes it easy to bring your existing data into B1, whether you are starting fresh from a spreadsheet, migrating from another church management platform, or importing giving records. It can also be used to export or back up your data at any time.
 
 
 
 
 #### Before You Begin
 
-- You need an active B1 Admin account with access to **Settings**. See [Roles & Permissions](roles-permissions.md) if you're unsure about your access level.
-- Have your member data ready in a spreadsheet or exported from your previous system.
-- If you are migrating from Breeze, make sure you have exported your People, Tags, and Contributions files from Breeze first.
+- You need an active B1 Admin account with access to **Settings**.
+- Have your data exported and ready from your previous system before starting.
+- This tool is intended for initial data migration. If you have already been using B1 for a while, importing again may create duplicate records.
 
 
 
-## Importing from CSV
+## Accessing the Transfer Tool
 
-If you have member data in a spreadsheet or another system, you can import it using a CSV (comma-separated values) file.
+1. Log in to **B1 Admin**.
+2. Go to **Settings** in the left sidebar.
+3. Click the **Import/Export** button in the top right of the page header.
+4. This will open the **B1 Transfer** tool in a new tab at [transfer.b1.church](https://transfer.b1.church).
 
-1. Go to **Settings** in the left sidebar.
-2. Click **Import/Export** in the top navigation.
-3. Select **B1 Import Zip** from the **Data Source** dropdown.
-4. Click the link to **download sample files** so you can see the expected format.
-5. Open the sample `people.csv` file and replace the sample data with your own. Keep the header row intact.
-6. If you have member photos, add them to the folder using 400x300px images, naming them to match the `importKey` numbers in your CSV.
-7. Compress your edited files into a zip file.
-8. Back in B1 Admin, click **Upload** and select your zip file.
-9. Review the data preview and click **Continue to Destination**.
-10. Verify **B1 Database** is selected, review the import summary, and click **Start Transfer**.
-11. Wait for the import to complete, then click **Go to B1** to return to your dashboard.
+The transfer tool walks you through four steps: Source, Preview, Destination, and Run.
 
-:::tip
-Always download and review the sample files first. Matching the expected column format will prevent import errors.
-:::
+---
+
+## Step 1 - Choose Your Source
+
+Select where your data is coming from. There are seven options:
+
+- **B1 Database** — Pulls data directly from your existing B1 church. Useful for making a backup or converting your data to another format. You must be logged in to use this option.
+- **B1 Import Zip** — A zip file in B1's own format. This is primarily used to restore a previous B1 export.
+- **Breeze Import Zip** — A zip file containing exported files from Breeze ChMS.
+- **Planning Center Zip** — A zip or CSV file exported from Planning Center.
+- **Custom CSV / Excel** — Any CSV or Excel file containing people data. After uploading, you will map your columns to B1 fields before the import proceeds.
+- **Tithe.ly CSV** — A people or giving export file from Tithe.ly (CSV or Excel format accepted).
+- **CCB / Pushpay CSV** — A people or giving export CSV from Church Community Builder or Pushpay.
+
+You can drag and drop your file onto the upload area, or click to browse for it.
+
+---
+
+## Step 1b - Map Your Fields (Custom CSV / Excel only)
+
+If you selected **Custom CSV / Excel**, after uploading your file the tool will show a field mapping screen before moving to the preview.
+
+Each column from your file is listed alongside a sample value. For each column, use the dropdown to choose the matching B1 field. The tool will auto-detect common column names like "First Name," "Email," or "Zip Code," but you should review every row and correct anything it missed.
+
+Available B1 fields include:
+
+- First Name, Last Name, Middle Name, Nickname, Display Name, Title/Prefix, Suffix
+- Email, Home Phone, Mobile Phone, Work Phone
+- Address Line 1, Address Line 2, City, State, Zip Code
+- Birth Date, Gender, Marital Status, Membership Status
+- Household/Family Name
+- Group Name — assigns the person to a group by name
+- **Form Answer (custom field)** — saves that column's value as a custom field attached to the person's record. If you use this option, you will be asked to give the form a name.
+
+Columns you do not want to import can be set to **(Skip)**. At least one name field (First Name or Last Name) must be mapped before you can continue.
+
+Click **Confirm Mapping & Import** to proceed to the preview.
+
+---
+
+## Step 2 - Preview Your Data
+
+After uploading, the tool displays a preview of everything that will be imported. Use the tabs to review each data type:
+
+- **People** — Listed by household, with photos if included.
+- **Groups** — Organized by campus, service, time, and category.
+- **Attendance** — Session dates, groups, and visit counts.
+- **Donations** — Batches, funds, donors, and amounts.
+- **Forms** — Form names and content types.
+
+Review this carefully before proceeding. If something looks wrong, click **Start Over** and correct your source file.
+
+---
+
+## Step 3 - Choose Your Destination
+
+Select where you want the data to go:
+
+- **B1 Database** — Imports directly into your church's B1 database. After selecting this, the tool will show a final count of records to be added. Click **Start Transfer** to confirm.
+- **B1 Export Zip** — Downloads your data as a B1-format zip file. Good for backups.
+- **Breeze Export Zip** — Converts your data to Breeze format.
+- **Planning Center Zip** — Converts your data to Planning Center format.
 
 :::warning
-Importing data will add new records to your database. If you import the same file twice, you may end up with duplicate entries. Double-check your file before starting the transfer.
+The source and destination cannot be the same format. If they match, the tool will warn you to prevent accidental duplication.
 :::
 
-## Importing from Breeze ChMS
+---
 
-If you are migrating from Breeze, B1 has a dedicated import option that handles the conversion automatically.
+## Step 4 - Run
+
+The tool processes the transfer and shows progress for each step:
+
+- Campuses, Services, and Times
+- People
+- Photos
+- Groups and Group Members
+- Donations
+- Attendance
+- Forms, Questions, Answers, and Form Submissions
+- Compressing (for zip file destinations only)
+
+:::warning
+Do not close your browser while the transfer is running. Wait until all steps show as complete.
+:::
+
+---
+
+## Preparing a Breeze Import Zip
 
 1. In Breeze, go to **Settings** and click **Export** in the left sidebar.
-2. Export three files: **People**, **Tags**, and **Contributions**.
-3. Select all three exported files, right-click, and compress them into a single zip file.
-4. In B1 Admin, go to **Settings** then **Import/Export**.
-5. Select **Breeze Import Zip** from the **Data Source** dropdown.
-6. Upload your zip file and follow the on-screen steps to review and complete the import.
+2. Export three separate files: **People**, **Tags**, and **Contributions**.
+3. Select all three files, right-click, and compress them into a single zip file.
+   - On a Mac: select the files, right-click, and choose **Compress**.
+   - On a PC: select the files, right-click, choose **Send to**, then **Compressed (zipped) folder**.
+4. Upload the zip file using the **Breeze Import Zip** option in Step 1.
+
+The Breeze import transfers people, groups (tags), and donation records automatically.
+
+---
+
+## Preparing a Planning Center Export
+
+1. In Planning Center, export your people data as a CSV or zip file.
+2. Upload it using the **Planning Center Zip** option in Step 1.
+
+---
+
+## Preparing a Tithe.ly Export
+
+1. In Tithe.ly, export your **People** data as a CSV or Excel file. You can also export a separate **Giving** file if you want to bring in donation records.
+2. The tool will automatically detect whether the file contains people or giving data based on the column names.
+3. Upload the file using the **Tithe.ly CSV** option in Step 1.
 
 :::info
-The Breeze import transfers people, photos, groups, donations, attendance, forms, and more -- giving you a complete migration in one step.
+Tithe.ly exports can be imported one file at a time. Run the process twice if you need to import both people and giving records separately.
 :::
+
+---
+
+## Preparing a CCB or Pushpay Export
+
+1. In Church Community Builder or Pushpay, export your **People** data as a CSV file. You can also export a separate giving/contributions file.
+2. The tool will automatically detect whether the file contains people or giving data based on the column names.
+3. Upload the file using the **CCB / Pushpay CSV** option in Step 1.
+
+---
 
 ## After Importing
 
-Once your import is complete, take a few minutes to verify your data:
+Once the transfer is complete, take a few minutes to verify your data:
 
 1. Browse the [People](../people/adding-people.md) page and spot-check a few profiles.
 2. Confirm that names, emails, phone numbers, and addresses came through correctly.
 3. Check that household connections are intact.
-4. Review any [groups](../groups/creating-groups.md) or tags that were imported.
+4. Review any imported groups and giving records.
 
-If you notice any issues, you can edit individual profiles directly from the People page. You can also [export your data](exporting-data.md) at any time to create a backup.
+If you notice issues, you can edit individual profiles from the People page. You can also run the transfer tool again to [export your data](exporting-data.md) as a backup.
 
 ---
 
@@ -2833,11 +5182,13 @@ Here is an overview of the key features available in the People section:
 
 2. **Add new people** -- Quickly add individuals to your directory and fill in their profile details, contact information, and household connections. See [Adding People](./adding-people.md) for step-by-step instructions.
 
-3. **Import and export data** -- Bring in member data from a CSV file or migrate from another church management system like Breeze. You can also export your directory to CSV at any time. See [Importing Data](./importing-data.md) and [Exporting Data](./exporting-data.md).
+3. **Bulk edit people** -- Update multiple people at once by changing their membership status, marital status, gender, opt-out preferences, or group memberships. This saves time when making the same change to many individuals. See [Bulk Editing](./bulk-editing.md).
 
-4. **Manage profiles** -- View and edit detailed profiles for each person, including contact info, household members, [group memberships](../groups/group-members.md), [attendance history](../attendance/tracking-attendance.md), [donations](../donations/recording-donations.md), and [custom forms](../forms/creating-forms.md).
+4. **Import and export data** -- Bring in member data from a CSV file or migrate from another church management system like Breeze. You can also export your directory to CSV at any time. See [Importing Data](./importing-data.md) and [Exporting Data](./exporting-data.md).
 
-5. **Assign roles and permissions** -- Control who on your team can access different parts of B1 Admin by assigning roles. See [Assigning Roles](./roles-permissions.md).
+5. **Manage profiles** -- View and edit detailed profiles for each person, including contact info, household members, [group memberships](../groups/group-members.md), [attendance history](../attendance/tracking-attendance.md), [donations](../donations/recording-donations.md), and [custom forms](../forms/creating-forms.md).
+
+6. **Assign roles and permissions** -- Control who on your team can access different parts of B1 Admin by assigning roles. See [Assigning Roles](./roles-permissions.md).
 
 ## Getting Started
 
@@ -3323,7 +5674,7 @@ Review the audit log regularly, especially after onboarding new team members or 
 
 - [Roles & Permissions](../settings/roles-permissions) -- Manage who has access to what
 - [Data Security](../settings/data-security) -- Understand how your data is protected
-- [Reports Overview](./index) -- See all available reports
+- [Reports Overview](./index.md) -- See all available reports
 
 ---
 
@@ -3639,8 +5990,8 @@ Click the **Settings** tab to customize the tabs and links that appear alongside
 ### Adding Tabs
 
 1. Click the **Add** button to add a new tab to your live stream page.
-2. Choose from pre-designed tabs (**Chat** or **Prayer**) or add a custom tab with an external URL.
-3. For pre-designed tabs, just give it a name in the **Tab Text** box and the setup is complete.
+2. Choose the **Chat** pre-designed tab or add a custom tab with an external URL.
+3. For the Chat tab, just give it a name in the **Tab Text** box and the setup is complete.
 4. For a linked tab, enter the tab name, choose an icon by clicking the icon button, and enter the URL.
 5. Your configured tabs will appear on the live streaming page for viewers to access additional resources and interactive features.
 
@@ -3673,7 +6024,7 @@ To change these, go to **Website** then **Appearance** and update your [Color Pa
 
 ## Adding Streaming Hosts
 
-To give team members host capabilities (chat moderation, prayer request responses):
+To give team members access to the host-only chat alongside the public chat:
 
 1. Go to **Settings** in the left sidebar and click **Roles**.
 2. Click the plus button and select **Add Custom Role**.
@@ -3681,7 +6032,7 @@ To give team members host capabilities (chat moderation, prayer request response
 4. Click the new role, then click **Add** in the Members section to add people.
 5. Scroll down to **Edit Permissions**, expand the **Content** section, and check **Host Chat**.
 
-When hosts log into the live stream page, they will have special capabilities including chat moderation and prayer request management.
+When hosts log into the live stream page, a private **Host Chat** tab appears alongside the public chat for staff-only conversation during the broadcast.
 
 :::info
 For more details on creating roles and managing permissions, see [Roles & Permissions](../settings/roles-permissions.md).
@@ -3933,6 +6284,8 @@ The Serving section is your hub for coordinating volunteers and planning church 
 
 When you open the **Serving** page, you will see your ministries displayed as tabs across the top. Each ministry has its own plan types and teams, so you can manage multiple ministries independently. For example, you might have separate tabs for Worship, Kids Ministry, and Hospitality.
 
+Non-admin staff who are members of a ministry can also access the Serving page. They will see only the ministries they belong to and can create and edit plans, assignments, plan types, and the service order for their ministry without needing full admin permissions.
+
 :::tip
 If you are an admin, toggle **Show All** to view all ministries at once. This is helpful when you need to check assignments across multiple teams.
 :::
@@ -3941,18 +6294,18 @@ If you are an admin, toggle **Show All** to view all ministries at once. This is
 
 The Serving section includes three key areas:
 
-- **[Plans](./plans.md)** -- Create service plans for specific dates and assign volunteers to teams. Plans help you organize who is serving when, so everyone knows their role ahead of time.
+- **[Plans](./plans.md)** -- Create service plans for specific dates and assign volunteers to teams. Plans help you organize who is serving when, so everyone knows their role ahead of time. Use the **[Plans Overview](./plans-overview.md)** to see all upcoming assignments across multiple weeks in one grid.
 - **[Songs](./songs.md)** -- Manage your worship song library with lyrics, arrangements, and external links. Your worship team can use this to prepare for upcoming services.
 - **[Tasks](./tasks.md)** -- Assign and track tasks for your team members. Set up [Automations](./automations.md) to create recurring tasks automatically, so nothing falls through the cracks.
 
 ## Getting Started
 
 1. Navigate to **Serving** from the main menu in B1 Admin.
-2. Select a **ministry tab** to view its plan types and teams.
-3. Choose a plan type to start [creating service plans](./plans.md), or explore the [Songs](./songs.md) and [Tasks](./tasks.md) sub-sections.
+2. Click the add ministry button to create a new ministry or toggle "show all" to view existing ministry tabs. Select a **ministry tab** to view its plan types and teams.
+3. Choose "create a plan type" or choose an existing plan type to start [creating service plans](./plans.md), or explore the [Songs](./songs.md) and [Tasks](./tasks.md) sub-sections.
 
 :::info
-Before you can create plans, you will need to set up your ministries and teams in the Settings area. See the Settings documentation for details on configuring your serving structure.
+Before you can create plans, you will need to create your Ministries in the Serving area and Teams within each Ministry . 
 :::
 
 ---
@@ -4010,14 +6363,80 @@ Only volunteers who have not yet been notified will be included. If you add some
 :::
 
 :::warning
-Volunteers must have the B1 Mobile app installed and notifications enabled to receive the push notification. See the [Notifications guide](/docs/b1-mobile/community/notifications) for how volunteers can enable this on their device.
+Volunteers must have the B1.church mobile experience installed (PWA on their home screen, or the deprecated B1 Mobile native app for users who still have it) with notifications enabled to receive push notifications. See [Installing as an App (PWA)](/docs/b1-church/getting-started/installing-pwa) for setup instructions.
 :::
 
 ## Related Articles
 
 - [Service Plans](./plans.md)
 - [Automations](./automations.md)
-- [B1 Mobile Notifications](/docs/b1-mobile/community/notifications)
+- [Installing the B1.church PWA](/docs/b1-church/getting-started/installing-pwa)
+
+---
+
+## serving/plans-overview.md
+
+# Plans Overview
+
+
+
+The Plans Overview gives you a bird's-eye view of all your volunteer assignments across multiple service dates at once. Instead of opening each plan individually, you can see who is serving in every position across upcoming weeks in a single grid — and quickly spot any gaps that still need to be filled.
+
+
+
+
+#### Before You Begin
+
+- Create at least one Ministry and Plan Type in the Serving area
+- Create [service plans](./plans.md) with dates and volunteer assignments
+- Ensure your volunteers have been added to your [people directory](../people/adding-people.md)
+
+
+
+## Accessing the Overview
+
+1. Navigate to **Serving** from the main menu in B1 Admin.
+2. Select a **ministry tab** at the top of the page.
+3. Click on a **plan type** to open its plan list.
+4. Click the **Overview** button near the top of the page.
+
+## Reading the Overview Grid
+
+The overview displays a grid where:
+
+- **Rows** represent each position (e.g., "Music: Guitar", "Tech: Projection") grouped by category
+- **Columns** represent upcoming service dates (e.g., "Apr 14", "Apr 21")
+- **Cells** show the name of the volunteer assigned to that position on that date
+
+Positions highlighted in **red** are unfilled — no volunteer has been assigned yet. This makes it easy to see staffing gaps at a glance without opening each plan individually.
+
+:::tip
+Volunteer names are shown in a shortened format (first name and last initial, e.g., "John D.") to keep the grid compact when you have many positions.
+:::
+
+## Filtering the Overview
+
+You can adjust what the overview shows using the filter controls at the top:
+
+- **Start Date / End Date** — By default the overview shows 12 weeks into the future. Enter custom dates to expand or narrow the range.
+- **Ministry** — Switch to a different ministry without leaving the overview.
+- **Plan Type** — Filter to a specific plan type within the selected ministry.
+
+Click **Filter** after making changes to update the grid.
+
+## Exporting to CSV
+
+Click **Export CSV** to download the current grid as a spreadsheet. The export includes all positions and volunteer assignments for the filtered date range, making it easy to share with ministry leaders or print for planning meetings.
+
+:::info
+The CSV export reflects whatever filters are currently applied — only the dates and plan type shown in the grid are included in the download.
+:::
+
+## Related Articles
+
+- [Service Plans](./plans.md) — Create and manage individual service plans
+- [Service Order](./service-order.md) — Build the order of service within a plan
+- [Scheduling Lessons](./scheduling-lessons.md) — Schedule lessons alongside your service plans
 
 ---
 
@@ -4034,7 +6453,7 @@ Service plans organize who is serving and when. Each plan is tied to a specific 
 
 #### Before You Begin
 
-- Set up your ministries and teams in the Settings area
+- Set up your ministries and teams in the Serving area
 - Make sure volunteers have been added to your [people directory](../people/adding-people.md) and assigned to teams
 
 
@@ -4046,11 +6465,16 @@ Service plans organize who is serving and when. Each plan is tied to a specific 
 3. Click on a **plan type** to see the list of plans for that type.
 4. Click on a specific plan to open it.
 
+:::info
+Full admin access is not required to manage plans. Anyone who is a member of a ministry can navigate to Serving and create, edit, and schedule plans for their own ministry without needing the Plans Edit permission. Editors with the Plans Edit role can manage plans across every ministry.
+:::
+
 ## Creating a Plan
 
-1. From the plan type view, click **Add Plan**.
-2. Select the **date** for the service.
-3. Save the plan. You can now begin assigning team members and building out the [service order](./service-order.md).
+1. From the plan type view, click **New Plan**.
+2. Give the plan a name or use the date as the name. Select the **date** for the service.
+3. If you would like to copy from a previous plan, choose positions only or positions and assignments. If you do not want to copy, just choose nothing. You can also copy the order of service from my previous plan.
+4. Save the plan. You can now begin assigning team members and building out the [service order](./service-order.md).
 
 ## The Plan Detail Page
 
@@ -4062,17 +6486,32 @@ When you open a plan, you will see two tabs:
 ## Assigning Team Members
 
 1. Open a plan and go to the **Assignments** tab.
-2. Click on a **team** to expand it.
-3. Add members from your team roster by clicking **Add**.
-4. Assigned members will appear under their team with their assignment status.
+2. Click on **add Position** to expand it. Fill out the information in the add a position form. For category name add whatever category you like.
+3. Click on **People Needed** and choose volunteers to fill that position.
+4. Add members from your team roster by clicking **Add**.
+5. Assigned members will appear under their team with their assignment status.
+6. Click notify volunteers to notify them within the B1 app or via email.
 
 :::tip
 Set up your teams in the ministry settings before creating plans. This way, you will have a ready pool of volunteers to assign from.
 :::
 
+## Associating Groups with a Plan Type
+
+Below the plan list on the plan type page, the **Groups** section lets you decide which groups can see the plans for this plan type from their member portal. This is a quick way to surface upcoming services to the right teams without giving them admin access.
+
+1. On the plan type page, scroll down to the **Groups** section.
+2. Click **Add Group** and pick a group from the dropdown.
+3. In the **Shows** column, choose whether members of that group should see **Past**, **Future**, or **Both** plans for this plan type.
+4. Repeat to associate additional groups, or click the trash icon to remove a group.
+
+:::info
+Only groups tagged as **Standard** appear in the picker. Members of an associated group automatically see this plan type's plans on the [Plans](/docs/b1-church/plans/) tab in the B1 member portal — limited to the past/future/both window you selected.
+:::
+
 ## Printing Plans
 
-You can print a plan for distribution to your team. Open the plan and use the **Print** option to generate a printable version that includes assignments and the service order. This is useful for handing out at rehearsals or posting in a common area.
+You can print a plan for distribution to your team. Open the plan, Open the service order tab and use the **Print** option to generate a printable version that includes assignments and the service order. This is useful for handing out at rehearsals or posting in a common area.
 
 :::info
 Plans are organized by ministry. Make sure you are on the correct ministry tab before creating or viewing plans.
@@ -4080,6 +6519,7 @@ Plans are organized by ministry. Make sure you are on the correct ministry tab b
 
 ## Next Steps
 
+- Use the [Plans Overview](./plans-overview.md) to see all upcoming assignments across multiple weeks in one grid and spot unfilled positions
 - Build out your [Service Order](./service-order.md) with songs, readings, and other elements
 - Add [songs](./songs.md) from your library directly into the service order
 - Use [Tasks](./tasks.md) to assign follow-up action items to team members
@@ -4130,7 +6570,8 @@ The Content Provider Accounts section is per ministry. If you run multiple minis
 Once linked, you can schedule lessons directly from Plans.
 
 1. In B1 Admin, go to **Serving → Plans**
-2. Select your ministry tab and click **Add Plan** — the **Schedule Lesson** form opens
+2. Select your ministry tab and click **Add Plan Type** — give the plan type a name such as Children's Church or Sunday School
+3. Click on the plan type you just made and click **Schedule Lesson** for one lesson or **bulk schedule** for a series of lessons.
 3. Select the **date** for the lesson (defaults to the upcoming Sunday)
 4. Click **Select Lesson** — a content browser dialog opens
 5. At the top of the dialog, confirm **Lessons.church** is selected as the provider
@@ -4138,7 +6579,7 @@ Once linked, you can schedule lessons directly from Plans.
    - Select a **Program** (e.g., "Bible Stories for Kids")
    - Select a **Study** within that program (e.g., "Creation and Early Stories")
    - Select the specific **Lesson**
-   - Select the **Venue** — this is the age-group version of the lesson (e.g., "Preschool", "Elementary")
+   - Select the **Venue** — this is the age-group version of the lesson
 7. Click **Associate Lesson** to confirm
 8. Choose your **copy option** for volunteers:
    - **Nothing** — fresh plan, no volunteers carried over
@@ -4149,7 +6590,7 @@ Once linked, you can schedule lessons directly from Plans.
 The plan is created and named automatically (e.g., "Feb 23 - Elementary"). Volunteers can open the plan to see their assignments and review the lesson content before Sunday.
 
 :::warning
-Make sure to select the correct **Venue** for your classroom's age group. Choosing the wrong venue (e.g., Preschool content for an Elementary class) means your volunteers will see content designed for a different age level.
+Make sure to select the correct **Venue** for your classroom's age group. Choosing the wrong venue means your volunteers will see content designed for a different age level.
 :::
 
 :::tip
@@ -4260,6 +6701,22 @@ Drag and drop items to rearrange the order. The sequence shown on screen is the 
 
 :::info
 The service order is specific to each plan. Changes you make here only affect the selected plan and will not alter other plans or your song library.
+:::
+
+## Including Items in Specific Service Times
+
+If your plan has more than one service time (for example, an 8 a.m. and 10 a.m. service), you can choose which services each item should appear in. This is useful when an announcement is only relevant to one service, or when a song is sung in one service but not another.
+
+1. Open a plan that has two or more service times defined on the **Times** tab.
+2. On the **Service Order** tab, click an item to edit it.
+3. Under **Include in Services**, you will see a checkbox for each service time, labeled with the time.
+4. Uncheck any service where the item should be skipped.
+5. Click **Save**.
+
+By default, every item is included in every service. Excluded service times are hidden when you print the plan filtered to that service, so each service receives a clean run sheet with only the relevant items.
+
+:::tip
+The **Include in Services** section only appears when the plan has more than one service time. If you only see one service, edit the plan's **Times** tab to add additional services first.
 :::
 
 ## Sharing the Service Order
@@ -4581,10 +7038,48 @@ Your data is yours and will never be sold to third parties. You can read our ful
 
 ## GDPR Compliance
 
-ChurchApps does not currently support GDPR compliance due to the significant technical and financial requirements involved. GDPR would require us to host data on EU-based servers and build a separate infrastructure to route and store data regionally, effectively doubling our hosting and development costs. As a nonprofit offering free tools to churches, we do not have the resources to support this at this time.
+ChurchApps supports GDPR compliance for churches with members in the UK or European Union. Here's how we address the key requirements:
+
+### Data Subject Rights
+
+ChurchApps provides tools to help churches respond to data subject requests:
+
+- **Right of Access (Article 15)** — Members can request a copy of their personal data by contacting their church. Administrators can export any person's data from the **Data Management** section on the person detail page in B1.church Admin.
+- **Right to Erasure (Article 17)** — Members can request account deletion by contacting their church. Administrators can anonymize a person's data across all modules from the **Data Management** section on the person detail page. Anonymization replaces personal information with generic values while preserving aggregate records (donation totals, attendance counts) needed for church financial reporting.
+- **Right to Restriction (Article 18)** — Members can request restriction of processing by contacting their church, including opting out of communications.
+- **Right to Data Portability (Article 20)** — Administrators can export personal data in a structured, machine-readable JSON format on behalf of members who request it.
+
+### Using the Data Management Tools
+
+To access GDPR data tools for an individual:
+
+1. Go to **People** in B1 Admin and open the person's record.
+2. Click **Edit** to enter edit mode.
+3. Scroll down to the **Data Management** section (collapsed by default) and click to expand it.
+4. Use **Export Data** to download a JSON file of all data stored for that person.
+5. Use **Anonymize** to replace personal information with generic values. You will be asked to type `ANONYMIZE` to confirm — this action cannot be undone.
 
 :::warning
-If your church has members in the European Union, be aware that ChurchApps does not currently meet GDPR requirements. Consult with your legal advisor about compliance obligations before storing EU member data.
+Anonymization is permanent. Donation totals and attendance counts are preserved for financial reporting purposes, but all personal identifiers (name, email, address, etc.) are removed and cannot be recovered.
+:::
+
+### Data Processing
+
+ChurchApps acts as a **data processor** on behalf of your church (the **data controller**). Our [Data Processing Agreement](https://churchapps.org/terms) outlines the responsibilities of each party, including sub-processor usage, breach notification procedures, and data handling on termination.
+
+### International Data Transfers
+
+ChurchApps data is hosted on Amazon Web Services (AWS) in the United States. International data transfers from the UK/EU are covered by AWS's Standard Contractual Clauses (SCCs) under the [AWS Data Processing Addendum](https://aws.amazon.com/compliance/data-processing-addendum/). The AWS DPA is automatically incorporated into the AWS Service Terms for all customers. EU-based hosting is not required when appropriate transfer mechanisms like SCCs are in place.
+
+For details on how transfer risks have been evaluated, see the [Transfer Risk Assessment](./transfer-risk-assessment.md).
+
+### Sub-Processors
+
+- **Amazon Web Services (AWS)** — Infrastructure hosting, data storage, and content delivery
+- **Stripe** — Payment processing for donations (no card data is stored by ChurchApps)
+
+:::info
+For full details on how we handle personal data, see our [Privacy Policy](https://churchapps.org/privacy) and [Terms of Service](https://churchapps.org/terms). If you have questions about GDPR compliance, contact us at support@churchapps.org.
 :::
 
 ---
@@ -4604,7 +7099,7 @@ The Settings section is where you configure your church's account, branding, and
 The Settings area is organized into four sub-sections accessible from the sidebar:
 
 1. **Settings** -- Configure your church's basic information, branding, and subdomain. See [Church Settings](./church-settings.md) for details.
-2. **Mobile Apps** -- Set up and customize the navigation tabs that appear in the B1 Mobile app for your members. See [Mobile App Settings](./mobile-app.md) for details.
+2. **Mobile Apps** -- Set up and customize the navigation tabs that appear in the [B1.church PWA](/docs/b1-church/getting-started/installing-pwa) for your members (the same tabs are also rendered by the deprecated B1 Mobile native app). See [Mobile App Settings](./mobile-app.md) for details.
 3. **Server Admin** -- Access advanced administration tools for managing your church's server-level settings.
 4. **Forms** -- Create and manage custom forms for collecting information from your congregation.
 
@@ -4629,7 +7124,7 @@ For information about how your data is protected, see [Data Security](./data-sec
 
 - [Church Settings](./church-settings.md) -- Configure your church information and branding
 - [Roles & Permissions](./roles-permissions.md) -- Set up user roles and access control
-- [Mobile App Settings](./mobile-app.md) -- Customize your B1 Mobile app tabs
+- [Mobile App Settings](./mobile-app.md) -- Customize the navigation tabs shown in the B1.church PWA
 - [Data Security](./data-security.md) -- Learn how your data is protected
 
 ---
@@ -4640,9 +7135,13 @@ For information about how your data is protected, see [Data Security](./data-sec
 
 
 
-The Mobile App Settings page lets you configure the navigation tabs that appear in the B1 Mobile app for your church members. You control which tabs are visible, what they link to, and how they are displayed.
+The Mobile App Settings page lets you configure the navigation tabs that appear in the **B1.church mobile experience (PWA)** for your church members. You control which tabs are visible, what they link to, and how they are displayed.
 
 
+
+:::info The native B1 Mobile app is deprecated
+Tabs configured here are delivered through the [B1.church Progressive Web App (PWA)](/docs/b1-church/getting-started/installing-pwa), which has replaced the native B1 Mobile app. Members can install the PWA on their home screen from any page on `https://yourchurchname.b1.church` instead of downloading the legacy app from the App Store or Google Play.
+:::
 
 
 #### Before You Begin
@@ -4689,7 +7188,7 @@ Keep your tab count manageable. Three to five tabs works well for most churches.
 
 ## Where These Tabs Appear
 
-The tabs you configure here are displayed in the **B1 Mobile app** (B1.church app) that your church members download from the App Store or Google Play. Changes you make on this page are reflected in the app the next time a member opens it.
+The tabs you configure here are displayed in the **B1.church PWA** that your members install from any page on `https://yourchurchname.b1.church`. Changes you make on this page are reflected the next time a member opens the app. (Tabs are also rendered by the legacy [B1 Mobile native app](/docs/b1-mobile/) for any members still running it, but that app is deprecated and no longer being updated.)
 
 ## Next Steps
 
@@ -4767,6 +7266,107 @@ Create specific roles like "Treasurer" with only **Donations** access, or "Check
 
 ---
 
+## settings/transfer-risk-assessment.md
+
+# Transfer Risk Assessment
+
+
+
+This document records ChurchApps' assessment of risks associated with international transfers of personal data from the UK/EEA to the United States, as required under UK GDPR and EU GDPR. This is an internal compliance record maintained by ChurchApps as data processor.
+
+
+
+**Last reviewed:** April 2026
+
+## 1. Transfer Details
+
+| Item | Detail |
+|---|---|
+| **Data Exporter** | Churches using ChurchApps (Data Controllers) located in the UK/EEA |
+| **Data Importer** | ChurchApps (Data Processor), operating from the United States |
+| **Categories of Data Subjects** | Church members, attendees, visitors, donors, volunteers, children (managed by parents/administrators) |
+| **Categories of Personal Data** | Names, email addresses, phone numbers, postal addresses, dates of birth, gender, marital status, profile photos, donation records, attendance records, group memberships, volunteer assignments, messaging history |
+| **Sensitive Data** | None intentionally collected. No health data, biometric data, or criminal records are stored. Financial account details (credit cards, bank accounts) are never stored by ChurchApps — these are handled directly by Stripe. |
+| **Purpose of Transfer** | Providing church management software services (member management, donations, attendance tracking, communications, volunteer scheduling, event registration) |
+| **Destination Country** | United States |
+| **Transfer Mechanism** | EU Standard Contractual Clauses (SCCs) and UK International Data Transfer Addendum (IDTA), incorporated via the AWS Data Processing Addendum |
+
+## 2. Sub-Processors
+
+| Sub-Processor | Role | Location | Transfer Mechanism |
+|---|---|---|---|
+| **Amazon Web Services (AWS)** | Infrastructure hosting, data storage, content delivery (us-east-2 region) | United States | AWS DPA with SCCs (automatically included in AWS Service Terms) |
+| **Stripe** | Payment processing for donations | United States | Stripe DPA with SCCs |
+
+Credit card and bank account data is transmitted directly from the user's browser to Stripe and is never stored on or transmitted through ChurchApps servers.
+
+## 3. Risk Assessment
+
+### 3.1 Encryption
+
+- **In transit:** All data is encrypted using TLS/HTTPS for all communications between users and ChurchApps servers.
+- **At rest:** Data stored on AWS is encrypted at rest using AWS-managed encryption.
+
+### 3.2 Access Controls
+
+- Production server access is limited to two individuals who are members of the ChurchApps board of directors.
+- Developers, volunteers, and other board members do not have access to production servers or databases.
+- Database servers are behind a firewall and are not directly accessible from the internet.
+- Church data is logically separated — each church can only access its own data through application-level access controls.
+
+### 3.3 Data Segregation
+
+Data is distributed across six independent databases (Membership, Giving, Attendance, Messaging, Doing, Content). Compromise of one database does not expose data from the others. For example, the Giving database contains donation amounts and dates but not the names or contact information of donors (stored in Membership).
+
+### 3.4 Data Minimization
+
+- No credit card or bank account information is stored (handled by Stripe).
+- Passwords are stored using one-way hashing and cannot be retrieved.
+- Churches control what data they collect from their members.
+
+### 3.5 Data Subject Rights
+
+ChurchApps provides technical tools enabling churches to fulfill data subject requests:
+
+- **Access & Portability:** Full data export in machine-readable JSON format.
+- **Erasure:** Anonymization across all six databases, replacing personal data with generic values while preserving aggregate records required for financial reporting.
+- **Restriction:** Inactive membership status excludes individuals from search, directory, reports, and messaging while retaining their record.
+- **Rectification:** Members and administrators can edit personal information through the application.
+
+### 3.6 Breach Notification
+
+ChurchApps commits to notifying affected churches within 72 hours of becoming aware of a personal data breach, as documented in the [Terms of Service](https://churchapps.org/terms) (Section 11.6).
+
+### 3.7 US Government Access Risk
+
+The primary risk associated with US-hosted data is potential access by US government authorities under FISA Section 702 or Executive Order 12333. This risk is assessed as **low** for the following reasons:
+
+- ChurchApps processes church membership and attendance data, not data of intelligence value.
+- Data subjects are church members and attendees — not categories typically targeted by surveillance programs.
+- No sensitive personal data (health, financial accounts, political opinions) is stored.
+- AWS's DPA includes commitments regarding government access requests and transparency reporting.
+- The EU-US Data Privacy Framework (established 2023) provides additional safeguards for data transfers to certified US organizations.
+
+## 4. Overall Risk Conclusion
+
+The risk to data subjects from this international transfer is assessed as **low**. The combination of:
+
+- Standard Contractual Clauses as the legal transfer mechanism
+- Encryption in transit and at rest
+- Strict access controls with only two authorized individuals
+- Data segregation across independent databases
+- No storage of financial account details
+- Low sensitivity and low intelligence value of the data processed
+- Technical tools for exercising all data subject rights
+
+provides adequate supplementary measures to ensure that the transferred data receives a level of protection essentially equivalent to that guaranteed within the UK/EEA.
+
+## 5. Review Schedule
+
+This assessment will be reviewed annually or when there is a material change to the data processing, sub-processors, or legal framework governing international data transfers.
+
+---
+
 ## website/appearance.md
 
 # Appearance
@@ -4824,6 +7424,17 @@ The Appearance page lets you customize the overall look and feel of your church 
 :::tip
 For best results, use a logo with a transparent background in PNG format. This ensures it looks great on both light and dark backgrounds across your website and [mobile app](../settings/mobile-app.md).
 :::
+
+## Navigation Styles
+
+Customize your website's navigation bar colors for both solid and transparent modes:
+
+1. Scroll to the **Navigation Styles** section
+2. Click **Edit Navigation Styles**
+3. Configure colors for solid navigation (with background) and transparent navigation (overlay mode)
+4. Click **Save** to apply your navigation colors
+
+For detailed instructions, see [Navigation Styles](./navigation-styles.md).
 
 ## Custom CSS and JavaScript
 
@@ -4959,6 +7570,7 @@ Start with [Initial Setup](initial-setup) if you are configuring your website fo
 
 - [Initial Setup](initial-setup) -- Get your website up and running for the first time
 - [Managing Pages](managing-pages) -- Learn how to create and organize your pages
+- [Using the Page Editor](page-editor) -- Build and style your page content with the visual editor
 - [Appearance](appearance) -- Customize your site's look and feel
 - [Files](files) -- Upload and manage media files
 
@@ -5009,7 +7621,7 @@ If you do not see the Settings option, ask the person who set up your church acc
 6. After adding a section, click **Add Content** again to insert text, images, videos, cards, forms, and more by dragging them into your section.
 
 :::info
-For detailed instructions on working with pages, navigation, and page types, see [Managing Pages](managing-pages).
+For detailed instructions on working with pages and navigation, see [Managing Pages](managing-pages). For a full guide to the visual editor, see [Using the Page Editor](page-editor).
 :::
 
 ## Configuring Site Appearance
@@ -5071,7 +7683,7 @@ You can convert any auto-generated page into a custom page if you want full cont
 
 1. Click the **Add Page** button in the top right corner of the Pages table.
 2. Choose a page type (blank or a template) and give it a name.
-3. Click **Edit** next to any page to open the page builder, where you can add sections, text, images, and other elements.
+3. Click **Edit** next to any page to open the [page editor](page-editor), where you can add sections, text, images, and other elements.
 4. Click **Page Settings** to update the page title, URL path, and other metadata.
 5. Use the **Preview** button to open your page in a new window and see exactly how it will look to visitors.
 
@@ -5103,10 +7715,295 @@ Removing a navigation link does not delete the page itself. The page still exist
 You can add [forms](../forms/creating-forms.md) to your pages to collect registrations, prayer requests, or other information from visitors.
 :::
 
+## Image Lightbox
+
+When visitors click on an image on your website, it opens in a full-screen lightbox overlay. This lets people view photos at a larger size without leaving the page. No configuration is required — the lightbox is enabled automatically for images in your page content.
+
 ## Next Steps
 
 - [Initial Setup](initial-setup) -- First-time setup instructions
+- [Using the Page Editor](page-editor) -- Learn how to build and style page content
 - [Appearance](appearance) -- Customize your site's visual theme
 - [Files](files) -- Upload and manage media assets for your pages
+
+---
+
+## website/navigation-styles.md
+
+# Navigation Styles
+
+
+
+Customize your church website's navigation bar colors to match your branding. You can configure colors for both solid backgrounds and transparent overlays, giving you complete control over how your navigation looks across different pages.
+
+
+
+
+#### Before You Begin
+
+- You need permission to manage your church website. See [Roles & Permissions](../people/roles-permissions.md) for details.
+- Have your brand colors ready, including hex color codes (e.g., #03A9F4).
+- Understand the difference between solid and transparent navigation styles on your website.
+
+
+
+## Understanding Navigation Modes
+
+Your website navigation can appear in two different styles depending on the page:
+
+- **Solid navigation** -- Navigation bar with a background color, typically used on content pages
+- **Transparent navigation** -- Navigation that overlays the page content, typically used on pages with hero images or full-screen backgrounds
+
+You can customize colors for both modes independently.
+
+## Accessing Navigation Styles
+
+1. Navigate to **Website** in B1 Admin
+2. Click on **Appearance** in the sidebar
+3. Scroll to the **Navigation Styles** section
+4. Click **Edit Navigation Styles**
+
+## Configuring Solid Navigation
+
+Solid navigation appears with a background color behind the navigation bar. You can customize:
+
+### Background Color
+
+1. Toggle the **Override** switch for **Background Color**
+2. Click the color picker
+3. Choose your desired background color
+4. The default is white (#FFFFFF)
+
+### Link Color
+
+1. Toggle the **Override** switch for **Link Color**
+2. Choose the color for navigation link text
+3. This affects links in their default state
+4. The default is dark gray (#555555)
+
+### Link Hover Color
+
+1. Toggle the **Override** switch for **Link Hover Color**
+2. Choose the color links change to when users hover over them
+3. This provides visual feedback for clickable links
+4. The default is light blue (#03A9F4)
+
+### Active Color
+
+1. Toggle the **Override** switch for **Active Color**
+2. Choose the color for the currently active page link
+3. This helps users know which page they're on
+4. The default is light blue (#03A9F4)
+
+## Configuring Transparent Navigation
+
+Transparent navigation overlays your page content with no background. You can customize:
+
+### Link Color
+
+1. Toggle the **Override** switch for **Link Color**
+2. Choose a color that contrasts well with your page background
+3. Often white or light colors work best over dark backgrounds
+4. The default is dark gray (#555555)
+
+### Link Hover Color
+
+1. Toggle the **Override** switch for **Link Hover Color**
+2. Choose the hover state color
+3. Ensure it's visible against your page background
+4. The default is light blue (#03A9F4)
+
+### Active Color
+
+1. Toggle the **Override** switch for **Active Color**
+2. Choose the active page indicator color
+3. Should stand out while still fitting your design
+4. The default is light blue (#03A9F4)
+
+:::info
+Transparent navigation does not have a background color setting since it overlays the page content directly.
+:::
+
+## Saving Your Changes
+
+1. After configuring your colors, click **Save Navigation Styles**
+2. Your changes apply immediately to your live website
+3. Visit your website to see the navigation in both modes
+
+## Resetting to Defaults
+
+If you want to go back to the default colors:
+
+1. Toggle off the **Override** switches for any custom colors
+2. Click **Save Navigation Styles**
+3. The navigation returns to the default color scheme
+
+Or click **Cancel** to discard all changes without saving.
+
+## Best Practices
+
+### Color Contrast
+
+- **Readability** -- Ensure link colors have enough contrast with the background
+- **WCAG compliance** -- Aim for at least 4.5:1 contrast ratio for accessibility
+- **Test both modes** -- Preview your site with both solid and transparent navigation
+
+### Brand Consistency
+
+- **Use your brand colors** -- Match your logo and website theme
+- **Limit your palette** -- Stick to 2-3 colors for a cohesive look
+- **Consider your images** -- If using transparent navigation, test it against typical page backgrounds
+
+### Hover and Active States
+
+- **Clear feedback** -- Make hover states obviously different from default links
+- **Distinguish active pages** -- Use a distinct color so users know where they are
+- **Smooth transitions** -- The system automatically animates color changes
+
+## Troubleshooting
+
+### Colors Don't Look Right
+
+- **Clear your cache** -- Browser caching may show old colors
+- **Check hex codes** -- Make sure you entered valid hex color codes
+- **Test on different backgrounds** -- Colors may look different depending on the page
+
+### Navigation Not Visible
+
+- **Transparent mode** -- If using transparent navigation over light images, dark text may be hard to see
+- **Solution** -- Adjust your link colors or use darker page backgrounds
+- **Alternative** -- Add a subtle shadow or background overlay to the navigation area
+
+## Technical Details
+
+Navigation styles are stored as JSON and applied using CSS variables:
+
+- Changes take effect immediately without rebuilding the site
+- Colors cascade to all navigation elements
+- Overrides are optional; unset colors use theme defaults
+
+## Related Articles
+
+- [Appearance](./appearance.md) -- Customize your website's overall look and feel
+- [Managing Pages](./managing-pages.md) -- Create and organize your website pages
+- [Page Editor](./page-editor.md) -- Design page layouts and content
+
+---
+
+## website/page-editor.md
+
+# Using the Page Editor
+
+
+
+The B1 page editor is a visual drag-and-drop builder that lets you design your church website pages without writing any code. You can add sections and content blocks, customize styles, preview your work, and undo changes -- all from within your browser.
+
+
+
+
+#### Before You Begin
+
+- Complete [Initial Setup](initial-setup) to get your website configured
+- Create at least one page in [Managing Pages](managing-pages)
+- You need the **content.edit** permission to access the editor
+
+
+
+## Opening the Editor
+
+1. In B1 Admin, click **Website** in the left menu.
+2. Find the page you want to edit in the Pages table and click **Edit**.
+
+The editor opens in full-screen mode. The left panel shows your page structure and available content elements; the center area shows a live preview of your page.
+
+:::info
+The editor always displays in light mode, regardless of your B1 Admin theme setting. This ensures the preview accurately matches how your page will look to website visitors.
+:::
+
+## Page Structure: Sections and Elements
+
+Every page is built from two levels:
+
+- **Sections** -- The top-level containers that divide your page into horizontal bands (for example, a hero section, a content block, or a footer strip). Every page must have at least one section before you can add content.
+- **Elements** -- The individual content pieces placed inside a section, such as text, images, buttons, cards, forms, and calendars.
+
+### Adding a Section
+
+1. Click **Add Section** (or the **+** button at the top of the left panel).
+2. Choose a layout for your section -- options include single column, two columns, three columns, and more.
+3. The new section appears in the preview. Click it to select it and configure its background color, padding, and other style options.
+
+### Adding Elements to a Section
+
+1. Click inside a section in the preview to select it.
+2. Click **Add Content** and choose an element type from the list:
+   - **Text** -- Headings, paragraphs, and rich text
+   - **Image** -- Upload or link to a photo
+   - **Button** -- A clickable call-to-action link
+   - **Card** -- An image with a title and description
+   - **Form** -- Embed a [form](../forms/creating-forms) directly on the page
+   - **Calendar** -- Display an event calendar
+   - **FAQ** -- Accordion-style question and answer blocks
+   - **Video** -- Embed a video by URL
+3. Configure the element using the settings panel that appears.
+
+### Reordering Content
+
+Drag sections or elements using the handle icon (six dots) on the left side of each item to reorder them. You can drag elements within a section or move them between sections.
+
+## Styling Your Page
+
+### Section Styles
+
+Click any section to open its style panel. You can set:
+
+- **Background** -- Solid color, gradient, or image
+- **Padding** -- Top and bottom spacing inside the section
+- **Width** -- Full-width or centered/contained
+
+### Element Styles
+
+Click any element to open its style panel. Common options include font size, color, alignment, margin, and padding. For images, you can set alt text and link targets.
+
+### Custom CSS
+
+For advanced styling, each section and element has a **Custom CSS** field where you can write your own CSS rules. These are scoped to that element, so they will not unintentionally affect the rest of the page.
+
+:::tip
+If you need to apply styles across your entire site -- such as a custom font or global color -- use the [Appearance](appearance) settings instead of custom CSS on individual pages.
+:::
+
+## Previewing Your Page
+
+Use the preview controls in the toolbar to check how your page looks at different screen sizes:
+
+- **Desktop** -- Full-width browser view
+- **Mobile** -- Narrow phone-sized view
+
+Click **Preview** to open a live version of the page in a new browser tab, exactly as visitors will see it.
+
+## Undoing Changes
+
+The editor tracks your editing history automatically. Use the toolbar buttons or keyboard shortcuts to navigate:
+
+- **Undo** (Ctrl+Z / Cmd+Z) -- Revert your last action
+- **Redo** (Ctrl+Y / Cmd+Y) -- Re-apply an undone action
+
+You can also restore the page to an earlier snapshot. Click **History** in the toolbar to see a list of saved snapshots with descriptions, and click any entry to restore to that point.
+
+:::warning
+Restoring a snapshot replaces your current page content with the snapshot version. This cannot be undone with the standard undo button. Save a snapshot of your current state before restoring an old one if you want to keep the option to return.
+:::
+
+## Saving Your Work
+
+Changes are saved automatically as you work. A status indicator in the toolbar shows whether your changes have been saved. You can also click **Save** at any time to force a save.
+
+## Related Articles
+
+- [Managing Pages](managing-pages) -- Create pages, set URLs, and manage site navigation
+- [Appearance](appearance) -- Set site-wide colors, fonts, and branding
+- [Files](files) -- Upload images and documents to use in the editor
+- [Creating Forms](../forms/creating-forms) -- Build forms you can embed on pages
 
 ---

@@ -137,6 +137,9 @@ dist
 !.yarn/sdks
 !.yarn/versions
 
+# npm is blocked (see preinstall guard); never commit an npm lockfile
+package-lock.json
+
 # Vite logs files
 vite.config.js.timestamp-*
 vite.config.ts.timestamp-*

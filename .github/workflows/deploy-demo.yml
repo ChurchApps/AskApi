@@ -15,24 +15,21 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       - name: Checkout
-        uses: actions/checkout@v2
+        uses: actions/checkout@v4
         with:
           submodules: "true"
 
-      - uses: actions/setup-node@v2
-        with:
-          node-version: "18"
+      - name: Enable Corepack
+        run: corepack enable
 
-      - name: Cache npm dependencies
-        uses: actions/cache@v3
+      - name: Setup Node.js
+        uses: actions/setup-node@v4
         with:
-          path: ~/.npm
-          key: ${{ runner.os }}-node-${{ hashFiles('**/package-lock.json') }}
-          restore-keys: |
-            ${{ runner.os }}-node-
+          node-version: "22"
+          cache: "yarn"
 
       - name: Configure AWS Credentials
-        uses: aws-actions/configure-aws-credentials@v1
+        uses: aws-actions/configure-aws-credentials@v4
         with:
           aws-access-key-id: ${{ secrets.STAGING_AWS_ACCESS_KEY_ID }}
           aws-secret-access-key: ${{ secrets.STAGING_AWS_SECRET_ACCESS_KEY }}
@@ -43,10 +40,10 @@ jobs:
 
       - name: Deploy API
         run: |
-          npm install
-          npm run deploy-demo
+          yarn install --immutable
+          yarn deploy-demo
 
       - name: Serverless package contents
         run: |
-          npx serverless package --stage Demo
+          yarn serverless package --stage Demo
           ls -R .serverless
