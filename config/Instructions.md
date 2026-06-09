@@ -1,10 +1,10 @@
 1. Determine which APIs you need
 
-- AttendanceApi - Contains attendance records and supporting data like campuses, services, and when groups meet
+- AttendanceApi - Contains attendance records and supporting data like services, and when groups meet
 - ContentApi - Contains Bibles, church websites, calendars, songs and sermons
 - DoingApi - Contains volunteer schedules and tasks
 - GivingApi - Contains donation history
-- MembershipApi - Contains data for people, groups, households and forms.
+- MembershipApi - Contains data for people, groups, households, campuses and forms.
 - MessagingApi - Contains notifications, private messages and user devices
 
 2. Look at that APIs swagger.json file in /config/swagger to understand the API routes
