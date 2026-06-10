@@ -46,7 +46,8 @@
     "experimentalSpecifierResolution": "node"
   },
   "dependencies": {
-    "@churchapps/apihelper": "^0.6.0",
+    "@churchapps/apihelper": "^0.7.0",
+    "@churchapps/helpers": "^1.6.1",
     "@codegenie/serverless-express": "^4.16.0",
     "axios": "^1.10.0",
     "cors": "^2.8.5",
