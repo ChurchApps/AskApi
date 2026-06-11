@@ -9,7 +9,7 @@ export class WebsiteHelper {
     url?: string
   ): Promise<any> {
     const maxRetries = 3;
-    let lastError: Error;
+    let lastError: Error | undefined;
 
     for (let attempt = 1; attempt <= maxRetries; attempt++) {
       try {
@@ -31,8 +31,8 @@ export class WebsiteHelper {
         console.log(`Successfully generated page JSON on attempt ${attempt}`);
         return pageJson;
       } catch (error) {
-        console.error(`Attempt ${attempt} failed:`, error.message);
-        lastError = error;
+        lastError = error as Error;
+        console.error(`Attempt ${attempt} failed:`, lastError.message);
 
         if (attempt === maxRetries) {
           break;
@@ -44,7 +44,7 @@ export class WebsiteHelper {
     }
 
     throw new Error(
-      `Failed to generate page from description after ${maxRetries} attempts. Last error: ${lastError.message}`
+      `Failed to generate page from description after ${maxRetries} attempts. Last error: ${lastError?.message}`
     );
   }
 
@@ -57,7 +57,7 @@ export class WebsiteHelper {
     constraints?: any
   ): Promise<any> {
     const maxRetries = 2; // Reduced to stay within API Gateway 29s timeout
-    let lastError: Error;
+    let lastError: Error | undefined;
 
     for (let attempt = 1; attempt <= maxRetries; attempt++) {
       try {
@@ -87,8 +87,8 @@ export class WebsiteHelper {
         console.log(`Successfully generated page on attempt ${attempt}`);
         return pageJson;
       } catch (error) {
-        console.error(`Attempt ${attempt} failed:`, error.message);
-        lastError = error;
+        lastError = error as Error;
+        console.error(`Attempt ${attempt} failed:`, lastError.message);
 
         if (attempt === maxRetries) {
           break;
@@ -100,7 +100,7 @@ export class WebsiteHelper {
     }
 
     throw new Error(
-      `Failed to generate page from prompt after ${maxRetries} attempts. Last error: ${lastError.message}`
+      `Failed to generate page from prompt after ${maxRetries} attempts. Last error: ${lastError?.message}`
     );
   }
 
@@ -116,7 +116,7 @@ export class WebsiteHelper {
     constraints?: any
   ): Promise<any> {
     const maxRetries = 2;
-    let lastError: Error;
+    let lastError: Error | undefined;
 
     for (let attempt = 1; attempt <= maxRetries; attempt++) {
       try {
@@ -143,8 +143,8 @@ export class WebsiteHelper {
         console.log(`Successfully generated outline with ${outlineJson.sections?.length || 0} sections`);
         return outlineJson;
       } catch (error) {
-        console.error(`Outline attempt ${attempt} failed:`, error.message);
-        lastError = error;
+        lastError = error as Error;
+        console.error(`Outline attempt ${attempt} failed:`, lastError.message);
 
         if (attempt === maxRetries) {
           break;
@@ -155,7 +155,7 @@ export class WebsiteHelper {
     }
 
     throw new Error(
-      `Failed to generate page outline after ${maxRetries} attempts. Last error: ${lastError.message}`
+      `Failed to generate page outline after ${maxRetries} attempts. Last error: ${lastError?.message}`
     );
   }
 
@@ -170,7 +170,7 @@ export class WebsiteHelper {
     pageContext?: any
   ): Promise<any> {
     const maxRetries = 2;
-    let lastError: Error;
+    let lastError: Error | undefined;
 
     for (let attempt = 1; attempt <= maxRetries; attempt++) {
       try {
@@ -199,8 +199,8 @@ export class WebsiteHelper {
         console.log(`Successfully generated section with ${sectionJson.elements?.length || 0} elements`);
         return sectionJson;
       } catch (error) {
-        console.error(`Section attempt ${attempt} failed:`, error.message);
-        lastError = error;
+        lastError = error as Error;
+        console.error(`Section attempt ${attempt} failed:`, lastError.message);
 
         if (attempt === maxRetries) {
           break;
@@ -211,7 +211,7 @@ export class WebsiteHelper {
     }
 
     throw new Error(
-      `Failed to generate section content after ${maxRetries} attempts. Last error: ${lastError.message}`
+      `Failed to generate section content after ${maxRetries} attempts. Last error: ${lastError?.message}`
     );
   }
 
@@ -524,7 +524,7 @@ export class WebsiteHelper {
       try {
         return JSON.parse(balancedJsonMatch);
       } catch (error) {
-        console.warn("Balanced JSON extraction failed:", error.message);
+        console.warn("Balanced JSON extraction failed:", (error as Error).message);
       }
     }
 
@@ -534,7 +534,7 @@ export class WebsiteHelper {
       try {
         return JSON.parse(simpleMatch[0]);
       } catch (error) {
-        console.warn("Simple regex match failed:", error.message);
+        console.warn("Simple regex match failed:", (error as Error).message);
       }
     }
 
@@ -544,7 +544,7 @@ export class WebsiteHelper {
       try {
         return JSON.parse(codeBlockMatch[1].trim());
       } catch (error) {
-        console.warn("Code block extraction failed:", error.message);
+        console.warn("Code block extraction failed:", (error as Error).message);
       }
     }
 
@@ -558,7 +558,7 @@ export class WebsiteHelper {
       try {
         return JSON.parse(cleanedResponse);
       } catch (error) {
-        console.warn("Cleaned response parsing failed:", error.message);
+        console.warn("Cleaned response parsing failed:", (error as Error).message);
       }
     }
 

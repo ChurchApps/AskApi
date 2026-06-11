@@ -2,7 +2,7 @@ export class Repositories {
   // Currently no repositories as Question has been removed
   // This class is kept for the base controller infrastructure
 
-  private static _current: Repositories = null;
+  private static _current: Repositories | null = null;
   public static getCurrent = () => {
     if (Repositories._current === null) Repositories._current = new Repositories();
     return Repositories._current;

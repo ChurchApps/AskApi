@@ -4,7 +4,7 @@ import { Environment } from "./helpers/Environment.js";
 
 const port = process.env.SERVER_PORT;
 
-Environment.init(process.env.APP_ENV).then(() => {
+Environment.init(process.env.APP_ENV || "dev").then(() => {
   Pool.initPool();
 
   init().then((app) => {

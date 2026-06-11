@@ -40,6 +40,11 @@ export class OpenAiHelper {
     return this.openai;
   }
 
+  private static getOpenAi(): OpenAI {
+    if (!this.openai) throw new Error("OpenAiHelper has not been initialized.");
+    return this.openai;
+  }
+
   public static async execute(systemRole: string, prompt: string): Promise<AskQuestionResult> {
     const openAiPayload: OpenAI.Chat.ChatCompletionCreateParams = {
       model: "gpt-4o-mini",
@@ -51,7 +56,7 @@ export class OpenAiHelper {
       max_tokens: 500
     };
 
-    const response = await this.openai.chat.completions.create(openAiPayload);
+    const response = await this.getOpenAi().chat.completions.create(openAiPayload);
     console.log("RESPONSE IS:", response.choices[0]?.message?.content);
 
     try {
@@ -76,7 +81,7 @@ export class OpenAiHelper {
       max_tokens: 500
     };
 
-    const response = await this.openai.chat.completions.create(openAiPayload);
+    const response = await this.getOpenAi().chat.completions.create(openAiPayload);
     console.log("RESPONSE IS:", response.choices[0]?.message?.content);
 
     return response.choices[0]?.message?.content || "";
@@ -103,7 +108,7 @@ export class OpenAiHelper {
       max_tokens: 1000
     };
 
-    const response = await this.openai.chat.completions.create(payload);
+    const response = await this.getOpenAi().chat.completions.create(payload);
     return response.choices[0]?.message?.content || "";
   }
 
@@ -118,7 +123,7 @@ export class OpenAiHelper {
       max_tokens: 100
     };
 
-    const response = await this.openai.chat.completions.create(payload);
+    const response = await this.getOpenAi().chat.completions.create(payload);
     const content = response.choices[0]?.message?.content || "[]";
     try {
       const jsonStart = content.indexOf("[");
@@ -131,7 +136,7 @@ export class OpenAiHelper {
 
   public static async executeWebsiteGeneration(systemRole: string, prompt: string, modelOverride?: string) {
     // Website generation uses OpenRouter with Claude models
-    const client = this.openrouter || this.openai;
+    const client = this.openrouter || this.getOpenAi();
     // Default: claude-3.5-haiku is fast enough for API Gateway's 29s timeout
     // For section generation, can use claude-3.5-sonnet for better quality
     const defaultModel = this.openrouter ? "anthropic/claude-3.5-haiku" : "gpt-4o-mini";

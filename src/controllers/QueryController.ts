@@ -1,48 +1,11 @@
-import { controller, httpGet, httpPost } from "inversify-express-utils";
+import { controller, httpPost } from "inversify-express-utils";
 import express from "express";
 import { AskBaseController } from "./AskBaseController.js";
-import { OpenAiHelper, InstructionsHelper, Environment, ArrayHelper } from "../helpers/index.js";
+import { OpenAiHelper, InstructionsHelper, ArrayHelper } from "../helpers/index.js";
 import { WorkflowHelper } from "../helpers/WorkflowHelper.js";
-
-import fs from "fs";
-import path from "path";
-import { fileURLToPath } from "url";
-import { dirname } from "path";
-
-const __filename = fileURLToPath(import.meta.url);
-const __dirname = dirname(__filename);
 
 @controller("/query")
 export class QueryController extends AskBaseController {
-  @httpGet("/test")
-  public async test(req: express.Request<{}, {}, any>, res: express.Response): Promise<any> {
-    return this.actionWrapperAnon(req, res, async () => {
-      const environment = process.env.APP_ENV;
-      let file = "dev.json";
-      if (environment === "staging") file = "staging.json";
-      if (environment === "prod") file = "prod.json";
-
-      const relativePath = "../../config/" + file;
-      const physicalPath = path.resolve(__dirname, relativePath);
-
-      const json = fs.readFileSync(physicalPath, "utf8");
-      const jsonData = JSON.parse(json);
-
-      const appName = jsonData.appName as string;
-      const appEnv = jsonData.appEnv as string;
-      const connectionString = `/${appEnv}/${appName}/connectionString`;
-
-      return { environment, physicalPath, appName, appEnv, connectionString, openAIKey: Environment.openAiApiKey };
-    });
-  }
-
-  @httpGet("/test2")
-  public async test2(req: express.Request<{}, {}, any>, res: express.Response): Promise<any> {
-    return this.actionWrapperAnon(req, res, async () => {
-      return { hello: "world" };
-    });
-  }
-
   @httpPost("/peopleOld")
   public async queryPeopleOld(req: express.Request<{}, {}, any>, res: express.Response): Promise<any> {
     return this.actionWrapper(req, res, async (_au) => {
@@ -94,7 +57,7 @@ export class QueryController extends AskBaseController {
           result.additionalApiCalls = [];
         }
       } catch (parseError) {
-        return { error: "Failed to parse OpenAI response", rawResponse: openAiResponse, parseError: parseError.message };
+        return { error: "Failed to parse OpenAI response", rawResponse: openAiResponse, parseError: (parseError as Error).message };
       }
 
       // Initialize apiCallResults to ensure it's always present
@@ -186,7 +149,7 @@ export class QueryController extends AskBaseController {
           console.error("Error executing additional API calls:", apiError);
           result.apiCallError = {
             message: "Failed to execute additional API calls",
-            error: apiError.message,
+            error: (apiError as Error).message,
             note: "This might be due to insufficient permissions or API access. Check if the user has access to the required APIs."
           };
         }
@@ -257,7 +220,7 @@ export class QueryController extends AskBaseController {
           }
         } catch (parseError) {
           filters = [];
-          error = parseError.message;
+          error = (parseError as Error).message;
         }
 
         results.push({ query, filters, error, rawResponse: openAiResponse });
