@@ -654,9 +654,9 @@ __metadata:
   languageName: node
   linkType: hard
 
-"@churchapps/helpers@npm:^1.6.1":
-  version: 1.6.1
-  resolution: "@churchapps/helpers@npm:1.6.1"
+"@churchapps/helpers@npm:^1.7.1":
+  version: 1.7.1
+  resolution: "@churchapps/helpers@npm:1.7.1"
   dependencies:
     dayjs: "npm:^1.11.20"
   peerDependencies:
@@ -664,7 +664,7 @@ __metadata:
   peerDependenciesMeta:
     rrule:
       optional: true
-  checksum: 10c0/b2a90eacd94ee369947c477f79f8d38bfc4ff4c8fd82ad7a0e2fbddcb36e5e4f3722e47069bfd7a61be0cd31358cdb594fdaca8e3af260560f108c5cbae02184
+  checksum: 10c0/1a6fd8c0b214c8c762b80b3f02e9773f4446893ddf09871c0b2b6dcedefad55b1513ec1b92c056a7d59bffee0ad2133dfbf8d6c76f8fbfff350a72709139f756
   languageName: node
   linkType: hard
 
@@ -2339,7 +2339,7 @@ __metadata:
   resolution: "ask-api@workspace:."
   dependencies:
     "@churchapps/apihelper": "npm:^0.7.0"
-    "@churchapps/helpers": "npm:^1.6.1"
+    "@churchapps/helpers": "npm:^1.7.1"
     "@codegenie/serverless-express": "npm:^4.16.0"
     "@eslint/eslintrc": "npm:^3.3.3"
     "@eslint/js": "npm:^9.39.2"
