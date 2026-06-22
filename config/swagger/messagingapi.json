@@ -410,43 +410,6 @@
         }
       }
     },
-    "/conversations/requestPrayer/{churchId}/{conversationId}": {
-      "get": {
-        "tags": ["Conversations"],
-        "summary": "Request prayer for a conversation",
-        "parameters": [
-          {
-            "name": "churchId",
-            "in": "path",
-            "required": true,
-            "schema": {
-              "type": "string"
-            }
-          },
-          {
-            "name": "conversationId",
-            "in": "path",
-            "required": true,
-            "schema": {
-              "type": "string"
-            }
-          }
-        ],
-        "responses": {
-          "200": {
-            "description": "Prayer request conversation",
-            "content": {
-              "application/json": {
-                "schema": {
-                  "$ref": "#/components/schemas/Conversation"
-                }
-              }
-            }
-          }
-        },
-        "security": []
-      }
-    },
     "/conversations/current/{churchId}/{contentType}/{contentId}": {
       "get": {
         "tags": ["Conversations"],
