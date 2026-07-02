@@ -86,6 +86,19 @@ Don't just repeat these. Expand each into engaging content:
 }
 ```
 
+### Section-level answersJSON (backgrounds & shaped dividers)
+
+The section's `answersJSON` (a STRING) can add polish. Use sparingly and only when it improves visual rhythm:
+
+- `backgroundOpacity`: "0.5" — darkens an image background so light text stays readable.
+- `dividerTop` / `dividerBottom`: a shaped SVG edge that transitions between two sections. Set `color` to the ADJACENT section's background so the shape appears to belong to the neighboring section.
+
+```json
+"answersJSON": "{\"dividerBottom\":{\"shape\":\"wave\",\"color\":\"#FFFFFF\",\"height\":60}}"
+```
+
+Divider `shape` must be one of: `wave`, `waves`, `slant`, `curve`, `triangle`, `peaks`. Optional `height` (px, default 60) and `flip` (true mirrors horizontally). A great pattern: a colored hero with `dividerBottom` whose color matches the white section beneath it.
+
 ---
 
 ## IMAGE SELECTION GUIDE
@@ -309,9 +322,66 @@ https://images.unsplash.com/photo-{imageId}?w={width}&h={height}&fit=crop
 {"elementType":"whiteSpace","sort":1,"answersJSON":"{\"height\":\"30\"}"}
 ```
 
+### iconFeature - Material icon + heading + blurb (great in a row of 3-4 for "what to expect", values, or feature grids)
+
+Prefer iconFeature over plain cards when there is NO photo - it gives a clean, modern feature grid. `icon` is a Material Icons ligature name (e.g. `groups`, `favorite`, `local_cafe`, `child_care`, `volunteer_activism`, `music_note`, `menu_book`, `schedule`). `iconSize`: small|medium|large.
+
+```json
+{"elementType":"row","sort":1,"answersJSON":"{\"columns\":\"4,4,4\"}","elements":[
+  {"elementType":"iconFeature","sort":0,"answersJSON":"{\"icon\":\"local_cafe\",\"title\":\"Come As You Are\",\"description\":\"<p>Grab a free coffee and find a seat wherever you're comfortable. There's no dress code - you'll see everything from jeans to business casual.</p>\",\"iconColor\":\"#2c5aa0\",\"iconSize\":\"large\",\"textAlignment\":\"center\"}"},
+  {"elementType":"iconFeature","sort":1,"answersJSON":"{\"icon\":\"music_note\",\"title\":\"Engaging Worship\",\"description\":\"<p>Our 75-minute services blend contemporary worship music with practical, Bible-based teaching you can apply to real life.</p>\",\"iconColor\":\"#2c5aa0\",\"iconSize\":\"large\",\"textAlignment\":\"center\"}"},
+  {"elementType":"iconFeature","sort":2,"answersJSON":"{\"icon\":\"child_care\",\"title\":\"Kids Are Welcome\",\"description\":\"<p>Safe, fun programs for birth through 5th grade run during every service, with a secure check-in and background-checked volunteers.</p>\",\"iconColor\":\"#2c5aa0\",\"iconSize\":\"large\",\"textAlignment\":\"center\"}"}
+]}
+```
+
+### testimonial - Real quotes from members or visitors (builds trust)
+
+`quotes` is a NATIVE ARRAY inside answers (not a stringified string). `displayMode`: `single` shows all, `rotate` auto-advances.
+
+```json
+{"elementType":"testimonial","sort":0,"answersJSON":"{\"quotes\":[{\"text\":\"We walked in as complete strangers and left feeling like family. Within a month we'd found a small group and our kids beg to come back every week.\",\"author\":\"The Martinez Family\",\"role\":\"Members since 2023\"},{\"text\":\"I hadn't been to church in years and was nervous, but nobody put me on the spot. I just got to explore faith at my own pace.\",\"author\":\"James T.\"}],\"displayMode\":\"single\"}"}
+```
+
+### stats - Big-number highlights (attendance, years, impact)
+
+`items` is a NATIVE ARRAY; `value` is a NUMBER. Use `prefix`/`suffix` for symbols. `columns`: 2-4.
+
+```json
+{"elementType":"stats","sort":1,"answersJSON":"{\"items\":[{\"value\":500,\"suffix\":\"+\",\"label\":\"People Every Sunday\"},{\"value\":35,\"label\":\"Small Groups\"},{\"value\":1985,\"label\":\"Serving Since\"}],\"columns\":3}"}
+```
+
+### gallery - Photo grid
+
+`photos` is a NATIVE ARRAY of `{ url, alt, caption? }`. `layout`: grid|masonry|square|wide. Use curated Unsplash IDs, same as other images.
+
+```json
+{"elementType":"gallery","sort":0,"answersJSON":"{\"photos\":[{\"url\":\"https://images.unsplash.com/photo-1507692049790-de58290a4334?w=600&h=600&fit=crop\",\"alt\":\"Worship service\"},{\"url\":\"https://images.unsplash.com/photo-1511632765486-a01980e01a18?w=600&h=600&fit=crop\",\"alt\":\"Friends together\"}],\"layout\":\"grid\",\"columns\":3,\"spacing\":\"medium\"}"}
+```
+
+### countdown - Counts down to the next service or a dated event
+
+Use `weekly` for recurring services (`dayOfWeek` 0=Sunday, `time` 24h HH:mm) or `date` with an ISO `targetDate` for one-time events.
+
+```json
+{"elementType":"countdown","sort":0,"answersJSON":"{\"mode\":\"weekly\",\"dayOfWeek\":0,\"time\":\"10:00\",\"title\":\"Next Service Starts In\",\"completedText\":\"We're live - come on in!\",\"showDays\":\"true\",\"showHours\":\"true\"}"}
+```
+
+### socialIcons - Row of social links (only URLs you set will render)
+
+```json
+{"elementType":"socialIcons","sort":0,"answersJSON":"{\"facebook\":\"https://facebook.com/gracecommunity\",\"instagram\":\"https://instagram.com/gracecommunity\",\"youtube\":\"https://youtube.com/@gracecommunity\",\"iconStyle\":\"filled\",\"size\":\"medium\",\"alignment\":\"center\",\"color\":\"#2c5aa0\"}"}
+```
+
+### sermons - Sermon list (choose a layout)
+
+`layout`: `browse` (interactive playlist browser, default), `grid`/`list` (flat set, honor `itemCount` and optional `playlistId`), `featuredLatest` (single hero for the newest sermon).
+
+```json
+{"elementType":"sermons","sort":0,"answersJSON":"{\"layout\":\"grid\",\"itemCount\":6,\"showTitles\":\"true\",\"showDates\":\"true\"}"}
+```
+
 ### Simple elements (use when appropriate)
 
-- **sermons**: `{"elementType":"sermons","sort":0,"answersJSON":"{}"}`
 - **donation**: `{"elementType":"donation","sort":0,"answersJSON":"{}"}`
 - **donateLink**: `{"elementType":"donateLink","sort":0,"answersJSON":"{}"}`
 - **calendar**: `{"elementType":"calendar","sort":0,"answersJSON":"{\"calendarType\":\"curated\"}"}`
@@ -539,6 +609,7 @@ https://images.unsplash.com/photo-{imageId}?w={width}&h={height}&fit=crop
 5. **Use church name** from context, never "Our Church" or "[Church Name]".
 6. **Use curated Unsplash images** - Select image IDs from the IMAGE SELECTION GUIDE that match the content. Kids content needs kids images, worship needs worship images, etc. Only use IDs from the curated library.
 7. **Match column counts** - Row columns MUST equal number of child elements.
+8. **Reach for the right element** - Don't force everything into text/card. Use `iconFeature` for icon-led feature grids ("what to expect", values), `testimonial` for member quotes, `stats` for impact numbers, `countdown` for the next service, `socialIcons` in a connect/CTA section, and `gallery` for photo collections. Only use element types from the Available Elements list.
 
 ---
 

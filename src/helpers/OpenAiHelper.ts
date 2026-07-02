@@ -163,4 +163,32 @@ export class OpenAiHelper {
       throw error;
     }
   }
+
+  public static async executeVision(systemRole: string, userText: string, imageUrls: string[], modelOverride?: string) {
+    const client = this.openrouter || this.getOpenAi();
+    // Vision-capable default; Claude 3.5 Sonnet supports images via OpenRouter
+    const defaultModel = this.openrouter ? "anthropic/claude-3.5-sonnet" : "gpt-4o-mini";
+    const model = modelOverride || defaultModel;
+
+    const content: OpenAI.Chat.ChatCompletionContentPart[] = [{ type: "text", text: userText || "Generate the alt text JSON now." }];
+    imageUrls.forEach((url) => content.push({ type: "image_url", image_url: { url } }));
+
+    const payload: OpenAI.Chat.ChatCompletionCreateParams = {
+      model,
+      messages: [
+        { role: "system", content: systemRole },
+        { role: "user", content }
+      ],
+      temperature: 0.2,
+      max_tokens: 2000
+    };
+
+    try {
+      const response = await client.chat.completions.create(payload);
+      return response.choices[0]?.message?.content || "";
+    } catch (error: any) {
+      console.error("Vision Error Details:", { message: error.message, status: error.status, code: error.code, type: error.type, error: error.error });
+      throw error;
+    }
+  }
 }

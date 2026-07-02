@@ -210,6 +210,65 @@ export class InstructionsHelper {
     return contents;
   }
 
+  static getGenerateSiteInstructions(input: any, availableElementTypes?: string[]): string {
+    let contents = this.readFile("/config/instructions/generateSite.md");
+
+    let ctx = "";
+    if (input?.churchName) ctx += `**Church Name**: ${input.churchName}\n`;
+    if (input?.denomination) ctx += `**Denomination**: ${input.denomination}\n`;
+    if (input?.description) ctx += `**Description**: ${input.description}\n`;
+    if (input?.tone) ctx += `**Tone**: ${input.tone}\n`;
+    if (Array.isArray(input?.audiences) && input.audiences.length > 0) {
+      ctx += `**Audiences**: ${input.audiences.join(", ")}\n`;
+    }
+    if (input?.serviceTimesText) ctx += `**Service Times**: ${input.serviceTimesText}\n`;
+    if (!ctx) ctx = "No onboarding details provided - use warm, generic church content.\n";
+    contents = contents.replace("{siteContext}", ctx);
+
+    let elementTypesStr = "";
+    if (availableElementTypes && availableElementTypes.length > 0) {
+      elementTypesStr = "Available element types:\n" + availableElementTypes.join(", ");
+    } else {
+      elementTypesStr = "No element type restrictions.";
+    }
+    contents = contents.replace("{availableElementTypes}", elementTypesStr);
+
+    return contents;
+  }
+
+  static getRewriteSectionInstructions(
+    section: any,
+    instruction?: string,
+    churchName?: string,
+    _availableElementTypes?: string[]
+  ): string {
+    let contents = this.readFile("/config/instructions/rewriteSection.md");
+
+    contents = contents.replace("{instruction}", instruction && instruction.trim().length > 0 ? instruction.trim() : "No specific instruction - improve clarity and warmth without changing meaning.");
+
+    let ctx = "";
+    if (churchName) ctx += `**Church Name**: ${churchName}\n`;
+    if (!ctx) ctx = "No specific church context provided.\n";
+    contents = contents.replace("{churchContext}", ctx);
+
+    contents = contents.replace("{section}", JSON.stringify(section, null, 2));
+    return contents;
+  }
+
+  static getGenerateAltTextInstructions(pageContext?: string): string {
+    let contents = this.readFile("/config/instructions/generateAltText.md");
+    contents = contents.replace("{pageContext}", pageContext && pageContext.trim().length > 0 ? pageContext.trim() : "No page context provided.");
+    return contents;
+  }
+
+  static getGenerateMetaDescriptionInstructions(pageTitle: string, pageContentText: string, churchName?: string): string {
+    let contents = this.readFile("/config/instructions/generateMetaDescription.md");
+    contents = contents.replace("{pageTitle}", pageTitle || "Untitled");
+    contents = contents.replace("{churchName}", churchName || "the church");
+    contents = contents.replace("{pageContentText}", pageContentText || "(no content provided)");
+    return contents;
+  }
+
   static getGenerateSectionInstructions(
     sectionOutline: any,
     churchContext?: any,

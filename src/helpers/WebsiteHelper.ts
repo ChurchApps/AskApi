@@ -216,6 +216,202 @@ export class WebsiteHelper {
   }
 
   /**
+   * Generates a full multi-page site: one site-outline call, then per-section
+   * generation reusing the existing generateSectionContent machinery.
+   */
+  public static async generateSite(input: any, availableElementTypes?: string[], planOnly?: boolean): Promise<any[]> {
+    const maxRetries = 2;
+    let lastError: Error | undefined;
+    let siteOutline: any;
+
+    for (let attempt = 1; attempt <= maxRetries; attempt++) {
+      try {
+        const systemPrompt = InstructionsHelper.getGenerateSiteInstructions(input, availableElementTypes);
+        const response = await OpenAiHelper.executeWebsiteGeneration(systemPrompt, "", "anthropic/claude-3.5-sonnet");
+        siteOutline = this.extractAndParseJson(response);
+        this.validateSiteOutlineStructure(siteOutline);
+        break;
+      } catch (error) {
+        lastError = error as Error;
+        console.error(`Site outline attempt ${attempt} failed:`, lastError.message);
+        if (attempt === maxRetries) {
+          throw new Error(`Failed to generate site outline after ${maxRetries} attempts. Last error: ${lastError.message}`);
+        }
+        await new Promise((resolve) => setTimeout(resolve, 500));
+      }
+    }
+
+    const normalizePage = (page: any) => ({
+      title: page.title,
+      url: page.url,
+      layout: page.layout || "headerFooter"
+    });
+
+    if (planOnly) {
+      return siteOutline.pages.map((page: any) => ({
+        ...normalizePage(page),
+        sections: page.sections.map((s: any) => ({
+          id: s.id,
+          purpose: s.purpose,
+          suggestedBackground: s.suggestedBackground,
+          suggestedTextColor: s.suggestedTextColor,
+          suggestedElements: s.suggestedElements,
+          contentHints: s.contentHints
+        }))
+      }));
+    }
+
+    const churchContext = { churchName: input?.churchName };
+    const pages: any[] = [];
+
+    for (const page of siteOutline.pages) {
+      const totalSections = page.sections.length;
+      const sections = await Promise.all(
+        page.sections.map((sectionOutline: any, index: number) =>
+          this.generateSectionContent(sectionOutline, churchContext, availableElementTypes, {
+            title: page.title,
+            totalSections,
+            sectionIndex: index
+          }))
+      );
+      pages.push({ ...normalizePage(page), sections });
+    }
+
+    return pages;
+  }
+
+  private static validateSiteOutlineStructure(siteJson: any): void {
+    if (!siteJson || typeof siteJson !== "object") {
+      throw new Error("Invalid site outline: Not an object");
+    }
+    if (!Array.isArray(siteJson.pages) || siteJson.pages.length === 0) {
+      throw new Error("Invalid site outline: Missing or empty pages array");
+    }
+    siteJson.pages.forEach((page: any, pageIndex: number) => {
+      if (!page.title || typeof page.title !== "string") {
+        throw new Error(`Invalid site page ${pageIndex}: Missing title`);
+      }
+      if (!Array.isArray(page.sections) || page.sections.length === 0) {
+        throw new Error(`Invalid site page ${pageIndex}: Missing or empty sections array`);
+      }
+      page.sections.forEach((section: any, sectionIndex: number) => {
+        if (!section.id || !section.purpose) {
+          throw new Error(`Invalid site page ${pageIndex} section ${sectionIndex}: Missing id or purpose`);
+        }
+      });
+    });
+  }
+
+  /**
+   * Rewrites only the text-bearing answer fields of a section, preserving its
+   * element ids/types/order. Falls back to the original section with an error
+   * flag if the model breaks the structure.
+   */
+  public static async rewriteSection(
+    section: any,
+    instruction?: string,
+    churchName?: string,
+    availableElementTypes?: string[]
+  ): Promise<{ section: any; error?: string; fallback?: boolean }> {
+    try {
+      const systemPrompt = InstructionsHelper.getRewriteSectionInstructions(section, instruction, churchName, availableElementTypes);
+      const response = await OpenAiHelper.executeWebsiteGeneration(systemPrompt, "");
+      const rewritten = this.extractAndParseJson(response);
+
+      this.coerceAnswersToStrings(rewritten);
+
+      if (this.structureSignature(section) !== this.structureSignature(rewritten)) {
+        return { section, error: "Rewrite altered section structure; returned original unchanged.", fallback: true };
+      }
+      return { section: rewritten };
+    } catch (error) {
+      console.error("rewriteSection failed:", (error as Error).message);
+      return { section, error: `Rewrite failed: ${(error as Error).message}`, fallback: true };
+    }
+  }
+
+  private static structureSignature(section: any): string {
+    const walk = (elements: any[]): any[] =>
+      Array.isArray(elements)
+        ? elements.map((e) => ({ id: e?.id, t: e?.elementType, c: walk(e?.elements) }))
+        : [];
+    return JSON.stringify(walk(section?.elements));
+  }
+
+  private static coerceAnswersToStrings(node: any): void {
+    if (!node || typeof node !== "object") return;
+    if (node.answersJSON && typeof node.answersJSON !== "string") {
+      node.answersJSON = JSON.stringify(node.answersJSON);
+    }
+    if (Array.isArray(node.elements)) node.elements.forEach((e: any) => this.coerceAnswersToStrings(e));
+  }
+
+  /**
+   * Generates concise alt text for a batch of image urls using a vision model.
+   */
+  public static async generateAltText(imageUrls: string[], pageContext?: string): Promise<{ url: string; altText: string }[]> {
+    const urls = imageUrls.slice(0, 20);
+    const systemPrompt = InstructionsHelper.getGenerateAltTextInstructions(pageContext);
+    const response = await OpenAiHelper.executeVision(systemPrompt, "", urls);
+    const parsed = this.parseJsonArray(response);
+
+    return urls.map((url, index) => {
+      const match = Array.isArray(parsed)
+        ? parsed.find((p: any) => p?.url === url) || parsed[index]
+        : undefined;
+      return { url, altText: this.cleanAltText(match?.altText) };
+    });
+  }
+
+  private static cleanAltText(text: any): string {
+    let value = typeof text === "string" ? text.trim() : "";
+    value = value.replace(/^["']|["']$/g, "").trim();
+    value = value.replace(/^(image|photo|picture|graphic|photograph)\s+of\s+/i, "").trim();
+    if (value.length > 125) value = value.substring(0, 122).trimEnd() + "...";
+    return value;
+  }
+
+  private static parseJsonArray(response: string): any[] {
+    const codeBlock = response.match(/```(?:json)?\s*([\s\S]*?)```/);
+    const candidates = [codeBlock?.[1]?.trim(), response.match(/\[[\s\S]*\]/)?.[0], response.trim()];
+    for (const candidate of candidates) {
+      if (!candidate) continue;
+      try {
+        const value = JSON.parse(candidate);
+        if (Array.isArray(value)) return value;
+      } catch {
+        // try next candidate
+      }
+    }
+    return [];
+  }
+
+  /**
+   * Generates a single SEO meta description (<=155 chars) for a page.
+   */
+  public static async generateMetaDescription(
+    pageTitle: string,
+    pageContentText: string,
+    churchName?: string
+  ): Promise<{ metaDescription: string }> {
+    const truncated = (pageContentText || "").substring(0, 6000);
+    const systemPrompt = InstructionsHelper.getGenerateMetaDescriptionInstructions(pageTitle, truncated, churchName);
+    const response = await OpenAiHelper.executeWebsiteGeneration(systemPrompt, "");
+
+    let value = "";
+    try {
+      const parsed = this.extractAndParseJson(response);
+      value = typeof parsed?.metaDescription === "string" ? parsed.metaDescription : "";
+    } catch {
+      value = response;
+    }
+
+    value = value.replace(/\s+/g, " ").replace(/^["']|["']$/g, "").trim();
+    if (value.length > 155) value = value.substring(0, 152).trimEnd() + "...";
+    return { metaDescription: value };
+  }
+
+  /**
    * Validates the outline structure
    */
   private static validateOutlineStructure(outlineJson: any): void {

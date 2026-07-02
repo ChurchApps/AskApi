@@ -109,8 +109,14 @@ For each section, provide:
 ### Information Cards Section
 - Background: Light gray (#F8F9FA) or off-white
 - Text: Dark
-- Elements: row with 3 cards OR 3 separate textWithPhoto elements
+- Elements: row with 3 cards OR 3 separate textWithPhoto elements. When the points have NO photos (e.g. "what to expect", core values), prefer a row of `iconFeature` elements for a cleaner, modern feature grid.
 - Content: Key facts or features, scannable format
+
+### Stats / Proof Section
+- Background: Church primary color or dark
+- Text: Light
+- Elements: `stats` (2-4 big numbers) and/or `testimonial` (member quotes)
+- Content: Attendance, years serving, groups, real member quotes that build trust
 
 ### Content/Story Section
 - Background: White (alternate with colored sections)
@@ -133,7 +139,7 @@ For each section, provide:
 ### CTA Section (Always Last)
 - Background: Dark (#1a1a1a) or church primary color
 - Text: Light
-- Elements: heading text + buttonLink
+- Elements: heading text + buttonLink (optionally `socialIcons` to connect, or `countdown` to the next service)
 - Content: Action-oriented headline, single clear CTA
 - Padding: 60px top/bottom
 
