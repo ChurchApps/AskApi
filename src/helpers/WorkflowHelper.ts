@@ -12,7 +12,6 @@ export class WorkflowHelper {
 
   static async determineRoutes(userQuery: string) {
     const fullQuestion = InstructionsHelper.getDetermineRoutesInstructions(userQuery);
-    //console.log("Full Question for WorkflowHelper:", fullQuestion);
     const result = await OpenAiHelper.execute(
       "You are an API routing assistant that selects specific routes based on user questions.",
       fullQuestion
@@ -34,7 +33,6 @@ export class WorkflowHelper {
 
   private static parseApiCallsJson(apiCallsText: string): any[] {
     try {
-      // Clean up the response if it has markdown formatting
       let cleanText = apiCallsText.trim();
       if (cleanText.startsWith("```json")) cleanText = cleanText.substring(7);
       if (cleanText.startsWith("```")) cleanText = cleanText.substring(3);
@@ -51,7 +49,6 @@ export class WorkflowHelper {
   }
 
   static async executeApiCalls(userQuery: string, jwts: any) {
-    // Get the formed API calls
     const apiCallsText = await WorkflowHelper.formApiCalls(userQuery);
     const apiCalls = this.parseApiCallsJson(apiCallsText);
     return DataHelper.executeApiCalls(apiCalls, jwts);
@@ -82,7 +79,6 @@ export class WorkflowHelper {
     console.log("Full Question for queryPeople:", fullQuestion);
     console.log("Result from OpenAiHelper for queryPeople:", result);
 
-    console.log("Result from OpenAiHelper for queryPeople:", result);
     return result;
   }
 }

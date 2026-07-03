@@ -8,12 +8,9 @@ const AuthSection: React.FC = () => {
   const { userChurch } = userContext;
 
   const handleLoginSuccess = (redirectUrl?: string) => {
-    // Login is successful when userChurch has a JWT
-    // The LoginPage component will have already updated the context
     setShowLogin(false);
   };
 
-  // User is authenticated if userChurch has a JWT
   const isAuthenticated = !!(userChurch && userChurch.jwt);
 
   if (showLogin) {
@@ -128,8 +125,6 @@ const AuthSection: React.FC = () => {
           </div>
         </div>
       )}
-
-
     </div>
   );
 };

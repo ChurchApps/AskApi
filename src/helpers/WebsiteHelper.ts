@@ -21,7 +21,6 @@ export class WebsiteHelper {
         const pageJson = this.extractAndParseJson(response);
         console.log("Parsed JSON structure:", { hasId: !!pageJson.id, hasSections: !!pageJson.sections, sectionsLength: pageJson.sections?.length || 0, firstSectionElementsLength: pageJson.sections?.[0]?.elements?.length || 0 });
 
-        // Replace all IDs with unique generated ones
         this.replaceIdsWithUniqueOnes(pageJson);
         console.log("Replaced IDs with unique generated ones");
 
@@ -38,7 +37,6 @@ export class WebsiteHelper {
           break;
         }
 
-        // Wait briefly before retrying
         await new Promise((resolve) => setTimeout(resolve, 1000));
       }
     }
@@ -61,7 +59,6 @@ export class WebsiteHelper {
 
     for (let attempt = 1; attempt <= maxRetries; attempt++) {
       try {
-        // Build enhanced system prompt with full context
         const systemPrompt = InstructionsHelper.getGeneratePageInstructions(
           prompt,
           churchContext,
@@ -78,10 +75,7 @@ export class WebsiteHelper {
         const pageJson = this.extractAndParseJson(response);
         console.log("Parsed JSON structure:", { hasTitle: !!pageJson.title, hasLayout: !!pageJson.layout, hasSections: !!pageJson.sections, sectionsCount: pageJson.sections?.length || 0 });
 
-        // Validate structure
         this.validateGeneratedPageStructure(pageJson, availableElementTypes);
-
-        // Sanitize and ensure proper data types
         this.sanitizePageData(pageJson);
 
         console.log(`Successfully generated page on attempt ${attempt}`);
@@ -94,7 +88,7 @@ export class WebsiteHelper {
           break;
         }
 
-        // Wait briefly before retrying (reduced delay for timeout constraints)
+        // Reduced delay to stay within API Gateway 29s timeout
         await new Promise((resolve) => setTimeout(resolve, 500));
       }
     }
@@ -104,11 +98,7 @@ export class WebsiteHelper {
     );
   }
 
-  /**
-   * Generates a page outline with section descriptions and content hints.
-   * This is a lightweight call that returns structure without full element content.
-   * Uses Sonnet model for better content strategy and page planning.
-   */
+  /** Generates lightweight page outline with section descriptions and content hints. */
   public static async generatePageOutline(
     prompt: string,
     churchContext?: any,
@@ -128,16 +118,13 @@ export class WebsiteHelper {
         );
 
         console.log(`Outline generation attempt ${attempt}`);
-        // Use Claude 3.5 Sonnet for outline - smarter than Haiku but still fast
-        // Claude 3.5 Sonnet is faster than Claude Sonnet 4 and stays within 29s timeout
-        // The outline is small (~1K tokens), so cost impact is minimal (~$0.01)
+        // Use Sonnet for outline: smarter than Haiku, cost-effective, stays within 29s timeout
         const response = await OpenAiHelper.executeWebsiteGeneration(systemPrompt, "", "anthropic/claude-3.5-sonnet");
 
         console.log(`Outline response (first 300 chars):`, response.substring(0, 300));
 
         const outlineJson = this.extractAndParseJson(response);
 
-        // Validate outline structure
         this.validateOutlineStructure(outlineJson);
 
         console.log(`Successfully generated outline with ${outlineJson.sections?.length || 0} sections`);
@@ -159,10 +146,7 @@ export class WebsiteHelper {
     );
   }
 
-  /**
-   * Generates a single section's full content based on the section outline.
-   * Uses sonnet model for better quality content generation.
-   */
+  /** Generates full content for a single section based on the section outline. */
   public static async generateSectionContent(
     sectionOutline: any,
     churchContext?: any,
@@ -182,18 +166,14 @@ export class WebsiteHelper {
         );
 
         console.log(`Section generation attempt ${attempt} for section: ${sectionOutline.id}`);
-        // Use haiku for section content - fast and cost-effective
-        // Haiku: ~$0.25/1M input, $1.25/1M output vs Sonnet: ~$3/1M input, $15/1M output
+        // Use Haiku for speed and cost efficiency
         const response = await OpenAiHelper.executeWebsiteGeneration(systemPrompt, "");
 
         console.log(`Section response (first 200 chars):`, response.substring(0, 200));
 
         const sectionJson = this.extractAndParseJson(response);
 
-        // Validate section structure
         this.validateSectionStructure(sectionJson, availableElementTypes);
-
-        // Sanitize section data
         this.sanitizeSectionData(sectionJson);
 
         console.log(`Successfully generated section with ${sectionJson.elements?.length || 0} elements`);
@@ -215,10 +195,7 @@ export class WebsiteHelper {
     );
   }
 
-  /**
-   * Generates a full multi-page site: one site-outline call, then per-section
-   * generation reusing the existing generateSectionContent machinery.
-   */
+  /** Generates full multi-page site: site-outline call then per-section generation. */
   public static async generateSite(input: any, availableElementTypes?: string[], planOnly?: boolean): Promise<any[]> {
     const maxRetries = 2;
     let lastError: Error | undefined;
@@ -302,11 +279,7 @@ export class WebsiteHelper {
     });
   }
 
-  /**
-   * Rewrites only the text-bearing answer fields of a section, preserving its
-   * element ids/types/order. Falls back to the original section with an error
-   * flag if the model breaks the structure.
-   */
+  /** Rewrites text fields of a section, preserving element structure; falls back if validation fails. */
   public static async rewriteSection(
     section: any,
     instruction?: string,
@@ -346,9 +319,7 @@ export class WebsiteHelper {
     if (Array.isArray(node.elements)) node.elements.forEach((e: any) => this.coerceAnswersToStrings(e));
   }
 
-  /**
-   * Generates concise alt text for a batch of image urls using a vision model.
-   */
+  /** Generates concise alt text for a batch of image URLs using a vision model. */
   public static async generateAltText(imageUrls: string[], pageContext?: string): Promise<{ url: string; altText: string }[]> {
     const urls = imageUrls.slice(0, 20);
     const systemPrompt = InstructionsHelper.getGenerateAltTextInstructions(pageContext);
@@ -386,9 +357,7 @@ export class WebsiteHelper {
     return [];
   }
 
-  /**
-   * Generates a single SEO meta description (<=155 chars) for a page.
-   */
+  /** Generates SEO meta description (<=155 chars) for a page. */
   public static async generateMetaDescription(
     pageTitle: string,
     pageContentText: string,
@@ -411,9 +380,7 @@ export class WebsiteHelper {
     return { metaDescription: value };
   }
 
-  /**
-   * Validates the outline structure
-   */
+  /** Validates outline structure. */
   private static validateOutlineStructure(outlineJson: any): void {
     if (!outlineJson || typeof outlineJson !== "object") {
       throw new Error("Invalid outline JSON: Not an object");
@@ -442,9 +409,7 @@ export class WebsiteHelper {
     });
   }
 
-  /**
-   * Validates a generated section structure
-   */
+  /** Validates generated section structure. */
   private static validateSectionStructure(sectionJson: any, availableElementTypes?: string[]): void {
     if (!sectionJson || typeof sectionJson !== "object") {
       throw new Error("Invalid section JSON: Not an object");
@@ -468,9 +433,7 @@ export class WebsiteHelper {
     }
   }
 
-  /**
-   * Sanitizes section data to ensure proper format
-   */
+  /** Sanitizes section data to ensure proper format. */
   private static sanitizeSectionData(sectionJson: any): void {
     // Ensure zone exists
     if (!sectionJson.zone) {
@@ -502,9 +465,7 @@ export class WebsiteHelper {
     }
   }
 
-  /**
-   * Filters out empty container elements (rows, boxes, carousels) and sanitizes the rest
-   */
+  /** Filters empty container elements and sanitizes the rest. */
   private static filterAndSanitizeElements(elements: any[]): any[] {
     return elements.filter((element: any) => {
       // Check if this is a container element (row, box, carousel)
@@ -552,59 +513,7 @@ export class WebsiteHelper {
     });
   }
 
-  /**
-   * Flattens a hierarchical page structure into separate arrays for page, sections, and elements
-   * @param pageData The hierarchical page data with nested sections and elements
-   * @returns Object containing flat arrays of page, sections, and elements
-   */
-  /**
-   * Example usage:
-   *
-   * Input:
-   * {
-   *   id: "page-123456",
-   *   title: "Home Page",
-   *   sections: [
-   *     {
-   *       id: "section-001",
-   *       type: "hero",
-   *       elements: [
-   *         { id: "elem-001", type: "heading", content: "Welcome" },
-   *         { id: "elem-002", type: "text", content: "Hello world" }
-   *       ],
-   *       sections: [
-   *         {
-   *           id: "section-002",
-   *           type: "content",
-   *           elements: [
-   *             { id: "elem-003", type: "image", src: "image.jpg" }
-   *           ]
-   *         }
-   *       ]
-   *     }
-   *   ]
-   * }
-   *
-   * Output:
-   * {
-   *   page: { id: "page-123456", title: "Home Page" },
-   *   sections: [
-   *     { id: "section-001", type: "hero" },
-   *     { id: "section-002", type: "content", parentSectionId: "section-001" }
-   *   ],
-   *   elements: [
-   *     { id: "elem-001", type: "heading", content: "Welcome", sectionId: "section-001" },
-   *     { id: "elem-002", type: "text", content: "Hello world", sectionId: "section-001" },
-   *     { id: "elem-003", type: "image", src: "image.jpg", sectionId: "section-002" }
-   *   ]
-   * }
-   */
-
-  /**
-   * Flattens a hierarchical page structure into separate arrays for page, sections, and elements
-   * @param pageData The hierarchical page data with nested sections and elements
-   * @returns Object containing flat arrays of page, sections, and elements
-   */
+  /** Flattens hierarchical page structure into separate arrays for page, sections, and elements. */
   public static flattenPageStructure(pageData: any): { page: any; sections: any[]; elements: any[] } {
     console.log("flattenPageStructure called with type:", typeof pageData);
     console.log("flattenPageStructure called with:", JSON.stringify(pageData).substring(0, 200));
@@ -714,7 +623,6 @@ export class WebsiteHelper {
   }
 
   private static extractAndParseJson(response: string): any {
-    // Strategy 1: Try to find complete JSON object with balanced braces
     const balancedJsonMatch = this.extractBalancedJson(response);
     if (balancedJsonMatch) {
       try {
@@ -724,7 +632,6 @@ export class WebsiteHelper {
       }
     }
 
-    // Strategy 2: Simple regex match for JSON-like structure
     const simpleMatch = response.match(/\{[\s\S]*\}/);
     if (simpleMatch) {
       try {
@@ -734,7 +641,6 @@ export class WebsiteHelper {
       }
     }
 
-    // Strategy 3: Look for JSON between triple backticks or code blocks
     const codeBlockMatch = response.match(/```(?:json)?\s*([\s\S]*?)```/);
     if (codeBlockMatch && codeBlockMatch[1]) {
       try {
@@ -744,7 +650,6 @@ export class WebsiteHelper {
       }
     }
 
-    // Strategy 4: Try to clean the response and extract JSON
     const cleanedResponse = response
       .replace(/^[^{]*/, "") // Remove everything before first {
       .replace(/[^}]*$/, "") // Remove everything after last }
@@ -761,11 +666,7 @@ export class WebsiteHelper {
     throw new Error("No valid JSON found in AI response. Response content: " + response.substring(0, 500));
   }
 
-  /**
-   * Extracts JSON with balanced braces to avoid incomplete JSON
-   * @param text Text to search for JSON
-   * @returns Extracted JSON string or null
-   */
+  /** Extracts JSON with balanced braces to avoid incomplete JSON. */
   private static extractBalancedJson(text: string): string | null {
     const start = text.indexOf("{");
     if (start === -1) return null;
@@ -807,10 +708,7 @@ export class WebsiteHelper {
     return null;
   }
 
-  /**
-   * Validates the basic structure of the page JSON
-   * @param pageJson Parsed page JSON object
-   */
+  /** Validates basic structure of page JSON. */
   private static validatePageStructure(pageJson: any): void {
     if (!pageJson || typeof pageJson !== "object") {
       throw new Error("Invalid JSON: Not an object");
@@ -840,10 +738,7 @@ export class WebsiteHelper {
     });
   }
 
-  /**
-   * Validates that all IDs are exactly 11 characters and use valid characters
-   * @param pageJson Parsed page JSON object
-   */
+  /** Validates IDs are exactly 11 characters using valid characters. */
   private static validateIdStructure(pageJson: any): void {
     const validIdPattern = /^[A-Za-z0-9-_]{11}$/;
     const seenIds = new Set<string>();
@@ -874,12 +769,7 @@ export class WebsiteHelper {
     });
   }
 
-  /**
-   * Recursively validates element IDs
-   * @param elements Array of elements to validate
-   * @param seenIds Set of already seen IDs
-   * @param context Context string for error messages
-   */
+  /** Recursively validates element IDs. */
   private static validateElementIds(elements: any[], seenIds: Set<string>, context: string): void {
     const validIdPattern = /^[A-Za-z0-9-_]{11}$/;
 
@@ -921,11 +811,7 @@ export class WebsiteHelper {
     return InstructionsHelper.getCreateWebpageInstructions(description, churchId, title, url);
   }
 
-  /**
-   * Validates the generated page structure for the new prompt-based generation
-   * @param pageJson Parsed page JSON object
-   * @param availableElementTypes List of valid element types
-   */
+  /** Validates generated page structure for prompt-based generation. */
   private static validateGeneratedPageStructure(pageJson: any, availableElementTypes?: string[]): void {
     if (!pageJson || typeof pageJson !== "object") {
       throw new Error("Invalid JSON: Not an object");
@@ -966,10 +852,7 @@ export class WebsiteHelper {
     });
   }
 
-  /**
-   * Sanitizes page data to ensure proper format and safe content
-   * @param pageJson Page JSON object to sanitize
-   */
+  /** Sanitizes page data to ensure proper format and safe content. */
   private static sanitizePageData(pageJson: any): void {
     // Ensure layout is valid
     const validLayouts = ["headerFooter", "cleanCentered", "embed"];
@@ -1031,10 +914,7 @@ export class WebsiteHelper {
     }
   }
 
-  /**
-   * Generates a random 11-character ID using A-Za-z0-9 and hyphens
-   * @returns A unique 11-character identifier
-   */
+  /** Generates random 11-character ID using A-Za-z0-9 and hyphens. */
   public static generateId(): string {
     const chars = "ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789-";
     let result = "";

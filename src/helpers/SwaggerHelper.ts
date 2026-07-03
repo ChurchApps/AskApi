@@ -65,11 +65,7 @@ export class SwaggerHelper {
   private static enumDefinitions: Record<string, string[]> = {};
   private static routeExamples: Record<string, any> = {};
 
-  /**
-   * Reads and parses a swagger JSON file for the specified API
-   * @param apiName The name of the API (e.g., "MembershipApi", "AttendanceApi")
-   * @returns Promise containing swagger content and available endpoints, or null if file not found
-   */
+  /** Reads and parses a swagger JSON file for the specified API. */
   public static async readSwaggerFile(apiName: string): Promise<SwaggerResult | null> {
     const swaggerPath = path.join(__dirname, this.SWAGGER_CONFIG_PATH, `${apiName.toLowerCase()}.json`);
 
@@ -83,11 +79,7 @@ export class SwaggerHelper {
     }
   }
 
-  /**
-   * Reads swagger files for multiple APIs
-   * @param apiNames Array of API names
-   * @returns Record of API names to their swagger results
-   */
+  /** Reads swagger files for multiple APIs. */
   public static async readSwaggerFiles(apiNames: string[]): Promise<Record<string, SwaggerResult | { error: string }>> {
     const results: Record<string, SwaggerResult | { error: string }> = {};
 
@@ -104,22 +96,13 @@ export class SwaggerHelper {
     return results;
   }
 
-  /**
-   * Gets available endpoints for a specific API
-   * @param apiName The name of the API
-   * @returns Array of endpoint paths, or empty array if swagger file not found
-   */
+  /** Gets available endpoints for a specific API. */
   public static async getAvailableEndpoints(apiName: string): Promise<string[]> {
     const swaggerResult = await this.readSwaggerFile(apiName);
     return swaggerResult?.availableEndpoints || [];
   }
 
-  /**
-   * Parses routes from swagger content
-   * @param apiName The name of the API
-   * @param swaggerContent The parsed swagger JSON content
-   * @returns Array of route information
-   */
+  /** Parses routes from swagger content. */
   private static parseRoutesFromSwagger(apiName: string, swaggerContent: SwaggerContent): RouteInfo[] {
     const routes: RouteInfo[] = [];
     const paths = swaggerContent.paths || {};
@@ -139,10 +122,7 @@ export class SwaggerHelper {
     return routes;
   }
 
-  /**
-   * Loads enum definitions from the enums.json file
-   * @returns Promise that resolves when enums are loaded
-   */
+  /** Loads enum definitions from the enums.json file. */
   private static async loadEnumDefinitions(): Promise<void> {
     const enumsPath = path.join(__dirname, this.ENUMS_CONFIG_PATH);
 
@@ -156,10 +136,7 @@ export class SwaggerHelper {
     }
   }
 
-  /**
-   * Loads route examples from the route-examples.json file
-   * @returns Promise that resolves when examples are loaded
-   */
+  /** Loads route examples from the route-examples.json file. */
   private static async loadRouteExamples(): Promise<void> {
     const examplesPath = path.join(__dirname, this.ROUTE_EXAMPLES_CONFIG_PATH);
 
@@ -173,19 +150,13 @@ export class SwaggerHelper {
     }
   }
 
-  /**
-   * Finds enum fields used in schemas
-   * @param schemas Object containing schema definitions
-   * @returns Record of enum names to their values that are used in the schemas
-   */
+  /** Finds enum fields used in schemas. */
   private static findUsedEnums(schemas: Record<string, any>): Record<string, string[]> {
     const usedEnums: Record<string, string[]> = {};
 
-    // Check each schema for enum fields
     Object.values(schemas).forEach((schema) => {
       if (schema && typeof schema === "object" && schema.properties) {
         Object.entries(schema.properties).forEach(([fieldName]: [string, any]) => {
-          // Check if this field matches any of our enum definitions
           if (this.enumDefinitions[fieldName]) {
             usedEnums[fieldName] = this.enumDefinitions[fieldName];
           }
@@ -196,12 +167,8 @@ export class SwaggerHelper {
     return usedEnums;
   }
 
-  /**
-   * Loads all swagger files on startup and builds the complete routes array
-   * @returns Promise that resolves when all swagger files are loaded
-   */
+  /** Loads all swagger files on startup and builds the complete routes array. */
   public static async loadAllSwaggerFiles(): Promise<void> {
-    // Load enum definitions and route examples first
     await this.loadEnumDefinitions();
     await this.loadRouteExamples();
 
@@ -221,7 +188,6 @@ export class SwaggerHelper {
         if (swaggerResult) {
           const routes = this.parseRoutesFromSwagger(apiName, swaggerResult.swagger);
           this.allRoutes.push(...routes);
-
           this.apiCollections.push({ apiName, routes });
         }
       }
@@ -232,29 +198,18 @@ export class SwaggerHelper {
     }
   }
 
-  /**
-   * Gets all loaded routes
-   * @returns Array of all route information
-   */
+  /** Gets all loaded routes. */
   public static getAllRoutes(): RouteInfo[] {
     return [...this.allRoutes];
   }
 
-  /**
-   * Gets routes for a specific API
-   * @param apiName The name of the API
-   * @returns Array of routes for the specified API
-   */
+  /** Gets routes for a specific API. */
   public static getRoutesForApi(apiName: string): RouteInfo[] {
     const collection = this.apiCollections.find((c) => c.apiName.toLowerCase() === apiName.toLowerCase());
     return collection ? [...collection.routes] : [];
   }
 
-  /**
-   * Searches routes by tags, summary, or description
-   * @param searchTerm The term to search for
-   * @returns Array of matching routes
-   */
+  /** Searches routes by tags, summary, or description. */
   public static searchRoutes(searchTerm: string): RouteInfo[] {
     const term = searchTerm.toLowerCase();
     return this.allRoutes.filter(
@@ -266,22 +221,12 @@ export class SwaggerHelper {
     );
   }
 
-  /**
-   * Generates a unique route key
-   * @param service Service name
-   * @param method HTTP method
-   * @param path Route path
-   * @returns Unique route key
-   */
+  /** Generates a unique route key. */
   private static generateRouteKey(service: string, method: string, path: string): string {
     return `${service}.${method}.${path.replace(/[^a-zA-Z0-9]/g, "_")}`;
   }
 
-  /**
-   * Extracts permissions from security array
-   * @param security Security configuration from swagger
-   * @returns Array of permission strings
-   */
+  /** Extracts permissions from security array. */
   private static extractPermissions(security?: any[]): string[] {
     if (!security || !Array.isArray(security)) return [];
 
@@ -295,11 +240,7 @@ export class SwaggerHelper {
     return permissions;
   }
 
-  /**
-   * Recursively finds all schema references in an object
-   * @param obj Object to search for references
-   * @param refs Set to collect unique references
-   */
+  /** Recursively finds all schema references in an object. */
   private static findSchemaRefs(obj: any, refs: Set<string>): void {
     if (!obj || typeof obj !== "object") return;
 
@@ -317,22 +258,15 @@ export class SwaggerHelper {
     }
   }
 
-  /**
-   * Extracts all referenced schemas for a route
-   * @param routeData Route data containing parameters, requestBody, responses
-   * @param allSchemas All available schemas from swagger
-   * @returns Object containing only referenced schemas
-   */
+  /** Extracts all referenced schemas for a route. */
   private static extractReferencedSchemas(routeData: any, allSchemas: Record<string, any>): Record<string, any> {
     const refs = new Set<string>();
     const schemas: Record<string, any> = {};
 
-    // Find all refs in route data
     this.findSchemaRefs(routeData.parameters, refs);
     this.findSchemaRefs(routeData.requestBody, refs);
     this.findSchemaRefs(routeData.responses, refs);
 
-    // Process refs recursively to get nested schemas
     const processedRefs = new Set<string>();
     const refsToProcess = Array.from(refs);
 
@@ -344,7 +278,6 @@ export class SwaggerHelper {
 
       if (allSchemas[ref]) {
         schemas[ref] = allSchemas[ref];
-        // Find nested refs
         const nestedRefs = new Set<string>();
         this.findSchemaRefs(allSchemas[ref], nestedRefs);
         nestedRefs.forEach((nestedRef) => {
@@ -358,10 +291,7 @@ export class SwaggerHelper {
     return schemas;
   }
 
-  /**
-   * Converts swagger routes to optimized route index
-   * @returns Array of route index entries
-   */
+  /** Converts swagger routes to optimized route index. */
   public static generateRouteIndex(): RouteIndex[] {
     const index: RouteIndex[] = [];
 
@@ -385,13 +315,7 @@ export class SwaggerHelper {
     return index;
   }
 
-  /**
-   * Extracts detailed route information for specific route
-   * @param apiName API name
-   * @param path Route path
-   * @param method HTTP method
-   * @returns Route details or null if not found
-   */
+  /** Extracts detailed route information for specific route. */
   public static async extractRouteDetails(apiName: string, path: string, method: string): Promise<RouteDetails | null> {
     const swaggerResult = await this.readSwaggerFile(apiName);
     if (!swaggerResult?.swagger.paths?.[path]?.[method.toLowerCase()]) {
@@ -401,17 +325,13 @@ export class SwaggerHelper {
     const methodData = swaggerResult.swagger.paths[path][method.toLowerCase()];
     const routeKey = this.generateRouteKey(apiName, method, path);
 
-    // Extract only the schemas referenced by this route
     const allSchemas = swaggerResult.swagger.components?.schemas || {};
     const referencedSchemas = this.extractReferencedSchemas(methodData, allSchemas);
 
-    // Find enums used in the referenced schemas
     const usedEnums = this.findUsedEnums(referencedSchemas);
 
-    // Check if we have custom examples for this route
     const customExamples = this.routeExamples[routeKey];
 
-    // Merge custom examples into requestBody if they exist
     let requestBody = methodData.requestBody;
     if (customExamples && requestBody && requestBody.content && requestBody.content["application/json"]) {
       requestBody = {
@@ -438,23 +358,17 @@ export class SwaggerHelper {
     };
   }
 
-  /**
-   * Generates optimized files for OpenAI integration
-   * @param outputDir Directory to save the optimized files
-   */
+  /** Generates optimized files for OpenAI integration. */
   public static async generateOptimizedFiles(outputDir: string = "./config/optimized"): Promise<void> {
     await this.loadAllSwaggerFiles();
 
-    // Ensure output directory exists
     if (!fs.existsSync(outputDir)) {
       fs.mkdirSync(outputDir, { recursive: true });
     }
 
-    // Generate route index (compact format)
     const routeIndex = this.generateRouteIndex();
     fs.writeFileSync(path.join(outputDir, "route-index.json"), JSON.stringify(routeIndex));
 
-    // Generate detailed route files
     const detailsDir = path.join(outputDir, "route-details");
     if (!fs.existsSync(detailsDir)) {
       fs.mkdirSync(detailsDir, { recursive: true });
@@ -470,7 +384,6 @@ export class SwaggerHelper {
         const details = await this.extractRouteDetails(route.apiName, route.path, route.method);
         if (details) {
           const filename = `${details.routeKey}.json`;
-          // Write compact JSON (no pretty printing)
           fs.writeFileSync(path.join(detailsDir, filename), JSON.stringify(details));
 
           if (details.schemas) {

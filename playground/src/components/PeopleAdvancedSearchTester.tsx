@@ -102,9 +102,7 @@ const PeopleAdvancedSearchTester: React.FC<PeopleAdvancedSearchTesterProps> = ({
             <strong>Error:</strong> {data.error || 'Unknown error occurred'}
           </div>
         ) : data.filters ? (
-          // Single query result
           <div>
-            {/* Query Section */}
             <div style={{
               background: '#e3f2fd',
               border: '1px solid #2196f3',
@@ -118,7 +116,6 @@ const PeopleAdvancedSearchTester: React.FC<PeopleAdvancedSearchTesterProps> = ({
               </div>
             </div>
 
-            {/* Filters Section */}
             <div style={{
               background: '#e8f5e8',
               border: '1px solid #27ae60',
@@ -164,7 +161,6 @@ const PeopleAdvancedSearchTester: React.FC<PeopleAdvancedSearchTesterProps> = ({
                 </div>
               )}
 
-              {/* JSON Preview */}
               <details style={{ marginTop: '15px' }}>
                 <summary style={{
                   cursor: 'pointer',
@@ -192,7 +188,6 @@ const PeopleAdvancedSearchTester: React.FC<PeopleAdvancedSearchTesterProps> = ({
             </div>
           </div>
         ) : data.testResults ? (
-          // Test results
           <div>
             <div style={{
               background: '#e3f2fd',

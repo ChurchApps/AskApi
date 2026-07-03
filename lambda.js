@@ -16,7 +16,6 @@ const universal = async function universal(event, context) {
   try {
     await checkPool();
 
-    // Initialize the handler only once
     if (!handler) {
       const app = await init();
       handler = serverlessExpress({

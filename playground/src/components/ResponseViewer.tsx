@@ -16,23 +16,19 @@ const ResponseViewer: React.FC<ResponseViewerProps> = ({ response }) => {
     }
   };
 
-  // Check if this is an enhanced query response
-  const isEnhancedResponse = response.data && 
-    response.data.executionMetrics && 
+  const isEnhancedResponse = response.data &&
+    response.data.executionMetrics &&
     response.data.tokenComparison &&
     typeof response.data.answer === 'string';
 
-  // Check if this is a people advanced search response
-  const isPeopleSearchResponse = response.data && 
+  const isPeopleSearchResponse = response.data &&
     (response.data.filters || response.data.testResults);
 
   const renderPeopleSearchResponse = (data: any) => {
-    // Single query result
     if (data.filters) {
       return (
         <div>
-          {/* Query Section */}
-          <div style={{ 
+          <div style={{
             background: '#e3f2fd', 
             border: '1px solid #2196f3', 
             borderRadius: '6px', 
@@ -45,8 +41,7 @@ const ResponseViewer: React.FC<ResponseViewerProps> = ({ response }) => {
             </div>
           </div>
 
-          {/* Filters Section */}
-          <div style={{ 
+          <div style={{
             background: '#e8f5e8', 
             border: '1px solid #27ae60', 
             borderRadius: '6px', 
@@ -90,8 +85,7 @@ const ResponseViewer: React.FC<ResponseViewerProps> = ({ response }) => {
                 ))}
               </div>
             )}
-            
-            {/* JSON Preview */}
+
             <details style={{ marginTop: '15px' }}>
               <summary style={{ 
                 cursor: 'pointer', 
@@ -118,7 +112,6 @@ const ResponseViewer: React.FC<ResponseViewerProps> = ({ response }) => {
             </details>
           </div>
 
-          {/* Debug Info */}
           {data.debug && (
             <details style={{ marginTop: '15px' }}>
               <summary style={{ 
@@ -152,7 +145,6 @@ const ResponseViewer: React.FC<ResponseViewerProps> = ({ response }) => {
       );
     }
 
-    // Test results
     if (data.testResults) {
       return (
         <div>
@@ -214,8 +206,7 @@ const ResponseViewer: React.FC<ResponseViewerProps> = ({ response }) => {
   const renderEnhancedResponse = (data: any) => {
     return (
       <div>
-        {/* Answer Section */}
-        <div style={{ 
+        <div style={{
           background: '#e8f5e8', 
           border: '1px solid #27ae60', 
           borderRadius: '6px', 
@@ -238,7 +229,6 @@ const ResponseViewer: React.FC<ResponseViewerProps> = ({ response }) => {
           )}
         </div>
 
-        {/* Performance Summary */}
         {data.tokenComparison && (
           <div style={{ 
             background: '#e3f2fd', 
@@ -272,7 +262,6 @@ const ResponseViewer: React.FC<ResponseViewerProps> = ({ response }) => {
           </div>
         )}
 
-        {/* Full Response Details */}
         <details style={{ marginTop: '15px' }}>
           <summary style={{ 
             cursor: 'pointer', 

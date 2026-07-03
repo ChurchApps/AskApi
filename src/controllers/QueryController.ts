@@ -12,8 +12,6 @@ export class QueryController extends AskBaseController {
       const { question, jwts } = req.body;
       await OpenAiHelper.initialize();
 
-      // Use the natural language query to search for people
-      // This will analyze attendance, donations, and other data to filter people
       const result = await WorkflowHelper.queryPeople(question, jwts);
 
       return result;
@@ -31,10 +29,7 @@ export class QueryController extends AskBaseController {
 
       await OpenAiHelper.initialize();
 
-      // Get the instruction prompt
       const instructions = InstructionsHelper.getPeopleAdvancedSearchWithApiCallsInstructions(query);
-
-      // Call OpenAI to convert the query
       const openAiResponse = await OpenAiHelper.executeText(
         "You are a helpful assistant that converts natural language queries into search filter and API calls.",
         instructions
@@ -42,17 +37,14 @@ export class QueryController extends AskBaseController {
 
       let result: any;
       try {
-        // Try to extract JSON from the response
         const jsonMatch = openAiResponse.match(/\{.*\}/s);
         const jsonStr = jsonMatch ? jsonMatch[0] : openAiResponse;
         result = JSON.parse(jsonStr);
 
-        // Validate structure - ensure we have filters
         if (!result.filters || !Array.isArray(result.filters)) {
           throw new Error("Response must include filters array");
         }
 
-        // Ensure additionalApiCalls exists (default to empty array if not present)
         if (!result.additionalApiCalls || !Array.isArray(result.additionalApiCalls)) {
           result.additionalApiCalls = [];
         }
@@ -60,15 +52,12 @@ export class QueryController extends AskBaseController {
         return { error: "Failed to parse OpenAI response", rawResponse: openAiResponse, parseError: (parseError as Error).message };
       }
 
-      // Initialize apiCallResults to ensure it's always present
       result.apiCallResults = [];
 
-      // If there are additional API calls, execute them
       if (result.additionalApiCalls && result.additionalApiCalls.length > 0) {
         try {
           console.log("Executing additional API calls:", result.additionalApiCalls.length);
 
-          // Validate API call structure
           const validApiCalls = result.additionalApiCalls.filter((apiCall: any) => {
             const isValid = apiCall.apiName && apiCall.method && apiCall.path;
             if (!isValid) {
@@ -88,13 +77,9 @@ export class QueryController extends AskBaseController {
             result.additionalApiCalls = validApiCalls;
           }
 
-          // Only proceed if we have valid API calls
           if (validApiCalls.length > 0) {
-            // Import DataHelper dynamically to avoid circular dependencies
             const { DataHelper } = await import("../helpers/DataHelper");
 
-            // Create JWT tokens object using the current user's JWT for all APIs
-            // This assumes the user has access to the APIs they're querying
             // TODO: Get the JWT from the user, currently there are no permissions in the au object
             const jwts = {
               membershipapi: au.jwt,
@@ -106,24 +91,16 @@ export class QueryController extends AskBaseController {
               reportingapi: au.jwt
             };
 
-            // Execute the API calls
             const apiResults = await DataHelper.executeApiCalls(validApiCalls, jwts, "json");
 
-            // Add the API results to the response
             result.apiCallResults = apiResults;
 
-            // Log success/failure summary
-            // const successfulCalls = apiResults.filter((r: any) => r.success);
-            // const failedCalls = apiResults.filter((r: any) => !r.success);
-
-            // console.log(`API calls executed: ${successfulCalls.length} successful, ${failedCalls.length} failed`);
             if (apiResults.length > 0) {
               const newFilters = [...result.filters];
               const successfullCallsData: any[] = [];
               apiResults.forEach((r: any) => {
                 successfullCallsData.push(...r);
               });
-              // we need personIds to send to the advanced search in membership api
               const personIds = ArrayHelper.getUniqueValues(successfullCallsData, "personId").filter((f) => f !== null);
               if (personIds.length > 0) {
                 newFilters.push({ field: "id", operator: "equals", value: personIds.join(",") });
@@ -155,7 +132,6 @@ export class QueryController extends AskBaseController {
         }
       }
 
-      // Add summary information to the response
       result.summary = {
         query: query,
         hasFilters: result.filters && result.filters.length > 0,
@@ -168,9 +144,6 @@ export class QueryController extends AskBaseController {
         note: "apiCallResults will always be present - empty array if no API calls were made, or populated with results if API calls were executed"
       };
 
-      // Ensure the response always contains both filters and apiCallResults
-      // - filters: array of search conditions for people search
-      // - apiCallResults: array of results from additional API calls (empty if none executed)
       console.log("Final response structure:", {
         hasFilters: result.filters && result.filters.length > 0,
         filtersCount: result.filters ? result.filters.length : 0,
@@ -185,7 +158,6 @@ export class QueryController extends AskBaseController {
   @httpPost("/people-test")
   public async peopleSearchTest(req: express.Request<{}, {}, any>, res: express.Response): Promise<any> {
     return this.actionWrapper(req, res, async (_au) => {
-      // Test multiple queries
       const testQueries = [
         "Find all men",
         "Show me teenagers",
@@ -211,7 +183,6 @@ export class QueryController extends AskBaseController {
         let error: string | null = null;
 
         try {
-          // Try to extract JSON from the response
           const jsonMatch = openAiResponse.match(/\[.*\]/s);
           const jsonStr = jsonMatch ? jsonMatch[0] : openAiResponse;
           filters = JSON.parse(jsonStr);

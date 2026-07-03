@@ -48,7 +48,6 @@ export class InstructionsHelper {
     let contents = this.readFile("/config/instructions/createWebpage.md");
     contents = contents.replace("{query}", description);
 
-    // Build context information
     let context = "";
     if (churchId) {
       context += `Church ID: ${churchId}\n`;
@@ -73,10 +72,8 @@ export class InstructionsHelper {
   ): string {
     let contents = this.readFile("/config/instructions/generatePage.md");
 
-    // Replace prompt
     contents = contents.replace("{prompt}", prompt);
 
-    // Build church context string - ENHANCED for better personalization
     let contextStr = "## Church Information (USE THROUGHOUT THE PAGE)\n\n";
     if (churchContext) {
       if (churchContext.churchName) {
@@ -106,7 +103,6 @@ export class InstructionsHelper {
     }
     contents = contents.replace("{churchContext}", contextStr);
 
-    // Build available blocks list
     let blocksStr = "";
     if (availableBlocks && availableBlocks.length > 0) {
       blocksStr = "The following reusable blocks are available:\n";
@@ -118,7 +114,6 @@ export class InstructionsHelper {
     }
     contents = contents.replace("{availableBlocks}", blocksStr);
 
-    // Build element types list
     let elementTypesStr = "";
     if (availableElementTypes && availableElementTypes.length > 0) {
       elementTypesStr = "ONLY use these element types (any other types will cause errors):\n";
@@ -128,7 +123,6 @@ export class InstructionsHelper {
     }
     contents = contents.replace("{availableElementTypes}", elementTypesStr);
 
-    // Build constraints string
     let constraintsStr = "";
     if (constraints) {
       if (constraints.maxSections) {
@@ -154,10 +148,8 @@ export class InstructionsHelper {
   ): string {
     let contents = this.readFile("/config/instructions/generatePageOutline.md");
 
-    // Replace prompt
     contents = contents.replace("{prompt}", prompt);
 
-    // Build church context string
     let contextStr = "## Church Information\n\n";
     if (churchContext) {
       if (churchContext.churchName) {
@@ -182,7 +174,6 @@ export class InstructionsHelper {
     }
     contents = contents.replace("{churchContext}", contextStr);
 
-    // Build element types list
     let elementTypesStr = "";
     if (availableElementTypes && availableElementTypes.length > 0) {
       elementTypesStr = "Available element types:\n";
@@ -192,7 +183,6 @@ export class InstructionsHelper {
     }
     contents = contents.replace("{availableElementTypes}", elementTypesStr);
 
-    // Build constraints string
     let constraintsStr = "";
     if (constraints) {
       if (constraints.maxSections) {
@@ -236,12 +226,7 @@ export class InstructionsHelper {
     return contents;
   }
 
-  static getRewriteSectionInstructions(
-    section: any,
-    instruction?: string,
-    churchName?: string,
-    _availableElementTypes?: string[]
-  ): string {
+  static getRewriteSectionInstructions(section: any, instruction?: string, churchName?: string, _availableElementTypes?: string[]): string {
     let contents = this.readFile("/config/instructions/rewriteSection.md");
 
     contents = contents.replace("{instruction}", instruction && instruction.trim().length > 0 ? instruction.trim() : "No specific instruction - improve clarity and warmth without changing meaning.");
@@ -269,18 +254,11 @@ export class InstructionsHelper {
     return contents;
   }
 
-  static getGenerateSectionInstructions(
-    sectionOutline: any,
-    churchContext?: any,
-    availableElementTypes?: string[],
-    pageContext?: any
-  ): string {
+  static getGenerateSectionInstructions(sectionOutline: any, churchContext?: any, availableElementTypes?: string[], pageContext?: any): string {
     let contents = this.readFile("/config/instructions/generateSection.md");
 
-    // Replace section outline
     contents = contents.replace("{sectionOutline}", JSON.stringify(sectionOutline, null, 2));
 
-    // Build church context string
     let contextStr = "## Church Information\n\n";
     if (churchContext) {
       if (churchContext.churchName) {
@@ -301,7 +279,6 @@ export class InstructionsHelper {
     }
     contents = contents.replace("{churchContext}", contextStr);
 
-    // Build element types list
     let elementTypesStr = "";
     if (availableElementTypes && availableElementTypes.length > 0) {
       elementTypesStr = "Available element types:\n";
@@ -311,7 +288,6 @@ export class InstructionsHelper {
     }
     contents = contents.replace("{availableElementTypes}", elementTypesStr);
 
-    // Build page context string
     let pageContextStr = "";
     if (pageContext) {
       pageContextStr += `**Page Title**: ${pageContext.title || "Untitled"}\n`;
@@ -344,12 +320,7 @@ export class InstructionsHelper {
       return contents;
     }*/
 
-  /**
-   * Filters JWT tokens to only include tokens for services that are actually used in the routes
-   * @param jwts Object containing all JWT tokens (e.g., { membershipApiToken: "...", attendanceApiToken: "..." })
-   * @param routes Array of route objects with service property
-   * @returns Filtered JWT object with only relevant tokens
-   */
+  /** Filters JWT tokens to include only services used in the routes. */
   static filterRelevantJwts(jwts: any, routes: any): any {
     console.log("JWTS are", jwts);
     console.log("filterRelevantJwts - Input routes type:", typeof routes);
@@ -399,9 +370,9 @@ export class InstructionsHelper {
   }
 
   static readFile(filePath: string) {
-    // ESM compatible: use import.meta.url instead of __dirname
     const currentFileUrl = new URL(import.meta.url);
-    const currentDir = path.dirname(currentFileUrl.pathname.replace(/^\/([A-Z]:)/, "$1")); // Fix Windows drive letter
+    // Fix Windows drive letter
+    const currentDir = path.dirname(currentFileUrl.pathname.replace(/^\/([A-Z]:)/, "$1"));
     const instructionsPath = path.join(currentDir, "../.." + filePath);
     const instructions = fs.readFileSync(instructionsPath, "utf-8");
     return instructions;

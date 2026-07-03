@@ -14,8 +14,8 @@ export class WebsiteController extends AskBaseController {
       const pageData = await WebsiteHelper.generatePageFromDescription(description, au.churchId, title, url);
       const flat = WebsiteHelper.flattenPageStructure(pageData);
       flat.page.churchId = au.churchId;
-      flat.sections.forEach((s) => (s.churchId = au.churchId));
-      flat.elements.forEach((e) => (e.churchId = au.churchId));
+      flat.sections.forEach(s => s.churchId = au.churchId);
+      flat.elements.forEach(e => e.churchId = au.churchId);
       return flat;
     });
   }
@@ -25,14 +25,12 @@ export class WebsiteController extends AskBaseController {
     return this.actionWrapper(req, res, async (au) => {
       const { prompt, churchContext, availableBlocks, availableElementTypes, constraints } = req.body;
 
-      // Validation
       if (!prompt || typeof prompt !== "string" || prompt.trim().length < 10) {
         return { error: "Prompt is required and must be at least 10 characters" };
       }
 
       await OpenAiHelper.initialize();
 
-      // Generate page structure using WebsiteHelper with enhanced context
       const pageData = await WebsiteHelper.generatePageFromPromptWithContext(
         prompt,
         au.churchId,
@@ -42,29 +40,22 @@ export class WebsiteController extends AskBaseController {
         constraints
       );
 
-      // Return the structured response expected by B1Admin
       return { page: pageData };
     });
   }
 
-  /**
-   * Generates a lightweight page outline with section descriptions and content hints.
-   * This is the first step in the multi-step page generation flow.
-   * Uses a fast model (haiku) for quick response.
-   */
+  /** Generates lightweight page outline as first step of multi-step page generation. */
   @httpPost("/generatePageOutline")
   public async generatePageOutline(req: express.Request<{}, {}, any>, res: express.Response): Promise<any> {
     return this.actionWrapper(req, res, async (_au) => {
       const { prompt, churchContext, availableElementTypes, constraints } = req.body;
 
-      // Validation
       if (!prompt || typeof prompt !== "string" || prompt.trim().length < 10) {
         return { error: "Prompt is required and must be at least 10 characters" };
       }
 
       await OpenAiHelper.initialize();
 
-      // Generate page outline
       const outlineData = await WebsiteHelper.generatePageOutline(
         prompt,
         churchContext,
@@ -76,17 +67,12 @@ export class WebsiteController extends AskBaseController {
     });
   }
 
-  /**
-   * Generates full content for a single section based on an outline.
-   * This is the second step in the multi-step page generation flow.
-   * Uses a better model (sonnet) for quality content generation.
-   */
+  /** Generates full content for a single section based on outline; second step of multi-step generation. */
   @httpPost("/generateSection")
   public async generateSection(req: express.Request<{}, {}, any>, res: express.Response): Promise<any> {
     return this.actionWrapper(req, res, async (_au) => {
       const { sectionOutline, churchContext, availableElementTypes, pageContext } = req.body;
 
-      // Validation
       if (!sectionOutline || typeof sectionOutline !== "object") {
         return { error: "sectionOutline is required and must be an object" };
       }
@@ -97,7 +83,6 @@ export class WebsiteController extends AskBaseController {
 
       await OpenAiHelper.initialize();
 
-      // Generate section content
       const sectionData = await WebsiteHelper.generateSectionContent(
         sectionOutline,
         churchContext,
@@ -109,10 +94,7 @@ export class WebsiteController extends AskBaseController {
     });
   }
 
-  /**
-   * AI onboarding: generates a full multi-page site plan from church details.
-   * One site-outline call followed by per-section generation server-side.
-   */
+  /** Generates full multi-page site plan from church details for AI onboarding. */
   @httpPost("/generateSite")
   public async generateSite(req: express.Request<{}, {}, any>, res: express.Response): Promise<any> {
     return this.actionWrapper(req, res, async (_au) => {
@@ -141,9 +123,7 @@ export class WebsiteController extends AskBaseController {
     });
   }
 
-  /**
-   * Rewrites only the text-bearing fields of a section, preserving structure.
-   */
+  /** Rewrites text fields of a section, preserving structure. */
   @httpPost("/rewriteSection")
   public async rewriteSection(req: express.Request<{}, {}, any>, res: express.Response): Promise<any> {
     return this.actionWrapper(req, res, async (_au) => {
@@ -155,14 +135,11 @@ export class WebsiteController extends AskBaseController {
 
       await OpenAiHelper.initialize();
 
-      const result = await WebsiteHelper.rewriteSection(section, instruction, churchName, availableElementTypes);
-      return result;
+      return await WebsiteHelper.rewriteSection(section, instruction, churchName, availableElementTypes);
     });
   }
 
-  /**
-   * Generates concise alt text for a batch of image urls using a vision model.
-   */
+  /** Generates concise alt text for batch of image URLs using vision model. */
   @httpPost("/generateAltText")
   public async generateAltText(req: express.Request<{}, {}, any>, res: express.Response): Promise<any> {
     return this.actionWrapper(req, res, async (_au) => {
@@ -171,7 +148,7 @@ export class WebsiteController extends AskBaseController {
       if (!Array.isArray(imageUrls) || imageUrls.length === 0) {
         return { error: "imageUrls is required and must be a non-empty array" };
       }
-      const cleanUrls = imageUrls.filter((u) => typeof u === "string" && u.length > 0);
+      const cleanUrls = imageUrls.filter(u => typeof u === "string" && u.length > 0);
       if (cleanUrls.length === 0) {
         return { error: "imageUrls must contain at least one valid url string" };
       }
@@ -183,9 +160,7 @@ export class WebsiteController extends AskBaseController {
     });
   }
 
-  /**
-   * Generates a single SEO meta description (<=155 chars) for a page.
-   */
+  /** Generates SEO meta description (<=155 chars) for a page. */
   @httpPost("/generateMetaDescription")
   public async generateMetaDescription(req: express.Request<{}, {}, any>, res: express.Response): Promise<any> {
     return this.actionWrapper(req, res, async (_au) => {
