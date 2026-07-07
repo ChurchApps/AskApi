@@ -116,6 +116,107 @@ Every check-in creates an attendance record in B1 Admin. You can view these reco
 
 ---
 
+## attendance/checkin-safety.md
+
+# Check-In Safety
+
+
+
+B1 includes a set of child-safety controls for check-in: room capacity limits and volunteer-to-child ratios, age and grade guidance at the kiosk, check-in types that distinguish members, guests, and volunteers, and a trusted-pickup list per household that is verified at check-out. This page covers how to configure each safety feature in B1 Admin.
+
+
+
+
+#### Before You Begin
+
+- Set up your [attendance structure](setup.md) and [check-in kiosks](check-in.md)
+- Rooms are [groups](../groups/creating-groups.md) linked to service times — the safety settings below live on the group
+- Page-a-parent and emergency broadcast require a connected texting provider ([Text In Church](../integrations/services/text-in-church), [Clearstream](../integrations/services/clearstream), or Mutual Ministry)
+
+
+
+## Room Capacity and Closing a Room
+
+Each check-in room (group) can enforce its own limits. Open the group, click the **pencil icon** to edit its settings, and find the **Check-In Capacity** section:
+
+- **Capacity** -- The maximum number of people who can be checked in to this room at once. When the room is full, check-in to it is blocked and the kiosk names the full room.
+- **Guest Capacity** -- An optional separate cap on how many guests the room can hold.
+- **Closed for Check-In** -- Set to **Yes** to stop all check-ins to this room immediately (for example, when a class is cancelled or a room is unavailable). Check-outs still work.
+
+## Volunteer Ratios
+
+The same **Check-In Capacity** section on the group includes staffing rules:
+
+- **Children per Volunteer** -- The maximum number of children each checked-in volunteer can cover (e.g. 5 means one volunteer per five children).
+- **Minimum Volunteers** -- The smallest number of volunteers that must be checked in before children can check in to the room.
+
+Volunteers count toward these rules when they check in with the **Volunteer** type at the kiosk (see [Check-In Types](#check-in-types) below).
+
+### Choosing Warn vs. Block
+
+How strictly ratios are enforced is a church-wide setting:
+
+1. In B1 Admin, go to **Settings > Manage Church** and open the **Check-In** tile.
+2. Set **Volunteer Ratio Enforcement**:
+   - **Warn (allow with confirmation)** -- The kiosk shows a warning when a room is over ratio or under its minimum volunteers, and a staff member can confirm to proceed anyway. This is the default.
+   - **Block (prevent check-in)** -- Check-in to the room is refused until enough volunteers are checked in.
+
+:::info
+Capacity and Closed for Check-In are always hard limits — the warn/block choice applies only to volunteer ratios.
+:::
+
+## Check-In Types
+
+Every check-in records whether the person is a **Member**, **Guest**, or **Volunteer**. The type is chosen with chips on the kiosk household screen (Member is the default). Types feed the safety rules — volunteers provide ratio coverage, and guests count against the room's Guest Capacity.
+
+## Age and Grade Room Guidance
+
+You can give each room age or grade bounds so the kiosk guides families to appropriate rooms:
+
+- On the group's settings, use the **Age & Grade** section to set the minimum/maximum age (years and months) and/or grade for the room.
+- At the kiosk, rooms a child qualifies for are highlighted and rooms they don't are dimmed. A dimmed room can still be chosen with a staff confirmation — the guidance never hard-blocks.
+
+Grades roll over on your church's **grade promotion date**:
+
+1. In B1 Admin, go to **Settings > Manage Church** and open the grade promotion tile.
+2. Set the month and day your church promotes students (for example, August 1). Ages and grades at the kiosk are computed as of the most recent promotion date.
+
+## Trusted and Not-Authorized Pickup People
+
+Each household can carry a list of people who are — or are not — allowed to pick up its children.
+
+1. Open a person's page in **People** and find the **Pickup** card.
+2. Click **Add**. Search for an existing person, or add someone not in the system by entering their **Name**, **Relationship**, and a photo.
+3. Set the **Status**:
+   - **Trusted** -- At check-out, this person appears as a tappable pickup card with their photo, making verified pickup fast.
+   - **Not Authorized** -- If someone attempts pickup under this name, the kiosk blocks check-out with a warning. A staff member can override, and the override is recorded on the attendance record.
+
+Click a person's status chip on the card to toggle between Trusted and Not Authorized.
+
+:::tip
+Add photos to trusted pickup people whenever possible — the check-out screen shows the photo so volunteers can visually verify the person standing in front of them.
+:::
+
+## Page-a-Parent and Emergency Broadcast
+
+Both features send text messages through your church's connected texting provider — there is no built-in SMS service, so one of the supported providers must be configured first.
+
+- **Page a parent** -- From a manned kiosk's check-out screen, staff can text a checked-in child's parents/guardians (for example, "Please come to the nursery").
+- **Emergency broadcast** -- From the kiosk's admin settings, staff can text every checked-in household's guardians for the selected service at once. Sending requires typing **EMERGENCY** to confirm.
+
+People who have opted out of texts, or who have no mobile number on file, are skipped automatically — the kiosk reports how many messages were sent and how many were skipped.
+
+See the kiosk-side walkthrough in [Check-Out & Child Safety](../../b1-checkin/check-in/checking-out).
+
+## Related Articles
+
+- [Check-In](check-in.md) — kiosk setup and hardware
+- [Check-Out & Child Safety](../../b1-checkin/check-in/checking-out) — the kiosk check-out, pickup verification, and paging flows
+- [Creating Groups](../groups/creating-groups.md) — where room settings live
+- [Attendance Setup](setup.md) — services, service times, and room assignments
+
+---
+
 ## attendance/index.md
 
 # Attendance
@@ -157,10 +258,101 @@ The **Groups** tab breaks attendance down by individual group. This is helpful w
 - [Recording Attendance](recording-attendance.md) -- manually enter attendance for a group session
 - [Tracking Attendance](tracking-attendance.md) -- view trends and filter reports
 - [Check-In](check-in.md) -- set up self check-in for services
+- [Check-In Safety](checkin-safety.md) -- room capacities, volunteer ratios, pickup people, and paging
 
 :::tip
 If you are setting up attendance for the first time, start with the [Attendance Setup](setup.md) guide to define your campuses and service times. Once that is in place, you can begin [recording attendance](recording-attendance.md) manually or set up [self check-in](check-in.md).
 :::
+
+---
+
+## attendance/labels.md
+
+# Check-In Label Designer
+
+
+
+The Label Designer lets you create and customize the name tag and pickup slip templates that print when families check in their children. You can control exactly what information appears on each label, where it is positioned, and how it looks.
+
+
+
+
+#### Before You Begin
+
+- Set up [Attendance](setup) and configure at least one service time with check-in enabled
+- Set up [Check-In](check-in) so labels are printing
+- You need administrative access to the Attendance section
+
+
+
+## Opening the Label Designer
+
+In B1 Admin, go to **Attendance** in the left sidebar and select **Labels**. You will see a list of your saved label templates, separated by type: **Nametag** and **Pickup Slip**.
+
+## Label Types
+
+- **Nametag** — printed and attached to the child. Typically includes the child's name, their classroom/session, and a security code.
+- **Pickup Slip** — given to the parent or guardian. Typically includes the security code and a list of the children they checked in.
+
+B1 starts you with a default nametag and a default pickup slip template sized for standard 3.5 × 1.1 inch thermal labels.
+
+## Creating a Label Template
+
+1. Click **Add Nametag** or **Add Pickup Slip** (or use the dropdown to choose).
+2. A new template opens in the label editor.
+
+### Label Editor
+
+The editor shows a scaled preview of the label at the configured size. Along the left panel you can configure:
+
+- **Name** — the template name (for your reference only)
+- **Label Type** — Nametag or Pickup Slip
+- **Width / Height** — label size in inches
+
+### Adding Blocks
+
+A label is built from blocks — individual pieces of content positioned on the label canvas. Click **Add Block** to insert a new block and choose its type:
+
+- **Field** — pulls a data value at print time:
+  - `person.displayName` — the person's full name
+  - `sessions` — the service/classroom they checked in to
+  - `securityCode` — the randomly generated pickup security code
+  - `children` — list of children (for pickup slips)
+  - `person.nametagNotes` — any special notes on the person's record
+  - `campus` — the campus name
+- **Text** — static text you type in (for headings, labels, or instructions)
+- **Barcode** — a barcode encoding the security code
+
+### Positioning Blocks
+
+Each block has **X**, **Y**, **Width**, and **Height** fields expressed as percentages of the label canvas (0–100). Adjust these to position content precisely. You can also set:
+
+- **Font Size** — text size in points
+- **Bold** — toggle bold text
+- **Align** — left, center, or right text alignment
+- **Condition** — optionally hide the block if a field is empty (for example, only show nametagNotes if it has a value)
+
+### Saving
+
+Click **Save** to save the template. The updated template will be used the next time labels are printed in B1 Checkin.
+
+## Reordering Templates
+
+If you have multiple nametag or pickup slip templates, B1 Checkin will use the first template in the list by default. Drag templates to reorder them.
+
+## Deleting a Template
+
+Click the delete icon on any template row and confirm. Deleting the last template of a type restores the default built-in template.
+
+:::tip
+Make a test print after editing a template to confirm the layout looks right before your next service.
+:::
+
+## Related Articles
+
+- [Check-In Setup](setup) — configure services and groups for check-in
+- [Completing Check-In](check-in) — the check-in flow for families
+- [B1 Checkin Getting Started](../../b1-checkin/getting-started/) — the Checkin kiosk app
 
 ---
 
@@ -359,6 +551,132 @@ Group attendance is especially valuable for [small group](../groups/creating-gro
 
 ---
 
+## calendars/approvals.md
+
+# Calendar Approvals
+
+
+
+The Approvals page is where administrators review and act on pending room and resource booking requests, as well as calendar events that require approval before being published.
+
+
+
+
+#### Before You Begin
+
+- Configure rooms or resources with an **Approval Group** in [Rooms & Resources](rooms-resources)
+- You need the **Calendars Admin** permission or the **content.edit** permission
+
+
+
+## Opening Approvals
+
+In B1 Admin, go to **Calendars** and select **Approvals**. Pending booking requests and events awaiting review are listed here.
+
+## Booking Requests
+
+When a group creates an event and requests a room or resource, the request appears in the **Booking Requests** panel. Each row shows:
+
+- The room or resource being requested
+- The event name and date/time
+- The requesting group
+
+### Conflict Indicators
+
+If two requests overlap for the same room or resource, a conflict warning icon appears. Review conflicting requests carefully before approving either one.
+
+### Approving or Rejecting
+
+Click the **✓** (approve) or **✗** (reject) icon on any booking request. The requesting group is notified of the decision. Approved bookings are locked to that room or resource for the event; rejected bookings free the slot for others.
+
+## Pending Events
+
+If your calendar workflow requires event approval before events become visible to the public, pending events appear in the **Pending Events** panel. Approve an event to publish it to the calendar, or reject it to notify the submitter that changes are needed.
+
+:::tip
+Set up an Approval Group on a room in [Rooms & Resources](rooms-resources) to require approval for that room. Groups with access can then request the room when creating events, and those requests flow into this page.
+:::
+
+## Related Articles
+
+- [Rooms, Resources & Scheduling](rooms-resources) — configure bookable rooms and resources
+- [Creating Calendars](creating-calendars) — manage calendars and events
+
+---
+
+## calendars/availability.md
+
+# Availability Calendar
+
+
+
+The Availability Calendar gives you a bird's-eye view of all room and resource bookings across your church. From here you can see what is scheduled, spot conflicts before they happen, and book a room or resource for any event directly.
+
+
+
+
+#### Before You Begin
+
+- Set up at least one [room or resource](rooms-resources) in the Rooms & Resources section
+- You need edit access to the Calendars section in B1 Admin
+
+
+
+## Opening the Availability Calendar
+
+In B1 Admin, go to **Calendars** and select **Availability** from the sidebar.
+
+## Reading the Calendar
+
+The calendar displays the current month by default. You can navigate forward and back with the arrows at the top, or switch between month, week, and day views.
+
+Each event is color-coded by booking status:
+
+| Color | Meaning |
+|-------|---------|
+| Green | Approved |
+| Orange | Pending approval |
+| Grey | Blocked out (not available) |
+
+Hovering over an event shows the event title and the room or resource it is attached to.
+
+## Filtering by Room or Resource
+
+Use the **Filter** dropdown at the top left to narrow the calendar to a single room or resource. Select **All Rooms & Resources** to return to the full view.
+
+## Booking a Room or Resource
+
+1. Click the **Book** button in the top right corner of the page.
+2. In the dialog that opens, fill in the event details:
+   - **Title** — the name of the event
+   - **Start** and **End** date/time
+   - **Visibility** — Public or Private
+   - **Rooms** — select one or more rooms to reserve
+   - **Resources** — select one or more resources to reserve
+3. Optionally set **Setup** and **Teardown** times (in minutes). These pad the booking on both ends so the space is reserved for setup and cleanup, even though the event start/end times stay the same.
+4. To repeat the booking, check **Repeats** and configure the recurrence:
+   - **Repeat every** -- set the interval (for example, every 2 weeks).
+   - **Frequency** -- Daily, Weekly, or Monthly. Weekly lets you pick specific day(s) of the week; Monthly lets you pick a fixed day of the month or a relative pattern like "the second Tuesday."
+   - **Ends** -- Never, on a specific date, or after a set number of occurrences.
+5. To specify a custom booking window (different from the event start/end), toggle **Custom Booking Window** and enter the window start and end times. Use this when a room needs to be accessible outside the event's listed hours.
+6. Click **Save** to submit the booking.
+
+:::info
+If the room or resource has an **Approval Group** configured, the booking will appear as **Pending** until a leader of that group approves it. See [Calendar Approvals](approvals) for the approval workflow.
+:::
+
+:::tip
+The calendar will highlight any conflicts before you save. If you see a conflict warning, adjust your times or choose a different room.
+:::
+
+## Related Articles
+
+- [Rooms, Resources & Scheduling](rooms-resources) — set up bookable spaces and equipment
+- [Calendar Approvals](approvals) — approve or deny booking requests
+- [Creating Calendars](creating-calendars) — manage event calendars
+
+---
+
 ## calendars/creating-calendars.md
 
 # Creating Calendars
@@ -420,9 +738,17 @@ You can enable registration for any calendar event so members can sign up throug
    - **Registration Opens** -- The date and time when registration becomes available.
    - **Registration Closes** -- The date and time when registration closes.
    - **Tags** -- Comma-separated labels (e.g., "youth, retreat, vbs") to help categorize registerable events.
+   - **Registration Questions** -- Optionally attach a [form](../forms/creating-forms.md) so registrants answer extra questions (dietary restrictions, T-shirt size, emergency contact, etc.) as part of signing up. Choose **None** to skip questions.
+   - **Enable Waitlist** -- When the event fills up, let additional registrants join a waitlist instead of being turned away. See [Paid Registrations](paid-registrations#waitlist).
 4. Save the event.
 
-Once registration is enabled, members will see a **Register for this Event** button when they view the event on the [B1 website](../../b1-church/events/registering) or [B1 Mobile app](../../b1-mobile/events/registering).
+For paid events, the same settings page lets you define priced **Attendee Types**, optional **Selections** (add-ons), and **Discount Codes**, with payment collected through your church's giving provider. See [Paid Registrations](paid-registrations) for the full walkthrough.
+
+Once registration is enabled, members will see a **Register for this Event** button when they view the event on the [B1 website](../../b1-church/events/registering) or [B1 Mobile app](../../b1-mobile/events/registering). If you attached a form, registrants see a **Questions** step during registration and their answers are saved with their registration.
+
+:::info
+Registration Questions only works with forms that are **not** marked Restricted. A restricted form is skipped automatically during registration rather than shown, so use an unrestricted form when attaching questions to an event.
+:::
 
 ### Managing Registrations
 
@@ -430,11 +756,15 @@ To view and manage registrations for your events:
 
 1. Navigate to the **Registrations** page in B1 Admin.
 2. You will see a table of all events with registration enabled, showing the event title, date, current registration count vs. capacity, and tags.
-3. Click on an event to see the full list of registrations, including names, member count, status, and registration date.
+3. Click on an event to see the full list of registrations, including names, member count, attendee types, payment status, and registration date.
 4. From the detail page, you can:
+   - **Add Attendee** -- Manually register someone who signed up offline or over the phone.
    - **Cancel** individual registrations
    - **Delete** registrations permanently
-   - **Export** all registrations to CSV
+   - **Promote** waitlisted registrations when a spot opens
+   - **Export CSV** -- Download all registrations, including attendee types, selections, payment amounts, and question answers
+
+If the event has Registration Questions attached, the detail page also shows an **Unanswered questions only** filter to quickly find registrants who haven't submitted answers yet, and a **View Answers** button on each answered registration to see their responses. Paid events add a **Type** column, a **Paid / Total** column, per-type counts, and a payments detail dialog -- see [Paid Registrations](paid-registrations#the-registration-roster).
 
 :::tip
 Use the capacity progress bar to monitor how quickly events are filling up. The bar turns red when an event is at or over capacity.
@@ -443,6 +773,7 @@ Use the capacity progress bar to monitor how quickly events are filling up. The 
 ## Next Steps
 
 - [Curated Calendar](curated-calendar) -- Create a calendar that pulls from multiple groups
+- [Paid Registrations](paid-registrations) -- Attendee types, add-on selections, discount codes, payments, and waitlists
 - [Event Registration Guide](../guides/event-registration) -- Step-by-step guide for setting up event registration
 - [Calendars Overview](./) -- Return to the calendars overview
 
@@ -507,6 +838,87 @@ When group leaders add new events to their [groups](../groups/creating-groups.md
 
 ---
 
+## calendars/event-reminders.md
+
+# Event Reminders
+
+
+
+Event reminders automatically notify the right people before an event happens -- for example, "Don't miss it! The healthcare workshop starts tomorrow at 9:00 AM." You configure a reminder once on the event, and B1 sends it out on schedule through push notifications and email. Members can control which reminders they receive from their own [Notification Preferences](../../b1-church/getting-started/notification-preferences).
+
+
+
+
+#### Before You Begin
+
+- Create the event you want to remind people about (see [Creating Calendars](creating-calendars))
+- To reach registered attendees, [enable registration](creating-calendars) on the event
+- To reach a whole group, make sure the event belongs to a [group](../groups/creating-groups) with members
+
+
+
+## Setting Up a Reminder
+
+You configure reminders in the **Reminders** section of the event.
+
+- When you **create a new event**, expand the **Reminders** section in the event editor before saving.
+- For an **existing event**, open the event's **Registration Details** page (from the **Registrations** section) to add or change its reminder.
+
+1. Turn on **Enable reminders**.
+2. Choose **When** to send. Pick up to three timings: **7 days before**, **3 days before**, **1 day before**, and **Day of**.
+3. Set the **Time of day** the reminder should go out (default is **9:00 AM**, in your church's local time zone).
+4. Choose **Who** should be reminded (see [Who Gets Reminded](#who-gets-reminded) below).
+5. Optionally add a **Message**. Leave it blank to use the default wording, or write your own -- you can include `{{eventTitle}}` and it will be replaced with the event's name.
+6. Choose the **Channels**: **Push** notification, **Email**, or both.
+7. Save the event.
+
+As you make changes, a **live preview** shows roughly how many people will be reminded, how many attendees can't be reached, and the next scheduled send times -- so you can confirm the reminder looks right before you save.
+
+## Who Gets Reminded
+
+The **Who** setting controls who the reminder goes to:
+
+- **Registrants only** -- Everyone registered for the event who is linked to a person record. This is the default when the event has registration enabled, so a reminder for a small registered event never accidentally goes to a whole group.
+- **Heads / registrants only** -- One reminder per registration (the person who registered), rather than every family member on the registration.
+- **Group members** -- Everyone in the event's group. This is the default when the event does not use registration.
+- **Auto** -- Uses registrants when registration is enabled, otherwise the group.
+
+:::info
+Guests added by name only (without a linked person record) can't receive a reminder, because there's no account, device, or email to send to. The preview tells you how many attendees fall into this group so there are no surprises. Members who have opted out of communication are also skipped.
+:::
+
+## When Reminders Are Sent
+
+- Reminders fire at the **time of day you choose**, in your church's local time zone, on each of the offsets you selected.
+- If you **change the event's date or time**, the pending reminders are automatically rescheduled -- you don't need to edit the reminder.
+- If you **delete the event** (or cancel a single occurrence of a recurring event), its pending reminders are automatically cancelled.
+- Recurring events are handled automatically: each upcoming occurrence gets its own reminder.
+
+:::tip
+Reminders are sent **push first, with email as a fallback**. If a member has push notifications enabled, they'll get a push; if not, they'll get an email instead. Members choose which channels they want per notification type in their [Notification Preferences](../../b1-church/getting-started/notification-preferences).
+:::
+
+## What Members Can Control
+
+Reminders always respect each member's [Notification Preferences](../../b1-church/getting-started/notification-preferences). A member can:
+
+- Turn **Event Reminders** off for push or email while keeping other notifications on.
+- Set **quiet hours** so non-urgent notifications wait until a reasonable time.
+
+You can't override a member's choice to opt out of event reminders -- this keeps B1 compliant with anti-spam rules and keeps members in control of their inbox.
+
+## Serving Reminders
+
+Volunteers scheduled on a plan receive a separate **serving reminder** with the plan details and, when they haven't responded yet, **Accept / Decline** buttons right in the email. Those reminders are configured on the plan type rather than on a calendar event -- see [Sunday Volunteers](../guides/sunday-volunteers) for how volunteer scheduling and reminders work.
+
+## Next Steps
+
+- [Notification Preferences](../../b1-church/getting-started/notification-preferences) -- What members can control
+- [Event Registration Guide](../guides/event-registration) -- Set up registration so reminders can reach attendees
+- [Creating Calendars](creating-calendars) -- Return to calendar setup
+
+---
+
 ## calendars/index.md
 
 # Calendars
@@ -519,7 +931,7 @@ The Calendars section in B1 Admin lets you create curated calendars for your chu
 
 ## Viewing Your Calendars
 
-1. In the B1 Admin, navigate to **Website**, then to the **Calendars** section.
+1. In B1 Admin, navigate to **Calendars** in the main menu.
 2. The Calendars page lists all your calendars with their name and status.
 3. Each calendar also shows the groups associated with it.
 
@@ -529,6 +941,8 @@ The Calendars section in B1 Admin lets you create curated calendars for your chu
 - **Edit a calendar** -- Click on any calendar to open it and manage which groups are included in it.
 - **Publish calendars** -- Calendars can be displayed on your B1.church website so visitors can see upcoming events at your church.
 - **Create curated calendars** -- Pull events from multiple groups into a single calendar view for a comprehensive look at everything happening at your church. See [Curated Calendar](curated-calendar) for details.
+- **Manage rooms and resources** -- Track bookable spaces and equipment and handle approval requests. See [Rooms & Resources](rooms-resources) for details.
+- **View availability** -- See all room and resource bookings on a single calendar and book spaces for upcoming events. See [Availability Calendar](availability) for details.
 
 :::info
 Calendars work closely with [Groups](../groups/creating-groups.md). When groups have events scheduled, those events can be pulled into your calendars. See the [Creating Calendars](creating-calendars) page to learn how to connect groups to calendars.
@@ -538,6 +952,185 @@ Calendars work closely with [Groups](../groups/creating-groups.md). When groups 
 
 - [Creating Calendars](creating-calendars) -- Set up a new calendar and connect groups
 - [Curated Calendar](curated-calendar) -- Aggregate events from multiple groups into one view
+- [Rooms & Resources](rooms-resources) -- Manage bookable spaces and equipment
+- [Availability Calendar](availability) -- View and manage room/resource bookings
+
+---
+
+## calendars/paid-registrations.md
+
+# Paid Registrations
+
+
+
+Event registration can go beyond a simple head count. You can define priced attendee types (like Adult and Child), offer optional add-ons with their own prices and quantities, create discount codes, and collect payment at registration through your church's existing giving provider. When an event fills up, an optional waitlist keeps interested members in line and promotes them automatically as spots open.
+
+
+
+
+#### Before You Begin
+
+- Enable registration on the event first — see [Creating Calendars](creating-calendars#enabling-event-registration)
+- To collect payments, your church needs [online giving configured](../donations/online-giving-setup.md) (Stripe, PayPal, or Kingdom Funding). Free events need no giving setup.
+
+
+
+## Opening Registration Settings
+
+1. In B1 Admin, go to the **Registrations** page and open your event (or open the event from its calendar).
+2. The **Registration Settings** card shows the basics — **Enable Registration**, **Capacity**, **Registration Opens/Closes**, **Tags**, and **Registration Questions**.
+3. Below the basics are three accordions: **Attendee Types**, **Selections**, and **Discount Codes**.
+
+## Attendee Types
+
+Attendee types let you charge different prices for different kinds of attendees — and cap each one separately.
+
+1. Expand the **Attendee Types** accordion and click **Add Type**.
+2. Enter a **Name** (e.g. "Adult", "Child", "Student").
+3. Set a **Price**. Use 0 for a free type.
+4. Optionally set a **Capacity** for just this type (e.g. only 20 Child spots). Leave blank for no per-type limit.
+5. Click **Save**.
+
+During registration, each attendee picks a type; sold-out types are shown as **Sold out** and cannot be selected. The roster shows each attendee's type and running per-type counts.
+
+## Selections
+
+Selections are optional priced add-ons — T-shirts, meal plans, activity upgrades.
+
+1. Expand the **Selections** accordion and click **Add Selection**.
+2. Enter a **Name**, optional **Description**, and a **Price** (0 shows as "Free").
+3. Optionally set a **Capacity** (total available across all registrations) and a **Max Qty** (the most one registration can order).
+4. Click **Save**.
+
+Registrants choose quantities during signup, and the totals count against capacity so you never oversell.
+
+## Discount Codes
+
+1. Expand the **Discount Codes** accordion and click **Add Discount Code**.
+2. Enter the **Code** registrants will type.
+3. Choose the **Type** — **Percent** or **Amount** — and its **Value**.
+4. Optionally limit the code with a **Start Date** / **End Date**, a **Min Members** (minimum number of attendees on the registration), and **Max Uses**.
+5. Click **Save**.
+
+Each code shows a **Uses** count so you can see how often it has been redeemed. Registrants get instant feedback when they apply a code — including clear messages when a code has expired, hasn't started, or needs more attendees.
+
+## Waitlist
+
+Turn on **Enable Waitlist** in the Registration Settings card. When the event reaches capacity:
+
+- New registrants are offered a waitlist spot instead of being turned away. They complete the same signup (payment is skipped while waitlisted).
+- When someone cancels, the oldest waitlisted registration is **promoted automatically** and receives an email that a spot opened. If they owe a balance, the email links them to complete payment.
+- You can promote someone manually at any time with the **Promote** action on a waitlisted row — useful after raising the event capacity.
+
+:::info
+Promoted registrations stay *pending* until any balance is paid; paying (or having nothing to pay) confirms them.
+:::
+
+## The Registration Roster
+
+Open an event from the Registrations page to see every registration. The table shows **Name**, **Members**, **Type** (each attendee's type), **Paid / Total** (with a balance warning when money is still owed), **Status**, and **Date**, plus per-type count chips above the table.
+
+- Click a row's details icon to open the **Registration Details** dialog — members, selections, paid/balance, and a **Payments** table listing every charge (amount, method, date).
+- **Export CSV** downloads the full roster with columns for members, attendee types, selections, paid/total/balance, status, and one column per registration question.
+- **Add Attendee** still lets you record offline signups manually.
+
+:::info
+Refunds are not processed inside B1. If you need to refund a cancelled paid registration, issue the refund from your giving provider's dashboard (e.g. Stripe).
+:::
+
+## How Payment Works
+
+Payments run through the same giving gateway your church already uses for donations — card details go straight to the provider and never touch B1's servers. Prices are always computed on the server from your configured types, selections, and discount codes, so a registrant can't tamper with the total. Logged-in members can pay with a saved card; guests enter a card at checkout.
+
+## Related Articles
+
+- [Creating Calendars](creating-calendars#enabling-event-registration) — enable registration and the basic settings
+- [Online Giving Setup](../donations/online-giving-setup.md) — configure the payment gateway used at checkout
+- [Registering for Events](../../b1-church/events/registering) — what members see when they sign up
+- [My Registrations](../../b1-church/events/my-registrations) — how members pay balances and edit registrations
+
+---
+
+## calendars/rooms-resources.md
+
+# Rooms, Resources & Scheduling
+
+
+
+Rooms and Resources let you track your church's bookable spaces and equipment. When a group or team wants to use a room or borrow a resource for an event, they can request it through B1 — and you can approve or deny those requests to prevent double-booking.
+
+
+
+
+#### Before You Begin
+
+- You need administrative access to the Calendars section in B1 Admin
+- Set up [groups](../groups/creating-groups) whose members will be submitting booking requests
+
+
+
+## Opening Rooms & Resources
+
+In B1 Admin, go to **Calendars** and select **Rooms & Resources**. The page has four tabs: **Rooms**, **Resources**, **Blockouts**, and **Templates**.
+
+## Rooms
+
+Rooms are physical spaces that can be reserved alongside calendar events — a sanctuary, a fellowship hall, a classroom, etc.
+
+### Adding a Room
+
+1. On the **Rooms** tab, click **Add Room**.
+2. Enter a **name** for the room.
+3. Optionally set a **capacity** (maximum number of people).
+4. Set an **Approval Group** — when a group requests this room, the chosen group's leaders are notified and must approve the booking. Leave blank if no approval is needed.
+5. Click **Save**.
+
+### Editing or Deleting a Room
+
+Click the edit icon next to any room, make your changes, and click **Save**. Use **Delete** to remove a room permanently.
+
+## Resources
+
+Resources are items that can be booked alongside an event — AV equipment, projectors, chairs, a van, etc.
+
+### Adding a Resource
+
+1. Click the **Resources** tab, then **Add Resource**.
+2. Enter a **name** and optionally a **description**.
+3. Set an **Approval Group** if someone needs to sign off on resource loans.
+4. Click **Save**.
+
+## Blockouts
+
+Blockouts prevent rooms or resources from being booked during certain times — for renovations, reserved periods, or maintenance.
+
+### Adding a Blockout
+
+1. Click the **Blockouts** tab, then **Add Blockout**.
+2. Choose whether to block a **Room**, a **Resource**, or all rooms and resources.
+3. Set the **start** and **end** date/time for the blockout.
+4. Optionally add a **reason** note.
+5. Click **Save**.
+
+## Event Templates
+
+Templates let you save a reusable event configuration — title, description, and associated groups — so that recurring events can be created consistently.
+
+### Adding a Template
+
+1. Click the **Templates** tab, then **Add Template**.
+2. Enter a **name** for the template.
+3. Optionally link a **group** so the event is automatically connected to that group when created from the template.
+4. Click **Save**.
+
+When creating a new event, staff can choose an existing template to pre-fill the event details.
+
+## Related Articles
+
+- [Availability Calendar](availability) — view all bookings at a glance and book rooms or resources directly
+- [Calendar Approvals](approvals) — approve or reject room and resource booking requests
+- [Creating Calendars](creating-calendars) — set up event calendars
+- [Creating Groups](../groups/creating-groups) — set up groups that can book rooms and resources
 
 ---
 
@@ -593,6 +1186,78 @@ Name your batches consistently so they are easy to find later. Including the dat
 ## Next Steps
 
 Once you have a batch, see [Recording Donations](recording-donations.md) to learn how to add individual donations to it. You can also [import Stripe transactions](stripe-import.md) to automatically create batches from online giving.
+
+---
+
+## donations/campaigns.md
+
+# Campaigns & Pledges
+
+
+
+Campaigns let you run a fundraising drive toward a specific goal — a building fund, a missions trip, a special project — and track pledges from members alongside actual donations so you can see your real-time progress.
+
+
+
+
+#### Before You Begin
+
+- Set up your [donation funds](funds) — each campaign is tied to a fund
+- You need access to the Donations section of B1 Admin
+
+
+
+## Opening Campaigns
+
+In B1 Admin, go to **Donations** in the left sidebar and select **Campaigns**. You will see a list of all campaigns with their goal amount, total pledged, and total given so far.
+
+## Creating a Campaign
+
+1. Click **Add Campaign**.
+2. Fill in the campaign details:
+   - **Name** *(required)* — the display name for this campaign (for example, "Building Fund 2026").
+   - **Fund** — the donation fund this campaign is associated with.
+   - **Start Date** / **End Date** — the fundraising window.
+   - **Goal** — the target dollar amount for the campaign.
+3. Click **Save**.
+
+## Tracking Progress
+
+Each campaign card shows:
+
+- **Goal** — your target amount
+- **Pledged** — the total amount members have pledged to give
+- **Given** — the total amount actually donated to this campaign's fund during the campaign window
+- A **progress bar** showing how far toward your goal you have come
+
+Click any campaign to open the detail view, which lists individual pledges and their fulfillment status.
+
+## Adding Pledges
+
+Pledges are commitments from members to give toward a campaign. To record a pledge:
+
+1. Open a campaign.
+2. Click **Add Pledge**.
+3. Select the **person** making the pledge.
+4. Enter the pledge **amount**.
+5. Optionally set a **date** for the pledge commitment.
+6. Click **Save**.
+
+Pledges appear in the campaign detail and contribute to the **Pledged** total on the campaign card.
+
+:::tip
+Pledges are separate from actual donations. A pledge tracks a commitment; a donation records the actual gift. Both are shown on the campaign so you can see how well pledges are being fulfilled.
+:::
+
+## Editing or Deleting a Campaign
+
+Click the edit icon on any campaign card to update its name, goal, dates, or fund. Click **Delete** to permanently remove the campaign and its pledges. Deleting a campaign does not delete any donations that were recorded to its fund.
+
+## Related Articles
+
+- [Recording Donations](recording-donations) — record the actual gifts that fulfill pledges
+- [Funds](funds) — set up the fund to associate with a campaign
+- [Donation Reports](donation-reports) — reporting on donations by fund
 
 ---
 
@@ -707,17 +1372,22 @@ Navigate to **Donations > Funds** to see a list of all your funds. Each row show
 1. Click **Add Fund** at the top of the page.
 2. Enter a name for the fund (e.g., "Building Fund").
 3. Check the **Tax Deductible** box if donations to this fund should be included on giving statements.
-4. Click **Save**.
+4. Leave **Visible to Donors** checked to show the fund on the public and member donation forms, or uncheck it to hide the fund from donors while still using it for manually recorded donations.
+5. Click **Save**.
 
 The new fund immediately appears in your list and is available when entering donations.
 
 ## Editing and Deleting Funds
 
-- To edit a fund, click the **Edit** button next to it. You can change the name or toggle the tax-deductible setting.
+- To edit a fund, click the **Edit** button next to it. You can change the name, toggle the tax-deductible setting, or toggle **Visible to Donors** to show or hide it from donation forms.
 - To delete a fund, open the edit form and click **Delete**.
 
 :::warning
 Deleting a fund does not remove donations that were previously assigned to it. Those donation records remain in the system, but the fund will no longer be available for new donations.
+:::
+
+:::info
+Funds hidden from donors show a **Hidden** chip next to their name in this list. Hidden funds still work for donations recorded manually in B1 Admin -- they just don't appear as an option on the public or member donation forms.
 :::
 
 ## Viewing Fund Details
@@ -993,7 +1663,7 @@ When working with multiple currencies:
 
 
 
-B1 Admin integrates with **Stripe** and **PayPal** so your members can give online through your B1.church site. Once configured, online donations automatically appear in your donation records alongside manually entered gifts, keeping everything in one system.
+B1 Admin integrates with **Stripe**, **PayPal**, and **Kingdom Funding** so your members can give online through your B1.church site. Once configured, online donations automatically appear in your donation records alongside manually entered gifts, keeping everything in one system.
 
 
 
@@ -1068,6 +1738,24 @@ You can configure your giving page to let donors optionally cover processing fee
 :::tip
 After setup, make a small test donation to confirm everything is working before announcing online giving to your congregation.
 :::
+
+## Setting Up Kingdom Funding
+
+Kingdom Funding is a Christian payment processor that supports credit/debit cards and ACH bank transfers. If your church is enrolled with Kingdom Funding, you can connect it as your giving gateway.
+
+:::info
+Kingdom Funding integration is currently in beta. Contact your B1 account representative to enable it for your church.
+:::
+
+1. Sign up or log in at [kingdomfunding.org](https://kingdomfunding.org).
+2. Obtain your **Security Key** (public) and **Private Key** from the Kingdom Funding merchant portal.
+3. In B1 Admin, go to **Settings** and open **Church Settings**.
+4. In the **Giving** section, set the **Provider** to **Kingdom Funding**.
+5. Paste your Security Key into the **Security Key** field and your Private Key into the **Private Key** field.
+6. Set the **Webhook Key** you received from Kingdom Funding, and copy the displayed webhook URL into your Kingdom Funding merchant settings so Kingdom Funding can notify B1 of completed transactions.
+7. Save.
+
+Once connected, members will see a card/bank toggle on the donation page and can give by credit card or ACH transfer.
 
 ## Next Steps
 
@@ -1265,6 +1953,14 @@ The **Payment** field type requires Stripe to be configured. If you haven't set 
    - **Admin** — Can edit the form and view all submissions.
    - **View Only** — Can view submissions but cannot edit the form.
 
+## Duplicating a Form
+
+To reuse a form as a starting point for a new one, click the **Duplicate** icon (copy icon) next to the form in the Forms list. B1 creates an exact copy of the form — including all questions — which you can then rename and edit independently.
+
+:::tip
+Duplication is handy for recurring events where the registration questions stay the same from year to year. Duplicate last year's form, update the name and dates, and you're ready to go.
+:::
+
 ## Configuring Form Properties
 
 You can update your form's name and settings at any time. For Stand Alone forms, you will also see a unique **public URL** that you can share with anyone.
@@ -1431,12 +2127,36 @@ Once your group is created, you can fill in additional details:
      - **Open** -- Anyone can join immediately without approval
      - **Request** -- People must submit a join request that requires approval (see [Group Join Requests](./group-join-requests.md))
      - **Closed** -- Members must be added manually by leaders or administrators
+   - **Labels** -- Assign one or more descriptive labels to the group (for example, "In-Person", "Online", "New Members Welcome"). Labels are freeform tags you define; check all that apply. Labels can be used to filter groups in the Groups Browser website element.
+   - **Confidential group** -- Hide this group and its roster from public pages, the group finder, and non-members. Use this for sensitive groups like recovery or counseling ministries; only the group's members and church staff can see it.
    - **Attendance Tracking** -- Enable this if you want to record [attendance](../attendance/tracking-attendance.md) for this group.
    - **Service Times** -- Associate the group with specific church service times if applicable. See [Attendance Setup](../attendance/setup.md) for details on service times.
 4. Click **Save** to apply your changes.
 
 :::tip
 Adding a clear description and meeting time helps members know what to expect when they join a group.
+:::
+
+## Duplicating a Group
+
+Starting a new session of a recurring class or ministry? Instead of re-entering all the settings, duplicate an existing group:
+
+1. Open the group and click the **duplicate** icon in the group banner (next to Edit).
+2. Confirm the duplication.
+
+The copy carries over the original's settings -- category, description, meeting time/location, join policy, labels, and campus -- but **not** its members. The new group is named after the original with " (Copy)" appended; rename it from the group settings.
+
+## Archiving a Group
+
+When a group is no longer active but you want to keep its history instead of deleting it:
+
+1. Open the group and click the **pencil icon** to edit its settings.
+2. Click **Archive** and confirm.
+
+Archived groups drop off the main Groups list. To find one again, turn on the **Show archived** toggle at the top of the Groups page, then click **Restore** next to the group to bring it back.
+
+:::info
+Archiving a group does not delete its members, attendance history, or calendar events -- it only hides the group from the default list until you restore it.
 :::
 
 ## Next Steps
@@ -1507,6 +2227,27 @@ If your group meets on a regular schedule, you can set events to repeat automati
 
 :::tip
 For a group that meets every Saturday, set the frequency to "week" and choose Saturday. The event will automatically populate on the calendar going forward.
+:::
+
+## Bulk-Creating Events in B1 Admin
+
+The group's page in B1 Admin also has a **Calendar** tab where staff can schedule a whole season of meetings at once:
+
+1. Open the group in B1 Admin and select the **Calendar** tab.
+2. Click **Add Events** to open the **Add Recurring Events** dialog.
+3. Choose the schedule (weekly, every 2 weeks, monthly, or one time), the **First Meeting** and **Last Meeting** dates, and optionally **Skip holidays**.
+4. Review the preview of meeting dates and uncheck any to skip.
+5. Leave **Allow RSVPs** checked if you want members to be able to respond to these events (see below), then save.
+
+## Event RSVPs
+
+Group events can collect RSVPs — a **Yes**, **No**, or **Maybe** for each occurrence of the event.
+
+- **Allow RSVPs** is on by default for events created through the bulk-add dialog; uncheck it to turn responses off for those events. Events with RSVPs turned off show as **Disabled** on the calendar tab.
+- On the B1 Admin group calendar tab, each event shows a response summary (for example, "5 yes · 2 maybe · 1 no"). Click through to open the **RSVP Responses** roster, which lists who answered yes, maybe, and no for that occurrence.
+
+:::tip
+RSVPs give leaders a head count without the formality of full event registration. For paid signups or capacity-managed events, use [event registration](../calendars/creating-calendars.md#enabling-event-registration) instead.
 :::
 
 ## Viewing the Calendar
@@ -1738,6 +2479,28 @@ To download the group member list as a file:
 
 This is useful for creating printed rosters, importing data into other tools, or keeping offline records. For more export options, see [Exporting Data](../people/exporting-data.md).
 
+## Sending Push Notifications to Group Members
+
+You can send a push notification directly to all group members who have the B1.church app installed on their device with push notifications enabled.
+
+1. From the group detail page, click the **bell icon** in the header toolbar (next to the email and SMS icons).
+2. A dialog opens showing how many of your group's members have push enabled.
+3. Fill in the notification details:
+   - **Title** *(required)* -- A short summary, up to 80 characters.
+   - **Message** *(required)* -- The notification body, up to 240 characters.
+   - **Open link or flyer URL** *(optional)* -- A relative app path (for example, `/mobile/groups`) or a full `https://` URL that the notification opens when tapped.
+   - **Image URL** *(optional)* -- An `https://` URL to an image that appears alongside the notification on supported devices.
+4. A live preview shows how the notification will appear on the device.
+5. Click **Send Notification**.
+
+:::info
+Push notifications are delivered only to group members who have the B1.church PWA installed and have not disabled push notifications. Members without a registered push device or with push turned off are counted as skipped, and the send summary shows how many were reached versus skipped.
+:::
+
+:::tip
+After sending, the dialog shows how many notifications were queued successfully. If most members are showing as skipped, remind them to visit their B1.church site, install it as a home-screen app, and allow notifications when prompted.
+:::
+
 ## Removing Members
 
 To remove someone from a group, locate their name in the member list and click the **remove** button next to their entry.
@@ -1745,6 +2508,60 @@ To remove someone from a group, locate their name in the member list and click t
 :::info
 Removing a person from a group does not delete them from your church directory. They will still appear in the [People](../people/adding-people.md) section and can be re-added to the group at any time.
 :::
+
+---
+
+## groups/groups-health.md
+
+# Groups Health
+
+
+
+The Groups Health dashboard gives you a bird's-eye view of how all your groups are doing — membership trends, attendance averages, and growth or attrition over the past 90 days — all in a single sortable table.
+
+
+
+
+#### Before You Begin
+
+- You need at least a few groups with members to see meaningful data. See [Creating Groups](creating-groups).
+- Attendance data is pulled from recorded sessions. See the [Attendance](../attendance/) section.
+
+
+
+## Opening Groups Health
+
+In B1 Admin, go to **Groups** in the left sidebar and select **Health**. The dashboard loads a table with one row per group.
+
+## Columns
+
+| Column | What it shows |
+|--------|--------------|
+| **Name** | The group name, linked to the group detail page |
+| **Category** | The group's category |
+| **Members** | Current active member count |
+| **Joined (90d)** | Members who joined in the last 90 days |
+| **Left (90d)** | Members who left in the last 90 days |
+| **Churn (90d)** | Net churn rate as a percentage over 90 days |
+| **Avg Attendance** | Average headcount per attendance session |
+
+Click any column header to sort the table by that column. Click again to reverse the sort direction.
+
+## Using Health Data
+
+- **High churn + low joins** — a group that is shrinking and not replacing lost members. Worth a conversation with the group leader.
+- **High joins + low attendance** — people are signing up but not showing up. Consider engagement follow-up.
+- **High average attendance** — a healthy, active group. Potential model for other groups.
+
+:::tip
+Clicking a group name takes you directly to the group's detail page where you can review individual members, attendance records, and calendar events.
+:::
+
+## Related Articles
+
+- [Creating Groups](creating-groups) — set up groups
+- [Group Members](group-members) — manage group membership
+- [Tracking Attendance](../attendance/tracking-attendance) — record attendance sessions that feed this dashboard
 
 ---
 
@@ -1780,7 +2597,9 @@ Here is what you can accomplish in the Groups section:
 
 3. **Schedule events** -- Each group can have its own calendar for meetings, events, and recurring activities. See [Group Calendar](./group-calendar.md).
 
-4. **Export group data** -- Download member lists for any group as a CSV file for use in spreadsheets or mailings. See [Group Members](./group-members.md) for export instructions.
+4. **Manage join requests** -- When a group uses the **Request** join policy, review and approve or decline incoming membership requests from people who want to join. See [Group Join Requests](./group-join-requests.md).
+
+5. **Export group data** -- Download member lists for any group as a CSV file for use in spreadsheets or mailings. See [Group Members](./group-members.md) for export instructions.
 
 ## Getting Started
 
@@ -2375,10 +3194,10 @@ Follow the [Managing Pages](../website/managing-pages.md) guide to:
 Members can access sermons and live services from any device.
 
 1. Members can watch sermons in the [B1 Mobile app](../../b1-mobile/content/sermons.md) and on [B1.church](../../b1-church/content/sermons.md)
-2. Live streaming with chat and prayer requests works on both platforms
+2. Live streaming with chat works on both platforms
 
 :::info
-The live chat and prayer request features let your online congregation participate in real time, just like being in the room.
+The live chat feature lets your online congregation participate in real time, just like being in the room.
 :::
 
 ## You're Done!
@@ -2850,13 +3669,13 @@ New to B1 Admin? Start with the [Introduction](./introduction) for a video walkt
 - **[Groups](./groups/)** - Create and organize church groups with join requests and member management
 - **[Attendance](./attendance/)** - Set up campuses, service times, and track attendance
 - **[Donations](./donations/)** - Record giving in multiple currencies, manage funds, generate statements
-- **[Serving](./serving/)** - Coordinate volunteers, create service plans, manage tasks
+- **[Serving](./serving/)** - Coordinate volunteers, create service plans, manage tasks, and move people through step-by-step workflows
 - **[Forms](./forms/)** - Build custom forms for registrations and data collection
 - **[Reports](./reports/)** - View birthday, attendance, and donation reports
 - **[Website](./website/)** - Build and manage your church website with custom navigation styles
 - **[Sermons](./sermons/)** - Manage your sermon library and live streaming
-- **[Calendars](./calendars/)** - Create curated calendars by connecting group events
-- **[Settings](./settings/)** - Configure church info, roles, and permissions
+- **[Calendars](./calendars/)** - Create curated calendars, manage room/resource bookings, and view availability
+- **[Settings](./settings/)** - Configure church info, roles, permissions, and custom person fields
 
 :::info
 Click the question mark icon in the top-right corner of any page for quick access to help and documentation.
@@ -3514,7 +4333,7 @@ The B1.church Make app is open source — the JSON definitions live in the `B1In
 
 
 
-[Checkr](https://checkr.com) runs background screening for staff and volunteers — a near-universal need for any church running a children's or youth program. Checkr doesn't have a Zapier app, but [Make.com's Checkr integration](https://www.make.com/en/integrations/checkr) is verified and exposes the actions you need to kick off a check from a B1 event.
+[Checkr](https://checkr.com) runs background screening for staff and volunteers — a near-universal need for any church running a children's or youth program. B1 has **no built-in background-check feature** — ordering checks, tracking results, and screening compliance all live in Checkr; the recipe below only wires B1 events to it. Checkr doesn't have a Zapier app, but [Make.com's Checkr integration](https://www.make.com/en/integrations/checkr) is verified and exposes the actions you need to kick off a check from a B1 event.
 
 
 
@@ -3848,7 +4667,7 @@ We've also deliberately skipped Planning Center-Services-specific tools (music, 
 
 
 
-Pipe new B1 people, givers, or group members into a Mailchimp audience so the next welcome series, year-end appeal, or volunteer newsletter pulls from a list that's always up to date. The wiring lives entirely in Zapier (or Make) — B1 fires the event, Mailchimp ingests the subscriber.
+Pipe new B1 people, givers, or group members into a Mailchimp audience so the next welcome series, year-end appeal, or volunteer newsletter pulls from a list that's always up to date. B1 has no built-in Mailchimp sync — the wiring lives entirely in Zapier (or Make): B1 fires the event, Mailchimp ingests the subscriber.
 
 
 
@@ -4676,6 +5495,10 @@ You can fill out custom forms directly from a person's profile. These are user-d
 Forms linked to a person's profile use the **People** form type. If you need a standalone form (like an event registration), see the [Stand Alone form option](../forms/creating-forms.md) in the forms guide.
 :::
 
+:::tip
+If you only need to track one or two extra pieces of information on people — a date, a number, a yes/no answer — use [Custom Fields](../settings/custom-fields.md) instead of a form. They're quicker to fill in and are searchable directly in Advanced Search.
+:::
+
 ## Managing Households
 
 Households let you link family members together. This is especially useful for [check-in](../attendance/check-in.md), where a parent can check in all their children at once.
@@ -4936,6 +5759,66 @@ Fill in missing marital status for married couples:
 
 ---
 
+## people/demographics.md
+
+# Demographics
+
+
+
+The **Demographics** dashboard gives you a visual snapshot of your congregation — who they are, how many there are, and how your membership is distributed across age groups, genders, marital statuses, and campuses. Every chart is interactive: click any segment to jump straight to a filtered People search showing exactly those people.
+
+
+
+
+#### Before You Begin
+
+- People must exist in your directory. See [Adding People](./adding-people.md) or [Importing Data](./importing-data.md) to get started.
+- To see the Campus chart, you first need campuses configured in [Settings → Campuses](../settings/campuses.md).
+
+
+
+## Opening Demographics
+
+From the **People** page, click the **Demographics** button in the page header (the bar chart icon). The page shows your total person count at the top, followed by the charts described below.
+
+## Charts
+
+### Age Distribution
+
+A grouped bar chart showing how many people fall into each age bracket (for example, 0–9, 10–17, 18–24, and so on through 65+). Each bar is split into three series — **Female**, **Male**, and **Unassigned** — so you can see the gender breakdown within each age group at a glance.
+
+### Membership Status
+
+A donut chart breaking down your congregation by membership status (for example, Member, Regular Attender, Visitor, and so on).
+
+### Gender
+
+A donut chart showing the proportion of female, male, and unassigned records in your directory.
+
+### Marital Status
+
+A donut chart showing the breakdown across marital status values (for example, Married, Single, Widowed).
+
+### Campus
+
+A donut chart showing how people are distributed across your church's campuses. This chart only appears if you have campuses configured and at least one person assigned to a campus. People with no campus assigned appear as **Unassigned**.
+
+## Drilling Into the Data
+
+Click any slice of a donut chart or any bar segment on the age chart to navigate to the **People** page pre-filtered to show exactly those people. Use this to quickly build a contact list, run a bulk action, or export a segment — for example, click the **Visitor** slice in Membership Status to see all visitors and then send them to a workflow.
+
+:::tip
+After drilling into a filtered result, use **Save as List** in the People search to save that filter for future use. See [Saved Lists](./lists.md).
+:::
+
+## Related Articles
+
+- [Searching People](./searching-people.md) — the People page you land on when drilling into a chart
+- [Saved Lists](./lists.md) — save a demographic segment as a reusable list
+- [Campuses](../settings/campuses.md) — configure campuses so the Campus chart appears
+
+---
+
 ## people/exporting-data.md
 
 # Exporting Data
@@ -5180,15 +6063,21 @@ Here is an overview of the key features available in the People section:
 
 1. **Search your directory** -- Use the quick search bar to find anyone by name, or take advantage of advanced filters and AI-powered natural language search to locate exactly who you need. See [Searching People](./searching-people.md) and [AI Search](./ai-search.md) for details.
 
-2. **Add new people** -- Quickly add individuals to your directory and fill in their profile details, contact information, and household connections. See [Adding People](./adding-people.md) for step-by-step instructions.
+2. **Save search queries as Lists** -- Save any search or filter as a named list so you can reload it with one click. See [Saved Lists](./lists.md).
 
-3. **Bulk edit people** -- Update multiple people at once by changing their membership status, marital status, gender, opt-out preferences, or group memberships. This saves time when making the same change to many individuals. See [Bulk Editing](./bulk-editing.md).
+3. **View Demographics** -- See a visual breakdown of your congregation by age, gender, marital status, membership status, and campus — and click any chart segment to drill into those people. See [Demographics](./demographics.md).
 
-4. **Import and export data** -- Bring in member data from a CSV file or migrate from another church management system like Breeze. You can also export your directory to CSV at any time. See [Importing Data](./importing-data.md) and [Exporting Data](./exporting-data.md).
+4. **Add new people** -- Quickly add individuals to your directory and fill in their profile details, contact information, and household connections. See [Adding People](./adding-people.md) for step-by-step instructions.
 
-5. **Manage profiles** -- View and edit detailed profiles for each person, including contact info, household members, [group memberships](../groups/group-members.md), [attendance history](../attendance/tracking-attendance.md), [donations](../donations/recording-donations.md), and [custom forms](../forms/creating-forms.md).
+5. **Bulk edit people** -- Update multiple people at once by changing their membership status, marital status, gender, opt-out preferences, or group memberships. This saves time when making the same change to many individuals. See [Bulk Editing](./bulk-editing.md).
 
-6. **Assign roles and permissions** -- Control who on your team can access different parts of B1 Admin by assigning roles. See [Assigning Roles](./roles-permissions.md).
+6. **Print your directory** -- Generate a formatted, printable member directory grouped by household, complete with photos and contact information. See [Print Directory](./print-directory.md).
+
+7. **Import and export data** -- Bring in member data from a CSV file or migrate from another church management system like Breeze. You can also export your directory to CSV at any time. See [Importing Data](./importing-data.md) and [Exporting Data](./exporting-data.md).
+
+8. **Manage profiles** -- View and edit detailed profiles for each person, including contact info, household members, [group memberships](../groups/group-members.md), [attendance history](../attendance/tracking-attendance.md), [donations](../donations/recording-donations.md), and [custom forms](../forms/creating-forms.md).
+
+9. **Assign roles and permissions** -- Control who on your team can access different parts of B1 Admin by assigning roles. See [Assigning Roles](./roles-permissions.md).
 
 ## Getting Started
 
@@ -5197,6 +6086,159 @@ To access the People section, click **People** in the left sidebar of your B1 Ad
 :::tip
 If you are setting up B1 for the first time, start by [importing your existing member data](./importing-data.md). Then review and clean up profiles as needed.
 :::
+
+---
+
+## people/lists.md
+
+# Saved Lists
+
+
+
+**Saved Lists** let you store a search query under a name and re-run it with one click at any time. Build a list once — "Active Members in Campus North," "Visitors in the last 90 days," or any advanced filter — and it stays in your sidebar so you never have to rebuild the query again.
+
+
+
+
+#### Before You Begin
+
+- Run at least one search in the People section so you have results to save. See [Searching People](./searching-people.md) or [AI Search](./ai-search.md).
+
+
+
+## Saving a Search as a List
+
+1. Run a search on the **People** page — a quick search, an AI search, or an advanced filter search.
+2. When results appear, a **Save as List** button (bookmark icon) shows in the People page header.
+3. Click **Save as List**.
+4. Enter a **Name** for the list (required).
+5. Optionally enter a **Category** to group related lists together in the sidebar (for example, "Outreach" or "Membership").
+6. Click **Save**.
+
+The list is now saved to your church's account and will appear in the **Saved Lists** panel on the left side of the People page.
+
+:::info
+Lists are shared across your church — anyone with People access can see and load them. Only staff with the appropriate permission can rename or delete lists.
+:::
+
+## Loading a Saved List
+
+In the **Saved Lists** panel on the left side of the People page, click any list name. The search re-runs instantly with the stored query, updating the results table.
+
+Lists are grouped by category (if you assigned one), with uncategorized lists appearing last.
+
+:::tip
+Lists are **live queries**, not snapshots. Every time you load a list, the search runs fresh against your current data, so new people who now match the criteria will appear.
+:::
+
+## Renaming and Deleting Lists
+
+Staff with manage permission can rename or delete any list directly from the Saved Lists panel.
+
+- Click the **pencil icon** next to a list name to rename it.
+- Click the **trash icon** to delete it (you will be asked to confirm).
+
+## Use Cases
+
+| Scenario | How to build the list |
+|---|---|
+| All visitors | Advanced search: Membership Status = Visitor |
+| Members at a specific campus | Advanced search: Campus = [your campus] |
+| People without an email address | Advanced search: Email is empty |
+| Volunteers with an expired background check | Advanced search: [Custom Field](../settings/custom-fields.md) "Background check expires" is before today |
+| Results from an AI question | Ask a question in AI Search, then save |
+
+## Related Articles
+
+- [Searching People](./searching-people.md) — quick search and column customization
+- [AI Search](./ai-search.md) — natural-language queries you can save as lists
+- [Custom Fields](../settings/custom-fields.md) — define your own person fields, then filter and save lists on them
+- [Demographics](./demographics.md) — drill a demographic chart into a People filter, then save it as a list
+- [Bulk Editing](./bulk-editing.md) — after loading a list, bulk-update all its members at once
+
+---
+
+## people/print-directory.md
+
+# Print Directory
+
+
+
+The Print Directory feature generates a formatted, printable member directory for your church. It organizes members by household, includes contact information and photos, and is designed to look professional when printed on standard letter-size paper.
+
+
+
+
+#### Before You Begin
+
+- You need an active B1 Admin account with permission to view people.
+- People in your directory should have photos and contact information filled in for the best results.
+
+
+
+## Opening the Print Directory
+
+1. Navigate to **People** in B1 Admin.
+2. Click the **print icon** (printer icon) in the toolbar at the top of the People results card. It appears next to the Export button.
+3. The Print Directory opens in a new browser tab and begins loading your directory data.
+4. After about 1.5 seconds, your browser's print dialog will appear automatically.
+
+:::tip
+The directory opens in a separate tab so you can print it without leaving the People page. After the print dialog appears, the tab navigates back automatically.
+:::
+
+## What Gets Included
+
+The print directory includes all **active members** of your church. Specifically:
+
+- People with an **Inactive** or **Visitor** membership status are automatically excluded.
+- People who have **opted out** of the directory are excluded.
+- Everyone else is grouped by **household**.
+
+## Directory Layout
+
+The printed directory has two parts:
+
+### Cover Page
+
+The first page includes:
+- Your church name
+- The title "Member Directory"
+- The current year
+- Your church's location
+- A count of total households included
+
+### Member Listings
+
+The remaining pages list households alphabetically by last name. Each household card shows:
+
+- **Photos** -- Circular thumbnails for each household member, with their name below
+- **Household display name** -- For example, "The Smith Family", "John & Jane Doe", or just the person's name for individuals
+- **Address** -- Street address, city, state, and zip
+- **Phone** -- Home or mobile number
+- **Email** -- Primary email address
+- **Birthdays** -- Formatted as individual dates for each household member
+- **Anniversary** -- If recorded
+
+Households are organized into **alphabetical sections** (A, B, C, ...) with a decorative section header before each letter group. Two household cards appear side by side on each row.
+
+## Print Settings
+
+The directory is formatted for **letter-size paper** (8.5" × 11") with 0.5-inch margins. When the browser print dialog appears:
+
+- Leave the paper size set to **Letter**
+- Enable **Background graphics** (sometimes called "Print backgrounds") in your browser's print settings if you want section headers to print with their color styling
+- Portrait orientation is recommended
+
+:::info
+The directory respects page breaks — household cards and section headers will not be split across pages.
+:::
+
+## Related Articles
+
+- [Searching People](./searching-people.md) -- Filter your directory before printing
+- [Exporting Data](./exporting-data.md) -- Export directory data as a spreadsheet instead
+- [Adding People](./adding-people.md) -- Add or update member records
 
 ---
 
@@ -5326,10 +6368,19 @@ Not every piece of information needs to be visible at once. You can choose which
    - **Age**
    - **Gender**
    - **Membership Status**
+   - **Campus**
 3. The table updates immediately to reflect your selections.
 
 :::info
 Your column choices affect what is included when you export to CSV. Customize columns before exporting to get exactly the data you need.
+:::
+
+## Pagination
+
+When your directory has many records, results are split across pages. Use the **pagination controls** at the bottom of the table to move between pages. The current page and total record count are displayed so you always know where you are in the list.
+
+:::tip
+If you want to see more results at once, refine your search to narrow down the list rather than paging through a large directory.
 :::
 
 ## Exporting Search Results
@@ -5346,6 +6397,16 @@ For more details on exporting, see [Exporting Data](./exporting-data.md).
 :::tip
 For more advanced queries -- like finding everyone who hasn't attended in the last three months -- try the [AI Search](./ai-search.md) feature, which lets you search using plain language questions.
 :::
+
+## Advanced Search
+
+Advanced Search lets you build precise filters by combining conditions. Open it from the People page, then expand a category and check the fields you want to filter on, choosing an operator and value for each. Categories include **Names**, **Demographics**, **Contact**, **Membership**, **Activity** (donations and attendance), and **Custom Fields**.
+
+The **Custom Fields** category lists your church's [Custom Fields](../settings/custom-fields.md) — the fields you define in Settings to track your own information (such as a background-check expiration date). The operators offered match each field's type: text fields support *contains / equals / starts with / ends with*, number fields support the comparison operators, date fields support *equals / after / before*, and Yes/No and Multiple Choice fields let you pick a value. Any field you can filter on here can be saved as a live [List](./lists.md).
+
+## Saving Searches as Lists
+
+After running a search, a **Save as List** button (bookmark icon) appears in the People page header. Click it to store your current query under a name and optional category, so you can reload it instantly in future sessions. See [Saved Lists](./lists.md) for full details.
 
 ---
 
@@ -6292,11 +7353,12 @@ If you are an admin, toggle **Show All** to view all ministries at once. This is
 
 ## Sub-Sections
 
-The Serving section includes three key areas:
+The Serving section includes these key areas:
 
-- **[Plans](./plans.md)** -- Create service plans for specific dates and assign volunteers to teams. Plans help you organize who is serving when, so everyone knows their role ahead of time. Use the **[Plans Overview](./plans-overview.md)** to see all upcoming assignments across multiple weeks in one grid.
+- **[Plans](./plans.md)** -- Create service plans for specific dates and assign volunteers to teams. Plans help you organize who is serving when, so everyone knows their role ahead of time. Set up automatic [volunteer reminders](./plans.md#volunteer-reminders) so your team is notified before each service, and use the **[Plans Overview](./plans-overview.md)** to see all upcoming assignments across multiple weeks in one grid.
 - **[Songs](./songs.md)** -- Manage your worship song library with lyrics, arrangements, and external links. Your worship team can use this to prepare for upcoming services.
 - **[Tasks](./tasks.md)** -- Assign and track tasks for your team members. Set up [Automations](./automations.md) to create recurring tasks automatically, so nothing falls through the cracks.
+- **[Workflows](./workflows.md)** -- Move people through a series of steps on a visual Kanban board, such as new-visitor follow-up or a membership process. Steps can run automated actions (send an email, wait a few days, add to a group), and cards advance by outcome buttons, conditional routing, or event and schedule triggers -- with built-in reports.
 
 ## Getting Started
 
@@ -6307,6 +7369,71 @@ The Serving section includes three key areas:
 :::info
 Before you can create plans, you will need to create your Ministries in the Serving area and Teams within each Ministry . 
 :::
+
+---
+
+## serving/plan-templates.md
+
+# Plan Templates
+
+
+
+Plan templates let you save a reusable snapshot of a plan's order of service or positions and apply it to future plans in one click. Instead of rebuilding the same structure every week, you save it once and stamp it onto as many upcoming plans as you need.
+
+
+
+
+#### Before You Begin
+
+- Create at least one [service plan](plans.md) with a service order or positions defined
+- You need access to the Serving area in B1 Admin
+
+
+
+## Saving a Plan as a Template
+
+1. Open an existing plan from the **Serving** area.
+2. Click the **Templates** button (top of the plan page).
+3. Choose **Save as Template**.
+4. Give the template a name (for example, "Standard Sunday" or "Worship + Sermon").
+5. Save. The template captures the plan's current order of service and positions at that moment.
+
+## Managing Templates
+
+From the **Templates** button on any plan type page you can:
+
+- **Rename** — change the template's display name
+- **Update from plan** — replace the template's content with a plan's current state (useful after you refine your standard structure)
+- **Apply** — stamp the template onto one or more upcoming plans
+- **Delete** — remove a template you no longer need
+
+## Applying a Template to Plans
+
+1. Click the **Templates** button on the plan type page.
+2. Click the **Apply** icon (copy icon) next to the template you want to use.
+3. Select which upcoming plans to apply it to by checking their boxes.
+4. Choose what to copy:
+   - **Order of Service** — replaces the selected plans' service order items with the template's items
+   - **Positions** — replaces the selected plans' positions (and their assignments) with the template's positions
+5. Click **Apply**.
+
+:::warning
+Applying positions replaces all existing positions and assignments on the selected plans. Make sure you have not already scheduled volunteers for those positions before applying.
+:::
+
+:::tip
+Apply the Order of Service without Positions when you want a consistent song/sermon structure but volunteers are already assigned differently each week.
+:::
+
+## Keeping Templates Up to Date
+
+If your standard service structure changes, open the template manager and use **Update from plan** to sync the template from your latest plan rather than rebuilding it from scratch.
+
+## Related Articles
+
+- [Service Plans](plans.md) — Create and manage individual service plans
+- [Plans Overview](plans-overview.md) — See all upcoming assignments across plans in one grid
+- [Service Order](service-order.md) — Build the order of service within a plan
 
 ---
 
@@ -6408,11 +7535,21 @@ The overview displays a grid where:
 - **Columns** represent upcoming service dates (e.g., "Apr 14", "Apr 21")
 - **Cells** show the name of the volunteer assigned to that position on that date
 
-Positions highlighted in **red** are unfilled — no volunteer has been assigned yet. This makes it easy to see staffing gaps at a glance without opening each plan individually.
+Cells highlighted in **red** are unfilled — no volunteer has been assigned yet. This makes it easy to see staffing gaps at a glance without opening each plan individually.
 
 :::tip
 Volunteer names are shown in a shortened format (first name and last initial, e.g., "John D.") to keep the grid compact when you have many positions.
 :::
+
+## Assigning Volunteers Directly from the Overview
+
+You do not need to open individual plans to fill empty slots. Click any cell in the grid to open an assignment panel for that position and date. From there you can:
+
+- Select a person from your team to assign to the position
+- Replace or remove an existing assignment
+- Save the change without leaving the overview
+
+This makes it possible to staff an entire schedule in one pass — work across weeks and positions without navigating in and out of individual plans.
 
 ## Filtering the Overview
 
@@ -6421,6 +7558,7 @@ You can adjust what the overview shows using the filter controls at the top:
 - **Start Date / End Date** — By default the overview shows 12 weeks into the future. Enter custom dates to expand or narrow the range.
 - **Ministry** — Switch to a different ministry without leaving the overview.
 - **Plan Type** — Filter to a specific plan type within the selected ministry.
+- **Gaps Only** — Toggle this on to hide rows where every date is already filled, so you can focus only on positions that still need a volunteer.
 
 Click **Filter** after making changes to update the grid.
 
@@ -6496,6 +7634,29 @@ When you open a plan, you will see two tabs:
 Set up your teams in the ministry settings before creating plans. This way, you will have a ready pool of volunteers to assign from.
 :::
 
+## Volunteer Reminders
+
+B1 can automatically remind volunteers ahead of the services they are scheduled for, so you do not have to chase down your team each week. Reminders go to **everyone scheduled** — both those who have confirmed and those who have not yet responded — by email and as an in-app/push notification. Each reminder includes the volunteer's position(s), the service date, the plan notes, and your custom message.
+
+Reminder timing and content are set per **plan type**, so each kind of service can keep its own schedule.
+
+1. From the **Serving** area, select the ministry that contains the plan type.
+2. Click the **edit (pencil) icon** next to the plan type.
+3. In the **Reminders** section, set:
+   - **Reminder days before service** — a comma-separated list of how many days ahead to send, for example `7,1,0`. Use `0` to send a reminder on the day of the service. Leave this field blank to turn reminders off for this plan type.
+   - **Custom reminder message** *(optional)* — extra text added to the reminder, such as "Arrive 30 minutes early to rehearse."
+4. Save the plan type.
+
+New plan types remind volunteers **2 days before** each service by default until you change this.
+
+:::tip
+Volunteers who have not yet confirmed get **Accept** and **Decline** buttons right inside the reminder email, so they can respond without signing in.
+:::
+
+:::info
+Each reminder is sent once. Plans that are still penciled in (not yet sent to the team) do not trigger reminders.
+:::
+
 ## Associating Groups with a Plan Type
 
 Below the plan list on the plan type page, the **Groups** section lets you decide which groups can see the plans for this plan type from their member portal. This is a quick way to surface upcoming services to the right teams without giving them admin access.
@@ -6519,7 +7680,8 @@ Plans are organized by ministry. Make sure you are on the correct ministry tab b
 
 ## Next Steps
 
-- Use the [Plans Overview](./plans-overview.md) to see all upcoming assignments across multiple weeks in one grid and spot unfilled positions
+- Use the [Plans Overview](./plans-overview.md) to see all upcoming assignments across multiple weeks in one grid and spot unfilled positions — and assign volunteers directly from the grid
+- Save a plan's structure as a [Plan Template](./plan-templates.md) so you can stamp it onto future plans in one click
 - Build out your [Service Order](./service-order.md) with songs, readings, and other elements
 - Add [songs](./songs.md) from your library directly into the service order
 - Use [Tasks](./tasks.md) to assign follow-up action items to team members
@@ -6777,19 +7939,25 @@ Click on any song card to open its detail page. From here you can:
 - **Edit song details** -- Update the title, artist, duration, and other metadata.
 - **Manage arrangements** -- Each song can have multiple arrangements (for example, different keys or versions). Add, edit, or remove arrangements as needed.
 - **Add lyrics** -- Enter or update the lyrics for each arrangement.
-- **Set the key** -- Specify the musical key for each arrangement so your team knows how to prepare.
+- **Set the key** -- Specify the musical key for each arrangement using the key picker next to the lyrics. Changing the key transposes the displayed chords immediately, both on the arrangement page and when opening the song from a service plan, so your team always sees chords in the key they're actually playing.
 - **Add external links** -- Attach links to resources like YouTube videos, chord charts, or sheet music hosted elsewhere.
 
 ## Arrangements
 
-A single song can have multiple arrangements to accommodate different services or team configurations. Each arrangement includes:
+An arrangement represents a distinct version of a song — for example, a faster modern version versus a slower acoustic take, or the same song in a different key for a different team. Each arrangement of the same song shares the song title and artist but has its own independent settings:
 
-- **Lyrics** for display or projection
-- **Key** designation
-- **External links** to additional resources
+- **Key** — the musical key the arrangement is performed in
+- **BPM** — tempo in beats per minute
+- **Length** — duration in seconds
+- **Meter** — time signature (e.g., 4/4, 3/4, 6/8)
+- **Sequence** — the chord/section structure (e.g., Intro → Verse → Chorus → Bridge)
+- **Lyrics** — for display or projection
+- **External links** — chord charts, YouTube recordings, sheet music, or other resources
+
+When you add a song to a [Service Order](./service-order.md), you can choose which arrangement to use for that specific service, so your team always rehearses and plays the right version.
 
 :::info
-Songs from your library can be added directly to a [Service Order](./service-order.md) within a plan, linking the song details and arrangements to that specific service.
+Songs from your library can be added directly to a [Service Order](./service-order.md) within a plan, linking the song details and the chosen arrangement to that specific service.
 :::
 
 ## Next Steps
@@ -6856,8 +8024,13 @@ Click on any task to open its detail page. From here you can:
 You can automate recurring tasks so they are created on a schedule. See [Automations](./automations.md) for details on setting this up.
 :::
 
+:::tip
+When you need to move many people through the same set of stages -- such as new-visitor follow-up or a membership process -- use [Workflows](./workflows.md). Workflows turn tasks into cards on a drag-and-drop board with steps, due dates, and routing.
+:::
+
 ## Next Steps
 
+- Move people through a multi-step process with [Workflows](./workflows.md)
 - Set up [Automations](./automations.md) to create recurring tasks automatically
 - Use tasks alongside [Service Plans](./plans.md) to track service preparation action items
 
@@ -6916,6 +8089,285 @@ For detailed steps on authenticating with a content provider (QR code, form logi
 - [FreePlay Overview](/docs/freeplay/)
 - [FreePlay — Content Providers](/docs/freeplay/content-providers/)
 - [FreePlay — Connecting to Providers](/docs/freeplay/content-providers/connecting-providers)
+
+---
+
+## serving/workflows.md
+
+# Workflows
+
+
+
+Workflows move people through a series of steps on a visual board. Each person becomes a card that travels from one step to the next -- from a first-time guest follow-up, to a membership process, to a first-time giver thank-you, and anything else where you need to track many people through the same set of stages. A step can ask a volunteer to do something (make a call, have a conversation) **and** run automated actions on its own -- send an email, wait a few days, add the person to a group -- so Workflows handle both the human follow-up and the busywork around it. Workflows extend [Tasks](./tasks.md) into a drag-and-drop Kanban board so nothing and no one falls through the cracks.
+
+
+
+
+#### Before You Begin
+
+- Make sure the people you want to track exist in B1 Admin
+- Familiarize yourself with how [Tasks](./tasks.md) work, since each card on a board is a task
+- To use the **Send email** action, create the email templates you want to send first (managed under **Messaging → Manage Templates**)
+- You will need the appropriate Tasks permission. Viewing, editing cards, and managing workflows are separate permission levels (see [Roles & Permissions](../settings/roles-permissions.md))
+
+
+
+## Viewing Workflows
+
+Navigate to **Serving**, open the **Tasks** area, and select **Workflows** from the menu. You will see your workflows listed and grouped by category, with active workflows highlighted. Click any workflow to open its board.
+
+## Creating a Workflow
+
+1. On the Workflows page, click **Add Workflow**.
+2. Choose how to start:
+   - **Blank workflow** -- start from scratch and build your own steps.
+   - **From a template** -- start with a ready-made set of steps you can edit. Built-in templates include:
+     - **New Visitor Follow-up** -- Send welcome email → Personal phone call → Invite to next step → Connected
+     - **Membership Class** -- Express interest → Register for class → Attend class → Complete membership
+     - **First-time Giver Thank-you** -- Send thank-you note → Share giving impact → Stewarded
+3. Give the workflow a **Name**.
+4. Optionally assign a **Category** to group related workflows together. You can create a new category right from the dropdown.
+5. Leave the workflow **Active** so people can be added to it, or set it to **Inactive** to hide it from the add-to-workflow lists.
+6. Click **Save**.
+
+:::tip
+Use the **Duplicate** button on the Workflows list to copy an existing workflow -- including its steps, automated actions, and routing -- as the starting point for a new one.
+:::
+
+## Building the Board with Steps
+
+Each workflow board is made up of **steps**, shown as columns from left to right. Open a workflow and use **Add Step** to create each stage of your process.
+
+When you add or edit a step, you can configure:
+
+- **Step Name** -- the column heading (for example, "Welcome Call" or "Awaiting Registration").
+- **Due in (days)** -- automatically sets a due date when a card enters this step. Cards past their due date are flagged as **Overdue**.
+- **Default assignee** -- the person or group new cards on this step are assigned to automatically.
+- **Automated actions** -- things the system does on its own when a card arrives (see below).
+- **Routing** -- where the card goes when it leaves the step (see [Routing](#routing-cards-with-outcomes-and-conditions)).
+
+Drag step columns into the order that matches your process. The order also defines the default path a card takes when no other routing applies.
+
+:::info
+Save a new step first. Automated actions and routing attach to the step, so the editor unlocks those sections once the step exists.
+:::
+
+## Automated Actions
+
+Every step can carry a list of **automated actions** that run by themselves the moment a card **enters** the step -- before anyone touches it. This is how a step both prompts a volunteer *and* takes care of the routine work around the follow-up.
+
+In the step editor, open **Automated actions**, click **Add Action**, choose a type, fill in its settings, and click the save icon on that action. Add as many as you need; they run **top to bottom in order**.
+
+| Action | What it does |
+|---|---|
+| **Send email** | Emails the person an email template you choose. You can override the subject line. |
+| **Wait** | Pauses the card for a number of days before continuing (see below). |
+| **Add to group** | Adds the person to a [group](../groups/index.md) you pick. |
+| **Add to workflow** | Starts the person on another workflow -- useful for handing off between processes. |
+| **Add note** | Records a note in the card's history. |
+| **Set field** | Updates a field on the person's record: Membership Status, Marital Status, Gender, City, State, or Zip. |
+| **Webhook** | Sends the card's details to an external web address (URL) you provide, for connecting to other systems. |
+
+After all of a step's actions finish, the card **rests on that step** so a person can work it -- unless the step has an automatic route that moves it onward (see [Fully automated steps](#fully-automated-steps)).
+
+:::info
+Automated actions run only when a card arrives through the normal flow -- when it's first added, when an outcome or automatic route brings it in, or after a Wait finishes. They do **not** re-run when a staff member manually drags a card onto the step or sends it back, so a person won't get the same email twice.
+:::
+
+### Sending email
+
+Choose **Send email**, pick one of your email templates, and optionally type a custom subject. When a card enters the step, the person receives that email automatically. (If the person has no email address on file, the step simply skips this action.)
+
+### Waiting a few days (drip sequences)
+
+The **Wait** action holds a card for the number of days you set. While it waits, the card shows as **Snoozed**. When the wait is over:
+
+1. Any **remaining actions on the same step** run -- so you can build a drip like **Send email → Wait 3 days → Send a reminder email**.
+2. Then, if the step has an automatic route, the card moves on; otherwise it rests on the step for a person to pick up.
+
+:::tip
+A **Wait** at the very start of a step is a simple way to "hold" a card before it surfaces to a volunteer -- for example, *Wait 7 days, then a coach reaches out*.
+:::
+
+## Adding People as Cards
+
+There are several ways to put people on a board:
+
+- **From the board** -- Click **Add Card** at the bottom of a step column and pick a person. You can also pick a group, and every member of that group is added as a card.
+- **From a person's record** -- Use **Add to Workflow** on a person's page to drop them onto a workflow.
+- **From People search** -- Select multiple people and use the bulk **Add to Workflow** action to add them all at once.
+- **Automatically with a trigger** -- Add people when something happens, like a form submission or a first gift (see [Triggers](#triggers) below).
+
+## Working the Board
+
+Open a workflow to see its board. Each card shows the person's name, who it is assigned to, and a due-date or status chip (**Overdue** or **Snoozed**). A step column also shows small badges for any automated actions it runs and annotations for its routing, giving you an at-a-glance map of how cards flow.
+
+- **Move a card** -- Drag a card from one column to the next as the person progresses.
+- **Open a card** -- Double-click a card (or click it) to open its detail drawer, where you can change the step, reassign it, add notes, and review what's already happened.
+
+From the card drawer you can:
+
+- **Assign** the card to a different person or group.
+- **Snooze** the card for 1 day, 3 days, or 1 week to temporarily hide its due date.
+- **Send Back** to the previous step or **Skip** to the next step.
+- **Pin assignment** -- keep the same owner on the card even as it moves between steps. By default, moving a card to a new step reassigns it to that step's default assignee; pinning keeps the current person responsible throughout.
+- **Complete** the card to finish it, or choose an **Outcome** button if the step has outcomes configured (see [Routing](#routing-cards-with-outcomes-and-conditions)).
+- **Add notes** and review the card's **history** -- including a log of automated actions that have run (emails sent, waits, etc.).
+
+### Bulk actions
+
+Select the checkboxes on multiple cards to act on them together. A toolbar appears letting you **Complete**, **Snooze**, **Reassign**, or **Move** all selected cards to another step at once.
+
+## Routing Cards with Outcomes and Conditions
+
+Routing controls where a card goes when it leaves a step. Open a step's editor to configure two kinds of routing.
+
+### Outcome buttons
+
+Outcomes are buttons shown on the card drawer when you are completing a card on that step. Instead of a single **Complete** button, you can offer choices like "Joined a Group" or "Not Interested." Each outcome can:
+
+- Send the card to **another step** in this workflow,
+- **Hand the card off** to a different workflow entirely, or
+- **Close** the card.
+
+This lets one decision branch the person down different paths.
+
+### Automatic routing (conditional)
+
+Automatic routes move a card onward **the moment it enters a step** (and after its automated actions finish), without anyone clicking, if the person matches a set of conditions. Add a route, choose the target step, and define one or more **conditions** (for example, a person's campus, age, or membership status). A route with no conditions matches everyone.
+
+:::info
+On the board, each step column shows small annotations describing its routing -- for example, an outcome label or "if matches" followed by an arrow to the destination step or workflow.
+:::
+
+## Fully Automated Steps
+
+You can make a step run entirely on its own, with no one working it. Give the step its **automated actions** and add an **automatic route** (with no conditions) pointing to the next step. When a card enters, the actions run, and then the route advances it immediately -- the card passes straight through.
+
+:::tip
+Combine this with **Wait**: *Send welcome email → Wait 3 days → automatically advance to the "Personal call" step.* The email and the timing are handled for you, and a volunteer only sees the card when it's time for the human touch.
+:::
+
+## Triggers
+
+Triggers add people to a workflow automatically when something happens, so you never have to add cards by hand. On a workflow board, click the **Triggers** tab, then **Add Trigger**. There are two kinds:
+
+### Event triggers
+
+Fire as soon as a record changes in B1. Choose the event, then optionally add **conditions** so only matching people are added:
+
+- **Person · Created / Updated** -- e.g. add anyone whose status becomes *Visitor*.
+- **Donation · Created** -- e.g. add a first-time or large gift to a thank-you workflow (match on amount, fund, or method).
+- **Group · Member Joined** / **Group · Created**.
+- **Form · Submitted** -- add anyone who submits a chosen form (great for an "I'm New" or "Connect" card).
+
+### Schedule triggers
+
+Run on a recurring basis -- daily, weekly, monthly, or yearly -- against a set of conditions. Use these for time-based outreach such as *everyone whose membership anniversary is today* or a *monthly* check-in.
+
+For any trigger you can also set:
+
+- The **entry step** the new card starts on (defaults to the first step).
+- **Once per person** -- so the same person isn't added to the workflow twice by the trigger.
+- **Active** -- turn the trigger on or off without deleting it.
+
+:::tip
+Pair a **Form · Submitted** trigger with the **New Visitor Follow-up** template to turn your "Connect Card" or "I'm New" form into an automatic follow-up pipeline.
+:::
+
+## My Cards
+
+Volunteers and staff do not need to dig through every board to find their work. The **My Cards** page (linked from the Workflows page) lists every card assigned to the current user across all workflows. Clicking a card opens the board it belongs to.
+
+## Reports
+
+Open a workflow and click **Reports** to see analytics for that workflow:
+
+- **Overdue** -- the number of cards past their due date.
+- **Cards per Step** -- how many cards currently sit on each step, shown as a column chart.
+- **Completed (30 days)** -- throughput over the last 30 days, shown as a line chart.
+
+Use these to spot bottlenecks -- for example, a step where cards pile up and never advance.
+
+## Related Articles
+
+- [Tasks](./tasks.md) -- the individual action items that workflow cards are built on
+- [Automations](./automations.md) -- create recurring tasks on a schedule
+- [Forms](../forms/index.md) -- build the forms that can trigger workflows
+- [Groups](../groups/index.md) -- the groups an "Add to group" action can place people in
+- [Roles & Permissions](../settings/roles-permissions.md) -- control who can view, edit, and manage workflows
+
+---
+
+## settings/campuses.md
+
+# Campuses
+
+
+
+If your church meets at more than one location, **Campuses** let you track which site each person and group belongs to. Once configured, campuses appear as an option on person profiles, in attendance setup, and in the Demographics dashboard. Multi-site churches can filter, search, and report by campus throughout B1 Admin.
+
+
+
+
+#### Before You Begin
+
+- You need the **Edit Church Settings** permission to manage campuses. See [Roles & Permissions](./roles-permissions.md).
+
+
+
+## Opening Campus Settings
+
+In B1 Admin, go to **Settings** in the left sidebar and select **Campuses** from the Settings navigation. You will see a list of all configured campuses with their name, location, and timezone.
+
+## Adding a Campus
+
+1. Click **Add Campus** (or the **+** button if no campuses exist yet).
+2. Fill in the campus details:
+   - **Name** *(required)* — the display name shown throughout B1 Admin (for example, "Main Campus" or "North Campus").
+   - **Address** — the campus street address (used for informational display; not the same as your main church address in Church Settings).
+   - **City / State / Zip** — the campus location.
+   - **Timezone** — the IANA timezone for this campus (for example, *America/Chicago*). Useful when campuses are in different time zones.
+   - **Website** — an optional URL for this campus's own web presence.
+3. Click **Save**.
+
+## Editing a Campus
+
+Click any campus row in the list to open its editor in the panel to the right. Update the fields and click **Save**.
+
+## Deleting a Campus
+
+Open a campus for editing and click **Delete**. You will be asked to confirm. Deleting a campus does not remove the people assigned to it — their campus field simply becomes blank.
+
+## Assigning People to a Campus
+
+After creating campuses, staff can assign a person to a campus from their profile:
+
+1. Open a person's record in **People**.
+2. Click **Edit**.
+3. Choose the campus from the **Campus** dropdown.
+4. Click **Save**.
+
+You can also update campus in bulk from the People page. Select multiple people, use **Bulk Edit**, and set the Campus field for everyone at once.
+
+## Filtering by Campus
+
+Once campuses are set up, you can filter across B1 Admin by campus:
+
+- **People search** — add a Campus condition in the advanced search, or load a [Saved List](../people/lists.md) scoped to a campus.
+- **Demographics** — the [Demographics dashboard](../people/demographics.md) shows a Campus donut chart when at least one person has a campus assigned.
+- **Attendance Setup** — each service time in Attendance can be tied to a campus.
+
+:::tip
+Single-location churches don't need to configure campuses. All campus features are optional — if no campuses exist, campus fields and charts simply don't appear.
+:::
+
+## Related Articles
+
+- [Church Settings](./church-settings.md) — your main church address and branding (separate from campus addresses)
+- [Demographics](../people/demographics.md) — the Campus breakdown chart
+- [Attendance Setup](../attendance/setup.md) — link service times to a campus
+- [Bulk Editing](../people/bulk-editing.md) — assign campus to many people at once
 
 ---
 
@@ -6982,6 +8434,102 @@ This is especially helpful when you are first setting up your church and need to
 :::warning
 When importing data, always back up your existing records first. Import operations add data to your system and may create duplicate entries if run multiple times.
 :::
+
+---
+
+## settings/custom-fields.md
+
+# Custom Fields
+
+
+
+**Custom Fields** let you track your own information on every person record — things B1 doesn't have a built-in field for, like a background-check expiration date, a T-shirt size, or a baptism class status. You define a field once in Settings, then fill in a value on each person's profile and search or build lists on it. This replaces the older workaround of creating a People form just to store a single piece of custom data.
+
+
+
+
+#### Before You Begin
+
+- You need **People** edit permission to define fields and to fill in values, and access to the **Settings** area. Anyone with People view permission can see the values. See [Roles & Permissions](./roles-permissions.md).
+- Decide what you want to track and which type fits best (text, a number, a date, a yes/no answer, or a pick-list) before you start.
+
+
+
+## Opening Custom Fields
+
+In B1 Admin, go to **Settings** in the left sidebar and select the **Custom Fields** card. You can also go straight there at **/settings/custom-fields**. You'll see a list of every field you've defined, showing its **Name** and **Field Type**. If you haven't created any yet, the panel reads *"No custom fields have been added yet."*
+
+## Adding a Field
+
+1. Click **Add Field**.
+2. In the editor that opens on the right, enter a **Name** — this is the label staff will see on person profiles and in search (for example, *Background check expires*).
+3. Choose a **Field Type**:
+   - **Textbox** — free-form short text.
+   - **Whole Number** — numbers without decimals (for example, a count).
+   - **Decimal** — numbers that can include decimals.
+   - **Date** — a calendar date.
+   - **Yes/No** — a simple yes-or-no answer.
+   - **Multiple Choice** — a pick-list. When you choose this type, a **choices editor** appears so you can add each option people can select from.
+4. Click **Save**.
+
+The field is now available on every person's profile.
+
+:::info
+The field types are the same set used for [form questions](../forms/creating-forms.md), so values behave consistently across B1.
+:::
+
+## Editing a Field
+
+Click any field row in the list to reopen it in the editor. Change the name, type, or choices and click **Save**.
+
+:::warning
+Changing the **Field Type** of a field that already has values (for example, from Textbox to Date) can leave previously entered values in a format that no longer matches the new type. Change types with care once staff have started filling the field in.
+:::
+
+## Deleting a Field
+
+Open a field for editing and click **Delete**. You'll be asked to confirm: *"Are you sure you wish to delete this custom field? Its stored values will also be removed."* Deleting a field permanently removes it **and every value stored for it** on all people — this cannot be undone.
+
+## Filling In Values on a Person
+
+Once at least one custom field exists, its values live right alongside the built-in details on each person's record — you view them in **Personal Details** and edit them on the same form you use for the rest of the person's information. Nothing extra appears until you've defined your first field.
+
+1. Open a person's record in **People**.
+2. In the **Personal Details** section, click the **Edit** (pencil) button.
+3. Scroll to the **Custom Fields** area at the bottom of the edit form and fill in a value for each field. Each field shows the input that matches its type — a date picker for Date fields, a yes/no dropdown for Yes/No fields, a pick-list for Multiple Choice, and so on.
+4. Click **Save**. Your custom-field values are saved together with the rest of the person's details.
+
+Back on the profile, any field that has a value now shows in the **Personal Details** section (Yes/No answers read as *Yes* or *No*, and Multiple Choice shows the option's label). Fields left blank are simply hidden. To remove a value, edit the person, clear the field, and save — an empty value is deleted from the record rather than stored as blank.
+
+:::tip
+The classic use case is volunteer safety: create a **Date** field called *Background check expires*, record each volunteer's date, then build a [Saved List](../people/lists.md) that flags anyone whose date has passed.
+:::
+
+## Searching and Building Lists on Custom Fields
+
+Custom fields are fully searchable:
+
+1. On the **People** page, open the [Advanced Search](../people/searching-people.md).
+2. Expand the **Custom Fields** category.
+3. Check the field you want to filter on, choose an operator, and enter a value. The operators offered match the field's type:
+   - **Textbox** — contains, equals, starts with, ends with.
+   - **Whole Number / Decimal** — equals, greater than, greater than or equal, less than, less than or equal.
+   - **Date** — equals, after (greater than), before (less than).
+   - **Yes/No** — equals Yes or No.
+   - **Multiple Choice** — equals or contains one of the choices.
+
+Save any custom-field search as a [List](../people/lists.md). Lists are live queries, so a list built on *Background check expires is before today* re-checks every person each time you open it — no manual upkeep.
+
+## What Happens on Merge
+
+When you [merge two person records](../people/adding-people.md), custom-field values carry over automatically. The person you keep holds on to their own values; for any field where only the removed person had a value, that value is copied over so nothing is lost.
+
+## Related Articles
+
+- [Searching People](../people/searching-people.md) — advanced search, including the Custom Fields category
+- [Saved Lists](../people/lists.md) — save a custom-field search and re-run it live
+- [Roles & Permissions](./roles-permissions.md) — who can define fields and edit values
+- [Creating Forms](../forms/creating-forms.md) — for multi-question data collection where a full form fits better than single fields
 
 ---
 
@@ -7096,12 +8644,14 @@ The Settings section is where you configure your church's account, branding, and
 
 ## What You Will Find Here
 
-The Settings area is organized into four sub-sections accessible from the sidebar:
+The Settings area is organized into the following sub-sections accessible from the sidebar:
 
 1. **Settings** -- Configure your church's basic information, branding, and subdomain. See [Church Settings](./church-settings.md) for details.
-2. **Mobile Apps** -- Set up and customize the navigation tabs that appear in the [B1.church PWA](/docs/b1-church/getting-started/installing-pwa) for your members (the same tabs are also rendered by the deprecated B1 Mobile native app). See [Mobile App Settings](./mobile-app.md) for details.
-3. **Server Admin** -- Access advanced administration tools for managing your church's server-level settings.
-4. **Forms** -- Create and manage custom forms for collecting information from your congregation.
+2. **Campuses** -- Add and manage multiple physical locations for your church. Once created, campuses appear on person profiles, in attendance setup, and in the Demographics dashboard. See [Campuses](./campuses.md) for details.
+3. **Custom Fields** -- Define your own fields to track on people (a date, number, yes/no answer, or pick-list), then fill them in on profiles and search on them. See [Custom Fields](./custom-fields.md) for details.
+3. **Mobile Apps** -- Set up and customize the navigation tabs that appear in the [B1.church PWA](/docs/b1-church/getting-started/installing-pwa) for your members (the same tabs are also rendered by the deprecated B1 Mobile native app). See [Mobile App Settings](./mobile-app.md) for details.
+4. **Server Admin** -- Access advanced administration tools for managing your church's server-level settings.
+5. **Forms** -- Create and manage custom forms for collecting information from your congregation.
 
 ## The Main Settings Page
 
@@ -7123,6 +8673,7 @@ For information about how your data is protected, see [Data Security](./data-sec
 ## Next Steps
 
 - [Church Settings](./church-settings.md) -- Configure your church information and branding
+- [Campuses](./campuses.md) -- Add locations for multi-site churches
 - [Roles & Permissions](./roles-permissions.md) -- Set up user roles and access control
 - [Mobile App Settings](./mobile-app.md) -- Customize the navigation tabs shown in the B1.church PWA
 - [Data Security](./data-security.md) -- Learn how your data is protected
@@ -7715,6 +9266,21 @@ Removing a navigation link does not delete the page itself. The page still exist
 You can add [forms](../forms/creating-forms.md) to your pages to collect registrations, prayer requests, or other information from visitors.
 :::
 
+## Starting from a Site Template
+
+If you are building your site from scratch, you can bootstrap it using a **Site Template** instead of creating pages one at a time. A site template creates a set of pre-built pages — home, about, connect, give, and others — with placeholder content and navigation links already wired up.
+
+1. On the Pages screen, click the **Site Templates** button (beside the **Add Page** button).
+2. Browse the available templates and click one to preview its page structure.
+3. When you find one you like, click **Apply Template**.
+4. Pages that do not already exist are created and added to your navigation. Existing pages are left as-is.
+
+After applying a template, open each page in the [page editor](page-editor) to replace the placeholder text and images with your church's real content.
+
+:::info
+Site templates create page structure and navigation. They do not override your site's color scheme or fonts — those are controlled by [Appearance](appearance).
+:::
+
 ## Image Lightbox
 
 When visitors click on an image on your website, it opens in a full-screen lightbox overlay. This lets people view photos at a larger size without leaving the page. No configuration is required — the lightbox is enabled automatically for images in your page content.
@@ -7930,7 +9496,9 @@ Every page is built from two levels:
 ### Adding a Section
 
 1. Click **Add Section** (or the **+** button at the top of the left panel).
-2. Choose a layout for your section -- options include single column, two columns, three columns, and more.
+2. Choose how to start:
+   - **From a template** — browse the section template gallery organized by category (Hero, About, Services, Giving, etc.) and click one to insert it as a fully styled, pre-filled section. You can customize everything after it is added.
+   - **Blank section** — choose a column layout (single, two columns, three columns, etc.) and build from scratch.
 3. The new section appears in the preview. Click it to select it and configure its background color, padding, and other style options.
 
 ### Adding Elements to a Section
@@ -7945,6 +9513,17 @@ Every page is built from two levels:
    - **Calendar** -- Display an event calendar
    - **FAQ** -- Accordion-style question and answer blocks
    - **Video** -- Embed a video by URL
+   - **Groups Browser** -- A filterable directory of all church groups with optional search, category filter, and label filter
+   - **Icon Feature** -- An icon with a title and short description, for feature or ministry highlights
+   - **Gallery** -- A multi-photo grid or masonry layout
+   - **Testimonial** -- One or more quotes with author name, role, and photo
+   - **Social Icons** -- Linked icons for your church's social media profiles
+   - **Countdown** -- A timer counting down to a date or a weekly service time
+   - **Stats** -- A row of large numbers with labels (members, years, campuses)
+   - **Campaign Progress** -- A live progress bar for a giving campaign, showing the total raised toward a fund goal
+   - **Staff Grid** -- Photo cards for the members of a group; the group must have its **public roster** option turned on
+   - **Service Times** -- Your campuses' service schedule, pulled automatically from attendance setup
+   - **Sermons** -- Your sermon library, as a full browser or a grid, list, or featured-latest layout
 3. Configure the element using the settings panel that appears.
 
 ### Reordering Content
@@ -7957,9 +9536,10 @@ Drag sections or elements using the handle icon (six dots) on the left side of e
 
 Click any section to open its style panel. You can set:
 
-- **Background** -- Solid color, gradient, or image
+- **Background** -- Solid color, gradient, or image. When using an image background, a **Focal Point** picker lets you click to set which part of the image stays centered as the section scales, and an **Overlay** color option lets you add a semi-transparent tint over the image to improve text legibility.
 - **Padding** -- Top and bottom spacing inside the section
 - **Width** -- Full-width or centered/contained
+- **Dividers** -- Decorative shape dividers (wave, slant, curve, triangle, and more) on the top or bottom edge of the section, with color, height, and flip options
 
 ### Element Styles
 
@@ -7995,9 +9575,27 @@ You can also restore the page to an earlier snapshot. Click **History** in the t
 Restoring a snapshot replaces your current page content with the snapshot version. This cannot be undone with the standard undo button. Save a snapshot of your current state before restoring an old one if you want to keep the option to return.
 :::
 
-## Saving Your Work
+## Saving and Publishing
 
-Changes are saved automatically as you work. A status indicator in the toolbar shows whether your changes have been saved. You can also click **Save** at any time to force a save.
+Changes are saved automatically as you work. A status indicator in the toolbar shows whether your changes have been saved.
+
+### Draft and published state
+
+Pages can have a **published** state, which controls when visitors see your changes. The toolbar displays a status chip showing the current state:
+
+- **Live on Save** -- The page does not use a publish workflow. Every saved change goes live immediately. This is the default for new pages.
+- **Unpublished Changes** -- The page has been published before, but you have made changes since the last publish. Visitors still see the previously published version.
+- **Published** -- The page is live and your saved content matches what visitors see.
+
+To publish your changes, click the **Publish** button in the toolbar. The page becomes live immediately.
+
+To revert to the last published version without affecting what visitors see, open the overflow menu (⋮) and click **Discard Changes**.
+
+To take a page offline entirely, open the overflow menu and click **Unpublish**. Visitors will no longer see that page until you publish it again.
+
+:::tip
+Use the draft/publish workflow when you want to prepare a page -- for example, for an upcoming event -- and only make it live at the right moment. Build and preview the page, then click Publish when you are ready.
+:::
 
 ## Related Articles
 

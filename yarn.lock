@@ -631,9 +631,9 @@ __metadata:
   languageName: node
   linkType: hard
 
-"@churchapps/apihelper@npm:^0.7.0":
-  version: 0.7.0
-  resolution: "@churchapps/apihelper@npm:0.7.0"
+"@churchapps/apihelper@npm:^0.7.1":
+  version: 0.7.1
+  resolution: "@churchapps/apihelper@npm:0.7.1"
   dependencies:
     "@aws-sdk/client-s3": "npm:^3.862.0"
     "@aws-sdk/client-ses": "npm:^3.862.0"
@@ -650,13 +650,13 @@ __metadata:
     winston-cloudwatch: "npm:^6.3.0"
   peerDependencies:
     "@churchapps/helpers": ^1.5.5
-  checksum: 10c0/e2339f3b0966a5e8a5e81635d98ed9458f718b9547fc70e9da3231f99b9b9fc234566e7093cbebcd7f4dea41ac2b5cb74b655217532c55b706bbaa32bebb83c7
+  checksum: 10c0/835e66cf33e03e9e88b42f553d6a5c172e633ec427b979152a03c4c0c65aa9bba20827e95ca7a009e8c076f08eed97eb835229058644ccd2a28a921ee9ed3ad4
   languageName: node
   linkType: hard
 
-"@churchapps/helpers@npm:^1.9.0":
-  version: 1.9.0
-  resolution: "@churchapps/helpers@npm:1.9.0"
+"@churchapps/helpers@npm:^1.10.1":
+  version: 1.10.1
+  resolution: "@churchapps/helpers@npm:1.10.1"
   dependencies:
     dayjs: "npm:^1.11.20"
   peerDependencies:
@@ -664,7 +664,7 @@ __metadata:
   peerDependenciesMeta:
     rrule:
       optional: true
-  checksum: 10c0/c41bdefba1b5ce7668a0648e95e4e4b14684dd02c63fe147b1587d2dc1691966034afe59b29e1f4a4a6759c3fc69583173c037c8b606bb22e94c197c30454324
+  checksum: 10c0/d2abb501fd8100231bd5e2142a4029e0189565958eb160a7b8c1ef9670599ed80660cb33a6a89fdd05003086843a76484ec14e9c81ad50ab3d76a31ac579d026
   languageName: node
   linkType: hard
 
@@ -2338,8 +2338,8 @@ __metadata:
   version: 0.0.0-use.local
   resolution: "ask-api@workspace:."
   dependencies:
-    "@churchapps/apihelper": "npm:^0.7.0"
-    "@churchapps/helpers": "npm:^1.9.0"
+    "@churchapps/apihelper": "npm:^0.7.1"
+    "@churchapps/helpers": "npm:^1.10.1"
     "@codegenie/serverless-express": "npm:^4.16.0"
     "@eslint/eslintrc": "npm:^3.3.3"
     "@eslint/js": "npm:^9.39.2"
