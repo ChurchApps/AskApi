@@ -3,6 +3,7 @@ import express from "express";
 import { AskBaseController } from "./AskBaseController.js";
 import { OpenAiHelper } from "../helpers/index.js";
 import { WorkflowHelper } from "../helpers/WorkflowHelper.js";
+import { sessionToken } from "../helpers/ApiCallGuard.js";
 
 @controller("/queryV2")
 export class QueryV2Controller extends AskBaseController {
@@ -26,19 +27,19 @@ export class QueryV2Controller extends AskBaseController {
 
   @httpPost("/executeApiCalls")
   public async executeApiCalls(req: express.Request<{}, {}, any>, res: express.Response): Promise<any> {
-    return this.actionWrapper(req, res, async (_au) => {
-      const { question, jwts } = req.body;
+    return this.actionWrapper(req, res, async (au) => {
+      const { question } = req.body;
       await OpenAiHelper.initialize();
-      return WorkflowHelper.executeApiCalls(question, jwts);
+      return WorkflowHelper.executeApiCalls(question, sessionToken(au, req.body));
     });
   }
 
   @httpPost("/answerQuestion")
   public async answerQuestion(req: express.Request<{}, {}, any>, res: express.Response): Promise<any> {
-    return this.actionWrapper(req, res, async (_au) => {
-      const { question, jwts } = req.body;
+    return this.actionWrapper(req, res, async (au) => {
+      const { question } = req.body;
       await OpenAiHelper.initialize();
-      return WorkflowHelper.answerQuestion(question, jwts);
+      return WorkflowHelper.answerQuestion(question, sessionToken(au, req.body));
     });
   }
 }

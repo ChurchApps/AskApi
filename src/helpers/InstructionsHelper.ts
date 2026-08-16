@@ -4,9 +4,10 @@ import path from "path";
 export class InstructionsHelper {
   static getDetermineRoutesInstructions(userQuery: string): string {
     let contents = this.readFile("/config/instructions/determineRoutes.md");
-    const routeIndex = this.readFile("/config/optimized/route-index.json");
+    const routeIndex = JSON.parse(this.readFile("/config/optimized/route-index.json"));
+    const getRoutes = Array.isArray(routeIndex) ? routeIndex.filter((r: any) => r.method === "GET") : [];
     contents = contents.replace("{query}", userQuery);
-    contents = contents.replace("{routes}", routeIndex);
+    contents = contents.replace("{routes}", JSON.stringify(getRoutes));
     return contents;
   }
 

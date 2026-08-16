@@ -2,7 +2,7 @@ The user asked:
 
 {query}
 
-Determine which routes are needed to answer this question. The routes available are:
+Determine which GET routes are needed to answer this question. Only select GET routes. The routes available are:
 
 {routes}
 
