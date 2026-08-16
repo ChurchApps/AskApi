@@ -1,5 +1,6 @@
 import axios from "axios";
 import { executionToken, selectApiCalls, validateApiCall } from "./ApiCallGuard.js";
+import { Environment } from "./Environment.js";
 
 export class DataHelper {
   static jsonToCsv(data: any[]): string {
@@ -174,16 +175,7 @@ export class DataHelper {
   static async executeApiCalls(apiCalls: any[], jwt: unknown, resultType: "csv" | "json" = "csv") {
     const results: any[] = [];
     const allowedCalls = selectApiCalls(apiCalls);
-
-    const baseUrls: { [key: string]: string } = {
-      membershipapi: "https://membershipapi.staging.churchapps.org",
-      attendanceapi: "https://attendanceapi.staging.churchapps.org",
-      contentapi: "https://contentapi.staging.churchapps.org",
-      doingapi: "https://doingapi.staging.churchapps.org",
-      givingapi: "https://givingapi.staging.churchapps.org",
-      messagingapi: "https://messagingapi.staging.churchapps.org",
-      reportingapi: "https://reportingapi.staging.churchapps.org"
-    };
+    const baseUrls = Environment.apiHosts();
 
     for (const apiCall of allowedCalls) {
       const result = await DataHelper.executeSingleApiCall(apiCall, jwt, baseUrls);

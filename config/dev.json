@@ -4,7 +4,12 @@
   "contentRoot": "http://localhost:3403",
   "mailSystem": "",
   "membershipApi": "http://localhost:8083",
+  "attendanceApi": "http://localhost:8085",
+  "contentApi": "http://localhost:8082",
+  "doingApi": "http://localhost:8088",
+  "givingApi": "http://localhost:8084",
   "s3Bucket": "",
   "messagingApi": "http://localhost:8086",
+  "reportingApi": "http://localhost:8089",
   "aiProvider": "openrouter"
 }
