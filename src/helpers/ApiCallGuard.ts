@@ -4,9 +4,15 @@ export const MAX_PATH_LENGTH = 500;
 
 export const PATH_PREFIXES: { [key: string]: string[] } = {
   membershipapi: ["/people", "/groups", "/forms", "/churches"],
-  attendanceapi: ["/attendancerecords", "/campuses", "/services", "/servicetimes", "/sessions", "/visits", "/visitsessions", "/groupservicetimes"],
-  contentapi: ["/events", "/sermons", "/songs", "/pages", "/files", "/blocks", "/bibles", "/arrangements", "/arrangementKeys", "/curatedCalendars", "/curatedEvents"],
-  doingapi: ["/tasks", "/plans", "/planItems", "/assignments", "/positions", "/times", "/automations", "/actions", "/blockoutDates", "/conditions", "/conjunctions"],
+  attendanceapi: [
+    "/attendancerecords", "/campuses", "/services", "/servicetimes", "/sessions", "/visits", "/visitsessions", "/groupservicetimes"
+  ],
+  contentapi: [
+    "/events", "/sermons", "/songs", "/pages", "/files", "/blocks", "/bibles", "/arrangements", "/arrangementKeys", "/curatedCalendars", "/curatedEvents"
+  ],
+  doingapi: [
+    "/tasks", "/plans", "/planItems", "/assignments", "/positions", "/times", "/automations", "/actions", "/blockoutDates", "/conditions", "/conjunctions"
+  ],
   givingapi: ["/funddonations", "/donations", "/funds", "/donationbatches", "/subscriptions", "/customers"],
   messagingapi: ["/conversations", "/messages", "/notifications", "/privateMessages", "/devices", "/notificationPreferences"],
   reportingapi: ["/reports"]
@@ -42,14 +48,14 @@ export function isPathAllowed(apiName: string, rawPath: string): boolean {
   return prefixes.some((prefix) => pathname === prefix || pathname.startsWith(prefix + "/"));
 }
 
-export function validateApiCall(apiCall: any): { ok: true; apiName: string } | { ok: false; error: string } {
-  if (!apiCall || typeof apiCall !== "object") return { ok: false, error: "Invalid API call" };
+export function validateApiCall(apiCall: any): { ok: boolean; apiName: string; error: string } {
+  if (!apiCall || typeof apiCall !== "object") return { ok: false, apiName: "", error: "Invalid API call" };
   const apiName = normalizeApiName(apiCall.apiName);
-  if (!PATH_PREFIXES[apiName]) return { ok: false, error: `Unknown API: ${apiCall.apiName}` };
+  if (!PATH_PREFIXES[apiName]) return { ok: false, apiName, error: `Unknown API: ${apiCall.apiName}` };
   const method = String(apiCall.method || "").trim().toUpperCase();
-  if (method !== ALLOWED_METHOD) return { ok: false, error: `Method not allowed: ${apiCall.method}` };
-  if (!isPathAllowed(apiName, String(apiCall.path || ""))) return { ok: false, error: `Path not allowed: ${apiCall.path}` };
-  return { ok: true, apiName };
+  if (method !== ALLOWED_METHOD) return { ok: false, apiName, error: `Method not allowed: ${apiCall.method}` };
+  if (!isPathAllowed(apiName, String(apiCall.path || ""))) return { ok: false, apiName, error: `Path not allowed: ${apiCall.path}` };
+  return { ok: true, apiName, error: "" };
 }
 
 export function selectApiCalls(apiCalls: any[]): any[] {

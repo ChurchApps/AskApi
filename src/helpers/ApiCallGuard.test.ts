@@ -15,13 +15,13 @@ describe("ApiCallGuard", () => {
   it("rejects POST", () => {
     const check = validateApiCall({ apiName: "membershipapi", method: "POST", path: "/people" });
     assert.equal(check.ok, false);
-    if (!check.ok) assert.match(check.error, /Method not allowed/i);
+    assert.match(check.error, /Method not allowed/i);
   });
 
   it("rejects an unknown path", () => {
     const check = validateApiCall({ apiName: "membershipapi", method: "GET", path: "/users/login" });
     assert.equal(check.ok, false);
-    if (!check.ok) assert.match(check.error, /Path not allowed/i);
+    assert.match(check.error, /Path not allowed/i);
   });
 
   it("ignores body jwts and uses au.jwt only", () => {
