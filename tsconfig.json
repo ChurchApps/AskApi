@@ -32,5 +32,8 @@
     "src/**/*",
     "tools/**/*",
     "LambdaEntry.js"
+  ],
+  "exclude": [
+    "src/**/__tests__/**"
   ]
 }

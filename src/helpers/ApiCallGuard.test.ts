@@ -1,6 +1,5 @@
 import assert from "node:assert/strict";
-import { describe, it } from "node:test";
-import { DataHelper } from "./DataHelper.js";
+import { describe, it, mock } from "node:test";
 import {
   executionToken,
   MAX_API_CALLS,
@@ -9,7 +8,30 @@ import {
   validateApiCall
 } from "./ApiCallGuard.js";
 
+mock.module("@churchapps/apihelper", {
+  namedExports: {
+    AwsHelper: { readParameter: async () => "" },
+    EnvironmentBase: class EnvironmentBase {
+      static appEnv = "";
+      static async initBase() { return {}; }
+    }
+  }
+});
+
+const { DataHelper } = await import("./DataHelper.js");
+const { Environment } = await import("./Environment.js");
+
 const baseUrls = { membershipapi: "https://example.invalid" };
+
+const applyExampleHosts = () => {
+  Environment.membershipApi = "https://example.invalid";
+  Environment.attendanceApi = "https://example.invalid";
+  Environment.contentApi = "https://example.invalid";
+  Environment.doingApi = "https://example.invalid";
+  Environment.givingApi = "https://example.invalid";
+  Environment.messagingApi = "https://example.invalid";
+  Environment.reportingApi = "https://example.invalid";
+};
 
 describe("ApiCallGuard", () => {
   it("rejects POST", () => {
@@ -69,6 +91,7 @@ describe("DataHelper execution guard", () => {
   });
 
   it("skips POST calls in a batch", async () => {
+    applyExampleHosts();
     const results = await DataHelper.executeApiCalls([{ apiName: "membershipapi", method: "POST", path: "/people" }], "session-jwt", "json");
     assert.deepEqual(results, []);
   });

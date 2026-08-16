@@ -5,7 +5,12 @@
   "fileStore": "S3",
   "mailSystem": "SES",
   "membershipApi": "https://membershipapi.staging.churchapps.org",
+  "attendanceApi": "https://attendanceapi.staging.churchapps.org",
+  "contentApi": "https://contentapi.staging.churchapps.org",
+  "doingApi": "https://doingapi.staging.churchapps.org",
+  "givingApi": "https://givingapi.staging.churchapps.org",
   "s3Bucket": "staging-churchapps-ask",
   "messagingApi": "https://messagingapi.staging.churchapps.org",
+  "reportingApi": "https://reportingapi.staging.churchapps.org",
   "aiProvider": "openrouter"
 }

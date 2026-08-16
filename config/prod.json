@@ -5,7 +5,12 @@
   "fileStore": "S3",
   "mailSystem": "SES",
   "membershipApi": "https://membershipapi.churchapps.org",
+  "attendanceApi": "https://attendanceapi.churchapps.org",
+  "contentApi": "https://contentapi.churchapps.org",
+  "doingApi": "https://doingapi.churchapps.org",
+  "givingApi": "https://givingapi.churchapps.org",
   "s3Bucket": "churchapps-ask",
   "messagingApi": "https://messagingapi.churchapps.org",
+  "reportingApi": "https://reportingapi.churchapps.org",
   "aiProvider": "openrouter"
 }
