@@ -13,12 +13,13 @@ I want you to return a list of API calls to make in the following format:
 [
 {
 "apiName": "MembershipApi",
-"method": "POST",
-"path": "/people/advancedSearch",
-"body": "[{\"field\":\"displayName\",\"value\":\"Jeremy\",\"operator\":\"contains\"}]",
+"method": "GET",
+"path": "/people/search?term=Jeremy",
 "fields": ["id", "name", "email"]
 }
 ]
+
+Only GET is allowed. Do not emit POST, PUT, PATCH, or DELETE.
 
 IMPORTANT: The "fields" property is REQUIRED and should contain only the fields necessary to answer the user's question. This dramatically reduces the data size. Consider what fields are needed:
 - For counting: often just ["id"] is enough
@@ -30,14 +31,7 @@ IMPORTANT: The "fields" property is REQUIRED and should contain only the fields 
 
 Common person fields: id, name (object with first/last/display), email, phone, birthDate, age, gender, maritalStatus, membershipStatus, householdId, householdRole, photoUrl, address
 
-IMPORTANT: For /people/advancedSearch, the body must be an array of SearchCondition objects with this exact format:
-[
-  {
-    "field": "fieldName",
-    "value": "searchValue", 
-    "operator": "operatorType"
-  }
-]
+IMPORTANT: For people search use GET /people/search?term=...
 
 Available search fields: displayName, age, gender, maritalStatus, membershipStatus, householdRole
 Available operators: equals, notEquals, contains, startsWith, endsWith, greaterThan, lessThan, greaterThanEqual, lessThanEqual

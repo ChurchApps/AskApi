@@ -1,4 +1,5 @@
 import axios from "axios";
+import { executionToken, selectApiCalls, validateApiCall } from "./ApiCallGuard.js";
 
 export class DataHelper {
   static jsonToCsv(data: any[]): string {
@@ -124,16 +125,20 @@ export class DataHelper {
     return toReturn;
   }
 
-  static async executeSingleApiCall(apiCall: any, jwts: any, baseUrls: { [key: string]: string }) {
-    const apiName = apiCall.apiName.toLowerCase();
-    const baseUrl = baseUrls[apiName];
+  static async executeSingleApiCall(apiCall: any, jwt: unknown, baseUrls: { [key: string]: string }) {
+    const check = validateApiCall(apiCall);
+    if (!check.ok) {
+      console.error(check.error);
+      return { success: false, error: check.error, apiCall: apiCall };
+    }
 
+    const baseUrl = baseUrls[check.apiName];
     if (!baseUrl) {
       console.error(`Unknown API: ${apiCall.apiName}`);
       return { success: false, error: `Unknown API: ${apiCall.apiName}`, apiCall: apiCall };
     }
 
-    const token = this.getApiToken(apiName, jwts);
+    const token = executionToken(jwt);
     if (!token) {
       console.error(`No token found for ${apiCall.apiName}`);
       return { success: false, error: `No token provided for ${apiCall.apiName}`, apiCall: apiCall };
@@ -166,24 +171,10 @@ export class DataHelper {
     }
   }
 
-  private static getApiToken(apiName: string, jwts: any): string {
-    console.log("Getting token for API:", apiName);
-    const tokenMap: { [key: string]: string } = {
-      membershipapi: jwts.membershipapi,
-      attendanceapi: jwts.attendanceapi,
-      contentapi: jwts.contentapi,
-      doingapi: jwts.doingapi,
-      givingapi: jwts.givingapi,
-      messagingapi: jwts.messagingapi,
-      reportingapi: jwts.reportingapi
-    };
-    return tokenMap[apiName] || "";
-  }
-
-  static async executeApiCalls(apiCalls: any[], jwts: any, resultType: "csv" | "json" = "csv") {
+  static async executeApiCalls(apiCalls: any[], jwt: unknown, resultType: "csv" | "json" = "csv") {
     const results: any[] = [];
+    const allowedCalls = selectApiCalls(apiCalls);
 
-    // Base URLs for different APIs
     const baseUrls: { [key: string]: string } = {
       membershipapi: "https://membershipapi.staging.churchapps.org",
       attendanceapi: "https://attendanceapi.staging.churchapps.org",
@@ -194,13 +185,12 @@ export class DataHelper {
       reportingapi: "https://reportingapi.staging.churchapps.org"
     };
 
-    // Execute each API call
-    for (const apiCall of apiCalls) {
-      const result = await DataHelper.executeSingleApiCall(apiCall, jwts, baseUrls);
+    for (const apiCall of allowedCalls) {
+      const result = await DataHelper.executeSingleApiCall(apiCall, jwt, baseUrls);
       results.push(result);
     }
 
-    console.log(`Executed ${apiCalls.length} API calls, ${results.filter((r) => r.success).length} successful`);
+    console.log(`Executed ${allowedCalls.length} API calls, ${results.filter((r) => r.success).length} successful`);
 
     // Extract just the data arrays from successful calls and convert to CSV
     const dataArrays = results.filter((r) => r.success).map((r) => r.data);
@@ -225,32 +215,18 @@ export class DataHelper {
   }
 
   private static buildRequestConfig(apiCall: any, baseUrl: string, token: string) {
-    const url = `${baseUrl}${apiCall.path}`;
+    const path = String(apiCall.path || "");
+    const url = `${baseUrl}${path}`;
     const requestConfig: any = {
-      method: apiCall.method.toLowerCase(),
+      method: "get",
       url: url,
-      headers: {
-        Authorization: `Bearer ${token}`,
-        "Content-Type": "application/json"
-      },
-      timeout: 15000
+      headers: { Authorization: `Bearer ${token}`, "Content-Type": "application/json" },
+      timeout: 15000,
+      maxContentLength: 1000000,
+      maxBodyLength: 0
     };
 
-    // Add body data if present and it's a POST/PUT/PATCH request
-    if (apiCall.body && ["post", "put", "patch"].includes(requestConfig.method)) {
-      try {
-        requestConfig.data = typeof apiCall.body === "string" ? JSON.parse(apiCall.body) : apiCall.body;
-      } catch (error) {
-        console.error(`Failed to parse body for ${apiCall.apiName} ${apiCall.path}:`, error);
-        requestConfig.data = apiCall.body;
-      }
-    }
-
-    console.log(`Executing API call: ${apiCall.method} ${url}`);
-    if (requestConfig.data) {
-      console.log("Request body:", JSON.stringify(requestConfig.data, null, 2));
-    }
-
+    console.log(`Executing API call: GET ${url}`);
     return requestConfig;
   }
 }

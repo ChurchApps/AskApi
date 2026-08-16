@@ -48,14 +48,14 @@ export class WorkflowHelper {
     }
   }
 
-  static async executeApiCalls(userQuery: string, jwts: any) {
+  static async executeApiCalls(userQuery: string, jwt: string) {
     const apiCallsText = await WorkflowHelper.formApiCalls(userQuery);
     const apiCalls = this.parseApiCallsJson(apiCallsText);
-    return DataHelper.executeApiCalls(apiCalls, jwts);
+    return DataHelper.executeApiCalls(apiCalls, jwt);
   }
 
-  static async answerQuestion(userQuery: string, jwts: any) {
-    const data = await WorkflowHelper.executeApiCalls(userQuery, jwts);
+  static async answerQuestion(userQuery: string, jwt: string) {
+    const data = await WorkflowHelper.executeApiCalls(userQuery, jwt);
     const fullQuestion = InstructionsHelper.getAnswerQuestionInstructions(userQuery, data);
     const result = await OpenAiHelper.executeText(
       "Provide a simple short answer to the user's question.  No additional conversation.",
@@ -65,9 +65,9 @@ export class WorkflowHelper {
     return result;
   }
 
-  static async queryPeople(userQuery: string, jwts: any) {
-    const prepQuery = userQuery + " - Find people ids matching this query.  Use /people/advancedSearch when possible.";
-    const data = await WorkflowHelper.executeApiCalls(prepQuery, jwts);
+  static async queryPeople(userQuery: string, jwt: string) {
+    const prepQuery = userQuery + " - Find people ids matching this query.  Use GET /people/search when possible.";
+    const data = await WorkflowHelper.executeApiCalls(prepQuery, jwt);
 
     const fullQuestion = InstructionsHelper.getQueryPeopleInstructions(userQuery, data);
     const result = await OpenAiHelper.executeText(

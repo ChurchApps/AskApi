@@ -3,18 +3,17 @@ import express from "express";
 import { AskBaseController } from "./AskBaseController.js";
 import { OpenAiHelper, InstructionsHelper, ArrayHelper } from "../helpers/index.js";
 import { WorkflowHelper } from "../helpers/WorkflowHelper.js";
+import { DataHelper } from "../helpers/DataHelper.js";
+import { sessionToken, validateApiCall } from "../helpers/ApiCallGuard.js";
 
 @controller("/query")
 export class QueryController extends AskBaseController {
   @httpPost("/peopleOld")
   public async queryPeopleOld(req: express.Request<{}, {}, any>, res: express.Response): Promise<any> {
-    return this.actionWrapper(req, res, async (_au) => {
-      const { question, jwts } = req.body;
+    return this.actionWrapper(req, res, async (au) => {
+      const { question } = req.body;
       await OpenAiHelper.initialize();
-
-      const result = await WorkflowHelper.queryPeople(question, jwts);
-
-      return result;
+      return WorkflowHelper.queryPeople(question, sessionToken(au, req.body));
     });
   }
 
@@ -59,11 +58,9 @@ export class QueryController extends AskBaseController {
           console.log("Executing additional API calls:", result.additionalApiCalls.length);
 
           const validApiCalls = result.additionalApiCalls.filter((apiCall: any) => {
-            const isValid = apiCall.apiName && apiCall.method && apiCall.path;
-            if (!isValid) {
-              console.warn("Invalid API call structure:", apiCall);
-            }
-            return isValid;
+            const check = validateApiCall(apiCall);
+            if (!check.ok) console.warn("Rejected API call:", check.error, apiCall);
+            return check.ok;
           });
 
           if (validApiCalls.length === 0) {
@@ -78,20 +75,7 @@ export class QueryController extends AskBaseController {
           }
 
           if (validApiCalls.length > 0) {
-            const { DataHelper } = await import("../helpers/DataHelper");
-
-            // TODO: Get the JWT from the user, currently there are no permissions in the au object
-            const jwts = {
-              membershipapi: au.jwt,
-              attendanceapi: au.jwt,
-              contentapi: au.jwt,
-              doingapi: au.jwt,
-              givingapi: au.jwt,
-              messagingapi: au.jwt,
-              reportingapi: au.jwt
-            };
-
-            const apiResults = await DataHelper.executeApiCalls(validApiCalls, jwts, "json");
+            const apiResults = await DataHelper.executeApiCalls(validApiCalls, sessionToken(au, req.body), "json");
 
             result.apiCallResults = apiResults;
 

@@ -30,7 +30,7 @@
     "start": "node .",
     "playground": "cd playground && npm start",
     "dev:with-playground": "npm-run-all --parallel playground dev",
-    "test": "echo \"Error: no test specified\" && exit 1",
+    "test": "node --import ./register.js --test src/helpers/*.test.ts",
     "serverless-local": "serverless invoke local -f api",
     "test-local": "node scripts/test-local.js",
     "offline": "serverless offline --httpPort 3000"
