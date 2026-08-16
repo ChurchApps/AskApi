@@ -1,29 +1,42 @@
-import { describe, it, beforeEach } from "node:test";
+import { describe, it, before, beforeEach, mock } from "node:test";
 import assert from "node:assert/strict";
-import { DataHelper } from "../DataHelper.js";
-import { Environment } from "../Environment.js";
+import fs from "fs";
+import path from "path";
 
-const prodHosts = {
-  membershipApi: "https://membershipapi.churchapps.org",
-  attendanceApi: "https://attendanceapi.churchapps.org",
-  contentApi: "https://contentapi.churchapps.org",
-  doingApi: "https://doingapi.churchapps.org",
-  givingApi: "https://givingapi.churchapps.org",
-  messagingApi: "https://messagingapi.churchapps.org",
-  reportingApi: "https://reportingapi.churchapps.org"
-};
+mock.module("@churchapps/apihelper", {
+  namedExports: {
+    AwsHelper: { readParameter: async () => "" },
+    EnvironmentBase: class EnvironmentBase {
+      static appEnv = "";
+      static async initBase(environment: string) {
+        const data = JSON.parse(fs.readFileSync(path.resolve(process.cwd(), "config", `${environment}.json`), "utf8"));
+        EnvironmentBase.appEnv = data.appEnv;
+        return data;
+      }
+    }
+  }
+});
 
-const applyHosts = (hosts: Partial<typeof prodHosts>) => {
-  Environment.membershipApi = hosts.membershipApi as string;
-  Environment.attendanceApi = hosts.attendanceApi as string;
-  Environment.contentApi = hosts.contentApi as string;
-  Environment.doingApi = hosts.doingApi as string;
-  Environment.givingApi = hosts.givingApi as string;
-  Environment.messagingApi = hosts.messagingApi as string;
-  Environment.reportingApi = hosts.reportingApi as string;
+const { DataHelper } = await import("../DataHelper.js");
+const { Environment } = await import("../Environment.js");
+
+const applyHosts = (hosts: Record<string, string>) => {
+  Environment.membershipApi = hosts.membershipApi;
+  Environment.attendanceApi = hosts.attendanceApi;
+  Environment.contentApi = hosts.contentApi;
+  Environment.doingApi = hosts.doingApi;
+  Environment.givingApi = hosts.givingApi;
+  Environment.messagingApi = hosts.messagingApi;
+  Environment.reportingApi = hosts.reportingApi;
 };
 
 describe("executeApiCalls hosts", () => {
+  let prodHosts: Record<string, string>;
+
+  before(() => {
+    prodHosts = JSON.parse(fs.readFileSync(path.resolve(process.cwd(), "config/prod.json"), "utf8"));
+  });
+
   beforeEach(() => {
     Environment.appEnv = "prod";
     applyHosts(prodHosts);
@@ -32,10 +45,10 @@ describe("executeApiCalls hosts", () => {
   it("does not use staging hosts when env is prod", async () => {
     const seen: string[] = [];
     const original = DataHelper.executeSingleApiCall;
-    DataHelper.executeSingleApiCall = async (_apiCall: any, _jwts: any, baseUrls: { [key: string]: string }) => {
+    DataHelper.executeSingleApiCall = (async (_apiCall: any, _jwts: any, baseUrls: { [key: string]: string }) => {
       seen.push(...Object.values(baseUrls));
       return { success: true, data: [] };
-    };
+    }) as typeof DataHelper.executeSingleApiCall;
     try {
       await DataHelper.executeApiCalls([{ apiName: "membershipapi", method: "GET", path: "/people" }], { membershipapi: "t" }, "json");
     } finally {
@@ -60,9 +73,6 @@ describe("Environment hosts", () => {
   });
 
   it("prod init does not configure staging hosts", async () => {
-    process.env.CONNECTION_STRING = "mysql://x";
-    process.env.ENCRYPTION_KEY = "x";
-    process.env.JWT_SECRET = "x";
     process.env.OPENAI_API_KEY = "x";
     process.env.OPENROUTER_API_KEY = "x";
     await Environment.init("prod");
