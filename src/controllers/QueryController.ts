@@ -11,6 +11,7 @@ export class QueryController extends AskBaseController {
   @httpPost("/peopleOld")
   public async queryPeopleOld(req: express.Request<{}, {}, any>, res: express.Response): Promise<any> {
     return this.actionWrapper(req, res, async (au) => {
+      if (!this.hasPeopleView(au)) return this.denyAccess(["Unauthorized"]);
       const { question } = req.body;
       await OpenAiHelper.initialize();
       return WorkflowHelper.queryPeople(question, sessionToken(au, req.body));
@@ -20,6 +21,8 @@ export class QueryController extends AskBaseController {
   @httpPost("/people")
   public async peopleSearch(req: express.Request<{}, {}, any>, res: express.Response): Promise<any> {
     return this.actionWrapper(req, res, async (au) => {
+      if (!this.hasPeopleView(au)) return this.denyAccess(["Unauthorized"]);
+
       const { query } = req.body;
 
       if (!query) {
@@ -141,7 +144,8 @@ export class QueryController extends AskBaseController {
 
   @httpPost("/people-test")
   public async peopleSearchTest(req: express.Request<{}, {}, any>, res: express.Response): Promise<any> {
-    return this.actionWrapper(req, res, async (_au) => {
+    return this.actionWrapper(req, res, async (au) => {
+      if (!this.hasPeopleView(au)) return this.denyAccess(["Unauthorized"]);
       const testQueries = [
         "Find all men",
         "Show me teenagers",

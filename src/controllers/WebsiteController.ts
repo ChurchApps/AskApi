@@ -8,7 +8,7 @@ import { WebsiteHelper } from "../helpers/WebsiteHelper.js";
 export class WebsiteController extends AskBaseController {
   @httpPost("/createPage")
   public async createPage(req: express.Request<{}, {}, any>, res: express.Response): Promise<any> {
-    return this.actionWrapper(req, res, async (au) => {
+    return this.actionWrapperEdit(req, res, async (au) => {
       const { description, title, url } = req.body;
       await OpenAiHelper.initialize();
       const pageData = await WebsiteHelper.generatePageFromDescription(description, au.churchId, title, url);
@@ -22,7 +22,7 @@ export class WebsiteController extends AskBaseController {
 
   @httpPost("/generatePage")
   public async generatePage(req: express.Request<{}, {}, any>, res: express.Response): Promise<any> {
-    return this.actionWrapper(req, res, async (au) => {
+    return this.actionWrapperEdit(req, res, async (au) => {
       const { prompt, churchContext, availableBlocks, availableElementTypes, constraints } = req.body;
 
       if (!prompt || typeof prompt !== "string" || prompt.trim().length < 10) {
@@ -47,7 +47,7 @@ export class WebsiteController extends AskBaseController {
   /** Generates lightweight page outline as first step of multi-step page generation. */
   @httpPost("/generatePageOutline")
   public async generatePageOutline(req: express.Request<{}, {}, any>, res: express.Response): Promise<any> {
-    return this.actionWrapper(req, res, async (_au) => {
+    return this.actionWrapperEdit(req, res, async (_au) => {
       const { prompt, churchContext, availableElementTypes, constraints } = req.body;
 
       if (!prompt || typeof prompt !== "string" || prompt.trim().length < 10) {
@@ -70,7 +70,7 @@ export class WebsiteController extends AskBaseController {
   /** Generates full content for a single section based on outline; second step of multi-step generation. */
   @httpPost("/generateSection")
   public async generateSection(req: express.Request<{}, {}, any>, res: express.Response): Promise<any> {
-    return this.actionWrapper(req, res, async (_au) => {
+    return this.actionWrapperEdit(req, res, async (_au) => {
       const { sectionOutline, churchContext, availableElementTypes, pageContext } = req.body;
 
       if (!sectionOutline || typeof sectionOutline !== "object") {
@@ -97,7 +97,7 @@ export class WebsiteController extends AskBaseController {
   /** Generates full multi-page site plan from church details for AI onboarding. */
   @httpPost("/generateSite")
   public async generateSite(req: express.Request<{}, {}, any>, res: express.Response): Promise<any> {
-    return this.actionWrapper(req, res, async (_au) => {
+    return this.actionWrapperEdit(req, res, async (_au) => {
       const { churchName, denomination, description, tone, audiences, serviceTimesText, availableElementTypes, planOnly } = req.body;
 
       if (!description || typeof description !== "string" || description.trim().length < 10) {
@@ -126,7 +126,7 @@ export class WebsiteController extends AskBaseController {
   /** Rewrites text fields of a section, preserving structure. */
   @httpPost("/rewriteSection")
   public async rewriteSection(req: express.Request<{}, {}, any>, res: express.Response): Promise<any> {
-    return this.actionWrapper(req, res, async (_au) => {
+    return this.actionWrapperEdit(req, res, async (_au) => {
       const { section, instruction, churchName, availableElementTypes } = req.body;
 
       if (!section || typeof section !== "object" || !Array.isArray(section.elements)) {
@@ -142,7 +142,7 @@ export class WebsiteController extends AskBaseController {
   /** Generates concise alt text for batch of image URLs using vision model. */
   @httpPost("/generateAltText")
   public async generateAltText(req: express.Request<{}, {}, any>, res: express.Response): Promise<any> {
-    return this.actionWrapper(req, res, async (_au) => {
+    return this.actionWrapperEdit(req, res, async (_au) => {
       const { imageUrls, pageContext } = req.body;
 
       if (!Array.isArray(imageUrls) || imageUrls.length === 0) {
@@ -163,7 +163,7 @@ export class WebsiteController extends AskBaseController {
   /** Generates SEO meta description (<=155 chars) for a page. */
   @httpPost("/generateMetaDescription")
   public async generateMetaDescription(req: express.Request<{}, {}, any>, res: express.Response): Promise<any> {
-    return this.actionWrapper(req, res, async (_au) => {
+    return this.actionWrapperEdit(req, res, async (_au) => {
       const { pageTitle, pageContentText, churchName } = req.body;
 
       if (!pageTitle || typeof pageTitle !== "string") {
