@@ -28,6 +28,7 @@ export class QueryV2Controller extends AskBaseController {
   @httpPost("/executeApiCalls")
   public async executeApiCalls(req: express.Request<{}, {}, any>, res: express.Response): Promise<any> {
     return this.actionWrapper(req, res, async (au) => {
+      if (!this.hasPeopleView(au)) return this.denyAccess(["Unauthorized"]);
       const { question } = req.body;
       await OpenAiHelper.initialize();
       return WorkflowHelper.executeApiCalls(question, sessionToken(au, req.body));
@@ -37,6 +38,7 @@ export class QueryV2Controller extends AskBaseController {
   @httpPost("/answerQuestion")
   public async answerQuestion(req: express.Request<{}, {}, any>, res: express.Response): Promise<any> {
     return this.actionWrapper(req, res, async (au) => {
+      if (!this.hasPeopleView(au)) return this.denyAccess(["Unauthorized"]);
       const { question } = req.body;
       await OpenAiHelper.initialize();
       return WorkflowHelper.answerQuestion(question, sessionToken(au, req.body));
