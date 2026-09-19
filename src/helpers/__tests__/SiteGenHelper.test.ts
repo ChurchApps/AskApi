@@ -6,7 +6,7 @@ mock.module("@churchapps/apihelper", { namedExports: { AwsHelper: { readParamete
 const { SiteGenHelper, SECTIONS } = await import("../SiteGenHelper.js");
 
 const BUILDER_TYPES = new Set([
-  "text", "row", "column", "card", "faq", "iconFeature", "table", "testimonial", "textWithPhoto", "box", "map", "sermons"
+  "text", "row", "column", "card", "faq", "iconFeature", "table", "testimonial", "textWithPhoto", "box", "map", "sermons", "image", "groups", "countdown", "serviceTimes"
 ]);
 
 const fillCopy = (layout: string[]) => Object.fromEntries(layout.map((k) => [k, Object.fromEntries(Object.keys(SECTIONS[k].slots).map((n) => [n, n === "rows" ? "Sunday | 9am\nWednesday | 6pm" : `It's <${n}>`]))]));
@@ -14,8 +14,8 @@ const fillCopy = (layout: string[]) => Object.fromEntries(layout.map((k) => [k, 
 describe("SiteGenHelper", () => {
   it("builds a valid builder tree for every template", () => {
     const layout = Object.keys(SECTIONS);
-    const church = { name: "Test Church", brief: "A church.", address: "1 Main St" };
-    const sections = SiteGenHelper.buildTree(church, layout, fillCopy(layout), { heroPhoto: "/tempLibrary/building.jpg", welcomePhoto: "/tempLibrary/bible.jpg" });
+    const church = { name: "Test Church", brief: "A church.", address: "1 Main St", resolvesPhotos: true };
+    const sections = SiteGenHelper.buildTree(church, layout, fillCopy(layout), { heroPhoto: "church exterior", welcomePhoto: "open bible", heroDivider: "wave" });
     assert.equal(sections.length, layout.length);
 
     const walk = (els: any[], parentType?: string) => els.forEach((e, i) => {
@@ -36,7 +36,12 @@ describe("SiteGenHelper", () => {
       walk(sec.elements);
     });
 
+    assert.equal(sections[0].background, "pexels:church exterior");
+    const legacy = SiteGenHelper.buildTree({ ...church, resolvesPhotos: false }, layout, fillCopy(layout), { heroPhoto: "church exterior" });
+    assert.ok(!JSON.stringify(legacy).includes("pexels:"), "clients that cannot resolve photos must never see a placeholder");
+    assert.equal(JSON.parse(sections[0].answersJSON).dividerBottom.shape, "wave");
     const all = JSON.stringify(sections);
+    assert.ok(!all.includes("tempLibrary/pastor"), "no stock portrait may stand in for the pastor");
     assert.ok(!all.includes("<headline>"), "copy must be HTML-escaped");
     assert.ok(all.includes("It&rsquo;s &lt;headline&gt;"));
   });
@@ -58,5 +63,36 @@ describe("SiteGenHelper", () => {
     const phrases = SiteGenHelper.stockPhrases({ name: "T", brief: "Hymns with piano." });
     assert.equal(SiteGenHelper.scrub(copy, phrases).pastor.body, "We meet Sundays. Hymns, with piano.");
     assert.ok(!SiteGenHelper.stockPhrases({ name: "T", brief: "Our motto is Come As You Are." }).includes("come as you are"));
+  });
+
+  it("uses the live serviceTimes element only when the church keeps service times in B1", () => {
+    const layout = ["heroPhoto", "times"];
+    const types = (church: any) => JSON.stringify(SiteGenHelper.buildTree(church, layout, fillCopy(layout), {}));
+    assert.ok(types({ name: "T", brief: "b", hasServiceTimes: true }).includes('"elementType":"serviceTimes"'));
+    assert.ok(types({ name: "T", brief: "b" }).includes('"elementType":"table"'));
+  });
+
+  it("only offers templates the church has data for", () => {
+    const bare = SiteGenHelper.available("mid", { name: "T", brief: "b" });
+    assert.ok(!bare.includes("groups") && !bare.includes("countdown"));
+    assert.ok(!SiteGenHelper.available("close", { name: "T", brief: "b" }).includes("contact"));
+    const full = SiteGenHelper.available("mid", { name: "T", brief: "b", hasGroups: true, nextService: { dayOfWeek: 0, time: "10:00" } });
+    assert.ok(full.includes("groups") && full.includes("countdown"));
+  });
+
+  it("flags a later section that re-tells an earlier one, but not recap sections", () => {
+    const told = "Lakeside Kids runs during every Sunday service with secure check-in for birth through fifth grade.";
+    const copy = {
+      heroPhoto: { headline: "h", sub: "s", button: "b" },
+      expect: { heading: "x", c1: told },
+      ministries: { heading: "y", c1: `Our kids program: ${told}` },
+      contact: { heading: "z", times: told }
+    };
+    assert.deepEqual(SiteGenHelper.findRepeats(["heroPhoto", "expect", "ministries", "contact"], copy), { ministries: "expect" });
+  });
+
+  it("treats facts from church records as part of the brief", () => {
+    assert.ok(SiteGenHelper.fullBrief({ name: "T", brief: "We love hymns.", facts: "Sunday 9:00 AM" }).includes("Sunday 9:00 AM"));
+    assert.equal(SiteGenHelper.fullBrief({ name: "T", brief: "We love hymns." }), "We love hymns.");
   });
 });
