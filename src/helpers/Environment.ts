@@ -11,6 +11,7 @@ export class Environment extends EnvironmentBase {
   static aiProvider: string;
   static openAiApiKey: string;
   static openRouterApiKey: string;
+  static aiGatewayApiKey: string;
 
   static async init(environment: string) {
     if (!environment) throw new Error("APP_ENV is required");
@@ -28,6 +29,7 @@ export class Environment extends EnvironmentBase {
     this.openAiApiKey = process.env.OPENAI_API_KEY || (await AwsHelper.readParameter(`/${environment}/openAIKey`));
     this.openRouterApiKey =
       process.env.OPENROUTER_API_KEY || (await AwsHelper.readParameter(`/${environment}/openRouterApiKey`));
+    this.aiGatewayApiKey = process.env.AI_GATEWAY_API_KEY || (await AwsHelper.readParameter(`/${environment}/aiGatewayApiKey`));
   }
 
   static apiHosts(): { [key: string]: string } {

@@ -4,6 +4,8 @@ CONNECTION_STRING=mysql://
 ENCRYPTION_KEY=aSecretKeyOfExactly192BitsLength
 JWT_SECRET=this is a test key that is a sentence
 SERVER_PORT=8097
+# Vercel AI Gateway key for website page generation (JEV + Haiku). Prod reads /{env}/aiGatewayApiKey from SSM.
+AI_GATEWAY_API_KEY=
 
 # AWS Deployment Configuration (optional - defaults are provided)
 # AWS_REGION=us-east-2

@@ -3,6 +3,7 @@ import express from "express";
 import { AskBaseController } from "./AskBaseController.js";
 import { OpenAiHelper } from "../helpers/index.js";
 import { WebsiteHelper } from "../helpers/WebsiteHelper.js";
+import { SiteGenHelper, type SiteGenChurch } from "../helpers/SiteGenHelper.js";
 
 @controller("/website")
 export class WebsiteController extends AskBaseController {
@@ -41,6 +42,38 @@ export class WebsiteController extends AskBaseController {
       );
 
       return { page: pageData };
+    });
+  }
+
+  private static siteGenChurch(body: any): SiteGenChurch | null {
+    const { prompt, churchContext } = body || {};
+    if (!prompt || typeof prompt !== "string" || prompt.trim().length < 10) return null;
+    const theme = churchContext?.theme?.palette || {};
+    return {
+      name: String(churchContext?.churchName || "").substring(0, 200),
+      brief: prompt.trim().substring(0, 4000),
+      address: typeof churchContext?.address === "string" ? churchContext.address.substring(0, 300) : undefined,
+      palette: { accent: theme.accent, dark: theme.dark }
+    };
+  }
+
+  /** Low-cost generation, phase 1: sample and judge candidate layouts. Each phase stays inside the API Gateway timeout. */
+  @httpPost("/planPage")
+  public async planPage(req: express.Request<{}, {}, any>, res: express.Response): Promise<any> {
+    return this.actionWrapperEdit(req, res, async (_au) => {
+      const church = WebsiteController.siteGenChurch(req.body);
+      if (!church) return { error: "Prompt is required and must be at least 10 characters" };
+      return await SiteGenHelper.planPage(church);
+    });
+  }
+
+  /** Low-cost generation, phase 2: write and fact-check copy for one planned layout; returns a builder section tree. */
+  @httpPost("/writePage")
+  public async writePage(req: express.Request<{}, {}, any>, res: express.Response): Promise<any> {
+    return this.actionWrapperEdit(req, res, async (_au) => {
+      const church = WebsiteController.siteGenChurch(req.body);
+      if (!church) return { error: "Prompt is required and must be at least 10 characters" };
+      return await SiteGenHelper.writePage(church, req.body.layout, req.body.tone);
     });
   }
 
