@@ -14,7 +14,7 @@ const fillCopy = (layout: string[]) => Object.fromEntries(layout.map((k) => [k, 
 describe("SiteGenHelper", () => {
   it("builds a valid builder tree for every template", () => {
     const layout = Object.keys(SECTIONS);
-    const church = { name: "Test Church", brief: "A church.", address: "1 Main St" };
+    const church = { name: "Test Church", brief: "A church.", address: "1 Main St", resolvesPhotos: true };
     const sections = SiteGenHelper.buildTree(church, layout, fillCopy(layout), { heroPhoto: "church exterior", welcomePhoto: "open bible", heroDivider: "wave" });
     assert.equal(sections.length, layout.length);
 
@@ -37,6 +37,8 @@ describe("SiteGenHelper", () => {
     });
 
     assert.equal(sections[0].background, "pexels:church exterior");
+    const legacy = SiteGenHelper.buildTree({ ...church, resolvesPhotos: false }, layout, fillCopy(layout), { heroPhoto: "church exterior" });
+    assert.ok(!JSON.stringify(legacy).includes("pexels:"), "clients that cannot resolve photos must never see a placeholder");
     assert.equal(JSON.parse(sections[0].answersJSON).dividerBottom.shape, "wave");
     const all = JSON.stringify(sections);
     assert.ok(!all.includes("tempLibrary/pastor"), "no stock portrait may stand in for the pastor");

@@ -57,6 +57,7 @@ export class WebsiteController extends AskBaseController {
       facts: typeof churchContext?.facts === "string" ? churchContext.facts.substring(0, 2000) : undefined,
       hasServiceTimes: churchContext?.hasServiceTimes === true,
       hasGroups: churchContext?.hasGroups === true,
+      resolvesPhotos: churchContext?.resolvesPhotos === true,
       nextService: WebsiteController.nextService(churchContext?.nextService)
     };
   }

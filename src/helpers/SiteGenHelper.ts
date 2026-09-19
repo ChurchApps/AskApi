@@ -14,6 +14,8 @@ export interface SiteGenChurch {
   hasServiceTimes?: boolean;
   hasGroups?: boolean;
   nextService?: { dayOfWeek: number; time: string };
+  // True when the client swaps "pexels:<term>" placeholders for real photos. Older clients get a built-in image instead.
+  resolvesPhotos?: boolean;
 }
 
 export interface SiteGenUsage { jevIn: number; jevCalls: number; haikuIn: number; haikuOut: number; haikuCalls: number }
@@ -92,7 +94,7 @@ export const SECTIONS: Record<string, { role: "hero" | "mid" | "close"; desc: st
   },
   pastor: {
     role: "mid",
-    desc: "Personal note from the pastor with portrait, a short first-person message and signature. Builds trust for small or relational churches.",
+    desc: "Personal note from the pastor: a short first-person message and signature, no photo. Builds trust for small or relational churches.",
     slots: { heading: s("Section heading", 50), body: s("First-person note from the pastor, 2-3 sentences, sounds like a real person", 360), sign: s("Signature line: name and role", 60) }
   },
   sermon: {
@@ -581,7 +583,7 @@ export class SiteGenHelper {
     const accent = church.palette?.accent || "#2A6F97";
     const dark = church.palette?.dark || "#0B2434";
     const light = church.palette?.light || "#FFFFFF";
-    const photo = (term: string) => (term ? `pexels:${term}` : "");
+    const photo = (term: string) => (!term ? "" : church.resolvesPhotos ? `pexels:${term}` : "/tempLibrary/backgrounds/worship.jpg");
     const FADE = { onShow: "fadeIn", onShowSpeed: "normal" };
     const esc = (t = "") => String(t).replace(/[&<>]/g, (c): string => ({ "&": "&amp;", "<": "&lt;", ">": "&gt;" } as Record<string, string>)[c]).replace(/'/g, "&rsquo;");
     const el = (elementType: string, answers: any, elements?: any[], animations?: any) => ({ elementType, answers, elements, animations });
