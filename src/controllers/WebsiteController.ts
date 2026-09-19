@@ -53,8 +53,29 @@ export class WebsiteController extends AskBaseController {
       name: String(churchContext?.churchName || "").substring(0, 200),
       brief: prompt.trim().substring(0, 4000),
       address: typeof churchContext?.address === "string" ? churchContext.address.substring(0, 300) : undefined,
-      palette: { accent: theme.accent, dark: theme.dark }
+      palette: { accent: theme.accent, dark: theme.dark, light: theme.light },
+      facts: typeof churchContext?.facts === "string" ? churchContext.facts.substring(0, 2000) : undefined,
+      hasServiceTimes: churchContext?.hasServiceTimes === true,
+      hasGroups: churchContext?.hasGroups === true,
+      nextService: WebsiteController.nextService(churchContext?.nextService)
     };
+  }
+
+  private static nextService(value: any) {
+    const day = Number(value?.dayOfWeek);
+    if (!Number.isInteger(day) || day < 0 || day > 6 || !/^([01]\d|2[0-3]):[0-5]\d$/.test(String(value?.time))) return undefined;
+    return { dayOfWeek: day, time: String(value.time) };
+  }
+
+  /** Records which generated layout a user kept or switched away from, so the judges can be checked against real choices. */
+  @httpPost("/feedback")
+  public async feedback(req: express.Request<{}, {}, any>, res: express.Response): Promise<any> {
+    return this.actionWrapperEdit(req, res, async (au) => {
+      const { event, pageType, shown, candidates } = req.body || {};
+      const safe = (Array.isArray(candidates) ? candidates : []).slice(0, 5).map((c: any) => ({ layout: Array.isArray(c?.layout) ? c.layout.slice(0, 8).map(String) : [], layoutScore: Number(c?.layoutScore) || 0, score: Number(c?.score) || 0 }));
+      console.log(JSON.stringify({ siteGen: "feedback", churchId: au.churchId, event: String(event || "").substring(0, 40), pageType: String(pageType || "").substring(0, 20), shown: Number(shown) || 0, candidates: safe }));
+      return { ok: true };
+    });
   }
 
   /** Low-cost generation, phase 1: sample and judge candidate layouts. Each phase stays inside the API Gateway timeout. */

@@ -8,7 +8,12 @@ export interface SiteGenChurch {
   name: string;
   brief: string;
   address?: string;
-  palette?: { accent?: string; dark?: string };
+  palette?: { accent?: string; dark?: string; light?: string };
+  // Facts pulled from the church's own B1 records (service times, campuses...). Counts as ground truth for fact-checking.
+  facts?: string;
+  hasServiceTimes?: boolean;
+  hasGroups?: boolean;
+  nextService?: { dayOfWeek: number; time: string };
 }
 
 export interface SiteGenUsage { jevIn: number; jevCalls: number; haikuIn: number; haikuOut: number; haikuCalls: number }
@@ -19,9 +24,13 @@ const CANDIDATES = 10;
 const TOP = 3;
 const SAMPLE_TEMP = 1.5;
 const JEV_TIMEOUT_MS = 6000;
-const HAIKU_TIMEOUT_MS = 20000;
+// JEV is nearly free, so a slow call is raced against a duplicate instead of waited on.
+const JEV_HEDGE_MS = 1500;
+const HAIKU_TIMEOUT_MS = 12000;
 // API Gateway cuts requests at 29s; skip the optional repair pass once a writePage call has used this much.
-const REPAIR_DEADLINE_MS = 13000;
+const REPAIR_DEADLINE_MS = 14000;
+const HEADLINE_OPTIONS = 5;
+const SECTIONS_PER_CALL = 2;
 
 type Slot = { guide: string; max: number };
 const s = (guide: string, max: number): Slot => ({ guide, max });
@@ -50,6 +59,11 @@ export const SECTIONS: Record<string, { role: "hero" | "mid" | "close"; desc: st
     role: "hero",
     desc: "Hero with headline beside the latest sermon video. Best for churches that stream and whose visitors watch online before attending.",
     slots: { headline: s("Main headline", 60), sub: s("One supporting sentence", 140), button: s("Button label", 22), videoCaption: s("Caption under the video", 60) }
+  },
+  heroSplit: {
+    role: "hero",
+    desc: "Split hero: headline and button on one side, a photo on the other, on a light background. Calmer and more editorial than a full-bleed photo; good for about, ministry and information pages.",
+    slots: { headline: s("Main headline", 60), sub: s("One supporting sentence", 140), button: s("Button label", 22) }
   },
   welcome: {
     role: "mid",
@@ -111,6 +125,16 @@ export const SECTIONS: Record<string, { role: "hero" | "mid" | "close"; desc: st
     desc: "Community impact band: what this church does for its neighbors (food pantry, recovery, school), with one short highlight box.",
     slots: { heading: s("Section heading", 50), body: s("2 sentences about real community work from the brief", 260), highlight: s("Short highlight, e.g. 'Open every Thursday'", 40) }
   },
+  groups: {
+    role: "mid",
+    desc: "Live list of the church's small groups pulled from its records, with a short intro. Only useful when finding a group is a real next step for this audience.",
+    slots: { heading: s("Section heading", 50), body: s("One or two sentences inviting people to find a group, brief facts only", 200) }
+  },
+  countdown: {
+    role: "mid",
+    desc: "Live countdown to the next main weekly gathering. Energetic; suits churches with one main gathering and a younger or online-first audience.",
+    slots: { title: s("Short line above the countdown, e.g. what is starting", 50) }
+  },
   visitCta: {
     role: "close",
     desc: "Closing call-to-action band inviting people to plan a visit, with one button.",
@@ -124,7 +148,17 @@ export const SECTIONS: Record<string, { role: "hero" | "mid" | "close"; desc: st
 };
 
 // Sections that read as duplicates of each other on one page.
-const CLASH: Record<string, string> = { pathways: "ministries", ministries: "pathways", sermon: "heroVideo" };
+const CLASH: Record<string, string> = { pathways: "ministries", ministries: "pathways", sermon: "heroVideo", countdown: "heroTimes" };
+
+const PAGE_TYPES: Record<string, string> = {
+  home: "The site home page: orient a newcomer and route them onward",
+  visit: "Plan-a-visit / I'm new page: logistics and reassurance for a first visit",
+  about: "About us: who the church is, its story, beliefs and leaders",
+  ministries: "A ministries or programs page (kids, students, groups, recovery, outreach)",
+  give: "A giving or stewardship page",
+  contact: "A contact and location page",
+  other: "Something else"
+};
 
 const sch = (desc: string, heading: string, body: string, light: string, lightAccent: string, accent: string, darkAccent: string, dark: string) => ({ desc, fonts: { heading, body }, palette: { light, lightAccent, accent, darkAccent, dark } });
 export const SCHEMES: Record<string, ReturnType<typeof sch>> = {
@@ -144,14 +178,43 @@ export const TONES: Record<string, string> = {
   reverent: "Reverent and gracious, comfortable with traditional and sacramental vocabulary."
 };
 
+// Photos are Pexels search terms; B1Admin resolves each "pexels:<term>" through ContentApi /stock/search.
+// Deliberately no portraits: a stock stranger must never stand in for a real pastor or member.
 const PHOTOS: Record<string, string> = {
-  "/tempLibrary/backgrounds/worship.jpg": "Congregation in a modern worship service with stage lighting",
-  "/tempLibrary/backgrounds/crowd.jpg": "A crowd of people gathered together",
-  "/tempLibrary/backgrounds/kids.jpg": "Children in a kids ministry setting",
-  "/tempLibrary/building.jpg": "Exterior of a traditional church building",
-  "/tempLibrary/praise.jpg": "People with hands raised in praise",
-  "/tempLibrary/bible.jpg": "An open Bible, quiet and studious",
-  "/tempLibrary/teen-praying.jpg": "A teenager praying, student ministry"
+  "church exterior": "Outside of a traditional church building",
+  "small country church": "Small rural or country church in a landscape",
+  "modern church building": "Contemporary church or auditorium building exterior",
+  "cathedral interior": "Historic, liturgical sanctuary interior with arches or stained glass",
+  "stained glass window": "Stained glass, reverent and traditional",
+  "church pews": "Quiet traditional sanctuary with pews",
+  "worship concert crowd": "Modern worship service with band, lights and raised hands",
+  "congregation singing": "People singing together in a service",
+  "choir singing": "A choir in robes or a vocal ensemble",
+  "hymnal piano": "Hymn book or piano, traditional music",
+  "acoustic guitar worship": "Simple acoustic worship music",
+  "open bible": "An open Bible, study and teaching",
+  "bible study group": "Small group of adults talking around a table or living room",
+  "friends talking coffee": "Friends in conversation over coffee, relaxed and candid",
+  "community dinner table": "People sharing a meal at a long table, fellowship dinner",
+  "food pantry volunteers": "Volunteers sorting or handing out food",
+  "volunteers serving community": "Volunteers serving neighbors, outreach",
+  "children playing classroom": "Kids in a bright classroom or play space",
+  "family walking together": "A young family together outdoors",
+  "teenagers friends outdoors": "Group of teenagers or students together",
+  "young adults city": "Young adults in an urban neighborhood",
+  "seniors smiling together": "Older adults together, warm and friendly",
+  "diverse group people smiling": "A diverse, multi-ethnic group of people together",
+  "hands praying": "Hands folded in prayer, quiet and personal",
+  "candles church": "Candles, contemplative and sacramental",
+  "baptism water": "Water and baptism imagery",
+  "communion bread wine": "Communion bread and cup",
+  "wedding church": "A wedding in a church",
+  "sunrise field": "Sunrise over a field, hopeful and open",
+  "mountain landscape": "Wide mountain landscape, grandeur",
+  "city skyline": "City skyline, urban setting",
+  "small town main street": "Small town street, local and neighborly",
+  "welcome handshake": "A handshake or greeting at a door",
+  "laptop video call home": "Watching online from home"
 };
 
 const ICONS: Record<string, string> = {
@@ -211,16 +274,17 @@ export class SiteGenHelper {
   private static async ask(usage: SiteGenUsage, state: any, questions: Record<string, any>): Promise<Record<string, any>> {
     usage.jevCalls++;
     const headers = { "ai-gateway-protocol-version": "0.0.1", "ai-gateway-auth-method": "api-key", "ai-evaluation-model-specification-version": "4", "ai-model-id": JEV };
-    for (let attempt = 1; ; attempt++) {
-      try {
-        // the gateway occasionally hangs, so each attempt gets its own short timeout
-        const r = await this.gateway("/v4/ai/evaluation-model", { state, questions, providerOptions: { gateway: { zeroDataRetention: true } } }, JEV_TIMEOUT_MS, headers);
-        usage.jevIn += r.usage?.inputTokens ?? 0;
-        return r.answers as Record<string, any>;
-      } catch (e) {
-        if (attempt >= 2) throw e;
-      }
-    }
+    const call = () => this.gateway("/v4/ai/evaluation-model", { state, questions, providerOptions: { gateway: { zeroDataRetention: true } } }, JEV_TIMEOUT_MS, headers);
+    // The gateway occasionally hangs or 5xxs. A duplicate fires after JEV_HEDGE_MS (or acts as the retry when the
+    // first call fails fast) and the first success wins.
+    const first = call();
+    const backup = new Promise<any>((resolve, reject) => {
+      const timer = setTimeout(() => call().then(resolve, reject), JEV_HEDGE_MS);
+      first.then(() => clearTimeout(timer), () => { /* let the backup run */ });
+    });
+    const r = await Promise.any([first, backup]);
+    usage.jevIn += r.usage?.inputTokens ?? 0;
+    return r.answers as Record<string, any>;
   }
 
   static sample(probs: Record<string, number>, temp: number, rand: () => number = Math.random): string {
@@ -233,35 +297,53 @@ export class SiteGenHelper {
     return weights[0][0];
   }
 
-  private static criteria(keys: string[]) { return Object.fromEntries(keys.map((k) => [k, SECTIONS[k].desc])); }
-  private static byRole(role: string, church: SiteGenChurch) {
-    return Object.keys(SECTIONS).filter((k) => SECTIONS[k].role === role && (k !== "contact" || !!church.address));
+  /** Everything the models may treat as true: what the user typed plus facts from the church's own records. */
+  static fullBrief(church: SiteGenChurch) {
+    return church.facts ? `${church.brief}\n\nFrom the church's own records (also true): ${church.facts}` : church.brief;
   }
 
-  private static async buildLayout(usage: SiteGenUsage, church: SiteGenChurch, temp: number): Promise<string[]> {
+  private static criteria(keys: string[]) { return Object.fromEntries(keys.map((k) => [k, SECTIONS[k].desc])); }
+
+  static available(role: string, church: SiteGenChurch) {
+    const needs: Record<string, boolean> = { contact: !!church.address, groups: !!church.hasGroups, countdown: !!church.nextService };
+    return Object.keys(SECTIONS).filter((k) => SECTIONS[k].role === role && needs[k] !== false);
+  }
+
+  // Candidates that share the same sections so far would ask JEV the identical question, so rounds are memoized by prefix.
+  private static async buildLayout(usage: SiteGenUsage, church: SiteGenChurch, temp: number, memo: Map<string, Promise<Record<string, any>>>, pageType: string): Promise<string[]> {
     const chosen: string[] = [];
-    const round = async (id: string, instructions: string, criteria: Record<string, string>) => {
-      const state = {
-        church: church.brief,
-        goal: "Design the web page this church asked for. The reader is a first-time visitor deciding whether to come.",
-        sections_so_far: chosen.map((k, i) => `${i + 1}. ${k}: ${SECTIONS[k].desc}`)
-      };
-      const a = (await this.ask(usage, state, { [id]: { type: "choice", instructions, criteria } }))[id];
-      return this.sample(a.probabilities, temp);
+    const round = async (questions: Record<string, any>) => {
+      const key = `${chosen.join(">")}|${Object.keys(questions).join(",")}`;
+      if (!memo.has(key)) {
+        memo.set(key, this.ask(usage, {
+          church: this.fullBrief(church),
+          page_type: PAGE_TYPES[pageType] || PAGE_TYPES.home,
+          goal: "Design the web page this church asked for. The reader is a first-time visitor deciding whether to come.",
+          sections_so_far: chosen.map((k, i) => `${i + 1}. ${k}: ${SECTIONS[k].desc}`)
+        }, questions));
+      }
+      return memo.get(key);
     };
-    chosen.push(await round("hero", "Which hero section should open this page?", this.criteria(this.byRole("hero", church))));
-    const count = Number(await round("count", "How many sections should sit between the hero and the closing section?", { 3: "Three: small church or simple message", 4: "Four: typical", 5: "Five: large church with many programs or audiences" }));
+    // hero and section count don't depend on each other, so they share one round trip
+    const opening = await round({
+      hero: { type: "choice", instructions: "Which hero section should open this page?", criteria: this.criteria(this.available("hero", church)) },
+      count: { type: "choice", instructions: "How many sections should sit between the hero and the closing section?", criteria: { 3: "Three: small church or simple message", 4: "Four: typical", 5: "Five: large church with many programs or audiences" } }
+    });
+    chosen.push(this.sample(opening.hero.probabilities, temp));
+    const count = Number(this.sample(opening.count.probabilities, temp));
     for (let i = 0; i < count; i++) {
-      const left = this.byRole("mid", church).filter((k) => !chosen.includes(k) && !chosen.includes(CLASH[k]));
-      chosen.push(await round(`s${i}`, `Which section should come next (position ${chosen.length + 1})? Pick what a first-time visitor to THIS church most needs next, and keep a natural flow from the sections so far.`, this.criteria(left)));
+      const left = this.available("mid", church).filter((k) => !chosen.includes(k) && !chosen.includes(CLASH[k]) && !chosen.some((c) => CLASH[c] === k));
+      const a = await round({ next: { type: "choice", instructions: `Which section should come next (position ${chosen.length + 1})? Pick what a first-time visitor to THIS church most needs next, and keep a natural flow from the sections so far.`, criteria: this.criteria(left) } });
+      chosen.push(this.sample(a.next.probabilities, temp));
     }
-    chosen.push(await round("close", "Which closing section should end the page?", this.criteria(this.byRole("close", church))));
+    const closing = await round({ close: { type: "choice", instructions: "Which closing section should end the page?", criteria: this.criteria(this.available("close", church)) } });
+    chosen.push(this.sample(closing.close.probabilities, temp));
     return chosen;
   }
 
-  private static async judgeLayout(usage: SiteGenUsage, church: SiteGenChurch, layout: string[]): Promise<number> {
-    const a = await this.ask(usage, { church: church.brief, page: layout.map((k, i) => `${i + 1}. ${k}: ${SECTIONS[k].desc}`) }, {
-      fit: { type: "score", instructions: "How well do these sections match what this specific church has to offer and who it is trying to reach?", criteria: SCORE4 },
+  private static async judgeLayout(usage: SiteGenUsage, church: SiteGenChurch, layout: string[], pageType: string): Promise<number> {
+    const a = await this.ask(usage, { church: this.fullBrief(church), page_type: PAGE_TYPES[pageType], page: layout.map((k, i) => `${i + 1}. ${k}: ${SECTIONS[k].desc}`) }, {
+      fit: { type: "score", instructions: "How well do these sections match what this specific church has to offer, who it is trying to reach, and the type of page requested?", criteria: SCORE4 },
       flow: { type: "score", instructions: "How natural is the order for a first-time visitor: orient, reassure, inform, then invite?", criteria: SCORE4 },
       gaps: { type: "score", instructions: "Does the page cover the things this church's brief emphasizes, without filler sections that the brief gives no material for?", criteria: ["Major gaps or filler", "Some gaps or filler", "Minor issues", "Covers everything, no filler"] }
     });
@@ -269,26 +351,29 @@ export class SiteGenHelper {
   }
 
   private static async pickStyle(usage: SiteGenUsage, church: SiteGenChurch) {
-    const a = await this.ask(usage, { church: church.brief }, {
+    const a = await this.ask(usage, { church: this.fullBrief(church) }, {
       scheme: { type: "choice", instructions: "Which color and type scheme best fits this church's identity and the people it wants to reach?", criteria: Object.fromEntries(Object.entries(SCHEMES).map(([k, v]) => [k, v.desc])) },
-      tone: { type: "choice", instructions: "Which writing voice fits this church?", criteria: TONES }
+      tone: { type: "choice", instructions: "Which writing voice fits this church?", criteria: TONES },
+      pageType: { type: "choice", instructions: "What kind of page is the church asking for?", criteria: PAGE_TYPES }
     });
-    return { scheme: a.scheme.choice as string, tone: a.tone.choice as string };
+    return { scheme: a.scheme.choice as string, tone: a.tone.choice as string, pageType: a.pageType.choice as string };
   }
 
   /** Phase 1: sample candidate layouts, judge them, and pick a voice. Returns the best few for phase 2. */
   static async planPage(church: SiteGenChurch) {
     const usage = this.newUsage();
-    const stylePromise = this.pickStyle(usage, church).catch(() => ({ scheme: "navyClassic", tone: "plainWarm" }));
-    const built = await Promise.allSettled(Array.from({ length: CANDIDATES }, (_, i) => this.buildLayout(usage, church, i ? SAMPLE_TEMP : 0)));
+    const style = await this.pickStyle(usage, church).catch(() => ({ scheme: "navyClassic", tone: "plainWarm", pageType: "home" }));
+    const memo = new Map<string, Promise<Record<string, any>>>();
+    const built = await Promise.allSettled(Array.from({ length: CANDIDATES }, (_, i) => this.buildLayout(usage, church, i ? SAMPLE_TEMP : 0, memo, style.pageType)));
     const layouts = built.filter((r): r is PromiseFulfilledResult<string[]> => r.status === "fulfilled").map((r) => r.value);
     if (!layouts.length) throw new Error("Could not plan a page layout. Please try again.");
     const unique = [...new Map(layouts.map((l) => [l.join(">"), l])).values()];
     // a failed judge call scores 0 rather than sinking the whole plan
-    const scored = await Promise.all(unique.map(async (layout) => ({ layout, score: await this.judgeLayout(usage, church, layout).catch(() => 0) })));
+    const scored = await Promise.all(unique.map(async (layout) => ({ layout, score: await this.judgeLayout(usage, church, layout, style.pageType).catch(() => 0) })));
     scored.sort((a, b) => b.score - a.score);
-    const style = await stylePromise;
-    return { candidates: scored.slice(0, TOP), tone: style.tone, suggestedStyle: { key: style.scheme, fonts: SCHEMES[style.scheme].fonts, palette: SCHEMES[style.scheme].palette }, usage };
+    // A weak best layout usually means the template library lacks something this church needed; the log is the template backlog.
+    if (scored[0].score < 6) console.log(JSON.stringify({ siteGen: "lowLayoutScore", score: scored[0].score, pageType: style.pageType, layout: scored[0].layout, brief: church.brief.substring(0, 500) }));
+    return { candidates: scored.slice(0, TOP), tone: style.tone, pageType: style.pageType, suggestedStyle: { key: style.scheme, fonts: SCHEMES[style.scheme].fonts, palette: SCHEMES[style.scheme].palette }, usage };
   }
 
   private static async haiku(usage: SiteGenUsage, prompt: string, maxOutputTokens: number, temperature: number): Promise<any> {
@@ -300,27 +385,35 @@ export class SiteGenHelper {
     return JSON.parse(out.slice(out.indexOf("{"), out.lastIndexOf("}") + 1));
   }
 
-  private static slotSpec(k: string, withGuide: boolean) {
-    return Object.fromEntries(Object.entries(SECTIONS[k].slots).map(([n, v]) => [n, withGuide ? `${v.guide} (max ${v.max} chars)` : `max ${v.max}`]));
+  private static slotSpec(k: string) {
+    return Object.fromEntries(Object.entries(SECTIONS[k].slots).map(([n, v]) => [n, `${v.guide} (max ${v.max} chars)`]));
   }
 
-  private static validCopy(layout: string[], copy: Copy) {
-    for (const k of layout) {
-      for (const [n, v] of Object.entries(SECTIONS[k].slots)) {
-        const t = copy?.[k]?.[n];
-        if (typeof t !== "string" || !t.trim() || t.length > v.max * 1.25) return false;
-      }
-    }
-    return true;
+  private static validSection(k: string, slots: Record<string, string>) {
+    // the templates reflow, so a slot that runs a little long is fine; only reject gross overruns
+    return Object.entries(SECTIONS[k].slots).every(([n, v]) => typeof slots?.[n] === "string" && !!slots[n].trim() && slots[n].length <= v.max * 1.6);
   }
 
-  private static async writeCopy(usage: SiteGenUsage, church: SiteGenChurch, layout: string[], tone: string): Promise<Copy> {
-    const spec = layout.map((k) => ({ section: k, purpose: SECTIONS[k].desc, slots: this.slotSpec(k, true) }));
-    const prompt = `Church: ${church.name}\nAddress: ${church.address || "(not given)"}\nBrief: ${church.brief}\nVoice: ${TONES[tone] || TONES.plainWarm}\n\nSections, in page order:\n${JSON.stringify(spec, null, 1)}`;
+  private static churchHeader(church: SiteGenChurch, tone: string) {
+    return `Church: ${church.name}\nAddress: ${church.address || "(not given)"}\nBrief: ${this.fullBrief(church)}\nVoice: ${TONES[tone] || TONES.plainWarm}`;
+  }
+
+  // Sections are written a couple at a time, in parallel: much faster than one long completion, while keeping the
+  // number of times the brief and rules are resent (the main cost) low. Each call is told what the other sections
+  // cover so it stays in its lane.
+  private static async writeSections(usage: SiteGenUsage, church: SiteGenChurch, layout: string[], keys: string[], tone: string, notes: Record<string, string> = {}): Promise<Copy> {
+    const spec = keys.map((k) => ({ section: k, purpose: SECTIONS[k].desc, slots: this.slotSpec(k), ...(notes[k] ? { reviewer_note: notes[k] } : {}) }));
+    const others = layout.filter((o) => !keys.includes(o)).map((o) => `- ${o}: ${SECTIONS[o].desc}`).join("\n");
+    const extra = keys.some((k) => SECTIONS[k].role === "hero") ? `\nInside the hero section also return "headlines": an array of ${HEADLINE_OPTIONS} different headline options (different angles, not rewordings), each max 60 chars.` : "";
+    const prompt = `${this.churchHeader(church, tone)}\n\nWrite ONLY these sections, keyed by section name:\n${JSON.stringify(spec, null, 1)}${extra}\n\nOther sections on the same page cover their own ground, so do not do their job or repeat their facts:\n${others}`;
+    const repairing = Object.keys(notes).length > 0;
     for (let attempt = 1; ; attempt++) {
       try {
-        const copy = await this.haiku(usage, prompt, 3000, 0.8);
-        if (this.validCopy(layout, copy)) return copy;
+        const out = await this.haiku(usage, prompt, 600 * keys.length + 300, repairing ? 0.4 : 0.8);
+        // a lone section sometimes comes back bare or wrapped as { section: slots } instead of { <key>: slots }
+        const found = keys.map((k) => [k, [out[k], ...(keys.length === 1 ? [out, ...Object.values(out)] : [])].find((o: any) => o && typeof o === "object" && !Array.isArray(o) && this.validSection(k, o))]);
+        if (found.every(([, slots]) => slots)) return Object.fromEntries(found);
+        console.log(JSON.stringify({ siteGen: "invalidSection", sections: keys, out: JSON.stringify(out).substring(0, 400) }));
       } catch (e) {
         if (attempt >= 2) throw e;
       }
@@ -328,8 +421,19 @@ export class SiteGenHelper {
     }
   }
 
+  static chunk<T>(items: T[], size: number): T[][] {
+    return items.reduce((groups: T[][], item, i) => (i % size ? groups[groups.length - 1].push(item) : groups.push([item]), groups), []);
+  }
+
+  private static async pickHeadline(usage: SiteGenUsage, church: SiteGenChurch, options: string[]): Promise<string | null> {
+    const clean = [...new Set(options.filter((h) => typeof h === "string" && h.trim() && h.length <= 75 && !h.toLowerCase().includes(church.name.toLowerCase().slice(0, 12))))];
+    if (clean.length < 2) return clean[0] || null;
+    const a = await this.ask(usage, { church: this.fullBrief(church) }, { headline: { type: "choice", instructions: "Which hero headline is most specific to this one church and would make a first-time visitor keep reading? Penalize generic lines any church could use.", criteria: Object.fromEntries(clean.map((h, i) => [`h${i}`, h])) } });
+    return clean[Number(String(a.headline.choice).slice(1))] ?? null;
+  }
+
   private static factCheck(usage: SiteGenUsage, church: SiteGenChurch, layout: string[], copy: Copy) {
-    return this.ask(usage, { church_brief: church.brief, church_name: church.name, address: church.address }, Object.fromEntries(layout.map((k) => [
+    return this.ask(usage, { church_brief: this.fullBrief(church), church_name: church.name, address: church.address }, Object.fromEntries(layout.map((k) => [
       k,
       {
         type: "boolean",
@@ -345,21 +449,53 @@ export class SiteGenHelper {
     return STOCK_PHRASES.filter((p) => !brief.includes(p));
   }
 
+  /** Sections whose body text re-tells an earlier section (shared 4-word runs). Recap sections are expected to repeat times and address. */
+  static findRepeats(layout: string[], copy: Copy): Record<string, string> {
+    const RECAP = new Set(["times", "contact", "visitCta", "countdown"]);
+    const shingles = (k: string) => {
+      const words = Object.values(copy[k] || {}).filter((v) => typeof v === "string" && v.length > 40).join(" ").toLowerCase().replace(/[^a-z0-9: ]/g, " ").split(/\s+/).filter(Boolean);
+      return new Set(words.slice(0, -3).map((_, i) => words.slice(i, i + 4).join(" ")));
+    };
+    const seen: [string, Set<string>][] = [];
+    const repeats: Record<string, string> = {};
+    for (const k of layout) {
+      const mine = shingles(k);
+      if (!RECAP.has(k) && SECTIONS[k].role !== "hero") {
+        const clash = seen.find(([, theirs]) => [...mine].filter((g) => theirs.has(g)).length >= 3);
+        if (clash) repeats[k] = clash[0];
+      }
+      seen.push([k, mine]);
+    }
+    return repeats;
+  }
+
+  // Flagged sections are rewritten a couple at a time, in parallel, each told exactly what was wrong with it.
   private static async repairCopy(usage: SiteGenUsage, church: SiteGenChurch, layout: string[], copy: Copy, tone: string, checks: Record<string, any>) {
     const phrases = this.stockPhrases(church);
-    const bad = layout.filter((k) => {
+    const repeats = this.findRepeats(layout, copy);
+    const reasons: Record<string, string[]> = {};
+    for (const k of layout) {
       const textOf = JSON.stringify(copy[k]).toLowerCase();
-      const nameAsHeadline = k.startsWith("hero") && copy[k].headline.toLowerCase().includes(church.name.toLowerCase().slice(0, 12));
-      return checks[k]?.probability > 0.5 || nameAsHeadline || /[!—]/.test(textOf) || phrases.some((p) => textOf.includes(p));
-    });
-    if (!bad.length) return { copy, repaired: bad };
-    const flagged = Object.fromEntries(bad.map((k) => [k, { slots: this.slotSpec(k, false), current: copy[k] }]));
-    const prompt = `Church: ${church.name}\nBrief: ${church.brief}\nVoice: ${TONES[tone] || TONES.plainWarm}\n\nA fact-checker flagged these sections for stating details that are not in the brief, using a stock phrase, exclamation mark or em dash, or using the church name as the hero headline. Rewrite ONLY these sections, same slots and max lengths, keeping what was good. Remove every detail the brief does not state.\n${JSON.stringify(flagged, null, 1)}`;
-    try {
-      const fix = await this.haiku(usage, prompt, 2000, 0.4);
-      for (const k of bad) if (this.validCopy([k], fix)) copy = { ...copy, [k]: fix[k] };
-    } catch { /* keep the original copy */ }
-    return { copy, repaired: bad };
+      const why: string[] = [];
+      if (checks[k]?.probability > 0.5) why.push("it states details that are not in the brief; remove every detail the brief does not state");
+      if (SECTIONS[k].role === "hero" && copy[k].headline.toLowerCase().includes(church.name.toLowerCase().slice(0, 12))) why.push("the headline uses the church name");
+      if (/[!—]/.test(textOf) || phrases.some((p) => textOf.includes(p))) why.push("it uses a stock church phrase, exclamation mark or em dash");
+      if (repeats[k]) why.push(`it repeats what the "${repeats[k]}" section already says (${JSON.stringify(copy[repeats[k]])}); say something that section does not`);
+      if (why.length) reasons[k] = why;
+    }
+    const bad = Object.keys(reasons);
+    await Promise.all(this.chunk(bad, SECTIONS_PER_CALL).map(async (keys) => {
+      const notes = Object.fromEntries(keys.map((k) => [k, `A reviewer rejected your previous version because ${reasons[k].join("; and ")}. Previous version: ${JSON.stringify(copy[k])}. Keep what was good and fix that.`]));
+      try {
+        const fixed = await this.writeSections(usage, church, layout, keys, tone, notes);
+        for (const k of keys) {
+          // the hero headline was already chosen from several options; only replace it when it was the problem
+          const keepHeadline = SECTIONS[k].role === "hero" && !reasons[k].some((r) => r.includes("church name"));
+          copy[k] = keepHeadline ? { ...fixed[k], headline: copy[k].headline } : fixed[k];
+        }
+      } catch { /* keep the original */ }
+    }));
+    return bad;
   }
 
   /** Last line of defense: Haiku sometimes keeps a stock phrase through a rewrite, so drop the offending sentence in code. */
@@ -375,26 +511,29 @@ export class SiteGenHelper {
   }
 
   private static async pickVisuals(usage: SiteGenUsage, church: SiteGenChurch, layout: string[], copy: Copy): Promise<Record<string, string>> {
-    const q: Record<string, any> = { heroPhoto: { type: "choice", instructions: "Which stock photo best fits the hero of this church's page?", criteria: PHOTOS } };
-    if (layout.includes("welcome")) q.welcomePhoto = { type: "choice", instructions: "Which stock photo best fits the 'who we are' section? It should differ in feel from a worship-stage hero.", criteria: PHOTOS };
+    const q: Record<string, any> = {
+      heroPhoto: { type: "choice", instructions: "Which photo subject best fits the hero of this church's page? Match the church's real setting, size and style.", criteria: PHOTOS },
+      heroDivider: { type: "choice", instructions: "Which shape should the bottom edge of the hero have?", criteria: { none: "Straight edge: traditional, formal, liturgical", curve: "Soft curve: warm and welcoming", wave: "Wave: relaxed, family-friendly, contemporary", slant: "Slant: modern, urban, energetic" } }
+    };
+    if (layout.includes("welcome")) q.welcomePhoto = { type: "choice", instructions: "Which photo subject best fits the 'who we are' section? It should show people or place, and differ from the hero.", criteria: PHOTOS };
     for (const i of [1, 2, 3]) {
       if (layout.includes("expect")) q[`expectIcon${i}`] = { type: "choice", instructions: `Which icon best matches this card? "${copy.expect[`c${i}t`]}: ${copy.expect[`c${i}`]}"`, criteria: ICONS };
-      if (layout.includes("ministries")) q[`ministryPhoto${i}`] = { type: "choice", instructions: `Which stock photo best matches this ministry card? "${copy.ministries[`c${i}t`]}: ${copy.ministries[`c${i}`]}"`, criteria: PHOTOS };
+      if (layout.includes("ministries")) q[`ministryPhoto${i}`] = { type: "choice", instructions: `Which photo subject best matches this ministry card? "${copy.ministries[`c${i}t`]}: ${copy.ministries[`c${i}`]}"`, criteria: PHOTOS };
     }
     const picks: Record<string, string> = {};
     const used = new Set<string>();
     try {
-      const a = await this.ask(usage, { church: church.brief }, q);
+      const a = await this.ask(usage, { church: this.fullBrief(church) }, q);
       for (const [k, v] of Object.entries(a)) {
         // no repeats on one page: fall back to the next most probable unused option
         const ranked = Object.entries(v.probabilities as Record<string, number>).sort((x, y) => y[1] - x[1]).map(([o]) => o);
-        picks[k] = (k === "heroPhoto" ? v.choice : ranked.find((o) => !used.has(o))) ?? v.choice;
-        used.add(picks[k]);
+        picks[k] = (k.startsWith("hero") ? v.choice : ranked.find((o) => !used.has(o))) ?? v.choice;
+        if (k !== "heroDivider") used.add(picks[k]);
       }
     } catch { /* fall through to defaults */ }
     const photoKeys = Object.keys(PHOTOS);
     const iconKeys = Object.keys(ICONS);
-    Object.keys(q).forEach((k, i) => { if (!picks[k]) picks[k] = k.includes("Icon") ? iconKeys[i % iconKeys.length] : photoKeys[i % photoKeys.length]; });
+    Object.keys(q).forEach((k, i) => { if (!picks[k]) picks[k] = k === "heroDivider" ? "none" : k.includes("Icon") ? iconKeys[i % iconKeys.length] : photoKeys[i % photoKeys.length]; });
     return picks;
   }
 
@@ -403,25 +542,35 @@ export class SiteGenHelper {
     if (!Array.isArray(layout) || !layout.length || layout.length > 8 || layout.some((k) => !SECTIONS[k])) throw new Error("Invalid layout.");
     const started = Date.now();
     const usage = this.newUsage();
-    let copy = await this.writeCopy(usage, church, layout, tone);
-    let checks: Record<string, any> = await this.factCheck(usage, church, layout, copy).catch(() => ({}));
-    let repaired: string[] = [];
-    if (Date.now() - started < REPAIR_DEADLINE_MS) {
-      ({ copy, repaired } = await this.repairCopy(usage, church, layout, copy, tone, checks));
-      if (repaired.length) checks = await this.factCheck(usage, church, layout, copy).catch(() => checks);
+    const written = await Promise.all(this.chunk(layout, SECTIONS_PER_CALL).map((keys) => this.writeSections(usage, church, layout, keys, tone)));
+    let copy: Copy = Object.assign({}, ...written);
+
+    const heroKey = layout.find((k) => SECTIONS[k].role === "hero");
+    const [checks, headline] = await Promise.all([
+      this.factCheck(usage, church, layout, copy).catch((): Record<string, any> => ({})),
+      heroKey ? this.pickHeadline(usage, church, [copy[heroKey].headline, ...((copy[heroKey] as any).headlines || [])]).catch((): string | null => null) : null
+    ]);
+    if (heroKey) {
+      if (headline) copy[heroKey].headline = headline;
+      delete (copy[heroKey] as any).headlines;
     }
+
+    let repaired: string[] = [];
+    if (Date.now() - started < REPAIR_DEADLINE_MS) repaired = await this.repairCopy(usage, church, layout, copy, tone, checks);
+    for (const k of layout) delete (copy[k] as any).headlines;
     copy = this.scrub(copy, this.stockPhrases(church));
 
     const [visuals, judged] = await Promise.all([
       this.pickVisuals(usage, church, layout, copy),
-      this.ask(usage, { church: church.brief, page_copy: layout.map((k) => ({ section: k, ...copy[k] })) }, {
+      this.ask(usage, { church: this.fullBrief(church), page_copy: layout.map((k) => ({ section: k, ...copy[k] })) }, {
         specific: { type: "score", instructions: "How specific is this copy to this one church, using real details from the brief, versus generic lines any church could use?", criteria: ["Generic boilerplate", "Mostly generic", "Mostly specific", "Unmistakably this church"] },
         visitor: { type: "score", instructions: "Would a nervous first-time visitor from the audience this church wants to reach feel understood and know exactly what to do next?", criteria: SCORE4 }
       }).catch((): Record<string, any> | null => null)
     ]);
-    const factClean = layout.filter((k) => !(checks[k]?.probability > 0.5)).length / layout.length;
+    // A rewritten section is not re-checked (that second pass only fed this score), so it earns half credit.
+    const factClean = layout.reduce((t, k) => t + (repaired.includes(k) ? 0.5 : checks[k]?.probability > 0.5 ? 0 : 1), 0) / layout.length;
     const score = +((judged?.specific?.score ?? 0) + (judged?.visitor?.score ?? 0) + factClean * 3).toFixed(2);
-    return { sections: this.buildTree(church, layout, copy, visuals), score, factClean: +factClean.toFixed(2), repaired, usage };
+    return { sections: this.buildTree(church, layout, copy, visuals), score, factClean: +factClean.toFixed(2), repaired, ms: Date.now() - started, usage };
   }
 
   private static newUsage(): SiteGenUsage { return { jevIn: 0, jevCalls: 0, haikuIn: 0, haikuOut: 0, haikuCalls: 0 }; }
@@ -431,8 +580,11 @@ export class SiteGenHelper {
   static buildTree(church: SiteGenChurch, layout: string[], copy: Copy, v: Record<string, string>) {
     const accent = church.palette?.accent || "#2A6F97";
     const dark = church.palette?.dark || "#0B2434";
+    const light = church.palette?.light || "#FFFFFF";
+    const photo = (term: string) => (term ? `pexels:${term}` : "");
+    const FADE = { onShow: "fadeIn", onShowSpeed: "normal" };
     const esc = (t = "") => String(t).replace(/[&<>]/g, (c): string => ({ "&": "&amp;", "<": "&lt;", ">": "&gt;" } as Record<string, string>)[c]).replace(/'/g, "&rsquo;");
-    const el = (elementType: string, answers: any, elements?: any[]) => ({ elementType, answers, elements });
+    const el = (elementType: string, answers: any, elements?: any[], animations?: any) => ({ elementType, answers, elements, animations });
     const text = (html: string, align = "left") => el("text", { text: html, textAlignment: align });
     const row = (columns: string, cols: any[][]) => el("row", { columns, mobileSizes: columns.split(",").map(() => 12).join(",") }, columns.split(",").map((size, i) => el("column", { size: Number(size), mobileSize: 12 }, cols[i] || [])));
     const narrow = (...els: any[]) => row("2,8,2", [[], els, []]);
@@ -440,10 +592,11 @@ export class SiteGenHelper {
     const three = (make: (i: number) => any) => row("4,4,4", [1, 2, 3].map((i) => [make(i)]));
     const DARK = { background: "var(--darkAccent)", textColor: "light", headingColor: "var(--light)" };
     const hero = (html: string) => ({
-      background: v.heroPhoto || "var(--dark)",
+      background: photo(v.heroPhoto) || "var(--dark)",
       textColor: "light",
       headingColor: "var(--light)",
-      answers: { overlayColor: dark, backgroundOpacity: "0.6", focalPoint: "center" },
+      // the divider is drawn in the color of the section below the hero, which is always the first plain (light) band
+      answers: { overlayColor: dark, backgroundOpacity: "0.6", focalPoint: "center", ...(v.heroDivider && v.heroDivider !== "none" ? { dividerBottom: { shape: v.heroDivider, color: light, height: 60, flip: false } } : {}) },
       styles: { all: { "padding-top": "130px", "padding-bottom": "130px" } },
       elements: [text(html, "center")]
     });
@@ -459,35 +612,44 @@ export class SiteGenHelper {
         styles: { all: { "padding-top": "70px", "padding-bottom": "70px" } },
         elements: [row("6,6", [[text(`${lead(x)}${btn(x.button, "btn-light")}`)], [sermons(), text(`<p>${esc(x.videoCaption)}</p>`, "center")]])]
       }),
-      welcome: (x) => ({ elements: [el("textWithPhoto", { photo: v.welcomePhoto, photoAlt: PHOTOS[v.welcomePhoto] || "", photoPosition: "left", text: `<h2>${esc(x.heading)}</h2><p>${esc(x.body)}</p>` })] }),
+      heroSplit: (x) => ({
+        background: "var(--lightAccent)",
+        styles: { all: { "padding-top": "70px", "padding-bottom": "70px" } },
+        elements: [row("6,6", [[text(`${lead(x)}${btn(x.button)}`)], [el("image", { photo: photo(v.heroPhoto), photoAlt: PHOTOS[v.heroPhoto] || "", imageAlign: "center" })]])]
+      }),
+      welcome: (x) => ({ elements: [el("textWithPhoto", { photo: photo(v.welcomePhoto), photoAlt: PHOTOS[v.welcomePhoto] || "", photoPosition: "left", text: `<h2>${esc(x.heading)}</h2><p>${esc(x.body)}</p>` })] }),
       expect: (x) => ({
         elements: [
           text(`<h2>${esc(x.heading)}</h2>`, "center"),
-          three((i) => el("iconFeature", { icon: v[`expectIcon${i}`], title: x[`c${i}t`], description: `<p>${esc(x[`c${i}`])}</p>`, iconColor: accent, iconSize: "medium", textAlignment: "center" }))
+          three((i) => el("iconFeature", { icon: v[`expectIcon${i}`], title: x[`c${i}t`], description: `<p>${esc(x[`c${i}`])}</p>`, iconColor: accent, iconSize: "medium", textAlignment: "center" }, undefined, FADE))
         ]
       }),
       times: (x) => ({
         elements: [
-          narrow(
-            text(`<h2>${esc(x.heading)}</h2>`, "center"),
-            el("table", { contents: String(x.rows).split(/\n/).filter(Boolean).map((r) => r.split("|").map((c) => c.trim())), head: false, markdown: false, size: "medium" }),
-            text(`<p>${esc(x.note)}</p>`, "center")
-          )
+          // live data beats typed copy: when the church keeps service times in B1, show those (the element draws its own heading)
+          church.hasServiceTimes
+            ? narrow(el("serviceTimes", { title: x.heading, showCampus: "true" }), text(`<p>${esc(x.note)}</p>`, "center"))
+            : narrow(
+              text(`<h2>${esc(x.heading)}</h2>`, "center"),
+              el("table", { contents: String(x.rows).split(/\n/).filter(Boolean).map((r) => r.split("|").map((c) => c.trim())), head: false, markdown: false, size: "medium" }),
+              text(`<p>${esc(x.note)}</p>`, "center")
+            )
         ]
       }),
       pathways: (x) => ({
         elements: [
           text(`<h2>${esc(x.heading)}</h2>`, "center"),
-          three((i) => el("card", { title: x[`c${i}t`], titleAlignment: "left", text: `<p>${esc(x[`c${i}`])}</p>`, textAlignment: "left" }))
+          three((i) => el("card", { title: x[`c${i}t`], titleAlignment: "left", text: `<p>${esc(x[`c${i}`])}</p>`, textAlignment: "left" }, undefined, FADE))
         ]
       }),
       ministries: (x) => ({
         elements: [
           text(`<h2>${esc(x.heading)}</h2>`, "center"),
-          three((i) => el("card", { photo: v[`ministryPhoto${i}`], photoAlt: x[`c${i}t`], title: x[`c${i}t`], titleAlignment: "center", text: `<p>${esc(x[`c${i}`])}</p>`, textAlignment: "center" }))
+          three((i) => el("card", { photo: photo(v[`ministryPhoto${i}`]), photoAlt: x[`c${i}t`], title: x[`c${i}t`], titleAlignment: "center", text: `<p>${esc(x[`c${i}`])}</p>`, textAlignment: "center" }, undefined, FADE))
         ]
       }),
-      pastor: (x) => ({ elements: [el("textWithPhoto", { photo: "/tempLibrary/pastor.jpg", photoAlt: x.sign, photoPosition: "right", text: `<h2>${esc(x.heading)}</h2><p><em>${esc(x.body)}</em></p><p><strong>${esc(x.sign)}</strong></p>` })] }),
+      // no photo on purpose: a stock stranger must never stand in for the real pastor
+      pastor: (x) => ({ elements: [narrow(text(`<h2>${esc(x.heading)}</h2><p style='font-size:1.15em'><em>${esc(x.body)}</em></p><p><strong>${esc(x.sign)}</strong></p>`, "center"))] }),
       sermon: (x) => ({ elements: [row("5,7", [[text(`<h2>${esc(x.heading)}</h2><p>${esc(x.body)}</p>${btn(x.button, "btn-accent", "/sermons")}`)], [sermons()]])] }),
       quote: (x) => ({ ...DARK, background: "var(--accent)", elements: [narrow(el("testimonial", { quotes: [{ text: x.quote, author: x.cite }], displayMode: "single" }))] }),
       faq: (x) => ({ elements: [narrow(text(`<h2>${esc(x.heading)}</h2>`, "center"), ...[1, 2, 3, 4].map((i) => el("faq", { headingType: "h6", title: x[`q${i}`], description: `<p>${esc(x[`a${i}`])}</p>`, iconColor: accent })))] }),
@@ -498,6 +660,12 @@ export class SiteGenHelper {
             [el("box", { background: "var(--accent)", textColor: "var(--light)", headingColor: "var(--light)", rounded: "true" }, [text(`<h3>${esc(x.highlight)}</h3>`, "center")])]
           ])
         ]
+      }),
+      groups: (x) => ({ elements: [text(`<h2>${esc(x.heading)}</h2><p>${esc(x.body)}</p>`, "center"), el("groups", { showSearch: "false", showCategory: "true" })] }),
+      countdown: (x) => ({
+        ...DARK,
+        background: "var(--accent)",
+        elements: [el("countdown", { mode: "weekly", dayOfWeek: church.nextService?.dayOfWeek ?? 0, time: church.nextService?.time || "10:00", title: x.title, completedText: "Starting now", showDays: "true", showHours: "true" })]
       }),
       visitCta: (x) => ({ ...DARK, styles: { all: { "padding-top": "80px", "padding-bottom": "80px" } }, elements: [text(`<h2>${esc(x.heading)}</h2><p>${esc(x.body)}</p>${btn(x.button, "btn-light")}`, "center")] }),
       contact: (x) => ({
@@ -510,7 +678,13 @@ export class SiteGenHelper {
       })
     };
 
-    const finish = (els: any[]): any[] => els.map((e, i) => ({ elementType: e.elementType, sort: i + 1, answersJSON: JSON.stringify(e.answers), elements: e.elements ? finish(e.elements) : undefined }));
+    const finish = (els: any[]): any[] => els.map((e, i) => ({
+      elementType: e.elementType,
+      sort: i + 1,
+      answersJSON: JSON.stringify(e.answers),
+      animationsJSON: e.animations ? JSON.stringify(e.animations) : undefined,
+      elements: e.elements ? finish(e.elements) : undefined
+    }));
     let plain = 0;
     return layout.map((k, i) => {
       const sec = build[k](copy[k]);
