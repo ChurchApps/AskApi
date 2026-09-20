@@ -183,4 +183,23 @@ describe("SiteGenHelper", () => {
     assert.ok(!SiteGenHelper.knownBrief(church).includes("5:30"));
     assert.equal(SiteGenHelper.fullBrief({ name: "T", brief: "b" }), "b");
   });
+
+  it("works out the weekday of dates in the request instead of letting the writer guess", () => {
+    const now = new Date(Date.UTC(2026, 8, 19));
+    assert.deepEqual(SiteGenHelper.dateFacts("Promote our Thanksgiving potluck on Nov 12th", now), ["Nov 12th is Thursday, November 12, 2026."]);
+    assert.deepEqual(SiteGenHelper.dateFacts("Easter egg hunt April 4", now), ["April 4 is Sunday, April 4, 2027."], "a past date means its next occurrence");
+    assert.deepEqual(SiteGenHelper.dateFacts("VBS is February 30", now), []);
+    assert.deepEqual(SiteGenHelper.dateFacts("A home page for new visitors", now), []);
+  });
+
+  it("never lets an invented email, web address or phone number through, but keeps the church's own", () => {
+    const known = "Call the office at (555) 123-4567 or write info@gracechurch.org";
+    assert.ok(SiteGenHelper.hasInventedContact("Email office@gracecommunity.org to sign up", known));
+    assert.ok(SiteGenHelper.hasInventedContact("Register at www.gracepotluck.com today", known));
+    assert.ok(SiteGenHelper.hasInventedContact("Call 555-987-6543", known));
+    assert.ok(!SiteGenHelper.hasInventedContact("Write info@gracechurch.org or call (555) 123-4567.", known));
+    assert.ok(!SiteGenHelper.hasInventedContact("Doors open at 5:30 PM on November 12, 2026 for about 150 people.", known));
+    const copy = { details: { c1: "Bring a dish to share. Sign up by emailing office@gracecommunity.org. Kids are welcome." } };
+    assert.equal(SiteGenHelper.stripInventedContacts(copy, known).details.c1, "Bring a dish to share. Kids are welcome.");
+  });
 });
