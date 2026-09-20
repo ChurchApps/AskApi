@@ -1,7 +1,7 @@
 import { Environment } from "./Environment.js";
 
 // Low-cost page generation. JEV (typed decisions, no text) picks the structure, judges layouts, fact-checks copy and
-// picks visuals; Haiku only fills named text slots. No model ever emits builder JSON: every template below is a fixed
+// picks visuals; a small chat model only fills named text slots. No model ever emits builder JSON: every template below is a fixed
 // section + element tree from the ElementTypes catalog, so output can never be structurally invalid.
 
 export interface SiteGenChurch {
@@ -18,17 +18,19 @@ export interface SiteGenChurch {
   resolvesPhotos?: boolean;
 }
 
-export interface SiteGenUsage { jevIn: number; jevCalls: number; haikuIn: number; haikuOut: number; haikuCalls: number }
+export interface SiteGenUsage { jevIn: number; jevCalls: number; copyIn: number; copyOut: number; copyCalls: number }
 
 const JEV = "typesafe-ai/jev";
-const HAIKU = "anthropic/claude-haiku-4.5";
+// The copywriter. A blind side-by-side against Claude Haiku 4.5 was close (Haiku slightly warmer), and this is about 4x cheaper
+// and faster. Any chat model id on the gateway works; set SITEGEN_COPY_MODEL=anthropic/claude-haiku-4.5 to switch back.
+const COPY_MODEL = process.env.SITEGEN_COPY_MODEL || "openai/gpt-4.1-mini";
 const CANDIDATES = 10;
 const TOP = 3;
 const SAMPLE_TEMP = 1.5;
 const JEV_TIMEOUT_MS = 6000;
 // JEV is nearly free, so a slow call is raced against a duplicate instead of waited on.
 const JEV_HEDGE_MS = 1500;
-const HAIKU_TIMEOUT_MS = 12000;
+const COPY_TIMEOUT_MS = 12000;
 // API Gateway cuts requests at 29s; skip the optional repair pass once a writePage call has used this much.
 const REPAIR_DEADLINE_MS = 14000;
 const HEADLINE_OPTIONS = 5;
@@ -378,11 +380,11 @@ export class SiteGenHelper {
     return { candidates: scored.slice(0, TOP), tone: style.tone, pageType: style.pageType, suggestedStyle: { key: style.scheme, fonts: SCHEMES[style.scheme].fonts, palette: SCHEMES[style.scheme].palette }, usage };
   }
 
-  private static async haiku(usage: SiteGenUsage, prompt: string, maxOutputTokens: number, temperature: number): Promise<any> {
-    const r = await this.gateway("/v1/chat/completions", { model: HAIKU, max_tokens: maxOutputTokens, temperature, messages: [{ role: "system", content: COPY_SYSTEM }, { role: "user", content: prompt }] }, HAIKU_TIMEOUT_MS);
-    usage.haikuCalls++;
-    usage.haikuIn += r.usage?.prompt_tokens ?? 0;
-    usage.haikuOut += r.usage?.completion_tokens ?? 0;
+  private static async writeJson(usage: SiteGenUsage, prompt: string, maxOutputTokens: number, temperature: number): Promise<any> {
+    const r = await this.gateway("/v1/chat/completions", { model: COPY_MODEL, max_tokens: maxOutputTokens, temperature, messages: [{ role: "system", content: COPY_SYSTEM }, { role: "user", content: prompt }] }, COPY_TIMEOUT_MS);
+    usage.copyCalls++;
+    usage.copyIn += r.usage?.prompt_tokens ?? 0;
+    usage.copyOut += r.usage?.completion_tokens ?? 0;
     const out: string = r.choices?.[0]?.message?.content || "";
     return JSON.parse(out.slice(out.indexOf("{"), out.lastIndexOf("}") + 1));
   }
@@ -411,7 +413,7 @@ export class SiteGenHelper {
     const repairing = Object.keys(notes).length > 0;
     for (let attempt = 1; ; attempt++) {
       try {
-        const out = await this.haiku(usage, prompt, 600 * keys.length + 300, repairing ? 0.4 : 0.8);
+        const out = await this.writeJson(usage, prompt, 600 * keys.length + 300, repairing ? 0.4 : 0.8);
         // a lone section sometimes comes back bare or wrapped as { section: slots } instead of { <key>: slots }
         const found = keys.map((k) => [k, [out[k], ...(keys.length === 1 ? [out, ...Object.values(out)] : [])].find((o: any) => o && typeof o === "object" && !Array.isArray(o) && this.validSection(k, o))]);
         if (found.every(([, slots]) => slots)) return Object.fromEntries(found);
@@ -500,7 +502,7 @@ export class SiteGenHelper {
     return bad;
   }
 
-  /** Last line of defense: Haiku sometimes keeps a stock phrase through a rewrite, so drop the offending sentence in code. */
+  /** Last line of defense: the writer sometimes keeps a stock phrase through a rewrite, so drop the offending sentence in code. */
   static scrub(copy: Copy, phrases: string[]): Copy {
     for (const sec of Object.values(copy)) {
       for (const [n, v] of Object.entries(sec)) {
@@ -575,7 +577,7 @@ export class SiteGenHelper {
     return { sections: this.buildTree(church, layout, copy, visuals), score, factClean: +factClean.toFixed(2), repaired, ms: Date.now() - started, usage };
   }
 
-  private static newUsage(): SiteGenUsage { return { jevIn: 0, jevCalls: 0, haikuIn: 0, haikuOut: 0, haikuCalls: 0 }; }
+  private static newUsage(): SiteGenUsage { return { jevIn: 0, jevCalls: 0, copyIn: 0, copyOut: 0, copyCalls: 0 }; }
 
   // ---- builder tree assembly (pure) ----
 
