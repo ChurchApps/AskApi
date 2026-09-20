@@ -6,7 +6,7 @@ mock.module("@churchapps/apihelper", { namedExports: { AwsHelper: { readParamete
 const { SiteGenHelper, SECTIONS } = await import("../SiteGenHelper.js");
 
 const BUILDER_TYPES = new Set([
-  "text", "row", "column", "card", "faq", "iconFeature", "table", "testimonial", "textWithPhoto", "box", "map", "sermons", "image", "groups", "countdown", "serviceTimes"
+  "text", "row", "column", "card", "faq", "iconFeature", "table", "testimonial", "textWithPhoto", "box", "map", "sermons", "image", "groups", "countdown", "serviceTimes", "gallery"
 ]);
 
 const fillCopy = (layout: string[]) => Object.fromEntries(layout.map((k) => [k, Object.fromEntries(Object.keys(SECTIONS[k].slots).map((n) => [n, n === "rows" ? "Sunday | 9am\nWednesday | 6pm" : `It's <${n}>`]))]));
@@ -99,7 +99,7 @@ describe("SiteGenHelper", () => {
   it("keeps a page about one event on topic by not offering general church sections", () => {
     const church = { name: "T", brief: "Promote our Thanksgiving potluck on Nov 12th", address: "1 Main St", hasGroups: true, nextService: { dayOfWeek: 0, time: "10:00" } };
     const event = SiteGenHelper.available("mid", church, "event");
-    for (const generic of ["pastor", "sermon", "ministries", "groups", "serve", "times", "countdown"]) assert.ok(!event.includes(generic), `${generic} is filler on an event page`);
+    for (const generic of ["pastor", "sermon", "ministries", "groups", "serve", "countdown"]) assert.ok(!event.includes(generic), `${generic} is filler on an event page`);
     assert.ok(event.includes("details") && event.includes("eventCountdown") && event.includes("faq"));
     assert.ok(!SiteGenHelper.available("hero", church, "event").includes("heroVideo"));
     const home = SiteGenHelper.available("mid", church, "home");
@@ -114,15 +114,33 @@ describe("SiteGenHelper", () => {
     assert.ok(!build("2020-11-12T18:00").includes('"elementType":"countdown"'));
   });
 
-  it("keeps a thin single-event request to a short page", () => {
+  it("gives even a one-line event request a full page, and general pages more room", () => {
     const thin = { name: "T", brief: "I want a page to promote our Thanksgiving potluck on Nov 12th" };
-    assert.deepEqual(Object.keys(SiteGenHelper.countOptions(thin, "event")), ["2"]);
-    assert.deepEqual(Object.keys(SiteGenHelper.countOptions(thin, "home")), ["2", "3", "4", "5"]);
-    assert.deepEqual(Object.keys(SiteGenHelper.countOptions({ name: "T", brief: "x".repeat(700) }, "event")), ["2", "3", "4"]);
+    assert.deepEqual(Object.keys(SiteGenHelper.countOptions(thin, "event")), ["3", "4"]);
+    assert.deepEqual(Object.keys(SiteGenHelper.countOptions({ name: "T", brief: "x".repeat(700) }, "event")), ["3", "4", "5"]);
+    assert.deepEqual(Object.keys(SiteGenHelper.countOptions(thin, "home")), ["4", "5", "6"]);
+  });
+
+  it("offers live service times on an event page only when the church has them", () => {
+    assert.ok(SiteGenHelper.available("mid", { name: "T", brief: "b", hasServiceTimes: true }, "event").includes("times"));
+    assert.ok(!SiteGenHelper.available("mid", { name: "T", brief: "b" }, "event").includes("times"));
+    assert.ok(SiteGenHelper.available("mid", { name: "T", brief: "b" }, "event").includes("invite"));
   });
 
   it("cuts a stock phrase out of a slot that is a single sentence", () => {
     const copy = { expect: { c1: "Come as you are to relax, eat, and enjoy the meal." } };
     assert.equal(SiteGenHelper.scrub(copy, ["come as you are"]).expect.c1, "Relax, eat, and enjoy the meal.");
+  });
+
+  it("adds photos beyond the hero, but only offers the gallery to clients that can resolve photos", () => {
+    const church = { name: "T", brief: "b", resolvesPhotos: true };
+    assert.ok(SiteGenHelper.available("mid", church).includes("gallery"));
+    assert.ok(!SiteGenHelper.available("mid", { name: "T", brief: "b" }).includes("gallery"));
+    const layout = ["heroPhoto", "gallery", "invite", "visitCta"];
+    const visuals = { heroPhoto: "church exterior", galleryPhoto1: "open bible", galleryPhoto2: "choir singing", galleryPhoto3: "hands praying", invitePhoto: "friends talking coffee", ctaPhoto: "sunrise field" };
+    const sections = SiteGenHelper.buildTree(church, layout, fillCopy(layout), visuals);
+    assert.equal(JSON.parse(sections[1].elements[1].answersJSON).photos.length, 3);
+    assert.equal(sections[3].background, "pexels:sunrise field");
+    assert.equal(new Set(JSON.stringify(sections).match(/pexels:[a-z ]+/g)).size, 6);
   });
 });

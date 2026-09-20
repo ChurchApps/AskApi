@@ -17,6 +17,8 @@ export interface SiteGenChurch {
   // True when the client swaps "pexels:<term>" placeholders for real photos. Older clients get a built-in image instead.
   resolvesPhotos?: boolean;
   pageType?: string;
+  // True once the dialog has shown its follow-up questions, so they are not offered twice.
+  askedQuestions?: boolean;
 }
 
 export interface SiteGenUsage { jevIn: number; jevCalls: number; copyIn: number; copyOut: number; copyCalls: number }
@@ -41,54 +43,55 @@ type Slot = { guide: string; max: number };
 const s = (guide: string, max: number): Slot => ({ guide, max });
 const threeCards = (first: string) => ({
   heading: s("Section heading", 50),
+  intro: s("One or two sentences under the heading that set up the three cards", 220),
   c1t: s(first, 30),
-  c1: s("Card 1 text, brief facts only", 150),
+  c1: s("Card 1 text: two full sentences", 240),
   c2t: s("Card 2 title", 30),
-  c2: s("Card 2 text", 150),
+  c2: s("Card 2 text: two full sentences", 240),
   c3t: s("Card 3 title", 30),
-  c3: s("Card 3 text", 150)
+  c3: s("Card 3 text: two full sentences", 240)
 });
 
 export const SECTIONS: Record<string, { role: "hero" | "mid" | "close"; desc: string; slots: Record<string, Slot> }> = {
   heroPhoto: {
     role: "hero",
-    desc: "Full-width photo hero with big headline, one sentence, and one button. Classic, warm, works for any church.",
-    slots: { headline: s("Main headline, concrete and specific to this church", 60), sub: s("One supporting sentence", 140), button: s("Button label", 22) }
+    desc: "Full-width photo hero with big headline, a supporting sentence or two, and one button. Classic, warm, works for any page.",
+    slots: { headline: s("Main headline, concrete and specific to this page's subject", 60), sub: s("One or two supporting sentences", 200), button: s("Button label", 22) }
   },
   heroTimes: {
     role: "hero",
     desc: "Hero with headline plus the key when-and-where line shown right in the hero (service times, or an event's date, time and place). Best when the reader's main question is when and where.",
-    slots: { headline: s("Main headline", 60), sub: s("One supporting sentence", 120), times: s("Service times, or the event's date, time and place; compact, separated by ' · '", 110), button: s("Button label", 22) }
+    slots: { headline: s("Main headline", 60), sub: s("One or two supporting sentences", 180), times: s("Service times, or the event's date, time and place; compact, separated by ' · '", 110), button: s("Button label", 22) }
   },
   heroVideo: {
     role: "hero",
     desc: "Hero with headline beside the latest sermon video. Best for churches that stream and whose visitors watch online before attending.",
-    slots: { headline: s("Main headline", 60), sub: s("One supporting sentence", 140), button: s("Button label", 22), videoCaption: s("Caption under the video", 60) }
+    slots: { headline: s("Main headline", 60), sub: s("One or two supporting sentences", 200), button: s("Button label", 22), videoCaption: s("Caption under the video", 60) }
   },
   heroSplit: {
     role: "hero",
     desc: "Split hero: headline and button on one side, a photo on the other, on a light background. Calmer and more editorial than a full-bleed photo; good for about, ministry and information pages.",
-    slots: { headline: s("Main headline", 60), sub: s("One supporting sentence", 140), button: s("Button label", 22) }
+    slots: { headline: s("Main headline", 60), sub: s("One or two supporting sentences", 200), button: s("Button label", 22) }
   },
   welcome: {
     role: "mid",
-    desc: "Two-column photo and paragraph: who the church is on a general page, or the story behind this page's subject (why this event, what it means) on a focused page.",
-    slots: { heading: s("Section heading", 50), body: s("2-3 sentence paragraph about the page's subject, using real details", 380) }
+    desc: "Two-column photo and text: who the church is on a general page, or the story behind this page's subject (why this event, what it means) on a focused page.",
+    slots: { heading: s("Section heading", 50), body: s("Two short paragraphs (separate them with a blank line) about the page's subject, using real details", 700) }
   },
   expect: {
     role: "mid",
-    desc: "What to expect: three short icon cards about what it will actually be like (a first visit, or the event this page is about). Lowers anxiety for someone coming for the first time.",
-    slots: threeCards("Card 1 title: an aspect of a visit the brief gives facts about")
+    desc: "What to expect: three icon cards about what it will actually be like (a first visit, or the event this page is about). Lowers anxiety for someone coming for the first time.",
+    slots: threeCards("Card 1 title: an aspect of the experience")
   },
   pathways: {
     role: "mid",
-    desc: "Three quick-link cards for the specific things people come to this site looking for (e.g. baptism, first communion, marriage prep, a recovery group, a service in another language, the school). Essential when the brief names things people need to find.",
-    slots: threeCards("Card 1: a thing the brief says people look for")
+    desc: "Three quick-link cards for the specific things people come looking for, or the different ways to take part (e.g. baptism, marriage prep, a recovery group; or attend, bring a dish, volunteer).",
+    slots: threeCards("Card 1: a thing people look for, or a way to take part")
   },
   times: {
     role: "mid",
-    desc: "Service times block: a clean table of every gathering with day and time. Essential when there are many services or Mass times.",
-    slots: { heading: s("Section heading", 50), rows: s("Every gathering, one per line as 'Name | day and time'", 420), note: s("Short note under the list", 120) }
+    desc: "Service times block: every regular gathering with day and time. Essential on general pages; on an event page it invites people back on Sundays.",
+    slots: { heading: s("Section heading", 50), rows: s("Every gathering, one per line as 'Name | day and time'", 420), note: s("One or two sentences under the list", 220) }
   },
   ministries: {
     role: "mid",
@@ -97,48 +100,40 @@ export const SECTIONS: Record<string, { role: "hero" | "mid" | "close"; desc: st
   },
   pastor: {
     role: "mid",
-    desc: "Personal note from the pastor: a short first-person message and signature, no photo. Builds trust for small or relational churches.",
-    slots: { heading: s("Section heading", 50), body: s("First-person note from the pastor, 2-3 sentences, sounds like a real person", 360), sign: s("Signature line: name and role", 60) }
+    desc: "Personal note from the pastor: a first-person message and signature, no photo. Builds trust for small or relational churches.",
+    slots: { heading: s("Section heading", 50), body: s("First-person note from the pastor, four to six sentences, sounds like a real person", 600), sign: s("Signature line: name and role", 60) }
   },
   sermon: {
     role: "mid",
     desc: "Latest sermon / watch online band with the newest sermon video and a link to the archive.",
-    slots: { heading: s("Section heading", 50), body: s("One or two sentences on what the teaching is like", 200), button: s("Button label", 22) }
+    slots: { heading: s("Section heading", 50), body: s("Two or three sentences on what the teaching is like", 350), button: s("Button label", 22) }
   },
   quote: {
     role: "mid",
-    desc: "Large pull quote: a scripture verse or a line about the church's heart, centered on a colored band. A breather between dense sections.",
-    slots: { quote: s("A scripture verse (quoted accurately) or one line about the church", 200), cite: s("Reference or attribution", 50) }
+    desc: "Large pull quote: a scripture verse that fits the page's subject, or a line about the church's heart, centered on a colored band. A breather between dense sections.",
+    slots: { quote: s("A scripture verse (quoted accurately) that fits this page's subject", 260), cite: s("Reference or attribution", 50) }
   },
   faq: {
     role: "mid",
-    desc: "FAQ with four questions a first-time visitor, or someone deciding whether to come to this event, would actually ask.",
+    desc: "FAQ with five questions a first-time visitor, or someone deciding whether to come to this event, would actually ask.",
     slots: {
       heading: s("Section heading", 50),
-      q1: s("Question 1: only ask questions the brief can answer", 70),
-      a1: s("Answer 1, brief facts only, no promises the brief does not make", 200),
-      q2: s("Question 2", 70),
-      a2: s("Answer 2", 200),
-      q3: s("Question 3", 70),
-      a3: s("Answer 3", 200),
-      q4: s("Question 4", 70),
-      a4: s("Answer 4", 200)
+      q1: s("Question 1: only ask questions the brief can answer, or that can be answered honestly without new facts", 80),
+      a1: s("Answer 1: two or three sentences, no promises the brief does not make", 300),
+      q2: s("Question 2", 80),
+      a2: s("Answer 2", 300),
+      q3: s("Question 3", 80),
+      a3: s("Answer 3", 300),
+      q4: s("Question 4", 80),
+      a4: s("Answer 4", 300),
+      q5: s("Question 5", 80),
+      a5: s("Answer 5", 300)
     }
   },
   serve: {
     role: "mid",
     desc: "Community impact band: what this church does for its neighbors (food pantry, recovery, school), with one short highlight box.",
-    slots: { heading: s("Section heading", 50), body: s("2 sentences about real community work from the brief", 260), highlight: s("Short highlight, e.g. 'Open every Thursday'", 40) }
-  },
-  groups: {
-    role: "mid",
-    desc: "Live list of the church's small groups pulled from its records, with a short intro. Only useful when finding a group is a real next step for this audience.",
-    slots: { heading: s("Section heading", 50), body: s("One or two sentences inviting people to find a group, brief facts only", 200) }
-  },
-  countdown: {
-    role: "mid",
-    desc: "Live countdown to the next main weekly gathering. Energetic; suits churches with one main gathering and a younger or online-first audience.",
-    slots: { title: s("Short line above the countdown, e.g. what is starting", 50) }
+    slots: { heading: s("Section heading", 50), body: s("Three or four sentences about real community work from the brief", 450), highlight: s("Short highlight, e.g. 'Open every Thursday'", 40) }
   },
   details: {
     role: "mid",
@@ -150,15 +145,35 @@ export const SECTIONS: Record<string, { role: "hero" | "mid" | "close"; desc: st
     desc: "Live countdown to the event's date. Builds anticipation for a dated event.",
     slots: { title: s("Short line above the countdown naming the event", 50), date: s("The event's start as an ISO date-time, e.g. 2026-11-12T18:00. Use the date and time from the request and the next future occurrence of that date. If the request gives no time, use 12:00", 20) }
   },
+  gallery: {
+    role: "mid",
+    desc: "Photo strip: three photos that set the mood for this page's subject, under a short heading. Adds warmth and breaks up text; needs no facts.",
+    slots: { heading: s("Short heading for the photo strip", 50), intro: s("One sentence under the heading", 160) }
+  },
+  invite: {
+    role: "mid",
+    desc: "Bring-someone band: a warm, short invitation to bring a friend, neighbor or family member along, with one button. Needs no facts, so it always has something true to say.",
+    slots: { heading: s("Invitation heading", 60), body: s("Three or four warm sentences encouraging the reader to bring someone", 380), button: s("Button label", 22) }
+  },
+  groups: {
+    role: "mid",
+    desc: "Live list of the church's small groups pulled from its records, with a short intro. Only useful when finding a group is a real next step for this audience.",
+    slots: { heading: s("Section heading", 50), body: s("Two or three sentences inviting people to find a group, brief facts only", 320) }
+  },
+  countdown: {
+    role: "mid",
+    desc: "Live countdown to the next main weekly gathering. Energetic; suits churches with one main gathering and a younger or online-first audience.",
+    slots: { title: s("Short line above the countdown, e.g. what is starting", 50) }
+  },
   visitCta: {
     role: "close",
     desc: "Closing call-to-action band inviting people to take this page's main action (plan a visit, come to the event, sign up), with one button.",
-    slots: { heading: s("Invitation headline", 60), body: s("One sentence", 140), button: s("Button label", 22) }
+    slots: { heading: s("Invitation headline", 60), body: s("Two sentences", 240), button: s("Button label", 22) }
   },
   contact: {
     role: "close",
-    desc: "Closing section with map, address, service times recap and a contact button. Best for local, walk-in, or older audiences.",
-    slots: { heading: s("Section heading", 50), times: s("Service times recap, compact", 140), button: s("Button label", 22) }
+    desc: "Closing section with map, address, a when-and-where recap and a contact button. Best for local, walk-in, or older audiences, and for events people must find.",
+    slots: { heading: s("Section heading", 50), times: s("When-and-where recap, one or two sentences", 220), button: s("Button label", 22) }
   }
 };
 
@@ -177,11 +192,40 @@ const PAGE_TYPES: Record<string, string> = {
   other: "Something else"
 };
 
+// When a request is short, the dialog offers the user a few of these (only the ones the request leaves unanswered).
+const QUESTION_BANK: Record<string, Record<string, string>> = {
+  event: {
+    time: "What time does it start and end?",
+    place: "Where exactly is it held (room, building or address)?",
+    bring: "What should people bring or prepare?",
+    signup: "How do people sign up or RSVP, and by when?",
+    cost: "Is there a cost?",
+    audience: "Who is it for (everyone, families, certain ages)?",
+    kids: "Is there childcare or something for kids?",
+    contact: "Who can people contact with questions?"
+  },
+  general: {
+    services: "When are your regular services or gatherings?",
+    style: "What is worship like (music, teaching style, length)?",
+    leader: "Who is the pastor or leader, and how long have they served?",
+    kids: "What do you offer for kids and students?",
+    distinct: "What would people say is special about your church?",
+    reach: "Who are you most hoping to reach?",
+    community: "How does your church serve the community?"
+  },
+  topic: {
+    what: "What are the key details people need to know?",
+    audience: "Who is this for?",
+    next: "What is the next step you want people to take, and how?",
+    contact: "Who can people contact with questions?"
+  }
+};
+const MAX_QUESTIONS = 4;
+const ASK_QUESTIONS_BELOW = 500;
+
 // On a page about one event or topic, sections about the church in general are filler, so they are not even offered.
 const FOCUSED_TYPES = new Set(["event", "topic"]);
-const GENERAL_ONLY = new Set([
-  "heroVideo", "pastor", "sermon", "ministries", "groups", "serve", "times", "countdown"
-]);
+const GENERAL_ONLY = new Set(["heroVideo", "pastor", "sermon", "ministries", "groups", "serve", "countdown"]);
 const FOCUSED_ONLY = new Set(["details", "eventCountdown"]);
 
 const sch = (desc: string, heading: string, body: string, light: string, lightAccent: string, accent: string, darkAccent: string, dark: string) => ({ desc, fonts: { heading, body }, palette: { light, lightAccent, accent, darkAccent, dark } });
@@ -279,13 +323,14 @@ Rules:
 - Every fact (names, times, programs, places) must come from the brief. Never invent staff, stats, history, or programs.
 - If the brief does not mention it, it does not exist: no coffee, parking, dress code, pews, greeters, nursery, building details or history unless the brief states them. When a slot asks for something the brief doesn't cover, write about what the brief DOES cover that serves the same visitor need.
 - The page request is the SUBJECT of the page. When it asks for a page about one event, program or topic, every section is about that subject; mention the wider church only where it directly helps the reader act (where it is, who to contact). Do not turn it into an "about our church" page.
-- Never state a time, time of day, day of the week, date, price, room, deadline, age range or sign-up method that the request or records do not give, however natural it would be for such an event. If a slot needs one that is missing, write around it ("details to follow", or simply leave the detail out) rather than guessing.
+- Never state a time, time of day, day of the week, date, price, room, deadline, age range or sign-up method that the request or records do not give, however natural it would be for such an event. If a slot needs one that is missing, write around it ("details to follow", or simply leave the detail out) rather than guessing. The same goes for negatives: do not say something is free, not required, not needed or provided unless the request says so.
+- Write generously. Use most of each slot's length: body slots are several full sentences, card texts two full sentences. Fill the space with warmth, why this matters, what it will feel like, reassurance and invitation. None of that needs facts. What you may NOT add is specifics the request does not give (previous rule).
 - Be specific to THIS church and this subject. A sentence that could appear on any church's site is a failed sentence.
 - The hero headline must NOT be the church's name (it is already in the site header). It should say something true and particular about the page's subject in under ten words.
 - Avoid stock church-website phrases such as "Welcome home", "come as you are", "a place to belong", "vibrant", "do life together", unless the brief itself uses them. No exclamation marks, no em dashes, no rhetorical questions in headlines.
 - Headlines are short and concrete. Body copy is second person and talks to the person this page is for.
 - Do not repeat the same fact or phrase in more than two sections. Each section must earn its place with new information.
-- Respect each slot's max characters strictly. Plain text only, no markdown.
+- Stay within each slot's max characters. Plain text only, no markdown.
 - Scripture, if used, must be quoted accurately with its reference.`;
 
 const STOCK_PHRASES = [
@@ -344,16 +389,18 @@ export class SiteGenHelper {
   private static criteria(keys: string[]) { return Object.fromEntries(keys.map((k) => [k, SECTIONS[k].desc])); }
 
   static available(role: string, church: SiteGenChurch, pageType = "home") {
-    const needs: Record<string, boolean> = { contact: !!church.address, groups: !!church.hasGroups, countdown: !!church.nextService, eventCountdown: pageType === "event" };
     const focused = FOCUSED_TYPES.has(pageType);
+    // on a focused page the weekly times are only worth a section when they are live data, never typed filler
+    const needs: Record<string, boolean> = { contact: !!church.address, groups: !!church.hasGroups, countdown: !!church.nextService, eventCountdown: pageType === "event", times: !focused || !!church.hasServiceTimes, gallery: !!church.resolvesPhotos };
     return Object.keys(SECTIONS).filter((k) => SECTIONS[k].role === role && needs[k] !== false && !(focused ? GENERAL_ONLY : FOCUSED_ONLY).has(k));
   }
 
-  // A one-line request cannot fill a long page with true statements; the extra sections would be padded with guesses.
+  // Pages should feel complete. A short request still gets a full page: warmth, explanation and invitation need no
+  // facts, and the writer is forbidden from guessing specifics, so length is no longer bought with invention.
   static countOptions(church: SiteGenChurch, pageType: string): Record<string, string> {
-    const all: Record<string, string> = { 2: "Two: a single event or short announcement", 3: "Three: small church or simple message", 4: "Four: typical", 5: "Five: large church with many programs or audiences" };
-    const max = FOCUSED_TYPES.has(pageType) ? (church.brief.length < 250 ? 2 : church.brief.length < 600 ? 3 : 4) : 5;
-    return Object.fromEntries(Object.entries(all).filter(([n]) => Number(n) <= max));
+    if (!FOCUSED_TYPES.has(pageType)) return { 4: "Four: a compact page", 5: "Five: typical", 6: "Six: large church with many programs or audiences" };
+    const all: Record<string, string> = { 3: "Three: a simple event or announcement", 4: "Four: typical", 5: "Five: a big event with lots to explain" };
+    return church.brief.length < 250 ? { 3: all[3], 4: all[4] } : all;
   }
 
   private static goal(pageType: string) {
@@ -381,7 +428,7 @@ export class SiteGenHelper {
     // hero and section count don't depend on each other, so they share one round trip
     const opening = await round({
       hero: { type: "choice", instructions: "Which hero section should open this page?", criteria: this.criteria(this.available("hero", church, pageType)) },
-      count: { type: "choice", instructions: "How many sections should sit between the hero and the closing section? Fewer is better when the request gives little material.", criteria: this.countOptions(church, pageType) }
+      count: { type: "choice", instructions: "How many sections should sit between the hero and the closing section? The page should feel complete and generous, not like a stub.", criteria: this.countOptions(church, pageType) }
     });
     chosen.push(this.sample(opening.hero.probabilities, temp));
     const count = Number(this.sample(opening.count.probabilities, temp));
@@ -413,11 +460,24 @@ export class SiteGenHelper {
     return { scheme: a.scheme.choice as string, tone: a.tone.choice as string, pageType: a.pageType.choice as string };
   }
 
+  /** For a short request: which few details would most improve the page? Unanswered questions only, in the bank's priority order. */
+  private static async pickQuestions(usage: SiteGenUsage, church: SiteGenChurch, pageType: string): Promise<{ key: string; question: string }[]> {
+    if (church.askedQuestions || church.brief.length >= ASK_QUESTIONS_BELOW) return [];
+    const bank = { ...(QUESTION_BANK[pageType] || (FOCUSED_TYPES.has(pageType) ? QUESTION_BANK.topic : QUESTION_BANK.general)) };
+    if (church.hasServiceTimes) delete bank.services;
+    const a = await this.ask(usage, { page_request: church.brief, church_records: church.facts || "" }, Object.fromEntries(Object.entries(bank).map(([key, question]) => [
+      key,
+      { type: "boolean", instructions: `Does page_request or church_records already answer this: "${question}"`, criteria: { true: "Yes, the answer is already stated", false: "No, it is not stated" } }
+    ])));
+    return Object.keys(bank).filter((key) => a[key]?.probability < 0.5).slice(0, MAX_QUESTIONS).map((key) => ({ key, question: bank[key] }));
+  }
+
   /** Phase 1: sample candidate layouts, judge them, and pick a voice. Returns the best few for phase 2. */
   static async planPage(church: SiteGenChurch) {
     const usage = this.newUsage();
     const style = await this.pickStyle(usage, church).catch(() => ({ scheme: "navyClassic", tone: "plainWarm", pageType: "home" }));
     const memo = new Map<string, Promise<Record<string, any>>>();
+    const questionsPromise = this.pickQuestions(usage, church, style.pageType).catch((): { key: string; question: string }[] => []);
     const built = await Promise.allSettled(Array.from({ length: CANDIDATES }, (_, i) => this.buildLayout(usage, church, i ? SAMPLE_TEMP : 0, memo, style.pageType)));
     const layouts = built.filter((r): r is PromiseFulfilledResult<string[]> => r.status === "fulfilled").map((r) => r.value);
     if (!layouts.length) throw new Error("Could not plan a page layout. Please try again.");
@@ -427,7 +487,7 @@ export class SiteGenHelper {
     scored.sort((a, b) => b.score - a.score);
     // A weak best layout usually means the template library lacks something this church needed; the log is the template backlog.
     if (scored[0].score < 6) console.log(JSON.stringify({ siteGen: "lowLayoutScore", score: scored[0].score, pageType: style.pageType, layout: scored[0].layout, brief: church.brief.substring(0, 500) }));
-    return { candidates: scored.slice(0, TOP), tone: style.tone, pageType: style.pageType, suggestedStyle: { key: style.scheme, fonts: SCHEMES[style.scheme].fonts, palette: SCHEMES[style.scheme].palette }, usage };
+    return { candidates: scored.slice(0, TOP), questions: await questionsPromise, tone: style.tone, pageType: style.pageType, suggestedStyle: { key: style.scheme, fonts: SCHEMES[style.scheme].fonts, palette: SCHEMES[style.scheme].palette }, usage };
   }
 
   private static async writeJson(usage: SiteGenUsage, prompt: string, maxOutputTokens: number, temperature: number): Promise<any> {
@@ -534,6 +594,8 @@ export class SiteGenHelper {
       if (checks[k]?.probability > 0.5) why.push("it states details that are not in the brief; remove every detail the brief does not state");
       if (SECTIONS[k].role === "hero" && copy[k].headline.toLowerCase().includes(church.name.toLowerCase().slice(0, 12))) why.push("the headline uses the church name");
       if (/[!—]/.test(textOf) || phrases.some((p) => textOf.includes(p))) why.push("it uses a stock church phrase, exclamation mark or em dash");
+      const thin = Object.entries(SECTIONS[k].slots).some(([n, slot]) => slot.max >= 200 && typeof copy[k][n] === "string" && copy[k][n].length < slot.max * 0.4);
+      if (thin) why.push("it is too thin; expand it to use most of each slot's length with warmth, explanation and invitation, without adding any new facts");
       if (repeats[k]) why.push(`it repeats what the "${repeats[k]}" section already says (${JSON.stringify(copy[repeats[k]])}); say something that section does not`);
       if (why.length) reasons[k] = why;
     }
@@ -572,7 +634,12 @@ export class SiteGenHelper {
       heroDivider: { type: "choice", instructions: "Which shape should the bottom edge of the hero have?", criteria: { none: "Straight edge: traditional, formal, liturgical", curve: "Soft curve: warm and welcoming", wave: "Wave: relaxed, family-friendly, contemporary", slant: "Slant: modern, urban, energetic" } }
     };
     if (layout.includes("welcome")) q.welcomePhoto = { type: "choice", instructions: "Which photo subject best fits the 'who we are' section? It should show people or place, and differ from the hero.", criteria: PHOTOS };
+    const mood = "It should suit this page's subject and differ from the other photos on the page.";
+    if (layout.includes("invite")) q.invitePhoto = { type: "choice", instructions: `Which photo subject best fits a section inviting people to bring a friend? ${mood}`, criteria: PHOTOS };
+    if (layout.includes("visitCta")) q.ctaPhoto = { type: "choice", instructions: `Which photo subject best fits the closing call-to-action band (it sits behind text)? ${mood}`, criteria: PHOTOS };
     for (const i of [1, 2, 3]) {
+      if (layout.includes("gallery")) q[`galleryPhoto${i}`] = { type: "choice", instructions: `Photo ${i} of a three-photo strip for this page. ${mood}`, criteria: PHOTOS };
+      if (layout.includes("pathways")) q[`pathwaysPhoto${i}`] = { type: "choice", instructions: `Which photo subject best matches this card? "${copy.pathways[`c${i}t`]}: ${copy.pathways[`c${i}`]}"`, criteria: PHOTOS };
       for (const cards of ["expect", "details"]) if (layout.includes(cards)) q[`${cards}Icon${i}`] = { type: "choice", instructions: `Which icon best matches this card? "${copy[cards][`c${i}t`]}: ${copy[cards][`c${i}`]}"`, criteria: ICONS };
       if (layout.includes("ministries")) q[`ministryPhoto${i}`] = { type: "choice", instructions: `Which photo subject best matches this ministry card? "${copy.ministries[`c${i}t`]}: ${copy.ministries[`c${i}`]}"`, criteria: PHOTOS };
     }
@@ -659,6 +726,8 @@ export class SiteGenHelper {
       elements: [text(html, "center")]
     });
     const lead = (x: any) => `<h1>${esc(x.headline)}</h1><p style='font-size:1.3em'>${esc(x.sub)}</p>`;
+    const paras = (body: string) => String(body || "").split(/\n\s*\n|\n/).map((p) => p.trim()).filter(Boolean).map((p) => `<p>${esc(p)}</p>`).join("");
+    const cardsHead = (x: any) => text(`<h2>${esc(x.heading)}</h2>${x.intro ? `<p>${esc(x.intro)}</p>` : ""}`, "center");
     const sermons = () => el("sermons", { layout: "featuredLatest" });
 
     const build: Record<string, (x: any) => any> = {
@@ -675,10 +744,10 @@ export class SiteGenHelper {
         styles: { all: { "padding-top": "70px", "padding-bottom": "70px" } },
         elements: [row("6,6", [[text(`${lead(x)}${btn(x.button)}`)], [el("image", { photo: photo(v.heroPhoto), photoAlt: PHOTOS[v.heroPhoto] || "", imageAlign: "center" })]])]
       }),
-      welcome: (x) => ({ elements: [el("textWithPhoto", { photo: photo(v.welcomePhoto), photoAlt: PHOTOS[v.welcomePhoto] || "", photoPosition: "left", text: `<h2>${esc(x.heading)}</h2><p>${esc(x.body)}</p>` })] }),
+      welcome: (x) => ({ elements: [el("textWithPhoto", { photo: photo(v.welcomePhoto), photoAlt: PHOTOS[v.welcomePhoto] || "", photoPosition: "left", text: `<h2>${esc(x.heading)}</h2>${paras(x.body)}` })] }),
       expect: (x) => ({
         elements: [
-          text(`<h2>${esc(x.heading)}</h2>`, "center"),
+          cardsHead(x),
           three((i) => el("iconFeature", { icon: v[`expectIcon${i}`], title: x[`c${i}t`], description: `<p>${esc(x[`c${i}`])}</p>`, iconColor: accent, iconSize: "medium", textAlignment: "center" }, undefined, FADE))
         ]
       }),
@@ -696,32 +765,32 @@ export class SiteGenHelper {
       }),
       pathways: (x) => ({
         elements: [
-          text(`<h2>${esc(x.heading)}</h2>`, "center"),
-          three((i) => el("card", { title: x[`c${i}t`], titleAlignment: "left", text: `<p>${esc(x[`c${i}`])}</p>`, textAlignment: "left" }, undefined, FADE))
+          cardsHead(x),
+          three((i) => el("card", { photo: photo(v[`pathwaysPhoto${i}`]) || undefined, photoAlt: x[`c${i}t`], title: x[`c${i}t`], titleAlignment: "left", text: `<p>${esc(x[`c${i}`])}</p>`, textAlignment: "left" }, undefined, FADE))
         ]
       }),
       ministries: (x) => ({
         elements: [
-          text(`<h2>${esc(x.heading)}</h2>`, "center"),
+          cardsHead(x),
           three((i) => el("card", { photo: photo(v[`ministryPhoto${i}`]), photoAlt: x[`c${i}t`], title: x[`c${i}t`], titleAlignment: "center", text: `<p>${esc(x[`c${i}`])}</p>`, textAlignment: "center" }, undefined, FADE))
         ]
       }),
       // no photo on purpose: a stock stranger must never stand in for the real pastor
-      pastor: (x) => ({ elements: [narrow(text(`<h2>${esc(x.heading)}</h2><p style='font-size:1.15em'><em>${esc(x.body)}</em></p><p><strong>${esc(x.sign)}</strong></p>`, "center"))] }),
+      pastor: (x) => ({ elements: [narrow(text(`<h2>${esc(x.heading)}</h2><div style='font-size:1.1em;font-style:italic'>${paras(x.body)}</div><p><strong>${esc(x.sign)}</strong></p>`, "center"))] }),
       sermon: (x) => ({ elements: [row("5,7", [[text(`<h2>${esc(x.heading)}</h2><p>${esc(x.body)}</p>${btn(x.button, "btn-accent", "/sermons")}`)], [sermons()]])] }),
       quote: (x) => ({ ...DARK, background: "var(--accent)", elements: [narrow(el("testimonial", { quotes: [{ text: x.quote, author: x.cite }], displayMode: "single" }))] }),
-      faq: (x) => ({ elements: [narrow(text(`<h2>${esc(x.heading)}</h2>`, "center"), ...[1, 2, 3, 4].map((i) => el("faq", { headingType: "h6", title: x[`q${i}`], description: `<p>${esc(x[`a${i}`])}</p>`, iconColor: accent })))] }),
+      faq: (x) => ({ elements: [narrow(text(`<h2>${esc(x.heading)}</h2>`, "center"), ...[1, 2, 3, 4, 5].filter((i) => x[`q${i}`]).map((i) => el("faq", { headingType: "h6", title: x[`q${i}`], description: `<p>${esc(x[`a${i}`])}</p>`, iconColor: accent })))] }),
       serve: (x) => ({
         elements: [
           row("7,5", [
-            [text(`<h2>${esc(x.heading)}</h2><p>${esc(x.body)}</p>`)],
+            [text(`<h2>${esc(x.heading)}</h2>${paras(x.body)}`)],
             [el("box", { background: "var(--accent)", textColor: "var(--light)", headingColor: "var(--light)", rounded: "true" }, [text(`<h3>${esc(x.highlight)}</h3>`, "center")])]
           ])
         ]
       }),
       details: (x) => ({
         elements: [
-          text(`<h2>${esc(x.heading)}</h2>`, "center"),
+          cardsHead(x),
           three((i) => el("iconFeature", { icon: v[`detailsIcon${i}`], title: x[`c${i}t`], description: `<p>${esc(x[`c${i}`])}</p>`, iconColor: accent, iconSize: "medium", textAlignment: "center" }, undefined, FADE))
         ]
       }),
@@ -735,13 +804,26 @@ export class SiteGenHelper {
           elements: [valid ? el("countdown", { mode: "date", targetDate: String(x.date), title: x.title, completedText: "Happening now", showDays: "true", showHours: "true" }) : text(`<h2>${esc(x.title)}</h2>`, "center")]
         };
       },
+      gallery: (x) => ({
+        elements: [
+          cardsHead(x),
+          el("gallery", { photos: [1, 2, 3].map((i) => ({ url: photo(v[`galleryPhoto${i}`]), alt: PHOTOS[v[`galleryPhoto${i}`]] || "" })).filter((p) => p.url), layout: "wide", columns: 3, spacing: "medium" })
+        ]
+      }),
+      invite: (x) => ({ elements: [el("textWithPhoto", { photo: photo(v.invitePhoto), photoAlt: PHOTOS[v.invitePhoto] || "", photoPosition: "right", text: `<h2>${esc(x.heading)}</h2>${paras(x.body)}${btn(x.button)}` })] }),
       groups: (x) => ({ elements: [text(`<h2>${esc(x.heading)}</h2><p>${esc(x.body)}</p>`, "center"), el("groups", { showSearch: "false", showCategory: "true" })] }),
       countdown: (x) => ({
         ...DARK,
         background: "var(--accent)",
         elements: [el("countdown", { mode: "weekly", dayOfWeek: church.nextService?.dayOfWeek ?? 0, time: church.nextService?.time || "10:00", title: x.title, completedText: "Starting now", showDays: "true", showHours: "true" })]
       }),
-      visitCta: (x) => ({ ...DARK, styles: { all: { "padding-top": "80px", "padding-bottom": "80px" } }, elements: [text(`<h2>${esc(x.heading)}</h2><p>${esc(x.body)}</p>${btn(x.button, "btn-light")}`, "center")] }),
+      visitCta: (x) => ({
+        ...DARK,
+        // a photo behind the closing band when the client can resolve one; the flat band otherwise
+        ...(church.resolvesPhotos && v.ctaPhoto ? { background: photo(v.ctaPhoto), answers: { overlayColor: dark, backgroundOpacity: "0.7", focalPoint: "center" } } : {}),
+        styles: { all: { "padding-top": "90px", "padding-bottom": "90px" } },
+        elements: [text(`<h2>${esc(x.heading)}</h2><p>${esc(x.body)}</p>${btn(x.button, "btn-light")}`, "center")]
+      }),
       contact: (x) => ({
         elements: [
           row("6,6", [
