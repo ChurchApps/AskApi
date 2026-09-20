@@ -58,7 +58,7 @@ export class WebsiteController extends AskBaseController {
       hasServiceTimes: churchContext?.hasServiceTimes === true,
       hasGroups: churchContext?.hasGroups === true,
       resolvesPhotos: churchContext?.resolvesPhotos === true,
-      askedQuestions: churchContext?.askedQuestions === true,
+      assumedDetails: Array.isArray(churchContext?.assumedDetails) ? churchContext.assumedDetails.filter((d: any) => typeof d === "string").slice(0, 10).map((d: string) => d.substring(0, 200)) : undefined,
       nextService: WebsiteController.nextService(churchContext?.nextService)
     };
   }

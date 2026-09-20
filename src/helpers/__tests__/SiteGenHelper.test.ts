@@ -15,7 +15,14 @@ describe("SiteGenHelper", () => {
   it("builds a valid builder tree for every template", () => {
     const layout = Object.keys(SECTIONS);
     const church = { name: "Test Church", brief: "A church.", address: "1 Main St", resolvesPhotos: true };
-    const sections = SiteGenHelper.buildTree(church, layout, fillCopy(layout), { heroPhoto: "church exterior", welcomePhoto: "open bible", heroDivider: "wave" });
+    const open = SiteGenHelper.buildTree(church, layout, fillCopy(layout));
+    const slots = SiteGenHelper.visualSlots(open);
+    const subjects = [
+      "church exterior", "open bible", "choir singing", "hands praying", "candles church", "sunrise field", "city skyline", "church pews", "hymnal piano", "welcome handshake", "outdoor picnic", "easter lilies", "baptism water", "wedding church", "mountain landscape", "stained glass window"
+    ];
+    let p = 0;
+    const picks = Object.fromEntries(slots.map((slot) => [slot.id, slot.kind === "photo" ? subjects[p++ % subjects.length] : slot.kind === "icon" ? "schedule" : "wave"]));
+    const sections = SiteGenHelper.applyVisuals(open, picks, true);
     assert.equal(sections.length, layout.length);
 
     const walk = (els: any[], parentType?: string) => els.forEach((e, i) => {
@@ -37,8 +44,9 @@ describe("SiteGenHelper", () => {
     });
 
     assert.equal(sections[0].background, "pexels:church exterior");
-    const legacy = SiteGenHelper.buildTree({ ...church, resolvesPhotos: false }, layout, fillCopy(layout), { heroPhoto: "church exterior" });
-    assert.ok(!JSON.stringify(legacy).includes("pexels:"), "clients that cannot resolve photos must never see a placeholder");
+    assert.ok(!JSON.stringify(sections).includes("auto:"), "every open slot must be filled");
+    const legacy = JSON.stringify(SiteGenHelper.applyVisuals(open, picks, false));
+    assert.ok(!legacy.includes("pexels:") && !legacy.includes("auto:"), "clients that cannot resolve photos must never see a placeholder");
     assert.equal(JSON.parse(sections[0].answersJSON).dividerBottom.shape, "wave");
     const all = JSON.stringify(sections);
     assert.ok(!all.includes("tempLibrary/pastor"), "no stock portrait may stand in for the pastor");
@@ -48,7 +56,7 @@ describe("SiteGenHelper", () => {
 
   it("alternates plain section backgrounds", () => {
     const layout = ["heroPhoto", "welcome", "expect", "faq"];
-    const sections = SiteGenHelper.buildTree({ name: "T", brief: "b" }, layout, fillCopy(layout), {});
+    const sections = SiteGenHelper.buildTree({ name: "T", brief: "b" }, layout, fillCopy(layout));
     assert.deepEqual(sections.slice(1).map((x) => x.background), ["var(--light)", "var(--lightAccent)", "var(--light)"]);
   });
 
@@ -67,7 +75,7 @@ describe("SiteGenHelper", () => {
 
   it("uses the live serviceTimes element only when the church keeps service times in B1", () => {
     const layout = ["heroPhoto", "times"];
-    const types = (church: any) => JSON.stringify(SiteGenHelper.buildTree(church, layout, fillCopy(layout), {}));
+    const types = (church: any) => JSON.stringify(SiteGenHelper.buildTree(church, layout, fillCopy(layout)));
     assert.ok(types({ name: "T", brief: "b", hasServiceTimes: true }).includes('"elementType":"serviceTimes"'));
     assert.ok(types({ name: "T", brief: "b" }).includes('"elementType":"table"'));
   });
@@ -107,7 +115,7 @@ describe("SiteGenHelper", () => {
   });
 
   it("turns only a real future date into a live event countdown", () => {
-    const build = (date: string) => JSON.stringify(SiteGenHelper.buildTree({ name: "T", brief: "b" }, ["eventCountdown"], { eventCountdown: { title: "Potluck", date } }, {}));
+    const build = (date: string) => JSON.stringify(SiteGenHelper.buildTree({ name: "T", brief: "b" }, ["eventCountdown"], { eventCountdown: { title: "Potluck", date } }));
     const future = new Date(Date.now() + 30 * 86400000).toISOString().slice(0, 16);
     assert.ok(build(future).includes('"elementType":"countdown"'));
     assert.ok(!build("sometime in November").includes('"elementType":"countdown"'));
@@ -132,15 +140,47 @@ describe("SiteGenHelper", () => {
     assert.equal(SiteGenHelper.scrub(copy, ["come as you are"]).expect.c1, "Relax, eat, and enjoy the meal.");
   });
 
-  it("adds photos beyond the hero, but only offers the gallery to clients that can resolve photos", () => {
+  it("finds every photo-capable element generically and picks from the text beside it", () => {
     const church = { name: "T", brief: "b", resolvesPhotos: true };
     assert.ok(SiteGenHelper.available("mid", church).includes("gallery"));
     assert.ok(!SiteGenHelper.available("mid", { name: "T", brief: "b" }).includes("gallery"));
-    const layout = ["heroPhoto", "gallery", "invite", "visitCta"];
-    const visuals = { heroPhoto: "church exterior", galleryPhoto1: "open bible", galleryPhoto2: "choir singing", galleryPhoto3: "hands praying", invitePhoto: "friends talking coffee", ctaPhoto: "sunrise field" };
-    const sections = SiteGenHelper.buildTree(church, layout, fillCopy(layout), visuals);
-    assert.equal(JSON.parse(sections[1].elements[1].answersJSON).photos.length, 3);
-    assert.equal(sections[3].background, "pexels:sunrise field");
-    assert.equal(new Set(JSON.stringify(sections).match(/pexels:[a-z ]+/g)).size, 6);
+    const layout = ["heroPhoto", "pathways", "gallery", "invite", "expect", "visitCta"];
+    const open = SiteGenHelper.buildTree(church, layout, fillCopy(layout));
+    const slots = SiteGenHelper.visualSlots(open);
+    // hero background + divider, 3 cards, 3 gallery photos, invite photo, 3 icons, closing background
+    assert.deepEqual(slots.map((x) => x.kind), [
+      "photo", "divider", "photo", "photo", "photo", "photo", "photo", "photo", "photo", "icon", "icon", "icon", "photo"
+    ]);
+    assert.ok(slots[2].context.includes("c1t"), "a card's photo is chosen from that card's own text");
+    assert.ok(slots[12].context.startsWith("Background photo"));
+  });
+
+  it("gives a template it has never heard of a photo, because any empty photo field is an open slot", () => {
+    const custom = [{ background: "var(--light)", elements: [{ elementType: "textWithPhoto", sort: 1, answersJSON: JSON.stringify({ text: "<h2>Youth retreat</h2><p>A weekend away for students.</p>" }) }, { elementType: "text", sort: 2, answersJSON: JSON.stringify({ text: "plain" }) }] }];
+    const slots = SiteGenHelper.visualSlots(custom);
+    assert.equal(slots.length, 1);
+    assert.ok(slots[0].context.includes("Youth retreat"));
+    const filled = SiteGenHelper.applyVisuals(custom, { v0: "teenagers friends outdoors" }, true);
+    assert.equal(JSON.parse(filled[0].elements[0].answersJSON).photo, "pexels:teenagers friends outdoors");
+    assert.equal(JSON.parse(custom[0].elements[0].answersJSON).photo, undefined, "the input tree is not mutated");
+  });
+
+  it("degrades cleanly for clients that cannot resolve photos", () => {
+    const layout = ["heroPhoto", "pathways", "visitCta"];
+    const open = SiteGenHelper.buildTree({ name: "T", brief: "b" }, layout, fillCopy(layout));
+    const picks = Object.fromEntries(SiteGenHelper.visualSlots(open).map((x) => [x.id, x.kind === "photo" ? "open bible" : "none"]));
+    const sections = SiteGenHelper.applyVisuals(open, picks, false);
+    assert.equal(sections[0].background, "/tempLibrary/backgrounds/worship.jpg");
+    assert.equal(sections[2].background, "var(--darkAccent)");
+    assert.equal(JSON.parse(sections[0].answersJSON).dividerBottom, undefined);
+    assert.ok(!JSON.stringify(sections[1]).includes('"photo"'), "cards simply go without a photo");
+  });
+
+  it("gives every section the same decided details, but reports against what the church actually said", () => {
+    const church = { name: "T", brief: "Promote our potluck on Nov 12th", assumedDetails: ["Starts at 5:30 PM in the fellowship hall"] };
+    assert.ok(SiteGenHelper.fullBrief(church).includes("Starts at 5:30 PM"));
+    assert.ok(SiteGenHelper.fullBrief(church).includes("never pick different ones"));
+    assert.ok(!SiteGenHelper.knownBrief(church).includes("5:30"));
+    assert.equal(SiteGenHelper.fullBrief({ name: "T", brief: "b" }), "b");
   });
 });

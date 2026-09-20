@@ -17,8 +17,8 @@ export interface SiteGenChurch {
   // True when the client swaps "pexels:<term>" placeholders for real photos. Older clients get a built-in image instead.
   resolvesPhotos?: boolean;
   pageType?: string;
-  // True once the dialog has shown its follow-up questions, so they are not offered twice.
-  askedQuestions?: boolean;
+  // Details the request left out, decided once during planning so every section tells the same story.
+  assumedDetails?: string[];
 }
 
 export interface SiteGenUsage { jevIn: number; jevCalls: number; copyIn: number; copyOut: number; copyCalls: number }
@@ -118,8 +118,8 @@ export const SECTIONS: Record<string, { role: "hero" | "mid" | "close"; desc: st
     desc: "FAQ with five questions a first-time visitor, or someone deciding whether to come to this event, would actually ask.",
     slots: {
       heading: s("Section heading", 50),
-      q1: s("Question 1: only ask questions the brief can answer, or that can be answered honestly without new facts", 80),
-      a1: s("Answer 1: two or three sentences, no promises the brief does not make", 300),
+      q1: s("Question 1", 80),
+      a1: s("Answer 1: two or three sentences", 300),
       q2: s("Question 2", 80),
       a2: s("Answer 2", 300),
       q3: s("Question 3", 80),
@@ -158,7 +158,7 @@ export const SECTIONS: Record<string, { role: "hero" | "mid" | "close"; desc: st
   groups: {
     role: "mid",
     desc: "Live list of the church's small groups pulled from its records, with a short intro. Only useful when finding a group is a real next step for this audience.",
-    slots: { heading: s("Section heading", 50), body: s("Two or three sentences inviting people to find a group, brief facts only", 320) }
+    slots: { heading: s("Section heading", 50), body: s("Two or three sentences inviting people to find a group", 320) }
   },
   countdown: {
     role: "mid",
@@ -191,37 +191,6 @@ const PAGE_TYPES: Record<string, string> = {
   topic: "A page about ONE specific topic, program, campaign or announcement rather than the church as a whole",
   other: "Something else"
 };
-
-// When a request is short, the dialog offers the user a few of these (only the ones the request leaves unanswered).
-const QUESTION_BANK: Record<string, Record<string, string>> = {
-  event: {
-    time: "What time does it start and end?",
-    place: "Where exactly is it held (room, building or address)?",
-    bring: "What should people bring or prepare?",
-    signup: "How do people sign up or RSVP, and by when?",
-    cost: "Is there a cost?",
-    audience: "Who is it for (everyone, families, certain ages)?",
-    kids: "Is there childcare or something for kids?",
-    contact: "Who can people contact with questions?"
-  },
-  general: {
-    services: "When are your regular services or gatherings?",
-    style: "What is worship like (music, teaching style, length)?",
-    leader: "Who is the pastor or leader, and how long have they served?",
-    kids: "What do you offer for kids and students?",
-    distinct: "What would people say is special about your church?",
-    reach: "Who are you most hoping to reach?",
-    community: "How does your church serve the community?"
-  },
-  topic: {
-    what: "What are the key details people need to know?",
-    audience: "Who is this for?",
-    next: "What is the next step you want people to take, and how?",
-    contact: "Who can people contact with questions?"
-  }
-};
-const MAX_QUESTIONS = 4;
-const ASK_QUESTIONS_BELOW = 500;
 
 // On a page about one event or topic, sections about the church in general are filler, so they are not even offered.
 const FOCUSED_TYPES = new Set(["event", "topic"]);
@@ -293,6 +262,14 @@ const PHOTOS: Record<string, string> = {
   "laptop video call home": "Watching online from home"
 };
 
+// Open-slot markers. An element type listed in PHOTO_ELEMENTS is also an open slot whenever its photo is simply empty.
+const AUTO_PHOTO = "auto:photo";
+const AUTO_ICON = "auto:icon";
+const AUTO_DIVIDER = "auto:divider";
+const PHOTO_ELEMENTS = new Set(["textWithPhoto", "card", "image"]);
+const FALLBACK_PHOTO = "/tempLibrary/backgrounds/worship.jpg";
+const DIVIDERS: Record<string, string> = { none: "Straight edge: traditional, formal, liturgical", curve: "Soft curve: warm and welcoming", wave: "Wave: relaxed, family-friendly, contemporary", slant: "Slant: modern, urban, energetic" };
+
 const ICONS: Record<string, string> = {
   schedule: "time, schedule",
   music_note: "music, band, hymns, choir",
@@ -320,11 +297,11 @@ const ICONS: Record<string, string> = {
 const COPY_SYSTEM = `You write page copy for church websites. You are given a church brief and a list of sections with named text slots. Return ONLY a JSON object: { "<sectionKey>": { "<slot>": "text", ... }, ... }.
 
 Rules:
-- Every fact (names, times, programs, places) must come from the brief. Never invent staff, stats, history, or programs.
-- If the brief does not mention it, it does not exist: no coffee, parking, dress code, pews, greeters, nursery, building details or history unless the brief states them. When a slot asks for something the brief doesn't cover, write about what the brief DOES cover that serves the same visitor need.
+- Use every fact the request and the church's records give, exactly as given, and never contradict them.
+- The church will edit this page, so it must read complete rather than vague. Where the request leaves out an ordinary detail a real page needs (a start time, a room, what to bring, who it is for, how to sign up, what a visit is like), fill it in with a plausible, typical choice instead of writing around it. Prefer modest, common choices over striking ones.
+- Some things are never made up, because a wrong one does real harm or cannot be spotted by a reader: names of people, phone numbers, email and web addresses, prices, statistics, the church's history, and quotes or testimonials attributed to people. Do not put a day of the week next to a date unless the request gives it.
 - The page request is the SUBJECT of the page. When it asks for a page about one event, program or topic, every section is about that subject; mention the wider church only where it directly helps the reader act (where it is, who to contact). Do not turn it into an "about our church" page.
-- Never state a time, time of day, day of the week, date, price, room, deadline, age range or sign-up method that the request or records do not give, however natural it would be for such an event. If a slot needs one that is missing, write around it ("details to follow", or simply leave the detail out) rather than guessing. The same goes for negatives: do not say something is free, not required, not needed or provided unless the request says so.
-- Write generously. Use most of each slot's length: body slots are several full sentences, card texts two full sentences. Fill the space with warmth, why this matters, what it will feel like, reassurance and invitation. None of that needs facts. What you may NOT add is specifics the request does not give (previous rule).
+- Write generously. Use most of each slot's length: body slots are several full sentences, card texts two full sentences. Fill the space with warmth, why this matters, what it will feel like, reassurance and invitation.
 - Be specific to THIS church and this subject. A sentence that could appear on any church's site is a failed sentence.
 - The hero headline must NOT be the church's name (it is already in the site header). It should say something true and particular about the page's subject in under ten words.
 - Avoid stock church-website phrases such as "Welcome home", "come as you are", "a place to belong", "vibrant", "do life together", unless the brief itself uses them. No exclamation marks, no em dashes, no rhetorical questions in headlines.
@@ -381,9 +358,15 @@ export class SiteGenHelper {
     return weights[0][0];
   }
 
+  /** What the church actually told us: the request plus its own records. */
+  static knownBrief(church: SiteGenChurch) {
+    return church.facts ? `${church.brief}\n\nFrom the church's own records (also true; background, use only where it serves the page request): ${church.facts}` : church.brief;
+  }
+
   /** Everything the models may treat as true: what the user typed plus facts from the church's own records. */
   static fullBrief(church: SiteGenChurch) {
-    return church.facts ? `${church.brief}\n\nFrom the church's own records (also true; background, use only where it serves the page request): ${church.facts}` : church.brief;
+    const decided = (church.assumedDetails || []).filter(Boolean);
+    return this.knownBrief(church) + (decided.length ? `\n\nDetails the church did not give, already decided for this page. Treat them as settled: use exactly these wherever such a detail is needed, and never pick different ones:\n${decided.map((d) => `- ${d}`).join("\n")}` : "");
   }
 
   private static criteria(keys: string[]) { return Object.fromEntries(keys.map((k) => [k, SECTIONS[k].desc])); }
@@ -460,16 +443,12 @@ export class SiteGenHelper {
     return { scheme: a.scheme.choice as string, tone: a.tone.choice as string, pageType: a.pageType.choice as string };
   }
 
-  /** For a short request: which few details would most improve the page? Unanswered questions only, in the bank's priority order. */
-  private static async pickQuestions(usage: SiteGenUsage, church: SiteGenChurch, pageType: string): Promise<{ key: string; question: string }[]> {
-    if (church.askedQuestions || church.brief.length >= ASK_QUESTIONS_BELOW) return [];
-    const bank = { ...(QUESTION_BANK[pageType] || (FOCUSED_TYPES.has(pageType) ? QUESTION_BANK.topic : QUESTION_BANK.general)) };
-    if (church.hasServiceTimes) delete bank.services;
-    const a = await this.ask(usage, { page_request: church.brief, church_records: church.facts || "" }, Object.fromEntries(Object.entries(bank).map(([key, question]) => [
-      key,
-      { type: "boolean", instructions: `Does page_request or church_records already answer this: "${question}"`, criteria: { true: "Yes, the answer is already stated", false: "No, it is not stated" } }
-    ])));
-    return Object.keys(bank).filter((key) => a[key]?.probability < 0.5).slice(0, MAX_QUESTIONS).map((key) => ({ key, question: bank[key] }));
+  // Sections are written in parallel, so left alone each would make up its own start time. The gaps are filled
+  // once, here, and every section is given the same list.
+  private static async assumeDetails(usage: SiteGenUsage, church: SiteGenChurch, pageType: string): Promise<string[]> {
+    const prompt = `Today's date: ${new Date().toISOString().slice(0, 10)}\nChurch: ${church.name}\nAddress: ${church.address || "(not given)"}\nPage type: ${PAGE_TYPES[pageType] || PAGE_TYPES.home}\nPage request: ${this.knownBrief(church)}\n\nA web page will be written from this request. List the ordinary details a complete page of this kind needs that the request and records do NOT already give (for an event: start and end time, room, what to bring, who it is for, how to sign up, whether there is something for kids; for a church page: what worship is like, what is offered for kids and students, what a first visit is like), and decide each one with a plausible, modest, typical choice. Follow the never-made-up list in your rules. If the request is already complete, return an empty list. Return ONLY JSON: { "details": ["short sentence", ...] } with at most 8 items, each under 120 characters.`;
+    const out = await this.writeJson(usage, prompt, 500, 0.5);
+    return (Array.isArray(out?.details) ? out.details : []).filter((d: any) => typeof d === "string" && d.trim()).slice(0, 8).map((d: string) => d.trim().substring(0, 160));
   }
 
   /** Phase 1: sample candidate layouts, judge them, and pick a voice. Returns the best few for phase 2. */
@@ -477,7 +456,7 @@ export class SiteGenHelper {
     const usage = this.newUsage();
     const style = await this.pickStyle(usage, church).catch(() => ({ scheme: "navyClassic", tone: "plainWarm", pageType: "home" }));
     const memo = new Map<string, Promise<Record<string, any>>>();
-    const questionsPromise = this.pickQuestions(usage, church, style.pageType).catch((): { key: string; question: string }[] => []);
+    const detailsPromise = this.assumeDetails(usage, church, style.pageType).catch((): string[] => []);
     const built = await Promise.allSettled(Array.from({ length: CANDIDATES }, (_, i) => this.buildLayout(usage, church, i ? SAMPLE_TEMP : 0, memo, style.pageType)));
     const layouts = built.filter((r): r is PromiseFulfilledResult<string[]> => r.status === "fulfilled").map((r) => r.value);
     if (!layouts.length) throw new Error("Could not plan a page layout. Please try again.");
@@ -487,7 +466,8 @@ export class SiteGenHelper {
     scored.sort((a, b) => b.score - a.score);
     // A weak best layout usually means the template library lacks something this church needed; the log is the template backlog.
     if (scored[0].score < 6) console.log(JSON.stringify({ siteGen: "lowLayoutScore", score: scored[0].score, pageType: style.pageType, layout: scored[0].layout, brief: church.brief.substring(0, 500) }));
-    return { candidates: scored.slice(0, TOP), questions: await questionsPromise, tone: style.tone, pageType: style.pageType, suggestedStyle: { key: style.scheme, fonts: SCHEMES[style.scheme].fonts, palette: SCHEMES[style.scheme].palette }, usage };
+    const suggestedStyle = { key: style.scheme, fonts: SCHEMES[style.scheme].fonts, palette: SCHEMES[style.scheme].palette };
+    return { candidates: scored.slice(0, TOP), assumedDetails: await detailsPromise, tone: style.tone, pageType: style.pageType, suggestedStyle, usage };
   }
 
   private static async writeJson(usage: SiteGenUsage, prompt: string, maxOutputTokens: number, temperature: number): Promise<any> {
@@ -546,15 +526,22 @@ export class SiteGenHelper {
     return clean[Number(String(a.headline.choice).slice(1))] ?? null;
   }
 
-  private static factCheck(usage: SiteGenUsage, church: SiteGenChurch, layout: string[], copy: Copy) {
-    return this.ask(usage, { church_brief: this.fullBrief(church), church_name: church.name, address: church.address }, Object.fromEntries(layout.map((k) => [
+  private static sectionCheck(usage: SiteGenUsage, church: SiteGenChurch, layout: string[], copy: Copy, brief: string, instructions: string, yes: string, no: string) {
+    return this.ask(usage, { church_brief: brief, church_name: church.name, address: church.address }, Object.fromEntries(layout.map((k) => [
       k,
-      {
-        type: "boolean",
-        instructions: `Does this website section state any concrete fact (a thing, amenity, time, person, number, program, or practice) that is NOT stated in church_brief? Section text: ${JSON.stringify(copy[k])}`,
-        criteria: { true: "At least one concrete detail is not in the brief (invented or assumed)", false: "Everything concrete is supported by the brief" }
-      }
+      { type: "boolean", instructions: `${instructions} Section text: ${JSON.stringify(copy[k])}`, criteria: { true: yes, false: no } }
     ])));
+  }
+
+  // The writer may fill gaps, but it may never disagree with what the church said or with the details already decided
+  // for this page (which is what keeps one section from saying 5:00 and another 5:30).
+  private static contradictionCheck(usage: SiteGenUsage, church: SiteGenChurch, layout: string[], copy: Copy) {
+    return this.sectionCheck(usage, church, layout, copy, this.fullBrief(church), "Does this website section CONTRADICT church_brief (a different time, date, place, name or number than the brief gives)? Adding details the brief is silent about is not a contradiction.", "It disagrees with something the brief states", "Nothing in it disagrees with the brief");
+  }
+
+  // Reported to the user, not repaired: these are the sections to double-check before sharing the page.
+  private static assumedCheck(usage: SiteGenUsage, church: SiteGenChurch, layout: string[], copy: Copy) {
+    return this.sectionCheck(usage, church, layout, copy, this.knownBrief(church), "Does this website section state a specific, checkable detail (a time, room, deadline, age range, what is provided, how to sign up) that is NOT stated in church_brief?", "At least one specific detail was filled in rather than taken from the brief", "Every specific detail comes from the brief");
   }
 
   static stockPhrases(church: SiteGenChurch) {
@@ -591,7 +578,7 @@ export class SiteGenHelper {
     for (const k of layout) {
       const textOf = JSON.stringify(copy[k]).toLowerCase();
       const why: string[] = [];
-      if (checks[k]?.probability > 0.5) why.push("it states details that are not in the brief; remove every detail the brief does not state");
+      if (checks[k]?.probability > 0.5) why.push("it contradicts what the request or the church's records say; make it agree with them exactly");
       if (SECTIONS[k].role === "hero" && copy[k].headline.toLowerCase().includes(church.name.toLowerCase().slice(0, 12))) why.push("the headline uses the church name");
       if (/[!—]/.test(textOf) || phrases.some((p) => textOf.includes(p))) why.push("it uses a stock church phrase, exclamation mark or em dash");
       const thin = Object.entries(SECTIONS[k].slots).some(([n, slot]) => slot.max >= 200 && typeof copy[k][n] === "string" && copy[k][n].length < slot.max * 0.4);
@@ -628,35 +615,105 @@ export class SiteGenHelper {
     return copy;
   }
 
-  private static async pickVisuals(usage: SiteGenUsage, church: SiteGenChurch, layout: string[], copy: Copy): Promise<Record<string, string>> {
-    const q: Record<string, any> = {
-      heroPhoto: { type: "choice", instructions: "Which photo subject best fits the hero of this church's page? Match the church's real setting, size and style.", criteria: PHOTOS },
-      heroDivider: { type: "choice", instructions: "Which shape should the bottom edge of the hero have?", criteria: { none: "Straight edge: traditional, formal, liturgical", curve: "Soft curve: warm and welcoming", wave: "Wave: relaxed, family-friendly, contemporary", slant: "Slant: modern, urban, energetic" } }
-    };
-    if (layout.includes("welcome")) q.welcomePhoto = { type: "choice", instructions: "Which photo subject best fits the 'who we are' section? It should show people or place, and differ from the hero.", criteria: PHOTOS };
-    const mood = "It should suit this page's subject and differ from the other photos on the page.";
-    if (layout.includes("invite")) q.invitePhoto = { type: "choice", instructions: `Which photo subject best fits a section inviting people to bring a friend? ${mood}`, criteria: PHOTOS };
-    if (layout.includes("visitCta")) q.ctaPhoto = { type: "choice", instructions: `Which photo subject best fits the closing call-to-action band (it sits behind text)? ${mood}`, criteria: PHOTOS };
-    for (const i of [1, 2, 3]) {
-      if (layout.includes("gallery")) q[`galleryPhoto${i}`] = { type: "choice", instructions: `Photo ${i} of a three-photo strip for this page. ${mood}`, criteria: PHOTOS };
-      if (layout.includes("pathways")) q[`pathwaysPhoto${i}`] = { type: "choice", instructions: `Which photo subject best matches this card? "${copy.pathways[`c${i}t`]}: ${copy.pathways[`c${i}`]}"`, criteria: PHOTOS };
-      for (const cards of ["expect", "details"]) if (layout.includes(cards)) q[`${cards}Icon${i}`] = { type: "choice", instructions: `Which icon best matches this card? "${copy[cards][`c${i}t`]}: ${copy[cards][`c${i}`]}"`, criteria: ICONS };
-      if (layout.includes("ministries")) q[`ministryPhoto${i}`] = { type: "choice", instructions: `Which photo subject best matches this ministry card? "${copy.ministries[`c${i}t`]}: ${copy.ministries[`c${i}`]}"`, criteria: PHOTOS };
-    }
+  // ---- visuals: one generic pass over the finished tree ----
+  // Templates never name their photos or icons. They leave slots open (a marker, or simply an empty photo field on
+  // an element type that can show one) and this pass finds every open slot, reads the text around it, and has JEV
+  // pick for all of them at once. A new template gets visuals for free.
+
+  /** Every open visual slot in document order, with the nearby text that should drive the choice. */
+  static visualSlots(sections: any[]): { id: string; kind: "photo" | "icon" | "divider"; context: string }[] {
+    const slots: { id: string; kind: "photo" | "icon" | "divider"; context: string }[] = [];
+    this.walkVisuals(sections, (kind, context) => { slots.push({ id: `v${slots.length}`, kind, context }); return undefined; });
+    return slots;
+  }
+
+  /** Fills every open slot from `picks` (slot id -> photo subject, icon name or divider shape). */
+  static applyVisuals(sections: any[], picks: Record<string, string>, resolvesPhotos: boolean): any[] {
+    const copy = JSON.parse(JSON.stringify(sections));
+    let n = 0;
+    this.walkVisuals(copy, (kind) => {
+      const pick = picks[`v${n++}`];
+      if (kind !== "photo") return pick || (kind === "icon" ? "favorite" : "none");
+      return pick ? { term: pick, url: resolvesPhotos ? `pexels:${pick}` : "" } : { term: "", url: "" };
+    });
+    return copy;
+  }
+
+  // Shared traversal: `visit` is called once per open slot, in a stable order, and its return value fills the slot.
+  private static walkVisuals(sections: any[], visit: (kind: "photo" | "icon" | "divider", context: string) => any) {
+    const plain = (html: any) => String(html || "").replace(/<[^>]+>/g, " ").replace(/&[a-z]+;/g, " ").replace(/\s+/g, " ").trim();
+    const textOf = (els: any[]): string => (els || []).map((e) => { const a = JSON.parse(e.answersJSON || "{}"); return [a.title, plain(a.text), plain(a.description), textOf(e.elements)].filter(Boolean).join(" "); }).join(" ").trim();
+    const isOpen = (value: any, type: string) => value === AUTO_PHOTO || ((value === undefined || value === "") && PHOTO_ELEMENTS.has(type));
+
+    sections.forEach((section, index) => {
+      const about = textOf(section.elements).slice(0, 300);
+      if (section.background === AUTO_PHOTO) {
+        const got = visit("photo", `Background photo behind the text of this section: "${about}"`);
+        // without a resolvable photo the opening section keeps a built-in image and any other band goes flat
+        if (got !== undefined) section.background = got.url || (index === 0 ? FALLBACK_PHOTO : "var(--darkAccent)");
+      }
+      const answers = section.answersJSON ? JSON.parse(section.answersJSON) : null;
+      if (answers?.dividerBottom?.shape === AUTO_DIVIDER) {
+        const got = visit("divider", about);
+        if (got !== undefined) {
+          if (got === "none") delete answers.dividerBottom; else answers.dividerBottom.shape = got;
+          section.answersJSON = JSON.stringify(answers);
+        }
+      }
+      const walk = (els: any[]) => (els || []).forEach((e) => {
+        const a = JSON.parse(e.answersJSON || "{}");
+        let changed = false;
+        const own = [a.title, plain(a.text), plain(a.description)].filter(Boolean).join(": ").slice(0, 240) || about;
+        if (isOpen(a.photo, e.elementType)) {
+          const got = visit("photo", own);
+          if (got !== undefined) {
+            // a card reads fine without a photo; elements built around one fall back to a built-in image
+            if (got.url) a.photo = got.url; else if (e.elementType === "card") delete a.photo; else a.photo = FALLBACK_PHOTO;
+            if (!a.photoAlt) a.photoAlt = PHOTOS[got.term] || "";
+            changed = true;
+          }
+        }
+        if (Array.isArray(a.photos)) {
+          a.photos.forEach((p: any, i: number) => {
+            if (p?.url !== AUTO_PHOTO) return;
+            const got = visit("photo", `Photo ${i + 1} of ${a.photos.length} in a photo strip for: "${about}"`);
+            if (got !== undefined) { p.url = got.url; p.alt = p.alt || PHOTOS[got.term] || ""; changed = true; }
+          });
+          if (changed) a.photos = a.photos.filter((p: any) => p?.url);
+        }
+        if (a.icon === AUTO_ICON) {
+          const got = visit("icon", own);
+          if (got !== undefined) { a.icon = got; changed = true; }
+        }
+        if (changed) e.answersJSON = JSON.stringify(a);
+        walk(e.elements);
+      });
+      walk(section.elements);
+    });
+  }
+
+  private static async pickVisuals(usage: SiteGenUsage, church: SiteGenChurch, sections: any[]): Promise<Record<string, string>> {
+    const slots = this.visualSlots(sections);
+    const question = (s: { kind: string; context: string }) => (s.kind === "icon"
+      ? { type: "choice", instructions: `Which icon best matches this content? "${s.context}"`, criteria: ICONS }
+      : s.kind === "divider"
+        ? { type: "choice", instructions: "Which shape should the bottom edge of the opening section have?", criteria: DIVIDERS }
+        : { type: "choice", instructions: `Which photo subject best fits this content? Match the church's real setting, size and style, and the subject of the page. "${s.context}"`, criteria: PHOTOS });
     const picks: Record<string, string> = {};
     const used = new Set<string>();
-    try {
-      const a = await this.ask(usage, { church: this.fullBrief(church) }, q);
-      for (const [k, v] of Object.entries(a)) {
-        // no repeats on one page: fall back to the next most probable unused option
-        const ranked = Object.entries(v.probabilities as Record<string, number>).sort((x, y) => y[1] - x[1]).map(([o]) => o);
-        picks[k] = (k.startsWith("hero") ? v.choice : ranked.find((o) => !used.has(o))) ?? v.choice;
-        if (k !== "heroDivider") used.add(picks[k]);
-      }
-    } catch { /* fall through to defaults */ }
-    const photoKeys = Object.keys(PHOTOS);
-    const iconKeys = Object.keys(ICONS);
-    Object.keys(q).forEach((k, i) => { if (!picks[k]) picks[k] = k === "heroDivider" ? "none" : k.includes("Icon") ? iconKeys[i % iconKeys.length] : photoKeys[i % photoKeys.length]; });
+    // a few slots per call keeps each JEV request small; the calls run in parallel
+    const answers = await Promise.all(this.chunk(slots, 8).map((group) => this.ask(usage, { church: this.fullBrief(church) }, Object.fromEntries(group.map((s) => [s.id, question(s)]))).catch((): Record<string, any> => ({}))));
+    for (const s of slots) {
+      const a = Object.assign({}, ...answers)[s.id];
+      if (!a) continue;
+      // no photo repeats on one page: fall back to the next most probable unused subject
+      const ranked = Object.entries((a.probabilities || {}) as Record<string, number>).sort((x, y) => y[1] - x[1]).map(([o]) => o);
+      picks[s.id] = (s.kind === "photo" ? ranked.find((o) => !used.has(o)) : a.choice) ?? a.choice;
+      if (s.kind === "photo") used.add(picks[s.id]);
+    }
+    // a failed call still gets distinct photos rather than blanks
+    const spare = Object.keys(PHOTOS).filter((p) => !used.has(p));
+    slots.filter((s) => s.kind === "photo" && !picks[s.id]).forEach((s, i) => { picks[s.id] = spare[i % spare.length]; });
     return picks;
   }
 
@@ -671,7 +728,7 @@ export class SiteGenHelper {
 
     const heroKey = layout.find((k) => SECTIONS[k].role === "hero");
     const [checks, headline] = await Promise.all([
-      this.factCheck(usage, church, layout, copy).catch((): Record<string, any> => ({})),
+      this.contradictionCheck(usage, church, layout, copy).catch((): Record<string, any> => ({})),
       heroKey ? this.pickHeadline(usage, church, [copy[heroKey].headline, ...((copy[heroKey] as any).headlines || [])]).catch((): string | null => null) : null
     ]);
     if (heroKey) {
@@ -684,29 +741,30 @@ export class SiteGenHelper {
     for (const k of layout) delete (copy[k] as any).headlines;
     copy = this.scrub(copy, this.stockPhrases(church));
 
-    const [visuals, judged] = await Promise.all([
-      this.pickVisuals(usage, church, layout, copy),
+    const tree = this.buildTree(church, layout, copy);
+    const [visuals, assumedChecks, judged] = await Promise.all([
+      this.pickVisuals(usage, church, tree),
+      this.assumedCheck(usage, church, layout, copy).catch((): Record<string, any> => ({})),
       this.ask(usage, { church: this.fullBrief(church), page_copy: layout.map((k) => ({ section: k, ...copy[k] })) }, {
         specific: { type: "score", instructions: "How specific is this copy to this one church, using real details from the brief, versus generic lines any church could use?", criteria: ["Generic boilerplate", "Mostly generic", "Mostly specific", "Unmistakably this church"] },
         visitor: { type: "score", instructions: "Would the person this page is for feel understood and know exactly what to do next?", criteria: SCORE4 },
         onTopic: { type: "score", instructions: "Does the copy stay on the subject the brief asks for, rather than drifting into a general page about the church?", criteria: ["Mostly a generic church page", "Drifts often", "Mostly on the subject", "Entirely about the requested subject"] }
       }).catch((): Record<string, any> | null => null)
     ]);
-    // A rewritten section is not re-checked (that second pass only fed this score), so it earns half credit.
-    const factClean = layout.reduce((t, k) => t + (repaired.includes(k) ? 0.5 : checks[k]?.probability > 0.5 ? 0 : 1), 0) / layout.length;
-    const score = +((judged?.specific?.score ?? 0) + (judged?.visitor?.score ?? 0) + (judged?.onTopic?.score ?? 0) + factClean * 3).toFixed(2);
-    return { sections: this.buildTree(church, layout, copy, visuals), score, factClean: +factClean.toFixed(2), repaired, ms: Date.now() - started, usage };
+    const assumed = layout.filter((k) => assumedChecks[k]?.probability > 0.5).map((k) => ({ section: k, heading: copy[k].heading || copy[k].headline || copy[k].title || k }));
+    const score = +((judged?.specific?.score ?? 0) + (judged?.visitor?.score ?? 0) + (judged?.onTopic?.score ?? 0)).toFixed(2);
+    return { sections: this.applyVisuals(tree, visuals, !!church.resolvesPhotos), score, assumed, repaired, ms: Date.now() - started, usage };
   }
 
   private static newUsage(): SiteGenUsage { return { jevIn: 0, jevCalls: 0, copyIn: 0, copyOut: 0, copyCalls: 0 }; }
 
   // ---- builder tree assembly (pure) ----
 
-  static buildTree(church: SiteGenChurch, layout: string[], copy: Copy, v: Record<string, string>) {
+  /** Assembles the builder tree with every photo, icon and divider slot left open for the visuals pass. */
+  static buildTree(church: SiteGenChurch, layout: string[], copy: Copy) {
     const accent = church.palette?.accent || "#2A6F97";
     const dark = church.palette?.dark || "#0B2434";
     const light = church.palette?.light || "#FFFFFF";
-    const photo = (term: string) => (!term ? "" : church.resolvesPhotos ? `pexels:${term}` : "/tempLibrary/backgrounds/worship.jpg");
     const FADE = { onShow: "fadeIn", onShowSpeed: "normal" };
     const esc = (t = "") => String(t).replace(/[&<>]/g, (c): string => ({ "&": "&amp;", "<": "&lt;", ">": "&gt;" } as Record<string, string>)[c]).replace(/'/g, "&rsquo;");
     const el = (elementType: string, answers: any, elements?: any[], animations?: any) => ({ elementType, answers, elements, animations });
@@ -717,11 +775,11 @@ export class SiteGenHelper {
     const three = (make: (i: number) => any) => row("4,4,4", [1, 2, 3].map((i) => [make(i)]));
     const DARK = { background: "var(--darkAccent)", textColor: "light", headingColor: "var(--light)" };
     const hero = (html: string) => ({
-      background: photo(v.heroPhoto) || "var(--dark)",
+      background: AUTO_PHOTO,
       textColor: "light",
       headingColor: "var(--light)",
       // the divider is drawn in the color of the section below the hero, which is always the first plain (light) band
-      answers: { overlayColor: dark, backgroundOpacity: "0.6", focalPoint: "center", ...(v.heroDivider && v.heroDivider !== "none" ? { dividerBottom: { shape: v.heroDivider, color: light, height: 60, flip: false } } : {}) },
+      answers: { overlayColor: dark, backgroundOpacity: "0.6", focalPoint: "center", dividerBottom: { shape: AUTO_DIVIDER, color: light, height: 60, flip: false } },
       styles: { all: { "padding-top": "130px", "padding-bottom": "130px" } },
       elements: [text(html, "center")]
     });
@@ -742,13 +800,13 @@ export class SiteGenHelper {
       heroSplit: (x) => ({
         background: "var(--lightAccent)",
         styles: { all: { "padding-top": "70px", "padding-bottom": "70px" } },
-        elements: [row("6,6", [[text(`${lead(x)}${btn(x.button)}`)], [el("image", { photo: photo(v.heroPhoto), photoAlt: PHOTOS[v.heroPhoto] || "", imageAlign: "center" })]])]
+        elements: [row("6,6", [[text(`${lead(x)}${btn(x.button)}`)], [el("image", { imageAlign: "center" })]])]
       }),
-      welcome: (x) => ({ elements: [el("textWithPhoto", { photo: photo(v.welcomePhoto), photoAlt: PHOTOS[v.welcomePhoto] || "", photoPosition: "left", text: `<h2>${esc(x.heading)}</h2>${paras(x.body)}` })] }),
+      welcome: (x) => ({ elements: [el("textWithPhoto", { photoPosition: "left", text: `<h2>${esc(x.heading)}</h2>${paras(x.body)}` })] }),
       expect: (x) => ({
         elements: [
           cardsHead(x),
-          three((i) => el("iconFeature", { icon: v[`expectIcon${i}`], title: x[`c${i}t`], description: `<p>${esc(x[`c${i}`])}</p>`, iconColor: accent, iconSize: "medium", textAlignment: "center" }, undefined, FADE))
+          three((i) => el("iconFeature", { icon: AUTO_ICON, title: x[`c${i}t`], description: `<p>${esc(x[`c${i}`])}</p>`, iconColor: accent, iconSize: "medium", textAlignment: "center" }, undefined, FADE))
         ]
       }),
       times: (x) => ({
@@ -766,13 +824,13 @@ export class SiteGenHelper {
       pathways: (x) => ({
         elements: [
           cardsHead(x),
-          three((i) => el("card", { photo: photo(v[`pathwaysPhoto${i}`]) || undefined, photoAlt: x[`c${i}t`], title: x[`c${i}t`], titleAlignment: "left", text: `<p>${esc(x[`c${i}`])}</p>`, textAlignment: "left" }, undefined, FADE))
+          three((i) => el("card", { photoAlt: x[`c${i}t`], title: x[`c${i}t`], titleAlignment: "left", text: `<p>${esc(x[`c${i}`])}</p>`, textAlignment: "left" }, undefined, FADE))
         ]
       }),
       ministries: (x) => ({
         elements: [
           cardsHead(x),
-          three((i) => el("card", { photo: photo(v[`ministryPhoto${i}`]), photoAlt: x[`c${i}t`], title: x[`c${i}t`], titleAlignment: "center", text: `<p>${esc(x[`c${i}`])}</p>`, textAlignment: "center" }, undefined, FADE))
+          three((i) => el("card", { photoAlt: x[`c${i}t`], title: x[`c${i}t`], titleAlignment: "center", text: `<p>${esc(x[`c${i}`])}</p>`, textAlignment: "center" }, undefined, FADE))
         ]
       }),
       // no photo on purpose: a stock stranger must never stand in for the real pastor
@@ -791,7 +849,7 @@ export class SiteGenHelper {
       details: (x) => ({
         elements: [
           cardsHead(x),
-          three((i) => el("iconFeature", { icon: v[`detailsIcon${i}`], title: x[`c${i}t`], description: `<p>${esc(x[`c${i}`])}</p>`, iconColor: accent, iconSize: "medium", textAlignment: "center" }, undefined, FADE))
+          three((i) => el("iconFeature", { icon: AUTO_ICON, title: x[`c${i}t`], description: `<p>${esc(x[`c${i}`])}</p>`, iconColor: accent, iconSize: "medium", textAlignment: "center" }, undefined, FADE))
         ]
       }),
       eventCountdown: (x) => {
@@ -807,10 +865,10 @@ export class SiteGenHelper {
       gallery: (x) => ({
         elements: [
           cardsHead(x),
-          el("gallery", { photos: [1, 2, 3].map((i) => ({ url: photo(v[`galleryPhoto${i}`]), alt: PHOTOS[v[`galleryPhoto${i}`]] || "" })).filter((p) => p.url), layout: "wide", columns: 3, spacing: "medium" })
+          el("gallery", { photos: [1, 2, 3].map(() => ({ url: AUTO_PHOTO })), layout: "wide", columns: 3, spacing: "medium" })
         ]
       }),
-      invite: (x) => ({ elements: [el("textWithPhoto", { photo: photo(v.invitePhoto), photoAlt: PHOTOS[v.invitePhoto] || "", photoPosition: "right", text: `<h2>${esc(x.heading)}</h2>${paras(x.body)}${btn(x.button)}` })] }),
+      invite: (x) => ({ elements: [el("textWithPhoto", { photoPosition: "right", text: `<h2>${esc(x.heading)}</h2>${paras(x.body)}${btn(x.button)}` })] }),
       groups: (x) => ({ elements: [text(`<h2>${esc(x.heading)}</h2><p>${esc(x.body)}</p>`, "center"), el("groups", { showSearch: "false", showCategory: "true" })] }),
       countdown: (x) => ({
         ...DARK,
@@ -819,8 +877,9 @@ export class SiteGenHelper {
       }),
       visitCta: (x) => ({
         ...DARK,
-        // a photo behind the closing band when the client can resolve one; the flat band otherwise
-        ...(church.resolvesPhotos && v.ctaPhoto ? { background: photo(v.ctaPhoto), answers: { overlayColor: dark, backgroundOpacity: "0.7", focalPoint: "center" } } : {}),
+        // a photo behind the closing band; the visuals pass falls back to the flat band when it cannot resolve one
+        background: AUTO_PHOTO,
+        answers: { overlayColor: dark, backgroundOpacity: "0.7", focalPoint: "center" },
         styles: { all: { "padding-top": "90px", "padding-bottom": "90px" } },
         elements: [text(`<h2>${esc(x.heading)}</h2><p>${esc(x.body)}</p>${btn(x.button, "btn-light")}`, "center")]
       }),
