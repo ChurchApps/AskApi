@@ -95,7 +95,7 @@ export class WebsiteController extends AskBaseController {
     return this.actionWrapperEdit(req, res, async (_au) => {
       const church = WebsiteController.siteGenChurch(req.body);
       if (!church) return { error: "Prompt is required and must be at least 10 characters" };
-      return await SiteGenHelper.writePage(church, req.body.layout, req.body.tone);
+      return await SiteGenHelper.writePage(church, req.body.layout, req.body.tone, typeof req.body.pageType === "string" ? req.body.pageType : "home");
     });
   }
 
