@@ -299,7 +299,7 @@ const COPY_SYSTEM = `You write page copy for church websites. You are given a ch
 Rules:
 - Use every fact the request and the church's records give, exactly as given, and never contradict them.
 - The church will edit this page, so it must read complete rather than vague. Where the request leaves out an ordinary detail a real page needs (a start time, a room, what to bring, who it is for, how to sign up, what a visit is like), fill it in with a plausible, typical choice instead of writing around it. Prefer modest, common choices over striking ones.
-- Some things are never made up, because a wrong one does real harm or cannot be spotted by a reader: names of people, phone numbers, email and web addresses, prices, statistics, the church's history, and quotes or testimonials attributed to people. Do not put a day of the week next to a date unless the request gives it.
+- Some things are never made up, because a wrong one does real harm or cannot be spotted by a reader: names of people, phone numbers, email and web addresses, prices, statistics, the church's history, and quotes or testimonials attributed to people. Only give a date's day of the week when the request or the calendar facts state it.
 - The page request is the SUBJECT of the page. When it asks for a page about one event, program or topic, every section is about that subject; mention the wider church only where it directly helps the reader act (where it is, who to contact). Do not turn it into an "about our church" page.
 - Write generously. Use most of each slot's length: body slots are several full sentences, card texts two full sentences. Fill the space with warmth, why this matters, what it will feel like, reassurance and invitation.
 - Be specific to THIS church and this subject. A sentence that could appear on any church's site is a failed sentence.
@@ -358,8 +358,49 @@ export class SiteGenHelper {
     return weights[0][0];
   }
 
+  /** Models guess weekdays badly, so the weekday of every date the request mentions is worked out here and stated as fact. */
+  static dateFacts(text: string, now = new Date()): string[] {
+    const months = [
+      "jan", "feb", "mar", "apr", "may", "jun", "jul", "aug", "sep", "oct", "nov", "dec"
+    ];
+    const facts: string[] = [];
+    for (const m of text.matchAll(/\b(jan|feb|mar|apr|may|jun|jul|aug|sep|oct|nov|dec)[a-z]*\.?\s+(\d{1,2})(?:st|nd|rd|th)?\b/gi)) {
+      const month = months.indexOf(m[1].toLowerCase());
+      const day = Number(m[2]);
+      let date = new Date(Date.UTC(now.getUTCFullYear(), month, day));
+      if (date.getUTCMonth() !== month) continue;
+      // a date with no year means its next occurrence
+      if (date.getTime() < Date.UTC(now.getUTCFullYear(), now.getUTCMonth(), now.getUTCDate())) date = new Date(Date.UTC(now.getUTCFullYear() + 1, month, day));
+      facts.push(`${m[0].trim()} is ${date.toLocaleDateString("en-US", { weekday: "long", year: "numeric", month: "long", day: "numeric", timeZone: "UTC" })}.`);
+    }
+    return [...new Set(facts)];
+  }
+
+  // Contact details are never made up: a wrong address or number sends real people to the wrong place.
+  private static readonly CONTACT = /[\w.+-]+@[\w-]+\.[\w.-]+|\b(?:https?:\/\/|www\.)\S+|\b[\w-]+\.(?:org|com|net|church|info)\b\S*|(?:\+?\d[\s.-]?)?\(?\d{3}\)?[\s.-]\d{3}[\s.-]\d{4}/gi;
+
+  /** True when `text` contains an email, web address or phone number that the church itself did not supply. */
+  static hasInventedContact(text: string, known: string): boolean {
+    const given = known.toLowerCase();
+    return (String(text).match(this.CONTACT) || []).some((c) => !given.includes(c.toLowerCase().replace(/[.,;:!?)]+$/, "")));
+  }
+
+  /** Drops every sentence that carries an invented contact detail. */
+  static stripInventedContacts(copy: Copy, known: string): Copy {
+    for (const sec of Object.values(copy)) {
+      for (const [n, v] of Object.entries(sec)) {
+        if (typeof v !== "string" || !this.hasInventedContact(v, known)) continue;
+        const kept = v.split(/(?<=[.?!])\s+/).filter((sentence) => !this.hasInventedContact(sentence, known)).join(" ");
+        sec[n] = kept || v.replace(this.CONTACT, "the church office").trim();
+      }
+    }
+    return copy;
+  }
+
   /** What the church actually told us: the request plus its own records. */
   static knownBrief(church: SiteGenChurch) {
+    const calendar = this.dateFacts(church.brief);
+    if (calendar.length) return (church.facts ? `${church.brief}\n\nFrom the church's own records (also true; background, use only where it serves the page request): ${church.facts}` : church.brief) + `\n\nCalendar facts (true): ${calendar.join(" ")}`;
     return church.facts ? `${church.brief}\n\nFrom the church's own records (also true; background, use only where it serves the page request): ${church.facts}` : church.brief;
   }
 
@@ -448,7 +489,8 @@ export class SiteGenHelper {
   private static async assumeDetails(usage: SiteGenUsage, church: SiteGenChurch, pageType: string): Promise<string[]> {
     const prompt = `Today's date: ${new Date().toISOString().slice(0, 10)}\nChurch: ${church.name}\nAddress: ${church.address || "(not given)"}\nPage type: ${PAGE_TYPES[pageType] || PAGE_TYPES.home}\nPage request: ${this.knownBrief(church)}\n\nA web page will be written from this request. List the ordinary details a complete page of this kind needs that the request and records do NOT already give (for an event: start and end time, room, what to bring, who it is for, how to sign up, whether there is something for kids; for a church page: what worship is like, what is offered for kids and students, what a first visit is like), and decide each one with a plausible, modest, typical choice. Follow the never-made-up list in your rules. If the request is already complete, return an empty list. Return ONLY JSON: { "details": ["short sentence", ...] } with at most 8 items, each under 120 characters.`;
     const out = await this.writeJson(usage, prompt, 500, 0.5);
-    return (Array.isArray(out?.details) ? out.details : []).filter((d: any) => typeof d === "string" && d.trim()).slice(0, 8).map((d: string) => d.trim().substring(0, 160));
+    const known = `${this.knownBrief(church)} ${church.address || ""}`;
+    return (Array.isArray(out?.details) ? out.details : []).filter((d: any) => typeof d === "string" && d.trim() && !this.hasInventedContact(d, known)).slice(0, 8).map((d: string) => d.trim().substring(0, 160));
   }
 
   /** Phase 1: sample candidate layouts, judge them, and pick a voice. Returns the best few for phase 2. */
@@ -739,7 +781,7 @@ export class SiteGenHelper {
     let repaired: string[] = [];
     if (Date.now() - started < REPAIR_DEADLINE_MS) repaired = await this.repairCopy(usage, church, layout, copy, tone, checks);
     for (const k of layout) delete (copy[k] as any).headlines;
-    copy = this.scrub(copy, this.stockPhrases(church));
+    copy = this.stripInventedContacts(this.scrub(copy, this.stockPhrases(church)), `${this.knownBrief(church)} ${church.address || ""}`);
 
     const tree = this.buildTree(church, layout, copy);
     const [visuals, assumedChecks, judged] = await Promise.all([
