@@ -95,4 +95,34 @@ describe("SiteGenHelper", () => {
     assert.ok(SiteGenHelper.fullBrief({ name: "T", brief: "We love hymns.", facts: "Sunday 9:00 AM" }).includes("Sunday 9:00 AM"));
     assert.equal(SiteGenHelper.fullBrief({ name: "T", brief: "We love hymns." }), "We love hymns.");
   });
+
+  it("keeps a page about one event on topic by not offering general church sections", () => {
+    const church = { name: "T", brief: "Promote our Thanksgiving potluck on Nov 12th", address: "1 Main St", hasGroups: true, nextService: { dayOfWeek: 0, time: "10:00" } };
+    const event = SiteGenHelper.available("mid", church, "event");
+    for (const generic of ["pastor", "sermon", "ministries", "groups", "serve", "times", "countdown"]) assert.ok(!event.includes(generic), `${generic} is filler on an event page`);
+    assert.ok(event.includes("details") && event.includes("eventCountdown") && event.includes("faq"));
+    assert.ok(!SiteGenHelper.available("hero", church, "event").includes("heroVideo"));
+    const home = SiteGenHelper.available("mid", church, "home");
+    assert.ok(home.includes("pastor") && !home.includes("details") && !home.includes("eventCountdown"));
+  });
+
+  it("turns only a real future date into a live event countdown", () => {
+    const build = (date: string) => JSON.stringify(SiteGenHelper.buildTree({ name: "T", brief: "b" }, ["eventCountdown"], { eventCountdown: { title: "Potluck", date } }, {}));
+    const future = new Date(Date.now() + 30 * 86400000).toISOString().slice(0, 16);
+    assert.ok(build(future).includes('"elementType":"countdown"'));
+    assert.ok(!build("sometime in November").includes('"elementType":"countdown"'));
+    assert.ok(!build("2020-11-12T18:00").includes('"elementType":"countdown"'));
+  });
+
+  it("keeps a thin single-event request to a short page", () => {
+    const thin = { name: "T", brief: "I want a page to promote our Thanksgiving potluck on Nov 12th" };
+    assert.deepEqual(Object.keys(SiteGenHelper.countOptions(thin, "event")), ["2"]);
+    assert.deepEqual(Object.keys(SiteGenHelper.countOptions(thin, "home")), ["2", "3", "4", "5"]);
+    assert.deepEqual(Object.keys(SiteGenHelper.countOptions({ name: "T", brief: "x".repeat(700) }, "event")), ["2", "3", "4"]);
+  });
+
+  it("cuts a stock phrase out of a slot that is a single sentence", () => {
+    const copy = { expect: { c1: "Come as you are to relax, eat, and enjoy the meal." } };
+    assert.equal(SiteGenHelper.scrub(copy, ["come as you are"]).expect.c1, "Relax, eat, and enjoy the meal.");
+  });
 });

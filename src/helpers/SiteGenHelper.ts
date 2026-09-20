@@ -1,7 +1,7 @@
 import { Environment } from "./Environment.js";
 
 // Low-cost page generation. JEV (typed decisions, no text) picks the structure, judges layouts, fact-checks copy and
-// picks visuals; Haiku only fills named text slots. No model ever emits builder JSON: every template below is a fixed
+// picks visuals; a small chat model only fills named text slots. No model ever emits builder JSON: every template below is a fixed
 // section + element tree from the ElementTypes catalog, so output can never be structurally invalid.
 
 export interface SiteGenChurch {
@@ -16,19 +16,22 @@ export interface SiteGenChurch {
   nextService?: { dayOfWeek: number; time: string };
   // True when the client swaps "pexels:<term>" placeholders for real photos. Older clients get a built-in image instead.
   resolvesPhotos?: boolean;
+  pageType?: string;
 }
 
-export interface SiteGenUsage { jevIn: number; jevCalls: number; haikuIn: number; haikuOut: number; haikuCalls: number }
+export interface SiteGenUsage { jevIn: number; jevCalls: number; copyIn: number; copyOut: number; copyCalls: number }
 
 const JEV = "typesafe-ai/jev";
-const HAIKU = "anthropic/claude-haiku-4.5";
+// The copywriter. A blind side-by-side against Claude Haiku 4.5 was close (Haiku slightly warmer), and this is about 4x cheaper
+// and faster. Any chat model id on the gateway works; set SITEGEN_COPY_MODEL=anthropic/claude-haiku-4.5 to switch back.
+const COPY_MODEL = process.env.SITEGEN_COPY_MODEL || "openai/gpt-4.1-mini";
 const CANDIDATES = 10;
 const TOP = 3;
 const SAMPLE_TEMP = 1.5;
 const JEV_TIMEOUT_MS = 6000;
 // JEV is nearly free, so a slow call is raced against a duplicate instead of waited on.
 const JEV_HEDGE_MS = 1500;
-const HAIKU_TIMEOUT_MS = 12000;
+const COPY_TIMEOUT_MS = 12000;
 // API Gateway cuts requests at 29s; skip the optional repair pass once a writePage call has used this much.
 const REPAIR_DEADLINE_MS = 14000;
 const HEADLINE_OPTIONS = 5;
@@ -54,8 +57,8 @@ export const SECTIONS: Record<string, { role: "hero" | "mid" | "close"; desc: st
   },
   heroTimes: {
     role: "hero",
-    desc: "Hero with headline plus service times shown right in the hero. Best when the visitor's main question is when and where.",
-    slots: { headline: s("Main headline", 60), sub: s("One supporting sentence", 120), times: s("Service times, compact, separated by ' · '", 110), button: s("Button label", 22) }
+    desc: "Hero with headline plus the key when-and-where line shown right in the hero (service times, or an event's date, time and place). Best when the reader's main question is when and where.",
+    slots: { headline: s("Main headline", 60), sub: s("One supporting sentence", 120), times: s("Service times, or the event's date, time and place; compact, separated by ' · '", 110), button: s("Button label", 22) }
   },
   heroVideo: {
     role: "hero",
@@ -69,12 +72,12 @@ export const SECTIONS: Record<string, { role: "hero" | "mid" | "close"; desc: st
   },
   welcome: {
     role: "mid",
-    desc: "Two-column welcome: photo on one side, short paragraph about who the church is on the other.",
-    slots: { heading: s("Section heading", 50), body: s("2-3 sentence paragraph about who this church is, using real details", 380) }
+    desc: "Two-column photo and paragraph: who the church is on a general page, or the story behind this page's subject (why this event, what it means) on a focused page.",
+    slots: { heading: s("Section heading", 50), body: s("2-3 sentence paragraph about the page's subject, using real details", 380) }
   },
   expect: {
     role: "mid",
-    desc: "What to expect on a first visit: three short icon cards about what the gathering is actually like. Lowers anxiety for first-time visitors.",
+    desc: "What to expect: three short icon cards about what it will actually be like (a first visit, or the event this page is about). Lowers anxiety for someone coming for the first time.",
     slots: threeCards("Card 1 title: an aspect of a visit the brief gives facts about")
   },
   pathways: {
@@ -109,7 +112,7 @@ export const SECTIONS: Record<string, { role: "hero" | "mid" | "close"; desc: st
   },
   faq: {
     role: "mid",
-    desc: "FAQ with four questions a nervous or skeptical first-time visitor would actually ask.",
+    desc: "FAQ with four questions a first-time visitor, or someone deciding whether to come to this event, would actually ask.",
     slots: {
       heading: s("Section heading", 50),
       q1: s("Question 1: only ask questions the brief can answer", 70),
@@ -137,9 +140,19 @@ export const SECTIONS: Record<string, { role: "hero" | "mid" | "close"; desc: st
     desc: "Live countdown to the next main weekly gathering. Energetic; suits churches with one main gathering and a younger or online-first audience.",
     slots: { title: s("Short line above the countdown, e.g. what is starting", 50) }
   },
+  details: {
+    role: "mid",
+    desc: "Key details: three icon cards answering the practical questions about this page's subject (when, where, what to bring, who it is for, cost, how to sign up). The core of any event page.",
+    slots: threeCards("Card 1 title: a practical detail stated in the request")
+  },
+  eventCountdown: {
+    role: "mid",
+    desc: "Live countdown to the event's date. Builds anticipation for a dated event.",
+    slots: { title: s("Short line above the countdown naming the event", 50), date: s("The event's start as an ISO date-time, e.g. 2026-11-12T18:00. Use the date and time from the request and the next future occurrence of that date. If the request gives no time, use 12:00", 20) }
+  },
   visitCta: {
     role: "close",
-    desc: "Closing call-to-action band inviting people to plan a visit, with one button.",
+    desc: "Closing call-to-action band inviting people to take this page's main action (plan a visit, come to the event, sign up), with one button.",
     slots: { heading: s("Invitation headline", 60), body: s("One sentence", 140), button: s("Button label", 22) }
   },
   contact: {
@@ -159,8 +172,17 @@ const PAGE_TYPES: Record<string, string> = {
   ministries: "A ministries or programs page (kids, students, groups, recovery, outreach)",
   give: "A giving or stewardship page",
   contact: "A contact and location page",
+  event: "A page promoting ONE specific event (a potluck, VBS, concert, Easter service, retreat): what it is, when, where, how to take part",
+  topic: "A page about ONE specific topic, program, campaign or announcement rather than the church as a whole",
   other: "Something else"
 };
+
+// On a page about one event or topic, sections about the church in general are filler, so they are not even offered.
+const FOCUSED_TYPES = new Set(["event", "topic"]);
+const GENERAL_ONLY = new Set([
+  "heroVideo", "pastor", "sermon", "ministries", "groups", "serve", "times", "countdown"
+]);
+const FOCUSED_ONLY = new Set(["details", "eventCountdown"]);
 
 const sch = (desc: string, heading: string, body: string, light: string, lightAccent: string, accent: string, darkAccent: string, dark: string) => ({ desc, fonts: { heading, body }, palette: { light, lightAccent, accent, darkAccent, dark } });
 export const SCHEMES: Record<string, ReturnType<typeof sch>> = {
@@ -211,6 +233,14 @@ const PHOTOS: Record<string, string> = {
   "baptism water": "Water and baptism imagery",
   "communion bread wine": "Communion bread and cup",
   "wedding church": "A wedding in a church",
+  "thanksgiving dinner table": "Thanksgiving or harvest meal on a table",
+  "potluck buffet food": "A buffet of shared homemade dishes",
+  "autumn leaves pumpkins": "Autumn, harvest season",
+  "christmas candles lights": "Christmas, advent, candlelight",
+  "easter lilies": "Easter, spring, resurrection",
+  "outdoor picnic": "Picnic or cookout outdoors",
+  "kids summer camp outdoors": "Children at camp or vacation Bible school",
+  "concert stage lights": "A concert or special music night",
   "sunrise field": "Sunrise over a field, hopeful and open",
   "mountain landscape": "Wide mountain landscape, grandeur",
   "city skyline": "City skyline, urban setting",
@@ -234,6 +264,11 @@ const ICONS: Record<string, string> = {
   favorite: "welcome, love, belonging",
   live_tv: "online, livestream",
   place: "location, where to go",
+  event: "date, calendar, when",
+  celebration: "party, holiday, celebration",
+  sell: "cost, price, free, tickets",
+  how_to_reg: "sign up, register, RSVP",
+  shopping_basket: "what to bring",
   healing: "recovery, confession, restoration",
   question_answer: "questions, conversation, doubts"
 };
@@ -243,10 +278,12 @@ const COPY_SYSTEM = `You write page copy for church websites. You are given a ch
 Rules:
 - Every fact (names, times, programs, places) must come from the brief. Never invent staff, stats, history, or programs.
 - If the brief does not mention it, it does not exist: no coffee, parking, dress code, pews, greeters, nursery, building details or history unless the brief states them. When a slot asks for something the brief doesn't cover, write about what the brief DOES cover that serves the same visitor need.
-- Be specific to THIS church. A sentence that could appear on any church's site is a failed sentence.
-- The hero headline must NOT be the church's name (it is already in the site header). It should say something true and particular about this church in under ten words.
+- The page request is the SUBJECT of the page. When it asks for a page about one event, program or topic, every section is about that subject; mention the wider church only where it directly helps the reader act (where it is, who to contact). Do not turn it into an "about our church" page.
+- Never state a time, time of day, day of the week, date, price, room, deadline, age range or sign-up method that the request or records do not give, however natural it would be for such an event. If a slot needs one that is missing, write around it ("details to follow", or simply leave the detail out) rather than guessing.
+- Be specific to THIS church and this subject. A sentence that could appear on any church's site is a failed sentence.
+- The hero headline must NOT be the church's name (it is already in the site header). It should say something true and particular about the page's subject in under ten words.
 - Avoid stock church-website phrases such as "Welcome home", "come as you are", "a place to belong", "vibrant", "do life together", unless the brief itself uses them. No exclamation marks, no em dashes, no rhetorical questions in headlines.
-- Headlines are short and concrete. Body copy is second person and talks to a first-time visitor.
+- Headlines are short and concrete. Body copy is second person and talks to the person this page is for.
 - Do not repeat the same fact or phrase in more than two sections. Each section must earn its place with new information.
 - Respect each slot's max characters strictly. Plain text only, no markdown.
 - Scripture, if used, must be quoted accurately with its reference.`;
@@ -301,14 +338,28 @@ export class SiteGenHelper {
 
   /** Everything the models may treat as true: what the user typed plus facts from the church's own records. */
   static fullBrief(church: SiteGenChurch) {
-    return church.facts ? `${church.brief}\n\nFrom the church's own records (also true): ${church.facts}` : church.brief;
+    return church.facts ? `${church.brief}\n\nFrom the church's own records (also true; background, use only where it serves the page request): ${church.facts}` : church.brief;
   }
 
   private static criteria(keys: string[]) { return Object.fromEntries(keys.map((k) => [k, SECTIONS[k].desc])); }
 
-  static available(role: string, church: SiteGenChurch) {
-    const needs: Record<string, boolean> = { contact: !!church.address, groups: !!church.hasGroups, countdown: !!church.nextService };
-    return Object.keys(SECTIONS).filter((k) => SECTIONS[k].role === role && needs[k] !== false);
+  static available(role: string, church: SiteGenChurch, pageType = "home") {
+    const needs: Record<string, boolean> = { contact: !!church.address, groups: !!church.hasGroups, countdown: !!church.nextService, eventCountdown: pageType === "event" };
+    const focused = FOCUSED_TYPES.has(pageType);
+    return Object.keys(SECTIONS).filter((k) => SECTIONS[k].role === role && needs[k] !== false && !(focused ? GENERAL_ONLY : FOCUSED_ONLY).has(k));
+  }
+
+  // A one-line request cannot fill a long page with true statements; the extra sections would be padded with guesses.
+  static countOptions(church: SiteGenChurch, pageType: string): Record<string, string> {
+    const all: Record<string, string> = { 2: "Two: a single event or short announcement", 3: "Three: small church or simple message", 4: "Four: typical", 5: "Five: large church with many programs or audiences" };
+    const max = FOCUSED_TYPES.has(pageType) ? (church.brief.length < 250 ? 2 : church.brief.length < 600 ? 3 : 4) : 5;
+    return Object.fromEntries(Object.entries(all).filter(([n]) => Number(n) <= max));
+  }
+
+  private static goal(pageType: string) {
+    return FOCUSED_TYPES.has(pageType)
+      ? "Design the page described in page_request. It is about ONE subject. Every section must serve that subject and help the reader decide to take part; general information about the church is filler here."
+      : "Design the web page described in page_request. The reader is a first-time visitor deciding whether to come.";
   }
 
   // Candidates that share the same sections so far would ask JEV the identical question, so rounds are memoized by prefix.
@@ -318,9 +369,10 @@ export class SiteGenHelper {
       const key = `${chosen.join(">")}|${Object.keys(questions).join(",")}`;
       if (!memo.has(key)) {
         memo.set(key, this.ask(usage, {
-          church: this.fullBrief(church),
+          page_request: church.brief,
+          church_records: church.facts || "",
           page_type: PAGE_TYPES[pageType] || PAGE_TYPES.home,
-          goal: "Design the web page this church asked for. The reader is a first-time visitor deciding whether to come.",
+          goal: this.goal(pageType),
           sections_so_far: chosen.map((k, i) => `${i + 1}. ${k}: ${SECTIONS[k].desc}`)
         }, questions));
       }
@@ -328,28 +380,28 @@ export class SiteGenHelper {
     };
     // hero and section count don't depend on each other, so they share one round trip
     const opening = await round({
-      hero: { type: "choice", instructions: "Which hero section should open this page?", criteria: this.criteria(this.available("hero", church)) },
-      count: { type: "choice", instructions: "How many sections should sit between the hero and the closing section?", criteria: { 3: "Three: small church or simple message", 4: "Four: typical", 5: "Five: large church with many programs or audiences" } }
+      hero: { type: "choice", instructions: "Which hero section should open this page?", criteria: this.criteria(this.available("hero", church, pageType)) },
+      count: { type: "choice", instructions: "How many sections should sit between the hero and the closing section? Fewer is better when the request gives little material.", criteria: this.countOptions(church, pageType) }
     });
     chosen.push(this.sample(opening.hero.probabilities, temp));
     const count = Number(this.sample(opening.count.probabilities, temp));
     for (let i = 0; i < count; i++) {
-      const left = this.available("mid", church).filter((k) => !chosen.includes(k) && !chosen.includes(CLASH[k]) && !chosen.some((c) => CLASH[c] === k));
-      const a = await round({ next: { type: "choice", instructions: `Which section should come next (position ${chosen.length + 1})? Pick what a first-time visitor to THIS church most needs next, and keep a natural flow from the sections so far.`, criteria: this.criteria(left) } });
+      const left = this.available("mid", church, pageType).filter((k) => !chosen.includes(k) && !chosen.includes(CLASH[k]) && !chosen.some((c) => CLASH[c] === k));
+      const a = await round({ next: { type: "choice", instructions: `Which section should come next (position ${chosen.length + 1})? Pick what the reader of THIS page most needs next to act on the page_request, and keep a natural flow from the sections so far.`, criteria: this.criteria(left) } });
       chosen.push(this.sample(a.next.probabilities, temp));
     }
-    const closing = await round({ close: { type: "choice", instructions: "Which closing section should end the page?", criteria: this.criteria(this.available("close", church)) } });
+    const closing = await round({ close: { type: "choice", instructions: "Which closing section should end the page?", criteria: this.criteria(this.available("close", church, pageType)) } });
     chosen.push(this.sample(closing.close.probabilities, temp));
     return chosen;
   }
 
   private static async judgeLayout(usage: SiteGenUsage, church: SiteGenChurch, layout: string[], pageType: string): Promise<number> {
-    const a = await this.ask(usage, { church: this.fullBrief(church), page_type: PAGE_TYPES[pageType], page: layout.map((k, i) => `${i + 1}. ${k}: ${SECTIONS[k].desc}`) }, {
-      fit: { type: "score", instructions: "How well do these sections match what this specific church has to offer, who it is trying to reach, and the type of page requested?", criteria: SCORE4 },
-      flow: { type: "score", instructions: "How natural is the order for a first-time visitor: orient, reassure, inform, then invite?", criteria: SCORE4 },
-      gaps: { type: "score", instructions: "Does the page cover the things this church's brief emphasizes, without filler sections that the brief gives no material for?", criteria: ["Major gaps or filler", "Some gaps or filler", "Minor issues", "Covers everything, no filler"] }
+    const a = await this.ask(usage, { page_request: church.brief, church_records: church.facts || "", page_type: PAGE_TYPES[pageType], page: layout.map((k, i) => `${i + 1}. ${k}: ${SECTIONS[k].desc}`) }, {
+      fit: { type: "score", instructions: "How well do these sections deliver the page that page_request asks for, for the people it is trying to reach?", criteria: SCORE4 },
+      flow: { type: "score", instructions: "How natural is the order for the reader: orient, reassure, inform, then invite?", criteria: SCORE4 },
+      onTopic: { type: "score", instructions: "Does every section serve page_request, with no generic about-the-church filler it did not ask for and no section the request gives no material for?", criteria: ["Mostly off-topic filler", "Some filler or gaps", "Minor filler", "Every section serves the request"] }
     });
-    return a.fit.score + a.flow.score + a.gaps.score;
+    return a.fit.score + a.flow.score + a.onTopic.score;
   }
 
   private static async pickStyle(usage: SiteGenUsage, church: SiteGenChurch) {
@@ -378,11 +430,11 @@ export class SiteGenHelper {
     return { candidates: scored.slice(0, TOP), tone: style.tone, pageType: style.pageType, suggestedStyle: { key: style.scheme, fonts: SCHEMES[style.scheme].fonts, palette: SCHEMES[style.scheme].palette }, usage };
   }
 
-  private static async haiku(usage: SiteGenUsage, prompt: string, maxOutputTokens: number, temperature: number): Promise<any> {
-    const r = await this.gateway("/v1/chat/completions", { model: HAIKU, max_tokens: maxOutputTokens, temperature, messages: [{ role: "system", content: COPY_SYSTEM }, { role: "user", content: prompt }] }, HAIKU_TIMEOUT_MS);
-    usage.haikuCalls++;
-    usage.haikuIn += r.usage?.prompt_tokens ?? 0;
-    usage.haikuOut += r.usage?.completion_tokens ?? 0;
+  private static async writeJson(usage: SiteGenUsage, prompt: string, maxOutputTokens: number, temperature: number): Promise<any> {
+    const r = await this.gateway("/v1/chat/completions", { model: COPY_MODEL, max_tokens: maxOutputTokens, temperature, messages: [{ role: "system", content: COPY_SYSTEM }, { role: "user", content: prompt }] }, COPY_TIMEOUT_MS);
+    usage.copyCalls++;
+    usage.copyIn += r.usage?.prompt_tokens ?? 0;
+    usage.copyOut += r.usage?.completion_tokens ?? 0;
     const out: string = r.choices?.[0]?.message?.content || "";
     return JSON.parse(out.slice(out.indexOf("{"), out.lastIndexOf("}") + 1));
   }
@@ -397,7 +449,7 @@ export class SiteGenHelper {
   }
 
   private static churchHeader(church: SiteGenChurch, tone: string) {
-    return `Church: ${church.name}\nAddress: ${church.address || "(not given)"}\nBrief: ${this.fullBrief(church)}\nVoice: ${TONES[tone] || TONES.plainWarm}`;
+    return `Today's date: ${new Date().toISOString().slice(0, 10)}\nChurch: ${church.name}\nAddress: ${church.address || "(not given)"}\nPage type: ${PAGE_TYPES[church.pageType || "home"] || PAGE_TYPES.home}\nPage request and brief (the subject of this page): ${this.fullBrief(church)}\nVoice: ${TONES[tone] || TONES.plainWarm}`;
   }
 
   // Sections are written a couple at a time, in parallel: much faster than one long completion, while keeping the
@@ -411,7 +463,7 @@ export class SiteGenHelper {
     const repairing = Object.keys(notes).length > 0;
     for (let attempt = 1; ; attempt++) {
       try {
-        const out = await this.haiku(usage, prompt, 600 * keys.length + 300, repairing ? 0.4 : 0.8);
+        const out = await this.writeJson(usage, prompt, 600 * keys.length + 300, repairing ? 0.4 : 0.8);
         // a lone section sometimes comes back bare or wrapped as { section: slots } instead of { <key>: slots }
         const found = keys.map((k) => [k, [out[k], ...(keys.length === 1 ? [out, ...Object.values(out)] : [])].find((o: any) => o && typeof o === "object" && !Array.isArray(o) && this.validSection(k, o))]);
         if (found.every(([, slots]) => slots)) return Object.fromEntries(found);
@@ -500,13 +552,15 @@ export class SiteGenHelper {
     return bad;
   }
 
-  /** Last line of defense: Haiku sometimes keeps a stock phrase through a rewrite, so drop the offending sentence in code. */
+  /** Last line of defense: the writer sometimes keeps a stock phrase through a rewrite, so drop the offending sentence in code. */
   static scrub(copy: Copy, phrases: string[]): Copy {
     for (const sec of Object.values(copy)) {
       for (const [n, v] of Object.entries(sec)) {
         if (typeof v !== "string") continue;
         const kept = v.split(/(?<=[.?!])\s+/).filter((sentence) => !phrases.some((p) => sentence.toLowerCase().includes(p))).join(" ");
-        sec[n] = (kept || v).replace(/\s*—\s*/g, ", ").replace(/!/g, ".");
+        // when the whole slot was one such sentence, cut just the phrase rather than leave the slot empty
+        const trimmed = kept || phrases.reduce((s, ph) => s.replace(new RegExp(`${ph}(,| to)?\\s*`, "ig"), ""), v).replace(/^[a-z]/, (c) => c.toUpperCase());
+        sec[n] = (trimmed || v).replace(/\s*—\s*/g, ", ").replace(/!/g, ".");
       }
     }
     return copy;
@@ -519,7 +573,7 @@ export class SiteGenHelper {
     };
     if (layout.includes("welcome")) q.welcomePhoto = { type: "choice", instructions: "Which photo subject best fits the 'who we are' section? It should show people or place, and differ from the hero.", criteria: PHOTOS };
     for (const i of [1, 2, 3]) {
-      if (layout.includes("expect")) q[`expectIcon${i}`] = { type: "choice", instructions: `Which icon best matches this card? "${copy.expect[`c${i}t`]}: ${copy.expect[`c${i}`]}"`, criteria: ICONS };
+      for (const cards of ["expect", "details"]) if (layout.includes(cards)) q[`${cards}Icon${i}`] = { type: "choice", instructions: `Which icon best matches this card? "${copy[cards][`c${i}t`]}: ${copy[cards][`c${i}`]}"`, criteria: ICONS };
       if (layout.includes("ministries")) q[`ministryPhoto${i}`] = { type: "choice", instructions: `Which photo subject best matches this ministry card? "${copy.ministries[`c${i}t`]}: ${copy.ministries[`c${i}`]}"`, criteria: PHOTOS };
     }
     const picks: Record<string, string> = {};
@@ -540,10 +594,11 @@ export class SiteGenHelper {
   }
 
   /** Phase 2: write, fact-check, repair and score the copy for one layout, then assemble the builder tree. */
-  static async writePage(church: SiteGenChurch, layout: string[], tone: string) {
+  static async writePage(church: SiteGenChurch, layout: string[], tone: string, pageType = "home") {
     if (!Array.isArray(layout) || !layout.length || layout.length > 8 || layout.some((k) => !SECTIONS[k])) throw new Error("Invalid layout.");
     const started = Date.now();
     const usage = this.newUsage();
+    church = { ...church, pageType };
     const written = await Promise.all(this.chunk(layout, SECTIONS_PER_CALL).map((keys) => this.writeSections(usage, church, layout, keys, tone)));
     let copy: Copy = Object.assign({}, ...written);
 
@@ -566,16 +621,17 @@ export class SiteGenHelper {
       this.pickVisuals(usage, church, layout, copy),
       this.ask(usage, { church: this.fullBrief(church), page_copy: layout.map((k) => ({ section: k, ...copy[k] })) }, {
         specific: { type: "score", instructions: "How specific is this copy to this one church, using real details from the brief, versus generic lines any church could use?", criteria: ["Generic boilerplate", "Mostly generic", "Mostly specific", "Unmistakably this church"] },
-        visitor: { type: "score", instructions: "Would a nervous first-time visitor from the audience this church wants to reach feel understood and know exactly what to do next?", criteria: SCORE4 }
+        visitor: { type: "score", instructions: "Would the person this page is for feel understood and know exactly what to do next?", criteria: SCORE4 },
+        onTopic: { type: "score", instructions: "Does the copy stay on the subject the brief asks for, rather than drifting into a general page about the church?", criteria: ["Mostly a generic church page", "Drifts often", "Mostly on the subject", "Entirely about the requested subject"] }
       }).catch((): Record<string, any> | null => null)
     ]);
     // A rewritten section is not re-checked (that second pass only fed this score), so it earns half credit.
     const factClean = layout.reduce((t, k) => t + (repaired.includes(k) ? 0.5 : checks[k]?.probability > 0.5 ? 0 : 1), 0) / layout.length;
-    const score = +((judged?.specific?.score ?? 0) + (judged?.visitor?.score ?? 0) + factClean * 3).toFixed(2);
+    const score = +((judged?.specific?.score ?? 0) + (judged?.visitor?.score ?? 0) + (judged?.onTopic?.score ?? 0) + factClean * 3).toFixed(2);
     return { sections: this.buildTree(church, layout, copy, visuals), score, factClean: +factClean.toFixed(2), repaired, ms: Date.now() - started, usage };
   }
 
-  private static newUsage(): SiteGenUsage { return { jevIn: 0, jevCalls: 0, haikuIn: 0, haikuOut: 0, haikuCalls: 0 }; }
+  private static newUsage(): SiteGenUsage { return { jevIn: 0, jevCalls: 0, copyIn: 0, copyOut: 0, copyCalls: 0 }; }
 
   // ---- builder tree assembly (pure) ----
 
@@ -663,6 +719,22 @@ export class SiteGenHelper {
           ])
         ]
       }),
+      details: (x) => ({
+        elements: [
+          text(`<h2>${esc(x.heading)}</h2>`, "center"),
+          three((i) => el("iconFeature", { icon: v[`detailsIcon${i}`], title: x[`c${i}t`], description: `<p>${esc(x[`c${i}`])}</p>`, iconColor: accent, iconSize: "medium", textAlignment: "center" }, undefined, FADE))
+        ]
+      }),
+      eventCountdown: (x) => {
+        // the writer supplies the date; only a real, future date becomes a live countdown
+        const when = new Date(String(x.date));
+        const valid = !isNaN(when.getTime()) && when.getTime() > Date.now();
+        return {
+          ...DARK,
+          background: "var(--accent)",
+          elements: [valid ? el("countdown", { mode: "date", targetDate: String(x.date), title: x.title, completedText: "Happening now", showDays: "true", showHours: "true" }) : text(`<h2>${esc(x.title)}</h2>`, "center")]
+        };
+      },
       groups: (x) => ({ elements: [text(`<h2>${esc(x.heading)}</h2><p>${esc(x.body)}</p>`, "center"), el("groups", { showSearch: "false", showCategory: "true" })] }),
       countdown: (x) => ({
         ...DARK,
