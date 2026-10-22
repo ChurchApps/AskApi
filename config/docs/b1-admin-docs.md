@@ -1747,7 +1747,7 @@ Kingdom Funding is a Christian payment processor that supports credit/debit card
 Kingdom Funding integration is currently in beta. Contact your B1 account representative to enable it for your church.
 :::
 
-1. Sign up or log in at [kingdomfunding.org](https://kingdomfunding.org).
+1. Sign up or log in at [kingdomfundinginternational.com](https://kingdomfundinginternational.com/churches/apply).
 2. Obtain your **Security Key** (public) and **Private Key** from the Kingdom Funding merchant portal.
 3. In B1 Admin, go to **Settings** and open **Church Settings**.
 4. In the **Giving** section, set the **Provider** to **Kingdom Funding**.
