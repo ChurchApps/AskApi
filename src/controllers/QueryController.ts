@@ -5,6 +5,7 @@ import { OpenAiHelper, InstructionsHelper, ArrayHelper } from "../helpers/index.
 import { WorkflowHelper } from "../helpers/WorkflowHelper.js";
 import { DataHelper } from "../helpers/DataHelper.js";
 import { sessionToken, validateApiCall } from "../helpers/ApiCallGuard.js";
+import { normalizePeopleSearchFilters } from "../helpers/PeopleSearchFilters.js";
 
 @controller("/query")
 export class QueryController extends AskBaseController {
@@ -138,7 +139,7 @@ export class QueryController extends AskBaseController {
         apiCallResultsCount: result.apiCallResults ? result.apiCallResults.length : 0
       });
 
-      return result.filters;
+      return normalizePeopleSearchFilters(result.filters);
     });
   }
 

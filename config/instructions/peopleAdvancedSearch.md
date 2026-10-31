@@ -46,7 +46,7 @@ Return ONLY a JavaScript array of SearchCondition objects:
 ## Available Operators
 
 - **equals** - Exact match
-- **notEquals** - Not equal to
+- **notEqual** - Not equal to. The operator name is exactly `notEqual`.
 - **contains** - Text contains substring
 - **startsWith** - Text starts with
 - **endsWith** - Text ends with
@@ -102,6 +102,15 @@ Return ONLY a JavaScript array of SearchCondition objects:
 - "email contains X" → `{"field":"email","value":"X","operator":"contains"}`
 - "phone number X" → `{"field":"phone","value":"X","operator":"contains"}`
 
+### Missing or blank values
+A contact that was never filled in is stored as an empty string. Find those people with `equals` and `""`.
+
+- "without an email", "no email", "missing email", "email is blank", "everyone without an email address" → `{"field":"email","value":"","operator":"equals"}`
+- The same shape for address, city, state, and zip: `equals` with value `""`
+- "has an email", "with an email address" → `{"field":"email","value":"","operator":"notEqual"}`
+
+`notEqual` with `""` means the field has a value. Never use `notEqual` with an empty value to mean missing.
+
 ### Birthday/Anniversary Terms
 - "birthday in January", "born in January" → `{"field":"birthMonth","value":"1","operator":"equals"}`
 - "birthday in February", "born in February" → `{"field":"birthMonth","value":"2","operator":"equals"}`
@@ -141,6 +150,10 @@ Return ONLY a JavaScript array of SearchCondition objects:
 ### Membership Searches
 - **"New members"** → `[{"field":"membershipStatus","value":"Member","operator":"equals"}]`
 - **"Visitors from last month"** → `[{"field":"membershipStatus","value":"Visitor","operator":"equals"}]`
+- **"People who are not members"** → `[{"field":"membershipStatus","value":"Member","operator":"notEqual"}]`
+
+### Missing contact
+- **"Show me everyone without an email address"** → `[{"field":"email","value":"","operator":"equals"}]`
 
 ### Complex Multi-Criteria
 - **"Married women members over 40 in Dallas"** → 
@@ -161,6 +174,7 @@ Return ONLY a JavaScript array of SearchCondition objects:
 3. **Case Sensitive**: Match enum values exactly (e.g., "Male" not "male")
 4. **Multiple Conditions**: All conditions are combined with AND logic
 5. **String Searches**: Use "contains" for partial matches, "equals" for exact matches
+6. **Missing values**: "without", "missing", "no", or "blank" on email, address, city, state, or zip is `equals` with value `""`. `notEqual` with `""` is the opposite: the field is filled in. The operator name is `notEqual`.
 
 ## Response Format
 
