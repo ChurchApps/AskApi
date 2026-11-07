@@ -20,6 +20,8 @@ provider:
   memorySize: 1024
   timeout: 60
   region: ${env:AWS_REGION, 'us-east-2'}
+  # Stop retaining Lambda log groups forever. Log levels are set per function under resources.extensions.
+  logRetentionInDays: 30
   stage: ${self:custom.stage}
   iam:
     role: arn:aws:iam::${aws:accountId}:role/ChurchAppsRole
@@ -69,3 +71,16 @@ functions:
 plugins:
   - serverless-plugin-utils
   - serverless-offline
+
+resources:
+  # Lambda advanced logging. Serverless v3 has no provider.logs.lambda (that is v4), so it is patched onto each function.
+  # JSON format maps console.debug/info/warn/error to levels; INFO drops console.debug, and systemLogLevel WARN drops
+  # the per-invocation START/END/REPORT lines (Duration/Errors metrics are unaffected).
+  # Add any new function here too.
+  extensions:
+    ApiLambdaFunction:
+      Properties:
+        LoggingConfig: &lambdaLogging
+          LogFormat: JSON
+          ApplicationLogLevel: INFO
+          SystemLogLevel: WARN

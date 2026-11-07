@@ -15,7 +15,7 @@ const __filename = fileURLToPath(import.meta.url);
 const __dirname = dirname(__filename);
 
 export const init = async () => {
-  dotenv.config();
+  dotenv.config({ quiet: true });
   const container = new Container();
   await container.loadAsync(bindings);
   const app = new InversifyExpressServer(container, null, null, null, CustomAuthProvider, false);
