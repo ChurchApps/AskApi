@@ -3,7 +3,7 @@ export const MAX_API_CALLS = 8;
 export const MAX_PATH_LENGTH = 500;
 
 export const PATH_PREFIXES: { [key: string]: string[] } = {
-  membershipapi: ["/people", "/groups", "/forms", "/churches"],
+  membershipapi: ["/people", "/groups", "/groupmembers", "/forms", "/churches"],
   attendanceapi: [
     "/attendancerecords", "/campuses", "/services", "/servicetimes", "/sessions", "/visits", "/visitsessions", "/groupservicetimes"
   ],
