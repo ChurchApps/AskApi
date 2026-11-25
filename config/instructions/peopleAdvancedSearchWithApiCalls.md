@@ -6,6 +6,9 @@ Convert the user's natural language query into both:
 2. Additional API calls to other services that might be needed
 
 **User Query:** {query}
+**Today:** {today}
+
+Every relative date in the query ("last 7 days", "this year", "recently") is counted from **Today** above. The dates inside the examples below are illustrations only, never today's date.
 
 ## Output Format
 
@@ -79,9 +82,11 @@ Each additional API call returns rows that carry a `personId`. The people found 
 
 **Examples:**
 
-- "attended last 7 days" → `/attendancerecords/search?startDate={today-7}&endDate={today}` with `"exclude": false`
-- "hasn't attended in last 3 months" → `/attendancerecords/search?startDate={today-3 months}&endDate={today}` with `"exclude": true`
-- "who came to church this year" → `/attendancerecords/search?startDate={Jan 1}&endDate={today}` with `"exclude": false`
+- "attended last 7 days" → `/attendancerecords/search?startDate=<Today minus 7 days>&endDate=<Today>` with `"exclude": false`
+- "hasn't attended in last 3 months" → `/attendancerecords/search?startDate=<Today minus 3 months>&endDate=<Today>` with `"exclude": true`
+- "who came to church this year" → `/attendancerecords/search?startDate=<January 1 of Today's year>&endDate=<Today>` with `"exclude": false`
+
+Write real `YYYY-MM-DD` dates worked out from **Today** at the top of this prompt.
 
 Attendance is **not** a people filter. Never emit a filter with field `memberAttendance` or `attendance`; always use the API call.
 

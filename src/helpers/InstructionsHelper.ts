@@ -33,16 +33,24 @@ export class InstructionsHelper {
     return contents;
   }
 
-  static getPeopleAdvancedSearchInstructions(userQuery: string): string {
+  static getPeopleAdvancedSearchInstructions(userQuery: string, now: Date = new Date()): string {
     let contents = this.readFile("/config/instructions/peopleAdvancedSearch.md");
     contents = contents.replace("{query}", userQuery);
+    contents = contents.replaceAll("{today}", this.todayLine(now));
     return contents;
   }
 
-  static getPeopleAdvancedSearchWithApiCallsInstructions(userQuery: string): string {
+  static getPeopleAdvancedSearchWithApiCallsInstructions(userQuery: string, now: Date = new Date()): string {
     let contents = this.readFile("/config/instructions/peopleAdvancedSearchWithApiCalls.md");
     contents = contents.replace("{query}", userQuery);
+    contents = contents.replaceAll("{today}", this.todayLine(now));
     return contents;
+  }
+
+  // Models have no clock: without this line "last 7 days" is counted from whatever date the examples mention.
+  static todayLine(now: Date): string {
+    const weekday = now.toLocaleDateString("en-US", { weekday: "long", timeZone: "UTC" });
+    return `${weekday}, ${now.toISOString().substring(0, 10)}`;
   }
 
   static getCreateWebpageInstructions(description: string, churchId?: string, title?: string, url?: string): string {
