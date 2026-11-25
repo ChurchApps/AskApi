@@ -15,8 +15,7 @@ export class Environment extends EnvironmentBase {
 
   static async init(environment: string) {
     if (!environment) throw new Error("APP_ENV is required");
-    // No demo.json in this project; demo runs on the dev config.
-    const data = await this.initBase(environment, { appName: "askApi", fileMap: { demo: "dev.json" } });
+    const data = await this.initBase(environment, { appName: "askApi" });
 
     this.membershipApi = this.requireHost(data.membershipApi, "membershipApi");
     this.attendanceApi = this.requireHost(data.attendanceApi, "attendanceApi");

@@ -57,7 +57,7 @@ describe("executeApiCalls hosts", () => {
     assert.ok(seen.length > 0);
     for (const url of seen) {
       assert.equal(url.includes(".staging.churchapps.org"), false);
-      assert.match(url, /^https:\/\/[a-z]+api\.churchapps\.org$/);
+      assert.match(url, /^https:\/\/api\.churchapps\.org\/[a-z]+$/);
     }
   });
 
@@ -79,7 +79,7 @@ describe("Environment hosts", () => {
     const hosts = Environment.apiHosts();
     for (const url of Object.values(hosts)) {
       assert.equal(url.includes(".staging.churchapps.org"), false);
-      assert.match(url, /^https:\/\/[a-z]+api\.churchapps\.org$/);
+      assert.match(url, /^https:\/\/api\.churchapps\.org\/[a-z]+$/);
     }
   });
 });

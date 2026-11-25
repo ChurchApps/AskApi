@@ -1,0 +1,16 @@
+{
+  "appEnv": "demo",
+  "appName": "AskApi",
+  "contentRoot": "https://ask.demo.churchapps.org",
+  "fileStore": "S3",
+  "mailSystem": "SES",
+  "membershipApi": "https://api.demo.churchapps.org/membership",
+  "attendanceApi": "https://api.demo.churchapps.org/attendance",
+  "contentApi": "https://api.demo.churchapps.org/content",
+  "doingApi": "https://api.demo.churchapps.org/doing",
+  "givingApi": "https://api.demo.churchapps.org/giving",
+  "messagingApi": "https://api.demo.churchapps.org/messaging",
+  "reportingApi": "https://api.demo.churchapps.org/reporting",
+  "s3Bucket": "demo-churchapps-ask",
+  "aiProvider": "openrouter"
+}
