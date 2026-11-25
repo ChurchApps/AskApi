@@ -19,6 +19,21 @@ describe("people search instructions", () => {
   });
 });
 
+describe("people search instructions know today's date", () => {
+  // The prompt's date examples say "if today is 2025-12-19"; without the real date the model treats that as today,
+  // so "attended last 7 days" searched December 2025 whatever the calendar said.
+  it("states the real date so relative ranges are counted from it, not from the examples", () => {
+    const now = new Date("2026-11-25T15:00:00Z");
+    for (const prompt of [
+      InstructionsHelper.getPeopleAdvancedSearchInstructions("attended last 7 days", now),
+      InstructionsHelper.getPeopleAdvancedSearchWithApiCallsInstructions("attended last 7 days", now)
+    ]) {
+      assert.match(prompt, /\*\*Today:\*\* Wednesday, 2026-11-25/);
+      assert.doesNotMatch(prompt, /\{today\}/);
+    }
+  });
+});
+
 describe("people search with api calls instructions", () => {
   const prompt = InstructionsHelper.getPeopleAdvancedSearchWithApiCallsInstructions("people in Test Ministry group");
 

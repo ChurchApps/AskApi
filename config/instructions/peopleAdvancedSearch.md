@@ -3,6 +3,9 @@
 Convert the user's natural language query into an array of SearchCondition objects for the `/people/advancedSearch` API endpoint.
 
 **User Query:** {query}
+**Today:** {today}
+
+Every relative date in the query ("last 7 days", "this year", "recently") is counted from **Today** above. The dates inside the examples below are illustrations only, never today's date.
 
 ## Output Format
 
