@@ -56,6 +56,12 @@ describe("ApiCallGuard", () => {
     assert.equal(check.ok, true);
   });
 
+  it("allows the GET lookups the people search needs: group members and attendance", () => {
+    assert.equal(validateApiCall({ apiName: "MembershipApi", method: "GET", path: "/groupmembers?groupId=abc" }).ok, true);
+    assert.equal(validateApiCall({ apiName: "MembershipApi", method: "GET", path: "/groups" }).ok, true);
+    assert.equal(validateApiCall({ apiName: "AttendanceApi", method: "GET", path: "/attendancerecords/search?startDate=2026-01-01&endDate=2026-02-01" }).ok, true);
+  });
+
   it("rejects path traversal and absolute URLs", () => {
     assert.equal(validateApiCall({ apiName: "membershipapi", method: "GET", path: "/people/../users/login" }).ok, false);
     assert.equal(validateApiCall({ apiName: "membershipapi", method: "GET", path: "https://evil.example/people" }).ok, false);

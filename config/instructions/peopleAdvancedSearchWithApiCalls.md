@@ -25,11 +25,14 @@ Return a JSON object with both filters and additional API calls:
       "apiName": "GivingApi",
       "method": "GET",
       "path": "/funddonations/basic",
-      "fields": ["id", "personId", "serviceId", "date"]
+      "fields": ["id", "personId", "serviceId", "date"],
+      "exclude": false
     }
   ]
 }
 ```
+
+Each additional API call returns rows that carry a `personId`. The people found by a call are ANDed with the filters: the final list is the people who match every filter **and** were found by every call. Set `"exclude": true` on a call when the question is negative ("hasn't attended", "did not give", "not in the choir"): the people that call finds are then removed from the list instead of required.
 
 ## Donation API Call Rules
 
@@ -63,6 +66,41 @@ Return a JSON object with both filters and additional API calls:
 - "people who give regularly" → Use `/funddonations/basic?startDate={startDate}&endDate={endDate}`
 - "who has donated recently" → Use `/funddonations/basic?startDate={startDate}&endDate={endDate}`
 - "donors between January and March" → Use `/funddonations/basic?startDate={startDate}&endDate={endDate}`
+
+## Attendance API Call Rules
+
+**When:** The question is about attendance: "attended", "came to church", "was present", "hasn't attended", "missed", "absent", "regular attendance".
+**API Call:** `AttendanceApi` `GET /attendancerecords/search?startDate={startDate}&endDate={endDate}`
+**Fields to Populate:**
+
+- `startDate` and `endDate`: calculated from the question; with no time mentioned use the last 3 months
+- Add `&groupId={groupId}` only when the question gives a group **id**; a group **name** is a group lookup (below), not an attendance filter
+- `"exclude": true` when the question is negative ("hasn't attended", "has not been to church", "missed", "absent", "no attendance")
+
+**Examples:**
+
+- "attended last 7 days" → `/attendancerecords/search?startDate={today-7}&endDate={today}` with `"exclude": false`
+- "hasn't attended in last 3 months" → `/attendancerecords/search?startDate={today-3 months}&endDate={today}` with `"exclude": true`
+- "who came to church this year" → `/attendancerecords/search?startDate={Jan 1}&endDate={today}` with `"exclude": false`
+
+Attendance is **not** a people filter. Never emit a filter with field `memberAttendance` or `attendance`; always use the API call.
+
+## Group API Call Rules
+
+**When:** The question names a group, class, team, ministry, or small group: "people in Test Ministry group", "members of the choir", "youth group", "not in the worship team".
+**API Call:** `MembershipApi` `GET /groupmembers?groupName={groupName}`
+**Fields to Populate:**
+
+- `groupName`: the group name exactly as the user wrote it, URL-encoded (`Test%20Ministry`). Do not add or remove words such as "group" or "ministry" that the user wrote; do not add words they did not write. The server resolves the name to the group.
+- `"exclude": true` when the question is negative ("not in", "outside", "who aren't part of")
+
+**Examples:**
+
+- "people in Test Ministry group" → `/groupmembers?groupName=Test%20Ministry` with `"exclude": false`
+- "members of the choir" → `/groupmembers?groupName=choir` with `"exclude": false`
+- "everyone not in the worship team" → `/groupmembers?groupName=worship%20team` with `"exclude": true`
+
+Group membership is **not** a people filter. Never emit a filter with field `groupMember` or `group`; always use the API call. "members of the choir" is a group question, not a `membershipStatus` filter.
 
 ## Dynamic Field Population
 
@@ -105,6 +143,8 @@ Return a JSON object with both filters and additional API calls:
 Include additional API calls when the query suggests:
 
 - **Donation history**: "people who give regularly", "donors", "people who has/have donated to a fund"
+- **Attendance**: "attended", "came to church", "hasn't attended", "missed", "absent"
+- **Group membership**: "in the X group", "members of X", "X team", "X class", "not in X"
 
 ## Available Fields for People Search
 
@@ -128,8 +168,8 @@ Include additional API calls when the query suggests:
 - **state** - State/Province
 - **zip** - ZIP/Postal code
 - **membershipStatus** - "Visitor", "Regular Attendee", "Member", "Staff", "Former Member", "Prospect", "Inactive"
-- **groupMember** - Group membership
-- **memberAttendance** - Attendance patterns
+
+There is no people field for group membership or attendance. Those come from the additional API calls above.
 
 ## Available Operators for People Search
 
@@ -142,6 +182,8 @@ Include additional API calls when the query suggests:
 - **lessThan** - Numeric/date less than
 - **greaterThanEqual** - Numeric/date greater than or equal
 - **lessThanEqual** - Numeric/date less than or equal
+- **in** - Matches any value in a comma-separated list. Use for "A or B" on one field, e.g. `{"field":"membershipStatus","value":"Member,Regular Attendee","operator":"in"}`
+- **notIn** - Matches none of the values in a comma-separated list
 
 ## Term Recognition Rules
 
@@ -172,6 +214,8 @@ Include additional API calls when the query suggests:
 - "visitors" → `{"field":"membershipStatus","value":"Visitor","operator":"equals"}`
 - "staff" → `{"field":"membershipStatus","value":"Staff","operator":"equals"}`
 - "regular attendees" → `{"field":"membershipStatus","value":"Regular Attendee","operator":"equals"}`
+- Two or more statuses joined by "and", "or", "and/or" mean either one. Use ONE `in` condition, never two `equals` conditions (nobody has two statuses at once): "members and regular attendees", "members or regular attendees" → `{"field":"membershipStatus","value":"Member,Regular Attendee","operator":"in"}`
+- "not members or visitors" → `{"field":"membershipStatus","value":"Member,Visitor","operator":"notIn"}`
 
 ### Marital Status Terms
 
@@ -252,6 +296,103 @@ A contact that was never filled in is stored as an empty string. Find those peop
     {"field":"email","value":"","operator":"equals"}
   ],
   "additionalApiCalls": []
+}
+```
+
+### Either Membership Status
+
+**Query:** "members and regular attendees"
+**Response:**
+
+```javascript
+{
+  "filters": [
+    {"field":"membershipStatus","value":"Member,Regular Attendee","operator":"in"}
+  ],
+  "additionalApiCalls": []
+}
+```
+
+### Attendance Query
+
+**Query:** "attended last 7 days" (today is 2025-12-19)
+**Response:**
+
+```javascript
+{
+  "filters": [],
+  "additionalApiCalls": [
+    {
+      "apiName": "AttendanceApi",
+      "method": "GET",
+      "path": "/attendancerecords/search?startDate=2025-12-12&endDate=2025-12-19",
+      "fields": { "startDate": "2025-12-12", "endDate": "2025-12-19" },
+      "exclude": false
+    }
+  ]
+}
+```
+
+### Negative Attendance Query
+
+**Query:** "hasn't attended in last 3 months" (today is 2025-12-19)
+**Response:**
+
+```javascript
+{
+  "filters": [],
+  "additionalApiCalls": [
+    {
+      "apiName": "AttendanceApi",
+      "method": "GET",
+      "path": "/attendancerecords/search?startDate=2025-09-19&endDate=2025-12-19",
+      "fields": { "startDate": "2025-09-19", "endDate": "2025-12-19" },
+      "exclude": true
+    }
+  ]
+}
+```
+
+### Group Query
+
+**Query:** "people in Test Ministry group"
+**Response:**
+
+```javascript
+{
+  "filters": [],
+  "additionalApiCalls": [
+    {
+      "apiName": "MembershipApi",
+      "method": "GET",
+      "path": "/groupmembers?groupName=Test%20Ministry",
+      "fields": { "groupName": "Test Ministry" },
+      "exclude": false
+    }
+  ]
+}
+```
+
+### Group Plus People Filters
+
+**Query:** "women in the choir who are members"
+**Response:**
+
+```javascript
+{
+  "filters": [
+    {"field":"gender","value":"Female","operator":"equals"},
+    {"field":"membershipStatus","value":"Member","operator":"equals"}
+  ],
+  "additionalApiCalls": [
+    {
+      "apiName": "MembershipApi",
+      "method": "GET",
+      "path": "/groupmembers?groupName=choir",
+      "fields": { "groupName": "choir" },
+      "exclude": false
+    }
+  ]
 }
 ```
 
@@ -486,7 +627,7 @@ A contact that was never filled in is stored as an empty string. Find those peop
 5. **Age Ranges**: Always use TWO conditions for age ranges (min and max)
 6. **Exact Values**: Use exact enum values, not user terminology
 7. **Case Sensitive**: Match enum values exactly (e.g., "Male" not "male")
-8. **Multiple Conditions**: All conditions are combined with AND logic
+8. **Multiple Conditions**: All conditions are combined with AND logic. Two values for the same field ("members and regular attendees") are ONE `in` condition, never two conditions.
 9. **String Searches**: Use "contains" for partial matches, "equals" for exact matches
 10. **Missing values**: "without", "missing", "no", or "blank" on email, address, city, state, or zip is `equals` with value `""`. `notEqual` with `""` is the opposite: the field is filled in. The operator name is `notEqual`.
 11. **Field Population Rules**:
@@ -494,7 +635,11 @@ A contact that was never filled in is stored as an empty string. Find those peop
 - `fundName`: ONLY include when a specific fund is mentioned
 - `startDate` and `endDate`: ALWAYS include for donation queries
 
-12. **Default Time Range**: If no specific time mentioned, use "last year to today"
+12. **Default Time Range**: If no specific time mentioned, use "last year to today" for donations and "last 3 months to today" for attendance
+
+14. **Attendance and groups are API calls, not filters**: never emit `memberAttendance`, `groupMember`, `attendance`, or `group` as a filter field. A negative question ("hasn't", "not in", "didn't") is the same call with `"exclude": true`.
+
+15. **Never answer with an empty response**: if the question is about attendance or a group, the response must contain that API call. If it is about a status, the response must contain that filter.
 
 13. **Fund Name Detection**: Look for fund-related keywords in the user's query
 
@@ -504,6 +649,8 @@ A contact that was never filled in is stored as an empty string. Find those peop
 2. **Dates**: Always calculate based on current date, not hardcoded examples
 3. **Field Population**: Only include fields that are actually needed
 4. **Missing contact**: "without an email address" is `{"field":"email","value":"","operator":"equals"}`. `notEqual` with an empty value means the field is filled in.
+5. **Either/or on one field**: one `in` condition with a comma list
+6. **Attendance and groups**: an API call with `exclude` true for negative questions, never a filter
 
 ## Response Format
 

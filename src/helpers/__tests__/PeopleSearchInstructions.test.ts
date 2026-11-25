@@ -19,6 +19,27 @@ describe("people search instructions", () => {
   });
 });
 
+describe("people search with api calls instructions", () => {
+  const prompt = InstructionsHelper.getPeopleAdvancedSearchWithApiCallsInstructions("people in Test Ministry group");
+
+  it("no longer offers person fields the search cannot evaluate", () => {
+    for (const p of prompts) {
+      assert.doesNotMatch(p, /\*\*groupMember\*\*/);
+      assert.doesNotMatch(p, /\*\*memberAttendance\*\*/);
+    }
+  });
+
+  it("teaches the attendance and group lookups", () => {
+    assert.match(prompt, /\/attendancerecords\/search\?startDate=/);
+    assert.match(prompt, /\/groupmembers\?groupName=/);
+    assert.match(prompt, /"exclude": ?true/);
+  });
+
+  it("asks for either-status questions as one `in` condition", () => {
+    assert.match(prompt, /\{"field":"membershipStatus","value":"Member,Regular Attendee","operator":"in"\}/);
+  });
+});
+
 describe("normalizePeopleSearchFilters", () => {
   it("renames the old notEquals operator and leaves other filters alone", () => {
     const filters = normalizePeopleSearchFilters([

@@ -1,11 +1,12 @@
 import { controller, httpPost } from "inversify-express-utils";
 import express from "express";
 import { AskBaseController } from "./AskBaseController.js";
-import { OpenAiHelper, InstructionsHelper, ArrayHelper } from "../helpers/index.js";
+import { OpenAiHelper, InstructionsHelper, Environment } from "../helpers/index.js";
 import { WorkflowHelper } from "../helpers/WorkflowHelper.js";
 import { DataHelper } from "../helpers/DataHelper.js";
-import { sessionToken, validateApiCall } from "../helpers/ApiCallGuard.js";
+import { selectApiCalls, sessionToken } from "../helpers/ApiCallGuard.js";
 import { normalizePeopleSearchFilters } from "../helpers/PeopleSearchFilters.js";
+import { groupNameOf, isExcludeCall, LookupCall, LookupResult, mergeLookupFilters, personIdsOf, resolveGroupCall } from "../helpers/PeopleSearchLookups.js";
 
 @controller("/query")
 export class QueryController extends AskBaseController {
@@ -58,66 +59,9 @@ export class QueryController extends AskBaseController {
       result.apiCallResults = [];
 
       if (result.additionalApiCalls && result.additionalApiCalls.length > 0) {
-        try {
-          console.log("Executing additional API calls:", result.additionalApiCalls.length);
-
-          const validApiCalls = result.additionalApiCalls.filter((apiCall: any) => {
-            const check = validateApiCall(apiCall);
-            if (!check.ok) console.warn("Rejected API call:", check.error, apiCall);
-            return check.ok;
-          });
-
-          if (validApiCalls.length === 0) {
-            console.warn("No valid API calls found, skipping execution");
-            result.apiCallError = {
-              message: "No valid API calls found",
-              error: "All API calls had invalid structure"
-            };
-          } else if (validApiCalls.length < result.additionalApiCalls.length) {
-            console.warn(`Filtered ${result.additionalApiCalls.length - validApiCalls.length} invalid API calls`);
-            result.additionalApiCalls = validApiCalls;
-          }
-
-          if (validApiCalls.length > 0) {
-            const apiResults = await DataHelper.executeApiCalls(validApiCalls, sessionToken(au, req.body), "json");
-
-            result.apiCallResults = apiResults;
-
-            if (apiResults.length > 0) {
-              const newFilters = [...result.filters];
-              const successfullCallsData: any[] = [];
-              apiResults.forEach((r: any) => {
-                successfullCallsData.push(...r);
-              });
-              const personIds = ArrayHelper.getUniqueValues(successfullCallsData, "personId").filter((f) => f !== null);
-              if (personIds.length > 0) {
-                newFilters.push({ field: "id", operator: "equals", value: personIds.join(",") });
-                result.filters = newFilters;
-              }
-            }
-
-            if (apiResults.length > 0) {
-              console.log(
-                "No valid API calls to execute"
-                // failedCalls.map((f: any) => ({
-                //   api: f.apiCall?.apiName,
-                //   path: f.apiCall?.path,
-                //   error: f.error
-                // }))
-              );
-            }
-          } else {
-            console.log("No valid API calls to execute");
-            result.apiCallResults = [];
-          }
-        } catch (apiError) {
-          console.error("Error executing additional API calls:", apiError);
-          result.apiCallError = {
-            message: "Failed to execute additional API calls",
-            error: (apiError as Error).message,
-            note: "This might be due to insufficient permissions or API access. Check if the user has access to the required APIs."
-          };
-        }
+        const lookups = await this.runLookups(result.additionalApiCalls, sessionToken(au, req.body));
+        result.filters = mergeLookupFilters(result.filters, lookups);
+        result.apiCallResults = lookups;
       }
 
       result.summary = {
@@ -141,6 +85,32 @@ export class QueryController extends AskBaseController {
 
       return normalizePeopleSearchFilters(result.filters);
     });
+  }
+
+  // Runs each allowed lookup and turns its rows into one id condition. A /groupmembers call that
+  // names the group is resolved to a groupId first. A call that fails or cannot be resolved counts
+  // as "no answer", which mergeLookupFilters turns into a match for nobody, never for everyone.
+  private async runLookups(apiCalls: LookupCall[], jwt: string): Promise<LookupResult[]> {
+    const allowed = selectApiCalls(apiCalls);
+    if (allowed.length < apiCalls.length) console.warn(`Rejected ${apiCalls.length - allowed.length} of ${apiCalls.length} API calls`);
+    const hosts = Environment.apiHosts();
+    const lookups: LookupResult[] = [];
+    for (const call of allowed) {
+      const exclude = isExcludeCall(call);
+      let resolved: LookupCall | null = call;
+      if (groupNameOf(call) !== null) {
+        const groups = await DataHelper.executeSingleApiCall({ apiName: "MembershipApi", method: "GET", path: "/groups" }, jwt, hosts);
+        resolved = groups.success && Array.isArray(groups.data) ? resolveGroupCall(call, groups.data) : null;
+        if (!resolved) console.warn("No group matches:", groupNameOf(call));
+      }
+      if (!resolved) {
+        lookups.push({ exclude, personIds: null });
+        continue;
+      }
+      const r = await DataHelper.executeSingleApiCall(resolved, jwt, hosts);
+      lookups.push({ exclude, personIds: r.success && Array.isArray(r.data) ? personIdsOf(r.data) : null });
+    }
+    return lookups;
   }
 
   @httpPost("/people-test")

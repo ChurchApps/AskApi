@@ -40,13 +40,13 @@ Return ONLY a JavaScript array of SearchCondition objects:
 - **state** - State/Province
 - **zip** - ZIP/Postal code
 - **membershipStatus** - "Visitor", "Regular Attendee", "Member", "Staff", "Former Member", "Prospect", "Inactive"
-- **groupMember** - Group membership
-- **memberAttendance** - Attendance patterns
 
 ## Available Operators
 
 - **equals** - Exact match
 - **notEqual** - Not equal to. The operator name is exactly `notEqual`.
+- **in** - Matches any value in a comma-separated list. "members and regular attendees" → `{"field":"membershipStatus","value":"Member,Regular Attendee","operator":"in"}`
+- **notIn** - Matches none of the values in a comma-separated list
 - **contains** - Text contains substring
 - **startsWith** - Text starts with
 - **endsWith** - Text ends with
